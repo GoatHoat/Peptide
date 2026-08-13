@@ -1,0 +1,559 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    /* The page around the phone, not the app itself. The app is pure #000. */
+    background: #0e0e10;
+    color: #fff;
+    /* SF Pro does not exist on the web — Inter is the Windows fallback. */
+    font-family: -apple-system, 'SF Pro Text', 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  * {
+    scrollbar-width: none;
+  }
+
+  *::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+}
+
+@layer components {
+  /* Frosted glass. The specular top edge is the lip of the panel catching
+     light — it is NOT a perimeter outline. A 1px white-at-10% border running
+     all four sides is the shadcn default and stays deleted forever. */
+  .glass {
+    background: rgba(255, 255, 255, 0.055);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    backdrop-filter: blur(24px) saturate(140%);
+    border-radius: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Specular top edge. TOP ONLY — never a full border. */
+  .glass::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.04) 0%,
+      rgba(255, 255, 255, 0.22) 22%,
+      rgba(255, 255, 255, 0.22) 78%,
+      rgba(255, 255, 255, 0.04) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* A panel sitting on another panel — sheets, the scan toast. Thicker fill
+     and a deeper blur so stacked glass reads as two panes, not one twice. */
+  .glass-2 {
+    background: rgba(255, 255, 255, 0.085);
+    -webkit-backdrop-filter: blur(32px) saturate(140%);
+    backdrop-filter: blur(32px) saturate(140%);
+    border-radius: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glass-2::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.04) 0%,
+      rgba(255, 255, 255, 0.22) 22%,
+      rgba(255, 255, 255, 0.22) 78%,
+      rgba(255, 255, 255, 0.04) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* Flat opaque surface. For panels with nothing behind them to distort —
+     blurring flat black just costs GPU and returns a constant. */
+  .surface {
+    position: relative;
+    overflow: hidden;
+    background: #131316;
+  }
+
+  /* The only permitted rule: inside a list, inset to the leading text edge,
+     never full-bleed. */
+  .row-separator > * + * {
+    position: relative;
+  }
+
+  .row-separator > * + *::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: var(--sep-inset, 0px);
+    right: 0;
+    height: 1px;
+    background: #38383a;
+    pointer-events: none;
+  }
+
+  /* DESIGN.md §7 — primary button. Full-width pill, 56, copper gradient. */
+  .btn-primary {
+    @apply flex h-14 cursor-pointer items-center justify-center rounded-full text-[16px] font-semibold uppercase tracking-[1.4px];
+    background: linear-gradient(135deg, #e8a87c, #c87941 55%, #8a4e24);
+    color: #0a0a0a;
+    transition: transform 0.15s ease-out;
+  }
+
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  .btn-secondary {
+    @apply flex h-14 cursor-pointer items-center justify-center rounded-full border-[1.5px] border-copper text-[16px] font-semibold uppercase tracking-[1.4px] text-copper;
+  }
+
+  .btn-tertiary {
+    @apply cursor-pointer px-3 pt-4 text-center text-[16px] font-medium text-copper;
+  }
+
+  /* DESIGN_V2 §4 + §6 — the type ramp.
+     Tracked uppercase is now used for exactly one role: buttons. */
+
+  /* Screen title · 34 · −1.05 · sentence · 1.40 leading */
+  .display {
+    @apply font-display text-[34px] font-normal;
+    letter-spacing: -1.05px;
+    line-height: 1.4;
+  }
+
+  /* Section header · 17 · semibold · −0.43 · sentence, aligned to the card edge */
+  .section-label {
+    @apply text-[17px] font-semibold text-t1;
+    letter-spacing: -0.43px;
+    line-height: 1.19;
+  }
+
+  /* Body · 17 · regular · −0.43 · 1.19 leading */
+  .body {
+    @apply text-[17px] font-normal;
+    letter-spacing: -0.43px;
+    line-height: 1.19;
+  }
+
+  /* Label · 13 · regular · +0.03 · sentence */
+  .label {
+    @apply text-[13px] font-normal;
+    letter-spacing: 0.03px;
+  }
+
+  /* Hero numeral · 72 · light · −2.0 */
+  .hero-num {
+    @apply text-[72px] font-light tabular-nums;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  /* Card hero · 40 · regular · −1.2 — the numeral inside the dose arc */
+  .card-hero {
+    @apply text-[40px] font-normal tabular-nums;
+    letter-spacing: -1.2px;
+    line-height: 1;
+  }
+
+  .serif {
+    @apply font-serif font-normal;
+  }
+
+  .pretty {
+    text-wrap: pretty;
+  }
+}
+
+@layer utilities {
+  .animate-glow-a {
+    animation: glowA 26s ease-in-out infinite, glowC 19s ease-in-out infinite;
+  }
+  .animate-glow-b {
+    animation: glowB 34s ease-in-out infinite, glowC 23s ease-in-out infinite;
+  }
+  .animate-glow-gate {
+    animation: glowA 22s ease-in-out infinite, glowC 16s ease-in-out infinite;
+  }
+}
+
+@layer utilities {
+  /* Only the two caps facing a due, untaken gap breathe — not the whole arc. */
+  @keyframes capBreathe {
+    0%, 100% { opacity: 0.055; }
+    50% { opacity: 0.105; }
+  }
+  .cap-breathe {
+    animation: capBreathe 3.2s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cap-breathe { animation: none; }
+  }
+}
+
+@layer utilities {
+  /* Recommender flow — parallax push, layers at different rates. */
+  @keyframes recPushHead { from { transform: translateX(402px); } to { transform: none; } }
+  @keyframes recPushCtrl { from { transform: translateX(462px); } to { transform: none; } }
+  @keyframes recPushBtn  { from { transform: translateX(342px); } to { transform: none; } }
+  @keyframes recBtnArrive { from { transform: translateY(90px); } to { transform: none; } }
+  @keyframes recRollIn { from { transform: translateY(100%); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes recRise { from { transform: translateY(10px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes recStrike { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes recFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes recFadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes recDisc { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: none; } }
+  @keyframes recBreathe { 0%, 100% { opacity: 0.86; } 50% { opacity: 1.21; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    [class*='rec'], [style*='recPush'] { animation-duration: 150ms !important; }
+  }
+}
+
+/* ── ob6b · Recommendations — ported from reco_reference.html ────────── */
+@layer components {
+  .reco-card {
+    position: relative;
+    flex: none;
+    width: 314px;
+    border-radius: 26px;
+    overflow: hidden;
+    scroll-snap-align: start;
+    padding: 14px 14px 20px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.075);
+    -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(1.14);
+    backdrop-filter: blur(20px) saturate(180%) brightness(1.14);
+    transition: opacity 0.25s ease, background 0.2s ease;
+  }
+  .reco-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.03),
+      rgba(255, 255, 255, 0.28) 22%,
+      rgba(255, 255, 255, 0.28) 78%,
+      rgba(255, 255, 255, 0.03)
+    );
+  }
+
+  /* circular well, countersunk. 0.565 x 122 = 68.9 < (166/2) - 10 = 73 —
+     go over and overflow:hidden slices a flat cut across the capsule. */
+  .reco-shot {
+    position: relative;
+    width: 166px;
+    height: 166px;
+    margin: 2px auto 0;
+    border-radius: 50%;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(
+      circle at 50% 36%,
+      rgba(255, 255, 255, 0.075),
+      rgba(255, 255, 255, 0.02) 62%,
+      rgba(0, 0, 0, 0.28)
+    );
+    box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.7), inset 0 -1px 0 rgba(255, 255, 255, 0.055);
+  }
+
+  .reco-capsule {
+    width: 122px;
+    height: 122px;
+    background-image: url('/capsule-sprite.webp');
+    background-size: 1220px 1464px; /* 10 cols x 12 rows of 122px cells */
+    animation-name: recoSpriteX, recoSpriteY;
+    animation-timing-function: steps(10), steps(12);
+    animation-iteration-count: infinite, infinite;
+    filter: saturate(0.72) hue-rotate(-13deg) brightness(0.9) contrast(1.08)
+      drop-shadow(0 10px 20px rgba(0, 0, 0, 0.85));
+  }
+
+  .reco-tick {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 4;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 255, 255, 0.24);
+    display: grid;
+    place-items: center;
+    transition: all 0.2s ease;
+  }
+  .reco-tick svg { width: 14px; height: 14px; opacity: 0; transition: opacity 0.2s ease; }
+  .reco-tick[data-sel] { border-color: #e3b08d; background: #c08960; }
+  .reco-tick[data-sel] svg { opacity: 1; }
+
+  .reco-why {
+    padding: 0 6px;
+    font-size: 14.5px;
+    line-height: 1.48;
+    letter-spacing: -0.32px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .reco-why em { font-style: normal; color: #fff; }
+  .reco-why p + p { margin-top: 12px; }
+
+  .reco-shop {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.05px;
+    color: #e3b08d;
+    padding: 8px 15px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(226, 176, 141, 0.45);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .reco-pip {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: width 0.25s ease, background 0.25s ease;
+  }
+  .reco-pip[data-on] { width: 20px; border-radius: 3px; background: #e3b08d; }
+
+  .reco-out {
+    margin: 22px 24px 0;
+    border-radius: 22px;
+    padding: 18px 18px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    -webkit-backdrop-filter: blur(20px) saturate(170%);
+    backdrop-filter: blur(20px) saturate(170%);
+  }
+
+  .reco-cta {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 38px;
+    height: 56px;
+    border-radius: 28px;
+    display: grid;
+    place-items: center;
+    z-index: 7;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: #1a0e07;
+    transition: opacity 0.2s ease;
+    background: linear-gradient(162deg, #c79372, #a56a46 46%, #7a4a2c);
+    box-shadow: 0 1px 0 rgba(245, 230, 218, 0.55) inset, 0 -1px 0 rgba(74, 66, 56, 0.5) inset;
+  }
+}
+
+@layer utilities {
+  @keyframes recoSpriteX { from { background-position-x: 0px; } to { background-position-x: -1220px; } }
+  @keyframes recoSpriteY { from { background-position-y: 0px; } to { background-position-y: -1464px; } }
+}
+
+/* ── ob6b · fit variant — ported from reco_fit_reference.html ────────── */
+@layer components {
+  .fit-bloom {
+    position: absolute; left: 50%; top: -70px; margin-left: -260px;
+    width: 520px; height: 420px; border-radius: 50%; filter: blur(60px);
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(206,138,92,.26), rgba(140,80,48,.08) 46%, transparent 70%);
+  }
+  /* Every card needs colour to lens across its whole width. Move or delete
+     this and the cards measure sd 0.00 and go flat. */
+  .fit-wash {
+    position: absolute; left: -90px; right: -90px; top: 150px; height: 600px;
+    filter: blur(64px); opacity: .95; pointer-events: none;
+    background:
+      radial-gradient(closest-side at 22% 12%, rgba(203,131,84,.30), transparent 100%),
+      radial-gradient(closest-side at 88% 30%, rgba(190,118,76,.34), transparent 100%),
+      radial-gradient(closest-side at 96% 55%, rgba(178,112,92,.26), transparent 100%),
+      radial-gradient(closest-side at 12% 58%, rgba(170,110,150,.20), transparent 100%),
+      radial-gradient(closest-side at 74% 82%, rgba(199,127,80,.24), transparent 100%),
+      radial-gradient(closest-side at 40% 96%, rgba(150,100,164,.16), transparent 100%);
+  }
+
+  .fit-h1 {
+    position: absolute; top: calc(92px + env(safe-area-inset-top)); left: 24px; right: 26px; z-index: 5;
+    font-size: 33px; font-weight: 700; line-height: 1.14; letter-spacing: -1.02px; color: #fff;
+  }
+  .fit-sub {
+    position: absolute; top: calc(178px + env(safe-area-inset-top)); left: 24px; right: 44px; z-index: 5;
+    font-size: 15px; line-height: 1.45; color: rgba(255,255,255,.5); letter-spacing: -.1px;
+  }
+  .fit-stack {
+    position: absolute; top: calc(218px + env(safe-area-inset-top)); left: 24px; right: 24px; z-index: 4;
+    display: flex; flex-direction: column;
+  }
+
+  /* LIQUID GLASS. The fill is 2.5% white, not 7.5% — on a near-black backdrop
+     a white fill IS the opacity you see. The read comes from amplifying what
+     is behind it, not from tinting the surface. */
+  .fit-card {
+    position: relative; border-radius: 26px; overflow: hidden; cursor: pointer;
+    display: flex; align-items: center; gap: 14px; padding: 0 14px;
+    background: rgba(255,255,255,.025);
+    transition: background .22s ease, box-shadow .22s ease;
+    -webkit-backdrop-filter: blur(26px) saturate(300%) brightness(1.75) contrast(1.04);
+            backdrop-filter: blur(26px) saturate(300%) brightness(1.75) contrast(1.04);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.20),
+      inset 1px 0 0 rgba(255,255,255,.07),
+      inset -1px 0 0 rgba(255,255,255,.04),
+      inset 0 -1px 0 rgba(255,255,255,.055),
+      0 10px 26px rgba(0,0,0,.42);
+  }
+  /* the bright bead along the top-left corner arc — the single tell that reads
+     as glass rather than translucent rectangle. Never a flat 4-sided border. */
+  .fit-card::before {
+    content: ''; position: absolute; inset: 0; border-radius: 26px; pointer-events: none;
+    background: linear-gradient(133deg, rgba(255,255,255,.16), rgba(255,255,255,.04) 26%,
+      transparent 46%, transparent 74%, rgba(255,255,255,.05));
+    -webkit-mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
+            mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
+    -webkit-mask-composite: xor; mask-composite: exclude; padding: 1px;
+  }
+  .fit-card.sel {
+    background: rgba(226,176,141,.07);
+    box-shadow:
+      inset 0 1px 0 rgba(255,235,222,.30),
+      inset 0 0 0 1px rgba(226,176,141,.26),
+      inset 0 -1px 0 rgba(255,255,255,.06),
+      0 10px 26px rgba(0,0,0,.42);
+  }
+
+  /* NO overflow:hidden — the capsule is deliberately larger than the disc and
+     breaks its edge. Put it back and you get a flat cut across the outline. */
+  .fit-shot {
+    position: relative; flex: none; border-radius: 50%;
+    background: radial-gradient(circle at 50% 36%, rgba(255,255,255,.075),
+      rgba(255,255,255,.02) 62%, rgba(0,0,0,.28));
+    box-shadow: inset 0 3px 8px rgba(0,0,0,.7), inset 0 -1px 0 rgba(255,255,255,.055);
+  }
+  /* Continuous 360° rotation, full 120 frames. The balance rule only governs
+     which frame it RESTS on — in motion the foreshortened frames read as the
+     pill turning edge-on, which is what is physically happening.
+     capsule_sheet.png is 12 columns x 10 rows, row-major, cell 0 = frame 1.
+     The asset already renders copper — saturate()/hue-rotate() only washed it
+     out at this size. Contrast alone keeps the two halves separated. */
+  .fit-capsule {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--cell);
+    height: var(--cell);
+    transform: translate(-50%, -50%) rotate(var(--rot));
+    background-image: url('/capsule_sheet.png');
+    background-repeat: no-repeat;
+    background-size: calc(var(--cell) * 12) calc(var(--cell) * 10);
+    animation:
+      spinx calc(var(--spin) / 10) steps(12) infinite,
+      spiny var(--spin) steps(10) infinite;
+    animation-delay: var(--delay), var(--delay);
+    /* safe ONLY because .fit-capsule is inside the card, never an ancestor of
+       the glass. Do not put will-change on the card, the stack or a wrapper. */
+    will-change: background-position;
+    backface-visibility: hidden;
+    filter: contrast(1.14) brightness(.98) drop-shadow(0 8px 18px rgba(0, 0, 0, .9));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fit-capsule {
+      animation: none;
+      /* cell 7 = frame 8, a balanced 50/50 frame */
+      background-position: calc(var(--cell) * -7) 0;
+    }
+  }
+
+  .fit-meta { flex: 1; min-width: 0; padding-right: 34px; }
+  .fit-meta h2 { font-size: 17px; font-weight: 600; color: #fff; letter-spacing: -.45px; line-height: 1.2; }
+  .fit-dose { margin-top: 5px; font-size: 12px; line-height: 1.35; color: rgba(255,255,255,.45); font-variant-numeric: tabular-nums; }
+  .fit-why { margin-top: 8px; font-size: 12.5px; line-height: 1.36; letter-spacing: -.15px; color: rgba(255,255,255,.72); }
+
+  .fit-tick {
+    position: absolute; top: 14px; right: 14px; z-index: 4; width: 26px; height: 26px;
+    border-radius: 50%; border: 1.5px solid rgba(255,255,255,.24);
+    display: grid; place-items: center; transition: all .2s ease;
+  }
+  .fit-tick svg { width: 13px; height: 13px; opacity: 0; transition: opacity .2s ease; }
+  .fit-tick[data-sel] { border-color: #E3B08D; background: #C08960; }
+  .fit-tick[data-sel] svg { opacity: 1; }
+
+  .fit-out {
+    position: absolute; left: 24px; right: 24px; z-index: 4;
+    font-size: 12.5px; line-height: 1.5; color: rgba(255,255,255,.38); letter-spacing: -.1px;
+  }
+  .fit-out b { color: rgba(255,255,255,.62); font-weight: 500; }
+
+  .fit-scrim {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 150px; z-index: 5; pointer-events: none;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,.8) 40%, #000 72%);
+  }
+  .fit-cta {
+    position: absolute; left: 20px; right: 20px;
+    bottom: calc(38px + env(safe-area-inset-bottom));
+    height: 56px; border-radius: 28px; display: grid; place-items: center; z-index: 7;
+    font-size: 16px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: #1A0E07;
+    transition: opacity .2s ease;
+    background: linear-gradient(162deg, #C79372, #A56A46 46%, #7A4A2C);
+    box-shadow: 0 1px 0 rgba(245,230,218,.55) inset, 0 -1px 0 rgba(74,66,56,.5) inset;
+  }
+}
+
+@layer utilities {
+  @keyframes spinx {
+    from { background-position-x: 0; }
+    to { background-position-x: calc(var(--cell) * -12); }
+  }
+  @keyframes spiny {
+    from { background-position-y: 0; }
+    to { background-position-y: calc(var(--cell) * -10); }
+  }
+}
+
+/* ── mobile: the three things that instantly read as "this is a website" ── */
+.mobile-root,
+.mobile-root * {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (pointer: coarse) {
+  html,
+  body {
+    overscroll-behavior: none;   /* no rubber-band past the top */
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;  /* no 300ms double-tap zoom delay */
+    background: #000;
+  }
+  /* the real status bar is right there — two of them is the obvious tell */
+  .ios-status-bar { display: none; }
+}

@@ -1,0 +1,2154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Gasoek+One&family=Marcellus&display=swap" rel="stylesheet"/>
+<style>
+*{-webkit-font-smoothing:antialiased}
+*::-webkit-scrollbar{width:0;height:0;display:none}
+body{margin:0;background:#0E0E10}
+a{color:#C87941;text-decoration:none}
+a:hover{color:#E8A87C}
+@keyframes glowA{0%{transform:translate(-50%,0) scale(1)}50%{transform:translate(-42%,-26px) scale(1.16)}100%{transform:translate(-50%,0) scale(1)}}
+@keyframes glowB{0%{transform:translate(-50%,0) scale(1.05)}50%{transform:translate(-58%,22px) scale(0.92)}100%{transform:translate(-50%,0) scale(1.05)}}
+@keyframes glowC{0%{opacity:.5}50%{opacity:.9}100%{opacity:.5}}
+@keyframes riseIn{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+</style></helmet>
+
+<div style="display:flex;min-height:100vh;background:#0E0E10;font-family:-apple-system,'SF Pro Display','SF Pro Text','Helvetica Neue',system-ui,sans-serif;color:#fff">
+
+  <aside style="width:292px;flex:none;box-sizing:border-box;border-right:1px solid rgba(255,255,255,0.08);padding:26px 18px 48px;display:flex;flex-direction:column;gap:20px;height:100vh;overflow-y:auto;position:sticky;top:0">
+    <div>
+      <div style="font-size:15px;font-weight:600;letter-spacing:-0.2px">Stack — supplement audit</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:4px;letter-spacing:0.2px">iOS prototype · dark only · 402×874</div>
+    </div>
+
+    <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="4">
+      <div>
+        <div style="font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.32)">{{ g.title }}</div>
+        <div style="display:flex;flex-direction:column;gap:1px;margin-top:8px">
+          <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="5">
+            <div onClick="{{ it.go }}" style="display:flex;gap:9px;align-items:center;padding:7px 9px;border-radius:8px;cursor:pointer;font-size:13px;line-height:1.2;background:{{ it.bg }}" style-hover="background:rgba(255,255,255,0.06)">
+              <span style="width:20px;flex:none;font-size:10.5px;color:rgba(255,255,255,0.3);font-variant-numeric:tabular-nums">{{ it.num }}</span>
+              <span style="color:{{ it.fg }}">{{ it.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+
+    <div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.32)">States</div>
+      <div style="display:flex;flex-direction:column;gap:2px;margin-top:8px">
+        <sc-for list="{{ toggles }}" as="t" hint-placeholder-count="5">
+          <div onClick="{{ t.go }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 9px;border-radius:8px;cursor:pointer;font-size:13px" style-hover="background:rgba(255,255,255,0.06)">
+            <span style="color:rgba(255,255,255,0.72)">{{ t.label }}</span>
+            <span style="width:34px;height:20px;border-radius:999px;flex:none;position:relative;transition:background 0.2s;background:{{ t.track }}">
+              <span style="position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left 0.2s;left:{{ t.knob }}"></span>
+            </span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="font-size:11px;line-height:1.55;color:rgba(255,255,255,0.3);border-top:1px solid rgba(255,255,255,0.08);padding-top:14px">
+      Every value from DESIGN.md. Particle field is the only unprompted motion. Type falls back to system UI off macOS.
+    </div>
+  </aside>
+
+  <main style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:40px 24px 56px;min-height:100vh;box-sizing:border-box">
+    <div style="display:flex;align-items:baseline;gap:10px">
+      <span style="font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.32)">{{ crumb }}</span>
+      <span style="font-size:11px;color:rgba(255,255,255,0.22)">{{ crumbNote }}</span>
+    </div>
+
+    <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ true }}" hint-size="402px,874px">
+
+      <div style="position:relative;height:100%;width:100%;background:#000;overflow:hidden;font-family:-apple-system,'SF Pro Display','SF Pro Text','Helvetica Neue',system-ui,sans-serif;color:#fff">
+
+        <sc-if value="{{ s.cinematic }}" hint-placeholder-val="{{ true }}">
+          <div style="position:absolute;left:50%;top:8%;width:520px;height:420px;border-radius:50%;pointer-events:none;z-index:0;background:radial-gradient(circle,rgba(200,121,65,0.16),transparent 62%);animation:glowA 26s ease-in-out infinite,glowC 19s ease-in-out infinite;animation-play-state:{{ glowPlay }}"></div>
+          <div style="position:absolute;left:50%;bottom:-8%;width:600px;height:460px;border-radius:50%;pointer-events:none;z-index:0;background:radial-gradient(circle,rgba(200,121,65,0.10),transparent 64%);animation:glowB 34s ease-in-out infinite,glowC 23s ease-in-out infinite;animation-play-state:{{ glowPlay }}"></div>
+        </sc-if>
+        <canvas ref="{{ canvasRef }}" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
+
+        <sc-if value="{{ s.onboarding }}" hint-placeholder-val="{{ true }}">
+          <div style="position:absolute;top:70px;left:20px;right:20px;height:3px;display:flex;gap:4px;z-index:4">
+            <sc-for list="{{ segs }}" as="sg" hint-placeholder-count="12">
+              <div style="flex:1;height:3px;border-radius:2px;background:{{ sg.bg }}"></div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.ob1 }}" hint-placeholder-val="{{ true }}">
+          <div style="position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;box-sizing:border-box;padding:96px 20px 40px">
+            <div style="flex:1.15"></div>
+            <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;line-height:1.14;text-wrap:pretty;max-width:330px">Most people don’t know what’s actually in their stack.</div>
+            <div style="flex:1"></div>
+            <div onClick="{{ next }}" style="display:flex;align-items:center;justify-content:center;height:56px;border-radius:999px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);color:#0A0A0A;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer" style-active="transform:scale(0.98)">Find out</div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.ob2 }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto">
+            <div style="min-height:100%;box-sizing:border-box;padding:96px 20px 40px;display:flex;flex-direction:column">
+              <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;line-height:1.14">About you</div>
+              <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:16px;font-weight:400;color:rgba(255,255,255,0.62);margin-top:12px;line-height:1.45;max-width:320px">Upper limits change with age and sex. We need this to do the math.</div>
+
+              <div style="flex:0.6"></div>
+
+              <div style="display:flex;align-items:flex-end;justify-content:center;gap:8px">
+                <span style="font-size:72px;font-weight:300;letter-spacing:-2px;line-height:0.9;font-variant-numeric:tabular-nums">{{ age }}</span>
+                <span style="font-size:24px;color:rgba(255,255,255,0.62);padding-bottom:8px">yrs</span>
+              </div>
+
+              <div onPointerDown="{{ ageDown }}" style="position:relative;height:64px;margin-top:14px;cursor:ew-resize;touch-action:none;overflow:hidden">
+                <div style="position:absolute;left:0;right:0;top:10px;display:flex;justify-content:center;align-items:flex-start;gap:0">
+                  <sc-for list="{{ ageTicks }}" as="tk" hint-placeholder-count="21">
+                    <div style="width:18px;flex:none;display:flex;flex-direction:column;align-items:center;gap:6px">
+                      <div style="width:1.5px;border-radius:1px;height:{{ tk.h }};background:{{ tk.c }}"></div>
+                      <div style="font-size:11px;color:rgba(255,255,255,0.38);font-variant-numeric:tabular-nums">{{ tk.lab }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="position:absolute;left:50%;top:4px;width:2px;height:34px;margin-left:-1px;border-radius:1px;background:#C87941"></div>
+              </div>
+
+              <div style="display:flex;gap:8px;justify-content:center;margin-top:2px">
+                <div onClick="{{ ageDec }}" style="width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,0.055);border:1px solid rgba(255,255,255,0.10);display:flex;align-items:center;justify-content:center;font-size:20px;color:rgba(255,255,255,0.62);cursor:pointer">−</div>
+                <div onClick="{{ ageInc }}" style="width:44px;height:44px;border-radius:14px;background:rgba(255,255,255,0.055);border:1px solid rgba(255,255,255,0.10);display:flex;align-items:center;justify-content:center;font-size:20px;color:rgba(255,255,255,0.62);cursor:pointer">+</div>
+              </div>
+
+              <div style="display:flex;gap:8px;margin-top:28px">
+                <sc-for list="{{ sexes }}" as="sx" hint-placeholder-count="3">
+                  <div onClick="{{ sx.go }}" style="flex:1;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;line-height:1.2;padding:0 6px;box-sizing:border-box;cursor:pointer;background:{{ sx.bg }};border:{{ sx.border }};color:{{ sx.fg }}">{{ sx.label }}</div>
+                </sc-for>
+              </div>
+
+              <div style="margin-top:28px;position:relative;overflow:hidden;border-radius:22px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:20px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Zinc, for you</div>
+                <div style="position:relative;height:8px;border-radius:4px;background:rgba(255,255,255,0.08);margin-top:18px">
+                  <div style="position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:linear-gradient(90deg,#8A4E24,#C87941);transition:width 0.35s cubic-bezier(.2,.7,.3,1);width:{{ rdaW }}"></div>
+                  <div style="position:absolute;top:-6px;bottom:-6px;width:2px;border-radius:1px;background:#E8A87C;transition:left 0.35s cubic-bezier(.2,.7,.3,1);left:{{ ulX }}"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:12px">
+                  <div>
+                    <div style="font-size:32px;font-weight:500;letter-spacing:-0.8px;font-variant-numeric:tabular-nums;line-height:1">{{ rda }}</div>
+                    <div style="font-size:12px;color:rgba(255,255,255,0.38);letter-spacing:0.2px;margin-top:4px">mg RDA</div>
+                  </div>
+                  <div style="text-align:right">
+                    <div style="font-size:32px;font-weight:500;letter-spacing:-0.8px;font-variant-numeric:tabular-nums;line-height:1">{{ ul }}</div>
+                    <div style="font-size:12px;color:rgba(255,255,255,0.38);letter-spacing:0.2px;margin-top:4px">mg upper limit</div>
+                  </div>
+                </div>
+                <sc-if value="{{ conservative }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:13px;color:rgba(255,255,255,0.38);margin-top:14px;line-height:1.45">Using the more conservative limit of the two.</div>
+                </sc-if>
+              </div>
+
+              <div style="flex:1;min-height:32px"></div>
+              <div onClick="{{ next }}" style="display:flex;align-items:center;justify-content:center;height:56px;border-radius:999px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);color:#0A0A0A;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer">Continue</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.ob3 }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto">
+            <div style="min-height:100%;box-sizing:border-box;padding:96px 20px 40px;display:flex;flex-direction:column">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">
+                <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;line-height:1.14">Build your stack</div>
+                <sc-if value="{{ hasAdded }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;font-variant-numeric:tabular-nums;color:#C87941">{{ addedCount }}</div>
+                </sc-if>
+              </div>
+              <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:16px;font-weight:400;color:rgba(255,255,255,0.62);margin-top:10px;line-height:1.45">Scanning is free forever. Every product, every ingredient.</div>
+
+              <sc-if value="{{ b.entry }}" hint-placeholder-val="{{ true }}">
+                <div style="margin-top:32px;display:flex;flex-direction:column;gap:12px">
+                  <div onClick="{{ scan }}" style="position:relative;overflow:hidden;border-radius:22px;height:150px;padding:20px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;background:rgba(255,255,255,0.055);border:1.5px solid #C87941" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#C87941" stroke-width="1.6" stroke-linecap="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M6 8v8M9 8v8M12 8v8M15.5 8v8M18 8v8"/></svg>
+                    <div>
+                      <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:25px;font-weight:400;letter-spacing:0.9px">Scan a barcode</div>
+                      <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:5px;letter-spacing:0.2px">Fastest — full label in one shot</div>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:12px">
+                    <div onClick="{{ scan }}" style="flex:1;position:relative;overflow:hidden;border-radius:22px;height:118px;padding:18px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;background:rgba(255,255,255,0.055);border:1px solid rgba(255,255,255,0.10)" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.62)" stroke-width="1.5" stroke-linecap="round"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6H8l1.5-2h5L16 6h2.5A2.5 2.5 0 0 1 21 8.5v9A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5z"/><circle cx="12" cy="13" r="3.6"/></svg>
+                      <div style="font-size:17px;font-weight:500;line-height:1.2">Photograph<br/>the label</div>
+                    </div>
+                    <div onClick="{{ scan }}" style="flex:1;position:relative;overflow:hidden;border-radius:22px;height:118px;padding:18px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;cursor:pointer;background:rgba(255,255,255,0.055);border:1px solid rgba(255,255,255,0.10)" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.62)" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
+                      <div style="font-size:17px;font-weight:500;line-height:1.2">Search<br/>by name</div>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ b.scanning }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:28px;position:relative;height:300px;border-radius:22px;overflow:hidden;background:linear-gradient(160deg,#121212,#070707)">
+                  <div style="position:absolute;left:50%;top:50%;width:210px;height:210px;margin:-105px 0 0 -105px">
+                    <div style="position:absolute;left:0;top:0;width:46px;height:46px;border-left:2.5px solid #C87941;border-top:2.5px solid #C87941;border-top-left-radius:10px"></div>
+                    <div style="position:absolute;right:0;top:0;width:46px;height:46px;border-right:2.5px solid #C87941;border-top:2.5px solid #C87941;border-top-right-radius:10px"></div>
+                    <div style="position:absolute;left:0;bottom:0;width:46px;height:46px;border-left:2.5px solid #C87941;border-bottom:2.5px solid #C87941;border-bottom-left-radius:10px"></div>
+                    <div style="position:absolute;right:0;bottom:0;width:46px;height:46px;border-right:2.5px solid #C87941;border-bottom:2.5px solid #C87941;border-bottom-right-radius:10px"></div>
+                    <div style="position:absolute;left:14px;right:14px;top:50%;height:1.5px;background:linear-gradient(90deg,transparent,#E8A87C,transparent)"></div>
+                    <div style="position:absolute;left:38px;right:38px;top:74px;bottom:74px;display:flex;align-items:stretch;gap:5px;opacity:0.5">
+                      <sc-for list="{{ barcode }}" as="bw" hint-placeholder-count="9">
+                        <div style="background:rgba(255,255,255,0.55);border-radius:1px;width:{{ bw.w }}"></div>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="position:absolute;left:0;right:0;bottom:18px;text-align:center;font-size:12px;letter-spacing:0.2px;color:rgba(255,255,255,0.38)">Hold steady — reading the label</div>
+                  <div style="position:absolute;right:0;top:24px;transition:transform 0.42s cubic-bezier(.2,.7,.3,1),opacity 0.42s;transform:translateX({{ toastX }});opacity:{{ toastO }}">
+                    <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);border-right:none;border-radius:18px 0 0 18px;padding:12px 18px 12px 14px">
+                      <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#E8A87C,#8A4E24);display:flex;align-items:center;justify-content:center">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></svg>
+                      </div>
+                      <div>
+                        <div style="font-size:15px;font-weight:600;white-space:nowrap">{{ nextItemName }}</div>
+                        <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:2px">{{ nextItemDose }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ b.fail }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:28px;position:relative;overflow:hidden;border-radius:22px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:24px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:25px;font-weight:400;letter-spacing:0.9px">Couldn’t read that one</div>
+                  <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:16px;font-weight:400;color:rgba(255,255,255,0.62);margin-top:10px;line-height:1.455">Some labels aren’t in the database yet. Type it in and we’ll match the ingredients ourselves.</div>
+                  <div style="display:flex;flex-direction:column;gap:10px;margin-top:22px">
+                    <div onClick="{{ addManual }}" style="height:56px;border-radius:999px;border:1.5px solid #C87941;color:#C87941;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer">Enter manually</div>
+                    <div onClick="{{ scan }}" style="text-align:center;font-size:16px;font-weight:500;color:#C87941;padding:12px;cursor:pointer">Try scanning again</div>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ b.list }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:26px;display:flex;gap:10px">
+                  <div onClick="{{ scan }}" style="flex:1;height:52px;border-radius:999px;border:1px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.055);display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;font-weight:500;cursor:pointer">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#C87941" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                    Add another
+                  </div>
+                </div>
+                <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px">
+                  <sc-for list="{{ addedItems }}" as="it" hint-placeholder-count="3">
+                    <div style="transition:opacity 0.35s,transform 0.35s cubic-bezier(.2,.7,.3,1);opacity:{{ it.op }};transform:translateY({{ it.ty }})">
+                      <div style="height:68px;display:flex;align-items:center;gap:14px;padding:0 4px">
+                        <div style="width:10px;height:10px;border-radius:50%;flex:none;background:#C87941;opacity:0.5"></div>
+                        <div style="flex:1;min-width:0">
+                          <div style="font-size:17px;line-height:1.25">{{ it.n }}</div>
+                          <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:3px;letter-spacing:0.2px">{{ it.d }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+
+              <div style="flex:1;min-height:28px"></div>
+              <div onClick="{{ next }}" style="display:flex;align-items:center;justify-content:center;height:56px;border-radius:999px;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer;color:{{ doneFg }};background:{{ doneBg }};border:{{ doneBorder }}">{{ doneLabel }}</div>
+              <sc-if value="{{ noneYet }}" hint-placeholder-val="{{ true }}">
+                <div onClick="{{ skipToGoals }}" style="text-align:center;font-size:16px;font-weight:500;color:#C87941;padding:16px 12px 0;cursor:pointer">I’m not taking anything yet</div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.ob4 }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto">
+            <div style="min-height:100%;box-sizing:border-box;padding:96px 20px 40px;display:flex;flex-direction:column">
+              <div style="flex:0.5;min-height:20px"></div>
+              <div style="display:flex;justify-content:center;padding:8px 0 4px">
+                <svg width="240" height="150" viewBox="0 0 240 150" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M52 75h34"/>
+                  <rect x="86" y="57" width="96" height="36" rx="6"/>
+                  <path d="M182 75h16"/>
+                  <path d="M198 61v28"/>
+                  <path d="M110 57v36M128 57v36M146 57v36" stroke-opacity="0.4"/>
+                  <path d="M86 66h58v18H86z" stroke="none" fill="rgba(255,255,255,0.10)"/>
+                </svg>
+              </div>
+              <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;line-height:1.14;margin-top:22px">Anything injectable or prescribed?</div>
+              <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:18px;line-height:1.5;color:rgba(255,255,255,0.62);margin-top:16px;text-wrap:pretty">You enter your own compounds and your own doses. This app never suggests what to take or how much — it does the math and the schedule around what you already have.</div>
+              <div style="flex:1;min-height:28px"></div>
+              <div onClick="{{ next }}" style="display:flex;align-items:center;justify-content:center;height:56px;border-radius:999px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);color:#0A0A0A;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer">Add a compound</div>
+              <div onClick="{{ next }}" style="text-align:center;font-size:16px;font-weight:500;color:#C87941;padding:16px 12px 0;cursor:pointer">Skip — nothing injectable</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.ob5 }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto">
+            <div style="position:absolute;top:-160px;left:50%;width:520px;height:420px;margin-left:-260px;border-radius:50%;background:radial-gradient(circle,rgba(200,121,65,0.14),transparent 62%);pointer-events:none"></div>
+            <div style="position:relative;min-height:100%;box-sizing:border-box;padding:104px 20px 40px;display:flex;flex-direction:column">
+              <div style="display:flex;align-items:flex-end;gap:6px">
+                <span style="font-size:72px;font-weight:700;letter-spacing:-2.5px;line-height:0.92;font-variant-numeric:tabular-nums">{{ auditN }}</span>
+                <span style="font-size:24px;font-weight:600;color:rgba(255,255,255,0.62);padding-bottom:9px">{{ auditUnit }}</span>
+              </div>
+              <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:16px;color:rgba(255,255,255,0.62);margin-top:14px">{{ auditLine1 }}</div>
+              <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:13px;color:rgba(255,255,255,0.38);margin-top:6px">{{ auditLine2 }}</div>
+
+              <div style="margin-top:40px;display:flex;flex-direction:column;gap:10px">
+                <sc-for list="{{ auditTiles }}" as="n" hint-placeholder-count="3">
+                  <div style="position:relative;overflow:hidden;border-radius:18px;background:#1A1A1A;border:1px solid rgba(255,255,255,0.08);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+                    <div style="position:absolute;left:0;top:0;bottom:0;background:#FF453A;width:{{ n.critW }}"></div>
+                    <div>
+                      <div style="font-size:16px;font-weight:600">{{ n.n }}</div>
+                      <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:4px">{{ n.sub }}</div>
+                    </div>
+                    <div style="font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.5px;color:#E8A87C">{{ n.pctT }}</div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:16px;color:rgba(255,255,255,0.62);margin-top:24px">{{ auditRest }}</div>
+              <div style="flex:1;min-height:28px"></div>
+              <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:13px;color:rgba(255,255,255,0.38);margin-bottom:18px">Limits from the NIH Office of Dietary Supplements.</div>
+              <div onClick="{{ toGoals }}" style="display:flex;align-items:center;justify-content:center;height:56px;border-radius:999px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);color:#0A0A0A;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer">Fix my schedule</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.ob6 }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow:hidden">
+            <div style="position:absolute;top:120px;left:50%;width:460px;height:400px;margin-left:-230px;border-radius:50%;background:radial-gradient(circle,rgba(200,121,65,0.14),transparent 60%);pointer-events:none"></div>
+            <div style="position:absolute;inset:0;box-sizing:border-box;padding:96px 20px 40px;display:flex;flex-direction:column;align-items:center">
+              <div style="height:9%"></div>
+              <div onPointerDown="{{ goalDown }}" style="position:relative;width:100%;height:180px;overflow:hidden;cursor:grab;touch-action:pan-y;user-select:none">
+                <div style="position:absolute;left:50%;top:24px;display:flex;gap:8px;align-items:center;transition:transform 0.42s cubic-bezier(.2,.7,.3,1);transform:{{ goalTrackX }}">
+                  <sc-for list="{{ goalTrack }}" as="g" hint-placeholder-count="8">
+                    <div style="width:132px;height:132px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform 0.42s cubic-bezier(.2,.7,.3,1),opacity 0.42s,border-color 0.3s;transform:{{ g.scale }};opacity:{{ g.op }};border:{{ g.ring }}">
+                      <svg width="112" height="112" viewBox="0 0 24 24" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" stroke="{{ g.c }}"><path d="{{ g.d }}"/></svg>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="display:flex;gap:6px;margin-top:6px">
+                <sc-for list="{{ goalDots }}" as="d" hint-placeholder-count="8">
+                  <div style="width:5px;height:5px;border-radius:50%;transition:background 0.3s;background:{{ d.bg }}"></div>
+                </sc-for>
+              </div>
+
+              <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;margin-top:28px;text-align:center;transition:color 0.3s;color:{{ goalTitleC }}">{{ goal.t }}</div>
+              <div style="font-size:17px;line-height:1.45;color:rgba(255,255,255,0.62);margin-top:14px;text-align:center;padding:0 20px;max-width:320px;text-wrap:pretty">{{ goal.s }}</div>
+
+              <div style="flex:1"></div>
+              <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:13px;color:rgba(255,255,255,0.38);margin-bottom:16px">Swipe to browse · tap to select</div>
+              <div onClick="{{ next }}" style="width:100%;display:flex;align-items:center;justify-content:center;height:56px;border-radius:999px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);color:#0A0A0A;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer">{{ goalCta }}</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.ob7 }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto">
+            <div style="min-height:100%;box-sizing:border-box;padding:96px 20px 40px;display:flex;flex-direction:column">
+              <sc-if value="{{ photoAsk }}" hint-placeholder-val="{{ true }}">
+                <div style="flex:0.5;min-height:16px"></div>
+                <div style="display:flex;justify-content:center">
+                  <div style="width:190px;height:230px;border-radius:22px;border:1.5px solid rgba(200,121,65,0.35);position:relative;display:flex;align-items:center;justify-content:center">
+                    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#C87941" stroke-width="1.2" stroke-linecap="round"><path d="M3 8.5A2.5 2.5 0 0 1 5.5 6H8l1.5-2h5L16 6h2.5A2.5 2.5 0 0 1 21 8.5v9A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5z"/><circle cx="12" cy="13" r="3.6"/></svg>
+                    <div style="position:absolute;left:-1.5px;top:22px;bottom:22px;width:3px;background:#000"></div>
+                    <div style="position:absolute;right:-1.5px;top:22px;bottom:22px;width:3px;background:#000"></div>
+                  </div>
+                </div>
+                <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;line-height:1.14;margin-top:34px">Your starting point</div>
+                <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:18px;line-height:1.5;color:rgba(255,255,255,0.62);margin-top:14px;text-wrap:pretty">Want a before photo? It stays on your phone, never leaves the device, and nobody sees it but you.</div>
+                <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:13px;color:rgba(255,255,255,0.38);margin-top:14px;line-height:1.5">Kept out of your photo library. Optional Face ID lock. Blurred in the app switcher.</div>
+                <div style="flex:1;min-height:28px"></div>
+                <div onClick="{{ toCamera }}" style="display:flex;align-items:center;justify-content:center;height:56px;border-radius:999px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);color:#0A0A0A;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer">Take a photo</div>
+                <div onClick="{{ next }}" style="text-align:center;font-size:16px;font-weight:500;color:#C87941;padding:16px 12px 0;cursor:pointer">Skip — I’ll do this later</div>
+              </sc-if>
+              <sc-if value="{{ photoCam }}" hint-placeholder-val="{{ false }}">
+                <div style="flex:1;border-radius:22px;background:linear-gradient(165deg,#141414,#070707);position:relative;overflow:hidden;margin-top:8px">
+                  <div style="position:absolute;left:50%;top:50%;width:180px;height:300px;margin:-150px 0 0 -90px;border:1.5px dashed rgba(200,121,65,0.35);border-radius:90px"></div>
+                  <div style="position:absolute;left:0;right:0;bottom:18px;text-align:center;font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:13px;color:rgba(255,255,255,0.38)">Same spot, same light, once a fortnight</div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:center;padding:26px 0 4px">
+                  <div onClick="{{ shoot }}" style="width:72px;height:72px;border-radius:50%;border:2px solid rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;cursor:pointer">
+                    <div style="width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#E8A87C,#8A4E24)"></div>
+                  </div>
+                </div>
+                <div onClick="{{ next }}" style="text-align:center;font-size:16px;font-weight:500;color:#C87941;padding:8px 12px 0;cursor:pointer">Skip</div>
+              </sc-if>
+              <sc-if value="{{ photoDone }}" hint-placeholder-val="{{ false }}">
+                <div style="flex:0.4;min-height:12px"></div>
+                <div style="display:flex;justify-content:center">
+                  <div style="width:190px;height:250px;border-radius:22px;background:linear-gradient(160deg,rgba(200,121,65,0.20),rgba(255,255,255,0.04));border:1px solid rgba(255,255,255,0.10);display:flex;align-items:flex-end;padding:14px;box-sizing:border-box">
+                    <span style="font-size:12px;color:rgba(255,255,255,0.62);letter-spacing:0.2px">9 Aug · day 1</span>
+                  </div>
+                </div>
+                <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;margin-top:32px">Day one, saved</div>
+                <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:18px;line-height:1.5;color:rgba(255,255,255,0.62);margin-top:14px">On this device only. We’ll ask again in a fortnight, once, quietly.</div>
+                <div style="flex:1;min-height:28px"></div>
+                <div onClick="{{ next }}" style="display:flex;align-items:center;justify-content:center;height:56px;border-radius:999px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);color:#0A0A0A;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer">Continue</div>
+                <div onClick="{{ retake }}" style="text-align:center;font-size:16px;font-weight:500;color:#C87941;padding:16px 12px 0;cursor:pointer">Retake</div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.ob8 }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow:hidden">
+            <div style="position:absolute;inset:0;box-sizing:border-box;padding:96px 20px 40px;display:flex;flex-direction:column">
+              <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;line-height:1.14">Your day, part one</div>
+              <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:16px;font-weight:400;color:rgba(255,255,255,0.62);margin-top:10px;line-height:1.45">Drag either end of the arc. We schedule around the window, not the minute.</div>
+
+              <div style="flex:0.6;min-height:12px"></div>
+
+              <div style="display:flex;justify-content:center">
+                <div onPointerDown="{{ dialDown }}" style="position:relative;width:280px;height:280px;cursor:grab;touch-action:none;user-select:none">
+                  <svg width="280" height="280" viewBox="-10 -10 280 280" fill="none">
+                    <defs><linearGradient id="arcGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E8A87C"/><stop offset="1" stop-color="#8A4E24"/></linearGradient></defs>
+                    <circle cx="130" cy="130" r="100" stroke="rgba(255,255,255,0.07)" stroke-width="18"/>
+                    <sc-for list="{{ dialTicks }}" as="t" hint-placeholder-count="24">
+                      <line x1="{{ t.x1 }}" y1="{{ t.y1 }}" x2="{{ t.x2 }}" y2="{{ t.y2 }}" stroke="{{ t.c }}" stroke-width="1.5" stroke-linecap="round"/>
+                    </sc-for>
+                    <path d="{{ sleepArc }}" stroke="url(#arcGrad)" stroke-width="18" stroke-linecap="round"/>
+                    <circle cx="{{ bedX }}" cy="{{ bedY }}" r="11" fill="#E8A87C"/>
+                    <circle cx="{{ wakeX }}" cy="{{ wakeY }}" r="11" fill="#E8A87C"/>
+                    <sc-for list="{{ dialLabels }}" as="l" hint-placeholder-count="4">
+                      <text x="{{ l.x }}" y="{{ l.y }}" fill="rgba(255,255,255,0.38)" font-size="11" text-anchor="middle" font-family="-apple-system,system-ui">{{ l.lab }}</text>
+                    </sc-for>
+                  </svg>
+                  <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
+                    <div style="font-size:44px;font-weight:600;letter-spacing:-1.2px;font-variant-numeric:tabular-nums;line-height:1">{{ sleepDur }}</div>
+                    <div style="font-size:12px;color:rgba(255,255,255,0.38);letter-spacing:1.2px;margin-top:8px">IN BED</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex;gap:12px;margin-top:32px">
+                <div style="flex:1;position:relative;overflow:hidden;border-radius:22px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:16px 18px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <div style="font-size:11px;font-weight:600;letter-spacing:1.2px;color:rgba(255,255,255,0.62)">IN BED</div>
+                  <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:25px;font-weight:400;letter-spacing:0.9px;font-variant-numeric:tabular-nums;margin-top:8px;white-space:nowrap">{{ bedText }}</div>
+                </div>
+                <div style="flex:1;position:relative;overflow:hidden;border-radius:22px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:16px 18px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <div style="font-size:11px;font-weight:600;letter-spacing:1.2px;color:rgba(255,255,255,0.62)">WAKE UP</div>
+                  <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:25px;font-weight:400;letter-spacing:0.9px;font-variant-numeric:tabular-nums;margin-top:8px;white-space:nowrap">{{ wakeText }}</div>
+                </div>
+              </div>
+
+              <div style="flex:1;min-height:24px"></div>
+              <div onClick="{{ next }}" style="display:flex;align-items:center;justify-content:center;height:56px;border-radius:999px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);color:#0A0A0A;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer">Continue</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.ob9 }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto">
+            <div style="min-height:100%;box-sizing:border-box;padding:96px 20px 40px;display:flex;flex-direction:column">
+              <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;line-height:1.14">Your day, part two</div>
+              <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:16px;font-weight:400;color:rgba(255,255,255,0.62);margin-top:10px;line-height:1.45">{{ fastNote }}</div>
+
+              <div style="margin-top:28px;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 18px;border-radius:22px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);cursor:pointer" onClick="{{ toggleFasting }}">
+                <span style="font-size:17px">Fasting window</span>
+                <span style="width:52px;height:32px;border-radius:999px;position:relative;transition:background 0.25s;background:{{ fastTrack }}">
+                  <span style="position:absolute;top:2px;width:28px;height:28px;border-radius:50%;background:#fff;transition:left 0.25s cubic-bezier(.2,.7,.3,1);left:{{ fastKnob }}"></span>
+                </span>
+              </div>
+
+              <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px">
+                <sc-for list="{{ mealStrips }}" as="r" hint-placeholder-count="3">
+                  <div style="border-radius:22px;background:#1A1A1A;border:1px solid rgba(255,255,255,0.08);padding:18px">
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+                      <span style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">{{ r.label }}</span>
+                      <span style="font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;flex:none">{{ r.text }}</span>
+                    </div>
+                    <div onPointerDown="{{ r.down }}" style="display:flex;align-items:flex-end;gap:2px;height:34px;margin-top:16px;cursor:ew-resize;touch-action:none;user-select:none">
+                      <sc-for list="{{ r.blocks }}" as="b" hint-placeholder-count="36">
+                        <div style="flex:1;border-radius:2px;transition:height 0.18s,background 0.18s;background:{{ b.bg }};height:{{ b.hh }}"></div>
+                      </sc-for>
+                    </div>
+                    <div style="position:relative;height:16px;margin-top:6px">
+                      <sc-for list="{{ r.labs }}" as="l" hint-placeholder-count="5">
+                        <div style="position:absolute;font-size:11px;color:rgba(255,255,255,0.38);transform:translateX(-50%);left:{{ l.x }}">{{ l.lab }}</div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="flex:1;min-height:28px"></div>
+              <div onClick="{{ next }}" style="display:flex;align-items:center;justify-content:center;height:56px;border-radius:999px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);color:#0A0A0A;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer">Build my schedule</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.ob10 }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto">
+            <div style="min-height:100%;box-sizing:border-box;padding:96px 20px 40px;display:flex;flex-direction:column">
+              <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;line-height:1.14">Your schedule</div>
+              <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:16px;font-weight:400;color:rgba(255,255,255,0.62);margin-top:10px;line-height:1.45">Nine items, three blocks. Two things moved.</div>
+              <div style="margin-top:32px;display:flex;flex-direction:column;gap:32px">
+                <sc-for list="{{ schedule }}" as="b" hint-placeholder-count="3">
+                  <div style="transition:opacity 0.35s;opacity:{{ b.op }}">
+                    <div style="display:flex;align-items:baseline;gap:10px">
+                      <span style="font-size:13px;font-weight:600;letter-spacing:1.2px;color:rgba(255,255,255,0.62)">{{ b.label }}</span>
+                      <span style="font-size:12px;color:rgba(255,255,255,0.38);font-variant-numeric:tabular-nums">{{ b.time }}</span>
+                    </div>
+                    <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">
+                      <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="3">
+                        <div style="transition:opacity 0.35s,transform 0.35s cubic-bezier(.2,.7,.3,1);opacity:{{ it.op }};transform:translateY({{ it.ty }})">
+                          <div style="display:flex;align-items:center;gap:14px">
+                            <div style="width:8px;height:8px;border-radius:50%;background:#C87941;opacity:0.5;flex:none"></div>
+                            <div style="flex:1;min-width:0">
+                              <div style="font-size:17px;line-height:1.25">{{ it.n }}</div>
+                              <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:3px">{{ it.d }}</div>
+                            </div>
+                          </div>
+                          <sc-if value="{{ it.hasWhy }}" hint-placeholder-val="{{ false }}">
+                            <div style="font-size:12px;color:rgba(255,255,255,0.38);line-height:1.45;margin:8px 0 0 22px;padding-left:12px;border-left:1px solid rgba(200,121,65,0.35)">{{ it.why }}</div>
+                          </sc-if>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="flex:1;min-height:32px"></div>
+              <div onClick="{{ next }}" style="display:flex;align-items:center;justify-content:center;height:56px;border-radius:999px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);color:#0A0A0A;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer">Looks right</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.ob11 }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto">
+            <div style="min-height:100%;box-sizing:border-box;padding:96px 20px 40px;display:flex;flex-direction:column">
+              <div style="flex:0.5;min-height:12px"></div>
+              <div style="position:relative;overflow:hidden;border-radius:22px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:14px 16px;display:flex;gap:12px;align-items:flex-start" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                <div style="width:38px;height:38px;border-radius:10px;flex:none;background:linear-gradient(140deg,#E8A87C,#8A4E24);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#0A0A0A">S</div>
+                <div style="flex:1;min-width:0">
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+                    <span style="font-size:15px;font-weight:600">Stack</span>
+                    <span style="font-size:12px;color:rgba(255,255,255,0.38)">now</span>
+                  </div>
+                  <div style="font-size:15px;margin-top:3px;line-height:1.35">Before bed — ZMA Complex, Ashwagandha, Magnesium Glycinate.</div>
+                </div>
+              </div>
+              <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;line-height:1.14;margin-top:38px">One nudge per block</div>
+              <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:18px;line-height:1.5;color:rgba(255,255,255,0.62);margin-top:14px;text-wrap:pretty">Three a day at most, at the times you just set. No streak guilt, no marketing.</div>
+              <div style="flex:1;min-height:28px"></div>
+              <div onClick="{{ askNotif }}" style="display:flex;align-items:center;justify-content:center;height:56px;border-radius:999px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);color:#0A0A0A;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer">Turn on reminders</div>
+              <div onClick="{{ next }}" style="text-align:center;font-size:16px;font-weight:500;color:#C87941;padding:16px 12px 0;cursor:pointer">Not now</div>
+            </div>
+            <sc-if value="{{ notifPrompt }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;z-index:5">
+                <div style="width:270px;border-radius:14px;overflow:hidden;background:rgba(40,40,40,0.92);backdrop-filter:blur(30px);text-align:center">
+                  <div style="padding:20px 16px 16px">
+                    <div style="font-size:17px;font-weight:600">“Stack” Would Like to Send You Notifications</div>
+                    <div style="font-size:13px;color:rgba(255,255,255,0.62);margin-top:6px;line-height:1.35">Notifications may include alerts, sounds and icon badges.</div>
+                  </div>
+                  <div style="display:flex;border-top:0.5px solid rgba(255,255,255,0.18)">
+                    <div onClick="{{ next }}" style="flex:1;padding:12px;font-size:17px;color:#0A84FF;border-right:0.5px solid rgba(255,255,255,0.18);cursor:pointer">Don’t Allow</div>
+                    <div onClick="{{ allowNotif }}" style="flex:1;padding:12px;font-size:17px;font-weight:600;color:#0A84FF;cursor:pointer">Allow</div>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.ob12 }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto">
+            <div style="min-height:100%;box-sizing:border-box;padding:96px 20px 40px;display:flex;flex-direction:column">
+              <div onClick="{{ closePaywall }}" style="width:44px;height:44px;margin:-8px 0 8px -12px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.62)" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5 5 19"/></svg>
+              </div>
+              <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;line-height:1.14">The audit stays free.<br/>The rest is Full Panel.</div>
+              <div style="display:flex;flex-direction:column;gap:10px;margin-top:26px">
+                <sc-for list="{{ plans }}" as="p" hint-placeholder-count="3">
+                  <div onClick="{{ p.go }}" style="position:relative;overflow:hidden;border-radius:22px;padding:18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color 0.25s,background 0.25s;background:{{ p.bg }};border:{{ p.border }}">
+                    <div style="width:22px;height:22px;border-radius:50%;flex:none;box-sizing:border-box;border:1.5px solid {{ p.dotBd }};background:{{ p.dot }}"></div>
+                    <div style="flex:1;min-width:0">
+                      <div style="display:flex;align-items:baseline;gap:8px">
+                        <span style="font-size:17px;font-weight:600">{{ p.n }}</span>
+                        <sc-if value="{{ p.hasTag }}" hint-placeholder-val="{{ false }}">
+                          <span style="font-size:10px;font-weight:600;letter-spacing:1.2px;color:rgba(255,255,255,0.38)">{{ p.tag }}</span>
+                        </sc-if>
+                      </div>
+                      <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:4px">{{ p.sub }}</div>
+                    </div>
+                    <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:25px;font-weight:400;letter-spacing:0.9px;font-variant-numeric:tabular-nums">{{ p.p }}</div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="margin-top:30px;display:flex;align-items:baseline;justify-content:space-between;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.10)">
+                <span style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">What you get</span>
+                <span style="display:flex;gap:0"><span style="width:64px;text-align:center;font-size:11px;letter-spacing:1.2px;color:rgba(255,255,255,0.38)">FREE</span><span style="width:74px;text-align:center;font-size:11px;font-weight:600;letter-spacing:1.2px;color:#FFFFFF">FULL PANEL</span></span>
+              </div>
+              <div style="display:flex;flex-direction:column">
+                <sc-for list="{{ features }}" as="f" hint-placeholder-count="10">
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0">
+                    <span style="font-size:15px;color:rgba(255,255,255,0.86)">{{ f.f }}</span>
+                    <span style="display:flex;gap:0;flex:none">
+                      <span style="width:64px;text-align:center;font-size:13px;color:{{ f.aC }}">{{ f.aT }}</span>
+                      <span style="width:74px;text-align:center;font-size:13px;color:#FFFFFF">{{ f.bT }}</span>
+                    </span>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="flex:1;min-height:28px"></div>
+              <div onClick="{{ closePaywall }}" style="display:flex;align-items:center;justify-content:center;height:56px;border-radius:999px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);color:#0A0A0A;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer;margin-top:20px">Start 7-day trial</div>
+              <div style="text-align:center;font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:13px;color:rgba(255,255,255,0.38);margin-top:14px;line-height:1.5">Cancel any time. Nothing you’ve already scanned gets locked.</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.today }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto">
+            <div style="box-sizing:border-box;padding:70px 0 120px">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:40px">
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:19px;font-weight:400;letter-spacing:0.7px;white-space:nowrap">Today, 9 Aug</span>
+                  <svg width="11" height="7" viewBox="0 0 12 8" fill="none"><path d="M1 1.5 6 6.5l5-5" stroke="rgba(255,255,255,0.62)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.055);border:1px solid rgba(255,255,255,0.10);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:rgba(255,255,255,0.62)">M</div>
+              </div>
+
+              <div style="padding:0 20px;margin-top:14px">
+                <div style="position:relative;overflow:hidden;border-radius:18px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:12px 14px;display:flex;align-items:center;gap:12px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <div style="width:38px;height:38px;border-radius:12px;flex:none;background:linear-gradient(140deg,rgba(232,168,124,0.22),rgba(138,78,36,0.22));border:1px solid rgba(200,121,65,0.35);display:flex;align-items:center;justify-content:center">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#E8A87C" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 1.8"/></svg>
+                  </div>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;color:rgba(255,255,255,0.38)">NEXT DOSE</div>
+                    <div style="font-size:15px;font-weight:600;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">ZMA Complex · 3 capsules</div>
+                  </div>
+                  <div style="font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;flex:none">9:30 PM</div>
+                </div>
+              </div>
+
+              <div style="padding:0 20px;margin-top:14px;display:flex;gap:6px">
+                <sc-for list="{{ weekDots }}" as="w" hint-placeholder-count="7">
+                  <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+                    <span style="font-size:10px;font-weight:600;letter-spacing:0.6px;color:{{ w.fg }}">{{ w.d }}</span>
+                    <span style="width:22px;height:22px;border-radius:50%;box-sizing:border-box;background:{{ w.bg }};border:{{ w.bd }}"></span>
+                  </div>
+                </sc-for>
+              </div>
+
+              <sc-if value="{{ alertsOn }}" hint-placeholder-val="{{ true }}">
+                <div style="padding:0 20px;margin-top:20px">
+                  <div style="position:relative;overflow:hidden;border-radius:18px;background:rgba(242,233,225,0.13);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(242,233,225,0.28);padding:14px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.35),transparent)">
+                    <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#FF453A"></div>
+                    <div style="display:flex;align-items:center;gap:12px">
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F2E9E1" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M12 3.6 1.8 20.4h20.4L12 3.6Z"/><path d="M12 9.6v4.6"/><path d="M12 17.2h.01"/></svg>
+                      <div style="flex:1;min-width:0">
+                        <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;color:rgba(242,233,225,0.75)">OVER THE CEILING</div>
+                        <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px">
+                          <span style="font-size:20px;font-weight:600;letter-spacing:-0.3px;font-variant-numeric:tabular-nums;color:#F2E9E1">Zinc {{ zincT }}</span>
+                          <span style="font-size:12px;color:rgba(242,233,225,0.7)">of 40 mg</span>
+                        </div>
+                      </div>
+                      <div style="text-align:right;flex:none">
+                        <div style="font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;color:#F2E9E1;line-height:1">113%</div>
+                        <div style="font-size:10px;color:rgba(242,233,225,0.7);margin-top:3px">3 products</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </sc-if>
+
+              <div style="padding:0 20px;margin-top:20px">
+                <div style="font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.38)">Timeline</div>
+                <div style="margin-top:10px;position:relative;overflow:hidden;border-radius:18px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:6px 16px 12px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <sc-for list="{{ timeline }}" as="b" hint-placeholder-count="3">
+                    <div>
+                      <sc-if value="{{ b.showNow }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;align-items:center;gap:10px;margin:14px 0 10px">
+                          <div style="width:5px;height:5px;border-radius:50%;background:#C87941"></div>
+                          <div style="flex:1;height:1px;background:rgba(200,121,65,0.35)"></div>
+                          <div style="font-size:10px;letter-spacing:1.2px;color:rgba(255,255,255,0.62)">NOW · 3:41 PM</div>
+                        </div>
+                      </sc-if>
+                      <div style="transition:opacity 0.3s;opacity:{{ b.op }};padding:10px 0 0">
+                        <div style="display:flex;align-items:baseline;gap:8px">
+                          <span style="font-size:11px;font-weight:600;letter-spacing:1.2px;color:rgba(255,255,255,0.62)">{{ b.label }}</span>
+                          <span style="font-size:11px;color:rgba(255,255,255,0.38);font-variant-numeric:tabular-nums">{{ b.time }}</span>
+                        </div>
+                        <div style="margin-top:2px">
+                          <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="3">
+                            <div style="position:relative;overflow:hidden">
+                              <sc-if value="{{ it.swiping }}" hint-placeholder-val="{{ false }}">
+                                <div style="position:absolute;right:0;top:0;bottom:0;width:120px;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:3px">
+                                  <span style="font-size:11px;color:rgba(255,255,255,0.62)">Ran out</span>
+                                  <span style="font-size:11px;color:rgba(255,255,255,0.62)">Skipped on purpose</span>
+                                </div>
+                              </sc-if>
+                              <div onPointerDown="{{ it.down }}" style="position:relative;transition:transform 0.25s cubic-bezier(.2,.7,.3,1);touch-action:pan-y;transform:translateX({{ it.tx }})">
+                                <div style="height:38px;display:flex;align-items:center;gap:6px">
+                                  <div onClick="{{ it.log }}" style="width:44px;height:38px;margin-left:-13px;flex:none;display:flex;align-items:center;justify-content:center;cursor:pointer">
+                                    <div style="width:17px;height:17px;border-radius:50%;box-sizing:border-box;border-style:solid;border-width:1.5px;transition:background 0.5s cubic-bezier(.2,.7,.3,1),border-color 0.35s,box-shadow 0.4s;background:{{ it.fill }};border-color:{{ it.bd }};box-shadow:{{ it.ring }}"></div>
+                                  </div>
+                                  <div style="flex:1;min-width:0;font-size:14px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color 0.3s;color:{{ it.nameC }}">{{ it.n }}</div>
+                                  <div style="font-size:11px;color:rgba(255,255,255,0.38);flex:none;white-space:nowrap;font-variant-numeric:tabular-nums">{{ it.d }}</div>
+                                </div>
+                                <sc-if value="{{ it.hasWhy }}" hint-placeholder-val="{{ false }}">
+                                  <div style="font-size:11px;color:rgba(255,255,255,0.38);line-height:1.35;margin:0 0 8px 31px;padding-left:10px;border-left:1px solid rgba(200,121,65,0.35)">{{ it.why }}</div>
+                                </sc-if>
+                              </div>
+                            </div>
+                          </sc-for>
+                        </div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="padding:0 20px;margin-top:20px">
+                <div style="position:relative;overflow:hidden;border-radius:18px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:14px 16px;display:flex;align-items:center;gap:14px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <svg width="44" height="44" viewBox="0 0 52 52" style="flex:none">
+                    <circle cx="26" cy="26" r="21" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="4"/>
+                    <circle cx="26" cy="26" r="21" fill="none" stroke="#C87941" stroke-width="4" stroke-linecap="round" transform="rotate(-90 26 26)" stroke-dasharray="{{ adhDash }}" style="transition:stroke-dasharray 0.6s cubic-bezier(.2,.7,.3,1)"/>
+                  </svg>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;color:rgba(255,255,255,0.38)">TODAY’S TOTAL</div>
+                    <div style="font-size:20px;font-weight:600;letter-spacing:-0.4px;font-variant-numeric:tabular-nums;margin-top:3px">{{ takenCount }} of 9 taken</div>
+                  </div>
+                  <div style="font-size:11px;color:rgba(255,255,255,0.38);flex:none">12-day<br/>streak</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.gate }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:2;background:#000;transition:transform 0.4s cubic-bezier(0.32,0.72,0,1);transform:translateY({{ gateY }})">
+            <div style="position:absolute;left:50%;top:14%;width:560px;height:440px;margin-left:-280px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(200,121,65,0.20),transparent 62%);animation:glowA 22s ease-in-out infinite,glowC 16s ease-in-out infinite;animation-play-state:{{ glowPlay }}"></div>
+            <div style="position:absolute;inset:0;box-sizing:border-box;padding:80px 20px 44px;display:flex;flex-direction:column;align-items:center">
+              <div style="display:flex;align-items:center;gap:8px;height:28px;padding:0 14px;border-radius:999px;background:rgba(255,255,255,0.055);border:1px solid rgba(255,255,255,0.10)">
+                <span style="width:5px;height:5px;border-radius:50%;background:#C87941"></span>
+                <span style="font-size:11px;font-weight:600;letter-spacing:1.2px;color:rgba(255,255,255,0.62)">12-DAY STREAK</span>
+              </div>
+
+              <div style="flex:1;min-height:20px"></div>
+
+              <div style="position:relative;width:168px;height:168px;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                <svg width="168" height="168" viewBox="0 0 168 168" style="position:absolute;left:0;top:0">
+                  <defs><linearGradient id="gateGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E8A87C"/><stop offset="1" stop-color="#8A4E24"/></linearGradient></defs>
+                  <circle cx="84" cy="84" r="78" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="3"/>
+                  <circle cx="84" cy="84" r="78" fill="none" stroke="url(#gateGrad)" stroke-width="3.5" stroke-linecap="round" transform="rotate(-90 84 84)" pathLength="100" stroke-dasharray="100" style="transition:stroke-dashoffset 0.5s cubic-bezier(.2,.7,.3,1)" stroke-dashoffset="{{ gateRingOffset }}"/>
+                </svg>
+                <div style="display:flex;align-items:flex-start;gap:3px">
+                  <span style="font-size:52px;font-weight:600;letter-spacing:-1.6px;line-height:1;font-variant-numeric:tabular-nums">20</span>
+                  <span style="font-size:17px;font-weight:500;color:rgba(255,255,255,0.62);margin-top:6px">mg</span>
+                </div>
+                <div style="font-size:11px;font-weight:600;letter-spacing:1.4px;color:rgba(255,255,255,0.38);margin-top:8px">ZINC</div>
+              </div>
+
+              <div style="font-size:15px;font-weight:500;color:rgba(255,255,255,0.62);margin-top:40px">Did you take your</div>
+              <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;margin-top:6px;text-align:center;line-height:1.1">ZMA Complex</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-top:14px">
+                <span style="font-size:15px;font-weight:500;color:rgba(255,255,255,0.62)">3 capsules</span>
+                <span style="width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,0.22)"></span>
+                <span style="font-size:15px;font-weight:500;color:rgba(255,255,255,0.62);font-variant-numeric:tabular-nums">9:30 PM</span>
+              </div>
+
+              <div style="flex:1.4;min-height:28px"></div>
+
+              <div onClick="{{ gateYes }}" style="width:100%;display:flex;align-items:center;justify-content:center;height:60px;border-radius:999px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);color:#0A0A0A;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer" style-active="transform:scale(0.98)">{{ gateBtn }}</div>
+              <div onClick="{{ gateNo }}" style="font-size:13px;font-weight:500;color:rgba(200,121,65,0.55);padding:18px 12px 0;cursor:pointer">Not yet</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.stack }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow:hidden">
+            <div style="position:absolute;top:70px;left:20px;right:20px;height:40px;display:flex;align-items:center;justify-content:space-between">
+              <div style="width:36px"></div>
+              <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Stack</div>
+              <div onClick="{{ openSheet }}" style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C87941" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              </div>
+            </div>
+
+            <div style="position:absolute;top:122px;left:0;right:0">
+              <div style="padding:0 20px;display:flex;align-items:baseline;justify-content:space-between">
+                <span style="font-size:11px;font-weight:600;letter-spacing:1.2px;color:rgba(255,255,255,0.38)">DOSES PER HOUR</span>
+                <span style="font-size:11px;color:rgba(255,255,255,0.38)">9 doses · 3 blocks</span>
+              </div>
+
+              <div style="display:flex;margin-top:22px">
+                <div style="width:26px;flex:none;position:relative;height:280px">
+                  <sc-for list="{{ yAxis }}" as="y" hint-placeholder-count="5">
+                    <div style="position:absolute;right:6px;transform:translateY(-50%);font-size:10px;color:rgba(255,255,255,0.38);font-variant-numeric:tabular-nums;top:{{ y.y }}">{{ y.v }}</div>
+                  </sc-for>
+                </div>
+                <div style="flex:1;min-width:0;position:relative">
+                  <div style="position:absolute;left:0;right:0;top:0;height:280px;pointer-events:none">
+                    <sc-for list="{{ yAxis }}" as="y" hint-placeholder-count="5">
+                      <div style="position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,0.06);top:{{ y.y }}"></div>
+                    </sc-for>
+                  </div>
+                  <div ref="{{ chartRef }}" style="overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch">
+                    <div style="display:flex;align-items:flex-end;padding-right:20px;width:max-content">
+                      <sc-for list="{{ dayChart }}" as="h" hint-placeholder-count="24">
+                        <div style="width:46px;flex:none">
+                          <div style="height:280px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end">
+                            <div style="font-size:11px;font-weight:600;color:#E8A87C;font-variant-numeric:tabular-nums;height:16px;animation:fadeIn 0.4s ease-out both;animation-delay:{{ h.delay }}">{{ h.cnt }}</div>
+                            <div style="width:26px;border-radius:13px;transform-origin:bottom;animation:riseIn 0.55s cubic-bezier(.16,.84,.44,1) both;background:{{ h.bg }};height:{{ h.hh }};animation-delay:{{ h.delay }}"></div>
+                          </div>
+                          <div style="height:32px;display:flex;align-items:center;justify-content:center;font-size:12px;font-variant-numeric:tabular-nums;color:{{ h.labC }}">{{ h.lab }}</div>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="position:absolute;left:0;right:0;bottom:92px;z-index:4;background:#1B1B1D;border-top:1px solid rgba(255,255,255,0.08);border-radius:28px 28px 0 0;display:flex;flex-direction:column;overflow:hidden;height:{{ sheetHpx }};transition:{{ sheetTrans }}">
+              <div onPointerDown="{{ sheetDown }}" style="flex:none;padding:10px 20px 4px;cursor:grab;touch-action:none;user-select:none">
+                <div style="width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,0.22);margin:0 auto 10px"></div>
+                <div style="height:34px;display:flex;align-items:center;gap:10px">
+                  <span style="flex:1;font-size:16px;font-weight:600">All items</span>
+                  <span style="font-size:12px;color:rgba(255,255,255,0.38);font-variant-numeric:tabular-nums">{{ stackCount }}</span>
+                  <svg width="12" height="8" viewBox="0 0 12 8" fill="none" style="transition:transform 0.3s;transform:{{ sheetChev }}"><path d="M1 1.5 6 6.5l5-5" stroke="rgba(255,255,255,0.62)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+              <div style="flex:1;overflow-y:auto;padding:0 20px 24px">
+                <sc-if value="{{ stackEmpty }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:40px 0;text-align:center">
+                    <div style="font-size:20px;font-weight:600;letter-spacing:-0.3px">Nothing in here yet</div>
+                    <div style="font-size:14px;color:rgba(255,255,255,0.62);margin-top:8px;line-height:1.45">Scan one bottle and we’ll tell you what’s in it.</div>
+                    <div onClick="{{ openSheet }}" style="margin:20px auto 0;width:220px;height:52px;border-radius:999px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);color:#0A0A0A;font-size:15px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center">Scan a barcode</div>
+                  </div>
+                </sc-if>
+                <sc-for list="{{ stackSections }}" as="sec" hint-placeholder-count="4">
+                  <div style="margin-top:12px">
+                    <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;color:rgba(255,255,255,0.38)">{{ sec.s }}</div>
+                    <div style="margin-top:2px">
+                      <sc-for list="{{ sec.items }}" as="it" hint-placeholder-count="4">
+                        <div onClick="{{ it.go }}" style="height:48px;display:flex;align-items:center;gap:10px;cursor:pointer">
+                          <div style="width:8px;height:8px;border-radius:50%;flex:none;background:#C87941;opacity:{{ it.dotOp }}"></div>
+                          <div style="flex:1;min-width:0">
+                            <div style="font-size:15px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.n }}</div>
+                            <div style="font-size:11px;color:rgba(255,255,255,0.38);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.d }}</div>
+                          </div>
+                          <div style="font-size:12px;color:rgba(255,255,255,0.62);font-variant-numeric:tabular-nums;flex:none">{{ it.t }}</div>
+                          <svg width="7" height="12" viewBox="0 0 8 14" style="flex:none"><path d="M1 1l6 6-6 6" stroke="rgba(255,255,255,0.38)" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.item }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto">
+            <div style="box-sizing:border-box;padding:70px 20px 120px">
+              <div style="display:flex;align-items:center;justify-content:space-between;height:44px">
+                <div onClick="{{ backToStack }}" style="width:44px;height:44px;margin-left:-14px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+                  <svg width="11" height="18" viewBox="0 0 12 20" fill="none"><path d="M10 2 2 10l8 8" stroke="#C87941" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Item</div>
+                <div style="width:44px"></div>
+              </div>
+
+              <div style="margin-top:20px">
+                <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;line-height:1.14">ZMA Complex</div>
+                <div style="font-size:15px;font-weight:500;color:rgba(255,255,255,0.62);margin-top:10px">3 capsules · daily · 9:30 PM</div>
+              </div>
+
+              <div style="margin-top:40px">
+                <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Per serving</div>
+                <div style="margin-top:16px;display:flex;flex-direction:column;gap:20px">
+                  <sc-for list="{{ ingredients }}" as="i" hint-placeholder-count="3">
+                    <div>
+                      <div style="display:flex;align-items:baseline;justify-content:space-between">
+                        <span style="font-size:15px;font-weight:500">{{ i.n }}</span>
+                        <span style="font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;color:rgba(255,255,255,0.62);white-space:nowrap;flex:none">{{ i.amt }}</span>
+                      </div>
+                      <div style="position:relative;height:6px;border-radius:3px;background:rgba(255,255,255,0.08);margin-top:10px">
+                        <div style="position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:linear-gradient(90deg,#8A4E24,#C87941);width:{{ i.ulW }}"></div>
+                      </div>
+                      <div style="display:flex;justify-content:space-between;margin-top:7px">
+                        <span style="font-size:12px;color:rgba(255,255,255,0.38)">{{ i.rdaP }}</span>
+                        <span style="font-size:12px;color:rgba(255,255,255,0.38)">{{ i.ulT }}</span>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="margin-top:40px">
+                <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Interacts with</div>
+                <div style="margin-top:16px;position:relative;overflow:hidden;border-radius:22px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:20px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:18px;line-height:1.5">Calcium, iron and quinolone antibiotics all compete with the zinc in this one.</div>
+                  <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:13px;color:rgba(255,255,255,0.38);line-height:1.5;margin-top:14px;padding-left:12px;border-left:1px solid rgba(200,121,65,0.35)">Scheduled at 9:30 PM so it sits four hours clear of the calcium in your multivitamin.</div>
+                </div>
+              </div>
+
+              <div style="margin-top:40px">
+                <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Inventory</div>
+                <div style="margin-top:16px;position:relative;overflow:hidden;border-radius:22px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:20px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <div style="display:flex;align-items:flex-end;justify-content:space-between">
+                    <div>
+                      <div style="font-size:32px;font-weight:500;letter-spacing:-0.8px;font-variant-numeric:tabular-nums">34</div>
+                      <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:6px">capsules left</div>
+                    </div>
+                    <div style="text-align:right">
+                      <div style="font-size:15px;font-weight:500;color:rgba(255,255,255,0.62)">Runs out 2 Sep</div>
+                      <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:5px">at your actual 87% rate</div>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.10)">
+                    <span style="font-size:15px;font-weight:500;color:rgba(255,255,255,0.62)">About 34 left?</span>
+                    <span style="display:flex;gap:14px"><span style="font-size:15px;font-weight:500;color:#C87941;cursor:pointer">Yes</span><span style="font-size:15px;font-weight:500;color:#C87941;cursor:pointer">Correct</span></span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top:40px">
+                <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Adherence</div>
+                <div style="margin-top:16px;display:flex;align-items:flex-end;gap:14px">
+                  <span style="font-size:32px;font-weight:500;letter-spacing:-0.8px;font-variant-numeric:tabular-nums">91%</span>
+                  <span style="font-size:12px;color:rgba(255,255,255,0.38);padding-bottom:7px">last 30 days · 27 of 30</span>
+                </div>
+                <div style="display:flex;gap:4px;margin-top:16px;height:34px;align-items:flex-end">
+                  <sc-for list="{{ adhBars }}" as="b" hint-placeholder-count="12">
+                    <div style="flex:1;border-radius:2px;background:rgba(200,121,65,0.35);height:{{ b.h }}"></div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="margin-top:40px">
+                <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Notes</div>
+                <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:18px;line-height:1.5;margin-top:14px;color:rgba(255,255,255,0.86)">Switched brands in May — the new one is 20 mg zinc, not 30.</div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.analysis }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto">
+            <div style="box-sizing:border-box;padding:70px 20px 120px">
+              <div style="display:flex;align-items:center;justify-content:center;height:44px">
+                <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Analysis</div>
+              </div>
+
+              <div style="margin-top:28px">
+                <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Nutrient totals</div>
+                <div style="margin-top:12px;position:relative;overflow:hidden;border-radius:18px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:16px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <div style="position:relative;padding:0 46px 0 92px">
+                    <div style="position:absolute;left:92px;right:46px;top:0;bottom:22px;pointer-events:none">
+                      <div style="position:absolute;top:0;bottom:0;left:62.5%;width:0;border-left:1px dashed rgba(242,233,225,0.45)"></div>
+                    </div>
+                    <sc-for list="{{ nutrientDots }}" as="n" hint-placeholder-count="10">
+                      <div style="position:relative;height:30px;display:flex;align-items:center">
+                        <span style="position:absolute;left:-92px;width:84px;font-size:12px;color:rgba(255,255,255,0.86);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.n }}</span>
+                        <div style="position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,0.06)"></div>
+                        <div style="position:absolute;left:0;height:2px;border-radius:1px;transition:width 0.5s;background:{{ n.lineC }};width:{{ n.trackW }}"></div>
+                        <div style="position:absolute;border-radius:50%;transform:translateX(-50%);transition:left 0.5s;left:{{ n.x }};width:{{ n.size }};height:{{ n.size }};background:{{ n.dot }};box-shadow:{{ n.halo }}"></div>
+                        <span style="position:absolute;right:-44px;width:40px;text-align:right;font-size:11px;font-variant-numeric:tabular-nums;color:{{ n.pctC }}">{{ n.pctT }}</span>
+                      </div>
+                    </sc-for>
+                    <div style="position:relative;height:22px">
+                      <span style="position:absolute;font-size:10px;font-weight:600;letter-spacing:1.2px;color:rgba(242,233,225,0.6);transform:translateX(-50%);left:62.5%;top:6px">CEILING</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top:40px">
+                <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Ratios</div>
+                <div style="margin-top:16px;display:flex;flex-direction:column;gap:12px">
+                  <sc-for list="{{ ratios }}" as="r" hint-placeholder-count="3">
+                    <div style="position:relative;overflow:hidden;border-radius:22px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:20px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+                        <span style="font-size:15px;font-weight:500">{{ r.n }}</span>
+                        <span style="font-size:10px;font-weight:600;letter-spacing:1.2px;color:{{ r.badgeC }}">{{ r.badge }}</span>
+                      </div>
+                      <div style="font-size:32px;font-weight:500;letter-spacing:-0.8px;font-variant-numeric:tabular-nums;margin-top:12px">{{ r.v }}</div>
+                      <div style="position:relative;height:6px;border-radius:3px;background:rgba(255,255,255,0.08);margin-top:14px">
+                        <div style="position:absolute;top:0;bottom:0;border-radius:3px;background:rgba(200,121,65,0.35);left:{{ r.lo }};width:{{ r.hi }}"></div>
+                        <div style="position:absolute;top:-4px;bottom:-4px;width:2px;border-radius:1px;background:#E8A87C;left:{{ r.pos }}"></div>
+                      </div>
+                      <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:12px;line-height:1.45">{{ r.note }} · {{ r.ideal }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="margin-top:40px">
+                <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Interactions</div>
+                <div style="margin-top:16px;position:relative;overflow:hidden;border-radius:22px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:4px 20px 20px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <sc-for list="{{ interactions }}" as="i" hint-placeholder-count="3">
+                    <div style="padding:16px 0">
+                      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+                        <span style="font-size:17px">{{ i.title }}</span>
+                        <span style="font-size:10px;font-weight:600;letter-spacing:1.2px;color:{{ i.fixC }}">{{ i.state }}</span>
+                      </div>
+                      <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:8px;line-height:1.45">{{ i.note }}</div>
+                      <sc-if value="{{ i.showFix }}" hint-placeholder-val="{{ false }}">
+                        <div onClick="{{ fixIt }}" style="margin-top:12px;display:inline-flex;align-items:center;height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #C87941;color:#C87941;font-size:15px;font-weight:500;cursor:pointer">Fix this</div>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="margin-top:40px">
+                <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Adherence</div>
+                <div style="margin-top:16px;position:relative;overflow:hidden;border-radius:22px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:20px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <div style="display:flex;align-items:flex-end;justify-content:space-between">
+                    <div style="font-size:32px;font-weight:500;letter-spacing:-0.8px;font-variant-numeric:tabular-nums">{{ adhValue }}</div>
+                    <div style="display:flex;gap:16px">
+                      <span onClick="{{ adh30 }}" style="font-size:13px;font-weight:600;letter-spacing:1.2px;cursor:pointer;color:{{ adh30C }}">30D</span>
+                      <span onClick="{{ adh90 }}" style="font-size:13px;font-weight:600;letter-spacing:1.2px;cursor:pointer;color:{{ adh90C }}">90D</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:5px;margin-top:20px;height:56px;align-items:flex-end">
+                    <sc-for list="{{ adhBars }}" as="b" hint-placeholder-count="12">
+                      <div style="flex:1;border-radius:2px;background:linear-gradient(180deg,#C87941,#8A4E24);height:{{ b.h }}"></div>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top:40px">
+                <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Cost</div>
+                <div style="margin-top:16px;position:relative;overflow:hidden;border-radius:22px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:20px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <div style="transition:filter 0.3s;filter:{{ costBlur }}">
+                    <div style="font-size:32px;font-weight:500;letter-spacing:-0.8px;font-variant-numeric:tabular-nums">$84.20</div>
+                    <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:6px">per month · $2.77 a day</div>
+                    <div style="display:flex;justify-content:space-between;margin-top:18px">
+                      <span style="font-size:15px;color:rgba(255,255,255,0.62)">Omega-3 Triple Strength</span>
+                      <span style="font-size:15px;font-variant-numeric:tabular-nums;color:rgba(255,255,255,0.62)">$0.62 / serving</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-top:10px">
+                      <span style="font-size:15px;color:rgba(255,255,255,0.62)">Creatine Monohydrate</span>
+                      <span style="font-size:15px;font-variant-numeric:tabular-nums;color:rgba(255,255,255,0.62)">$0.07 / serving</span>
+                    </div>
+                  </div>
+                  <sc-if value="{{ costLocked }}" hint-placeholder-val="{{ true }}">
+                    <div onClick="{{ unlock }}" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer">
+                      <div style="font-size:15px;font-weight:500;color:rgba(255,255,255,0.62)">Cost tracking is Full Panel</div>
+                      <div style="display:flex;align-items:center;height:44px;padding:0 20px;border-radius:999px;border:1.5px solid #C87941;color:#C87941;font-size:15px;font-weight:500">See what’s included</div>
+                    </div>
+                  </sc-if>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.profile }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto">
+            <div style="box-sizing:border-box;padding:70px 0 120px">
+              <div style="padding:0 20px;display:flex;align-items:center;gap:14px;margin-top:6px">
+                <div style="width:52px;height:52px;border-radius:50%;flex:none;background:linear-gradient(140deg,rgba(232,168,124,0.30),rgba(138,78,36,0.30));border:1px solid rgba(200,121,65,0.35);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:600;color:#E8A87C">M</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:29px;font-weight:400;letter-spacing:1px;line-height:1.15">Marcus</div>
+                  <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:4px">Member since January</div>
+                </div>
+              </div>
+
+              <div style="padding:0 20px;margin-top:18px;display:flex;gap:10px">
+                <sc-for list="{{ profileStats }}" as="s2" hint-placeholder-count="3">
+                  <div style="flex:1;position:relative;overflow:hidden;border-radius:16px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:12px 14px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                    <div style="font-size:24px;font-weight:700;letter-spacing:-0.5px;font-variant-numeric:tabular-nums">{{ s2.v }}</div>
+                    <div style="font-size:10px;color:rgba(255,255,255,0.38);margin-top:4px;letter-spacing:0.4px">{{ s2.l }}</div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="padding:0 20px;margin-top:20px;display:flex;gap:10px;align-items:stretch">
+                <div style="flex:1;min-width:0;position:relative;overflow:hidden;border-radius:18px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:14px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;color:rgba(255,255,255,0.38)">AUGUST</div>
+                  <div style="display:flex;gap:8px;margin-top:14px">
+                    <div style="display:flex;flex-direction:column;gap:9px;padding-top:20px">
+                      <sc-for list="{{ weekStarts }}" as="w" hint-placeholder-count="6">
+                        <div style="height:9px;display:flex;align-items:center;font-size:9px;color:rgba(255,255,255,0.38);font-variant-numeric:tabular-nums">{{ w.d }}</div>
+                      </sc-for>
+                    </div>
+                    <div style="flex:1;min-width:0">
+                      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:9px 0">
+                        <sc-for list="{{ weekdayHeads }}" as="w" hint-placeholder-count="7">
+                          <div style="display:flex;justify-content:center;font-size:9px;font-weight:600;color:rgba(255,255,255,0.38)">{{ w.d }}</div>
+                        </sc-for>
+                        <sc-for list="{{ monthCells }}" as="c" hint-placeholder-count="35">
+                          <div style="display:flex;align-items:center;justify-content:center;height:9px">
+                            <div style="width:9px;height:9px;border-radius:50%;box-sizing:border-box;background:{{ c.bg }};border:{{ c.bd }};box-shadow:{{ c.ring }}"></div>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+                    <span style="display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,0.38)"><span style="width:7px;height:7px;border-radius:50%;background:#C87941"></span>done</span>
+                    <span style="display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,0.38)"><span style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.45)"></span>missed</span>
+                  </div>
+                </div>
+
+                <div style="flex:1;min-width:0;position:relative;overflow:hidden;border-radius:18px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:14px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <div style="font-size:10px;font-weight:600;letter-spacing:1.2px;color:rgba(255,255,255,0.38)">YOUR DAY</div>
+                  <div style="display:flex;flex-direction:column;gap:16px;margin-top:16px">
+                    <sc-for list="{{ dayRows }}" as="r" hint-placeholder-count="3">
+                      <div>
+                        <div style="font-size:11px;color:rgba(255,255,255,0.38)">{{ r.n }}</div>
+                        <div style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:3px;line-height:1.25">{{ r.v }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+
+              <div style="padding:0 20px;margin-top:20px">
+                <div style="font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.38)">Progress</div>
+                <div onClick="{{ togglePhotos }}" style="margin-top:10px;position:relative;overflow:hidden;border-radius:18px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:16px;cursor:pointer" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <sc-if value="{{ photosCollapsed }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:flex;gap:12px;align-items:center">
+                      <sc-for list="{{ photoThumbs }}" as="p" hint-placeholder-count="3">
+                        <div style="text-align:center">
+                          <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(160deg,rgba(200,121,65,0.20),rgba(255,255,255,0.05));border:1px solid rgba(255,255,255,0.10)"></div>
+                          <div style="font-size:11px;color:rgba(255,255,255,0.38);margin-top:6px">{{ p.d }}</div>
+                        </div>
+                      </sc-for>
+                      <div style="flex:1;text-align:right;font-size:11px;color:rgba(255,255,255,0.38)">tap to expand</div>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ photosOpen }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+                      <sc-for list="{{ photoGrid }}" as="p" hint-placeholder-count="8">
+                        <div>
+                          <div style="width:100%;padding-top:126%;border-radius:12px;background:linear-gradient(160deg,rgba(200,121,65,0.20),rgba(255,255,255,0.05));border:1px solid rgba(255,255,255,0.10)"></div>
+                          <div style="font-size:11px;color:rgba(255,255,255,0.38);margin-top:6px;text-align:center">{{ p.d }}</div>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </div>
+              </div>
+
+              <div style="padding:0 20px;margin-top:20px">
+                <div style="position:relative;overflow:hidden;border-radius:18px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:2px 16px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <sc-for list="{{ quietRows }}" as="r" hint-placeholder-count="5">
+                    <div style="height:48px;display:flex;align-items:center;gap:12px;cursor:pointer">
+                      <span style="flex:1;font-size:15px">{{ r.n }}</span>
+                      <svg width="7" height="12" viewBox="0 0 8 14"><path d="M1 1l6 6-6 6" stroke="rgba(255,255,255,0.38)" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.yir }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto">
+            <div style="position:absolute;top:-140px;left:50%;width:560px;height:440px;margin-left:-280px;border-radius:50%;background:radial-gradient(circle,rgba(200,121,65,0.14),transparent 62%);pointer-events:none"></div>
+            <div style="position:relative;min-height:100%;box-sizing:border-box;padding:96px 20px 40px;display:flex;flex-direction:column">
+              <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">2026</div>
+              <div style="font-family:'Gasoek One',-apple-system,system-ui,sans-serif;font-size:34px;font-weight:400;letter-spacing:1.2px;line-height:1.14;margin-top:16px">You showed up 284 days this year.</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:26px 16px;margin-top:40px">
+                <sc-for list="{{ yirNumbers }}" as="n" hint-placeholder-count="4">
+                  <div>
+                    <div style="font-size:32px;font-weight:500;letter-spacing:-0.8px;font-variant-numeric:tabular-nums">{{ n.v }}</div>
+                    <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:6px">{{ n.l }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:12px;margin-top:40px">
+                <div style="flex:1">
+                  <div style="width:100%;padding-top:132%;border-radius:22px;background:linear-gradient(160deg,rgba(200,121,65,0.20),rgba(255,255,255,0.05));border:1px solid rgba(255,255,255,0.10)"></div>
+                  <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:10px">3 Jan · first</div>
+                </div>
+                <div style="flex:1">
+                  <div style="width:100%;padding-top:132%;border-radius:22px;background:linear-gradient(160deg,rgba(200,121,65,0.28),rgba(255,255,255,0.06));border:1px solid rgba(255,255,255,0.10)"></div>
+                  <div style="font-size:12px;color:rgba(255,255,255,0.38);margin-top:10px">1 Dec · most recent</div>
+                </div>
+              </div>
+              <div style="flex:1;min-height:32px"></div>
+              <div onClick="{{ toggleYir }}" style="display:flex;align-items:center;justify-content:center;height:56px;border-radius:999px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);color:#0A0A0A;font-size:16px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer">{{ yirBtn }}</div>
+              <div style="text-align:center;font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:13px;color:rgba(255,255,255,0.38);margin-top:14px;line-height:1.5">{{ yirNote }}</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.rt }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto;background:#000">
+            <div style="box-sizing:border-box;padding:70px 20px 60px">
+              <div style="display:flex;align-items:center;justify-content:center;height:44px">
+                <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Today ⌄</div>
+              </div>
+              <div style="margin-top:28px;border-radius:22px;background:#121212;border:1px solid rgba(255,255,255,0.10);padding:24px">
+                <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Next dose</div>
+                <div style="display:flex;align-items:flex-end;gap:8px;margin-top:14px">
+                  <span style="font-size:72px;font-weight:300;letter-spacing:-2px;line-height:0.9;font-variant-numeric:tabular-nums">9:30</span>
+                  <span style="font-size:24px;color:rgba(255,255,255,0.62);padding-bottom:8px">PM</span>
+                </div>
+                <div style="font-size:15px;font-weight:500;color:rgba(255,255,255,0.62);margin-top:14px">ZMA Complex · 3 capsules</div>
+              </div>
+              <div style="margin-top:40px;font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Today’s numbers</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
+                <div style="border-radius:22px;background:#121212;border:1px solid rgba(255,255,255,0.10);padding:20px;aspect-ratio:1.15">
+                  <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Taken</div>
+                  <div style="font-size:32px;font-weight:500;letter-spacing:-0.8px;font-variant-numeric:tabular-nums;margin-top:14px">4</div>
+                  <div style="font-size:15px;font-weight:500;color:rgba(255,255,255,0.62);margin-top:4px">of 9</div>
+                </div>
+                <div style="border-radius:22px;background:#121212;border:1px solid rgba(255,255,255,0.10);padding:20px;aspect-ratio:1.15">
+                  <div style="font-size:13px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Streak</div>
+                  <div style="font-size:32px;font-weight:500;letter-spacing:-0.8px;font-variant-numeric:tabular-nums;margin-top:14px">12</div>
+                  <div style="font-size:15px;font-weight:500;color:rgba(255,255,255,0.62);margin-top:4px">days</div>
+                </div>
+              </div>
+              <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:13px;color:rgba(255,255,255,0.38);margin-top:32px;line-height:1.55">Reduce Transparency: glass becomes <span style="color:rgba(255,255,255,0.62)">#121212</span>, sheen and edge highlight removed, border and spacing unchanged. Particle field still draws behind — it is content, not chrome.</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.ax3 }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;z-index:1;overflow-y:auto">
+            <div style="box-sizing:border-box;padding:70px 20px 60px">
+              <div style="display:flex;align-items:center;justify-content:center;height:44px">
+                <div style="font-size:18px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Today ⌄</div>
+              </div>
+              <div style="margin-top:28px;position:relative;overflow:hidden;border-radius:22px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:24px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                <div style="font-size:18px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Next dose</div>
+                <div style="display:flex;align-items:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap">
+                  <span style="font-size:72px;font-weight:300;letter-spacing:-2px;line-height:0.95;font-variant-numeric:tabular-nums">9:30</span>
+                  <span style="font-size:30px;color:rgba(255,255,255,0.62);padding-bottom:8px">PM</span>
+                </div>
+                <div style="font-size:23px;font-weight:500;color:rgba(255,255,255,0.62);margin-top:16px;line-height:1.35">ZMA Complex · 3 capsules</div>
+              </div>
+              <div style="margin-top:40px;font-size:18px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Today’s numbers</div>
+              <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
+                <div style="position:relative;overflow:hidden;border-radius:22px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:20px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <div style="font-size:18px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Taken</div>
+                  <div style="font-size:44px;font-weight:500;letter-spacing:-0.8px;font-variant-numeric:tabular-nums;margin-top:12px">4 of 9</div>
+                </div>
+                <div style="position:relative;overflow:hidden;border-radius:22px;background:rgba(255,255,255,0.022);backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);-webkit-backdrop-filter:blur(4px) saturate(1.15) brightness(1.1);border:1px solid rgba(255,255,255,0.10);padding:20px" style-before="content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)">
+                  <div style="font-size:18px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.62)">Streak</div>
+                  <div style="font-size:44px;font-weight:500;letter-spacing:-0.8px;font-variant-numeric:tabular-nums;margin-top:12px">12 days</div>
+                </div>
+              </div>
+              <div style="font-family:'Relationship of Melodrame','Marcellus',Georgia,serif;font-size:18px;color:rgba(255,255,255,0.38);margin-top:32px;line-height:1.5">Accessibility size 3: hero numerals cap here, tiles reflow to one-up, nothing clips or truncates.</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s.tabs }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;left:0;right:0;bottom:0;height:92px;z-index:3;background:#000;border-top:1px solid rgba(255,255,255,0.10);display:flex;align-items:flex-start;padding-top:8px">
+            <sc-for list="{{ tabsLeft }}" as="t" hint-placeholder-count="2">
+              <div onClick="{{ t.go }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;padding-top:6px">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" stroke="{{ t.c }}"><path d="{{ t.d }}"/></svg>
+                <span style="font-size:10px;letter-spacing:0.2px;color:{{ t.lc }}">{{ t.label }}</span>
+              </div>
+            </sc-for>
+            <div style="flex:1;display:flex;justify-content:center">
+              <div onClick="{{ openSheet }}" style="width:56px;height:56px;border-radius:50%;margin-top:-14px;background:linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24);display:flex;align-items:center;justify-content:center;cursor:pointer">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              </div>
+            </div>
+            <sc-for list="{{ tabsRight }}" as="t" hint-placeholder-count="2">
+              <div onClick="{{ t.go }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;padding-top:6px">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" stroke="{{ t.c }}"><path d="{{ t.d }}"/></svg>
+                <span style="font-size:10px;letter-spacing:0.2px;color:{{ t.lc }}">{{ t.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <div style="position:absolute;inset:0;z-index:6;transition:opacity 0.4s;background:rgba(0,0,0,0.55);opacity:{{ sheetO }};pointer-events:{{ sheetPE }}" onClick="{{ closeSheet }}"></div>
+        <div style="position:absolute;left:0;right:0;bottom:0;z-index:7;transition:transform 0.5s cubic-bezier(0.32,0.72,0,1);transform:translateY({{ sheetY }});pointer-events:{{ sheetPE }}">
+          <div style="border-radius:28px 28px 0 0;background:#121212;border-top:1px solid rgba(255,255,255,0.10);padding:12px 20px 40px">
+            <div style="width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,0.22);margin:0 auto 18px"></div>
+            <sc-for list="{{ sheetRows }}" as="r" hint-placeholder-count="6">
+              <div onClick="{{ r.go }}" style="height:60px;display:flex;align-items:center;gap:16px;cursor:pointer">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C87941" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="{{ r.d }}"/></svg>
+                <span style="flex:1;font-size:17px">{{ r.n }}</span>
+                <svg width="8" height="14" viewBox="0 0 8 14"><path d="M1 1l6 6-6 6" stroke="rgba(255,255,255,0.38)" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div data-anchor="screens-end"></div>
+      </div>
+    </x-import>
+  </main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1200,&quot;height&quot;:980}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'ob1', reduceMotion: false, lowPower: false, alerts: true, emptyStack: false, scanFail: false,
+    age: 34, sex: 'Male', builder: 'entry', added: 0, toast: false,
+    goalIdx: 0, goalSel: { 0: true, 1: true, 4: true }, goalDX: 0, photo: 'ask',
+    bedT: 22.75, wakeT: 7,
+    wake: [6.5, 7.5], bed: [22.5, 23.75], breakfast: [8, 9], lunch: [12.5, 13.5], dinner: [18.5, 19.5], fasting: false,
+    reveal: 0, notif: 'mock', plan: 'annual', gate: 'ask',
+    taken: { d1: true, d2: true, d3: true, d4: true }, ring: null,
+    sheet: false, swipe: null, photosOpen: false, yirPhotos: false, adh: 30, costLocked: true,
+    stackOpen: true, sheetH: 310, sheetDragging: false, barsIn: false
+  };
+
+  canvasRef = React.createRef();
+  P = [];
+
+  BUILD = [
+    { n: 'Foundation Multivitamin', d: '1 tablet · 15 mg zinc' },
+    { n: 'ZMA Complex', d: '3 capsules · 20 mg zinc' },
+    { n: 'Zinc Picolinate', d: '10 mg' },
+    { n: 'Vitamin D3 + K2', d: '5000 IU' },
+    { n: 'Omega-3 Triple Strength', d: '2 softgels' },
+    { n: 'Magnesium Glycinate', d: '200 mg' },
+    { n: 'Creatine Monohydrate', d: '5 g' },
+    { n: 'Ashwagandha KSM-66', d: '600 mg' },
+    { n: 'B-Complex', d: '1 capsule' }
+  ];
+
+  NUTRIENTS = [
+    { n: 'Magnesium', amt: 550, u: 'mg', rda: 420, ul: 350, from: 'across 2 products' },
+    { n: 'Niacin (B3)', amt: 50, u: 'mg', rda: 16, ul: 35, from: 'B-Complex' },
+    { n: 'Vitamin D', amt: 125, u: 'mcg', rda: 15, ul: 100, from: 'across 2 products' },
+    { n: 'Zinc', amt: 45, u: 'mg', rda: 11, ul: 40, from: 'across 3 products' },
+    { n: 'Selenium', amt: 340, u: 'mcg', rda: 55, ul: 400, from: 'Multivitamin' },
+    { n: 'Vitamin B6', amt: 60, u: 'mg', rda: 1.3, ul: 100, from: 'across 2 products' },
+    { n: 'Folate', amt: 400, u: 'mcg', rda: 400, ul: 1000, from: 'Multivitamin' },
+    { n: 'Vitamin C', amt: 250, u: 'mg', rda: 90, ul: 2000, from: 'Multivitamin' },
+    { n: 'Copper', amt: 0.9, u: 'mg', rda: 0.9, ul: 10, from: 'Multivitamin' },
+    { n: 'Calcium', amt: 200, u: 'mg', rda: 1000, ul: 2500, from: 'Multivitamin' }
+  ];
+
+  GOALS = [
+    { t: 'Sleep', s: 'We’ll push magnesium and glycine into your wind-down window and watch what it does.', d: 'M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z' },
+    { t: 'Recovery', s: 'We’ll prioritise timing around training and track soreness alongside your stack.', d: 'M4 12a8 8 0 1 0 2.4-5.7M4 3.5v3.8h3.8' },
+    { t: 'Energy', s: 'B-vitamins and iron move to the morning, and we flag anything sedating before noon.', d: 'M13 2 5 13.5h5.5L9.5 22 18 10.5h-5.5L13 2Z' },
+    { t: 'Focus', s: 'We separate the things that compete for the same transporters so each one lands.', d: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z' },
+    { t: 'Training', s: 'Creatine gets a fixed daily slot and we track it against your session days.', d: 'M3 9v6M6 6.5v11M18 6.5v11M21 9v6M6 12h12' },
+    { t: 'General health', s: 'We keep every nutrient between its RDA and its ceiling, and tell you when it drifts.', d: 'M12 20.5S5 16.4 5 10.9a3.9 3.9 0 0 1 7-2.5 3.9 3.9 0 0 1 7 2.5c0 5.5-7 9.6-7 9.6Z' },
+    { t: 'Skin & hair', s: 'Zinc, biotin and omega-3s get watched together — this trio is easy to overshoot.', d: 'M12 3s6 6.4 6 10.4a6 6 0 0 1-12 0C6 9.4 12 3 12 3Z' },
+    { t: 'Gut', s: 'Probiotics move away from anything that kills them, including your morning coffee.', d: 'M8 3v4.2a4 4 0 0 0 8 0M16 7.2v4.2a4 4 0 0 1-8 0M8 11.4v4.2a4 4 0 0 0 8 0M16 15.6V20' }
+  ];
+
+  BLOCKS = [
+    { id: 'b1', label: 'Breakfast', time: '8:00 AM', past: true, items: [
+      { id: 'd1', n: 'Foundation Multivitamin', d: '1 tablet' },
+      { id: 'd2', n: 'Vitamin D3 + K2', d: '5000 IU' },
+      { id: 'd3', n: 'Omega-3 Triple Strength', d: '2 softgels' },
+      { id: 'd4', n: 'B-Complex', d: '1 capsule' }
+    ] },
+    { id: 'b2', label: 'Midday', time: '1:00 PM', past: true, items: [
+      { id: 'd5', n: 'Creatine Monohydrate', d: '5 g' },
+      { id: 'd6', n: 'Zinc Picolinate', d: '10 mg', why: 'Zinc moved to midday — the calcium in your multivitamin blocks it.' }
+    ] },
+    { id: 'b3', label: 'Before bed', time: '9:30 PM', past: false, items: [
+      { id: 'd7', n: 'ZMA Complex', d: '3 capsules' },
+      { id: 'd8', n: 'Ashwagandha KSM-66', d: '600 mg' },
+      { id: 'd9', n: 'Magnesium Glycinate', d: '200 mg', why: 'Magnesium moved to bed — it competes with zinc for absorption.' }
+    ] }
+  ];
+
+  STACK = [
+    { s: 'Active', items: [
+      { n: 'Foundation Multivitamin', d: '1 tablet · daily', t: '8:00 AM', on: true },
+      { n: 'Vitamin D3 + K2', d: '5000 IU · daily', t: '8:00 AM', on: true },
+      { n: 'Omega-3 Triple Strength', d: '2 softgels · daily', t: '8:00 AM', on: true },
+      { n: 'B-Complex', d: '1 capsule · daily', t: '8:00 AM', on: true },
+      { n: 'Creatine Monohydrate', d: '5 g · daily', t: '1:00 PM', on: false },
+      { n: 'Zinc Picolinate', d: '10 mg · daily', t: '1:00 PM', on: false },
+      { n: 'ZMA Complex', d: '3 capsules · daily', t: '9:30 PM', on: false },
+      { n: 'Ashwagandha KSM-66', d: '600 mg · daily', t: '9:30 PM', on: false }
+    ] },
+    { s: 'Running low', items: [
+      { n: 'Magnesium Glycinate', d: '200 mg · 6 days left', t: '9:30 PM', on: false }
+    ] },
+    { s: 'Paused', items: [
+      { n: 'Vitamin E', d: '400 IU · paused 12 Jun', t: '—', on: false }
+    ] },
+    { s: 'Archived', items: [
+      { n: 'Turmeric Complex', d: '500 mg · stopped 2 Mar', t: '—', on: false }
+    ] }
+  ];
+
+  RATIOS = [
+    { n: 'Zinc : Copper', v: '50 : 1', ideal: 'Ideal 8–15 : 1', pos: '96%', lo: '16%', hi: '30%', ok: false, note: '45 mg zinc against 0.9 mg copper. Long-term this depletes copper.' },
+    { n: 'Calcium : Magnesium', v: '0.4 : 1', ideal: 'Ideal 1.5–2 : 1', pos: '8%', lo: '38%', hi: '55%', ok: false, note: 'Calcium is low relative to the magnesium you’re taking.' },
+    { n: 'Omega-6 : Omega-3', v: '4 : 1', ideal: 'Ideal 4 : 1 or lower', pos: '44%', lo: '10%', hi: '48%', ok: true, note: 'In range.' }
+  ];
+
+  INTERACTIONS = [
+    { a: 'Calcium', b: 'Zinc', fixed: true, note: 'Solved — zinc sits at midday, away from your multivitamin.' },
+    { a: 'Zinc', b: 'Copper', fixed: false, note: '45 mg of zinc daily with no added copper. Timing can’t fix this one.' },
+    { a: 'Magnesium', b: 'Zinc', fixed: true, note: 'Solved — magnesium moved to your wind-down block.' }
+  ];
+
+  INGREDIENTS = [
+    { n: 'Zinc (monomethionine)', amt: '20 mg', rdaP: '182% RDA', ulW: '50%', ulT: '50% of UL' },
+    { n: 'Magnesium (aspartate)', amt: '350 mg', rdaP: '83% RDA', ulW: '100%', ulT: '100% of UL' },
+    { n: 'Vitamin B6 (P-5-P)', amt: '10.5 mg', rdaP: '808% RDA', ulW: '11%', ulT: '11% of UL' }
+  ];
+
+  componentDidMount() {
+    this.seed();
+    this.loop = this.loop.bind(this);
+    this.raf = requestAnimationFrame(this.loop);
+    this.onMove = (e) => { if (this.dragFn) this.dragFn(e); };
+    this.onUp = () => {
+      if (this.dragFn) this.dragFn = null;
+      if (this.goalRelease) { this.goalRelease(); this.goalRelease = null; }
+      if (this.sheetRelease) { this.sheetRelease(); this.sheetRelease = null; }
+      const sw = this.state.swipe;
+      if (sw) this.setState({ swipe: sw.dx < -70 ? { id: sw.id, dx: -124 } : null });
+    };
+    window.addEventListener('pointermove', this.onMove, { passive: true });
+    window.addEventListener('pointerup', this.onUp);
+  }
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf);
+    clearTimeout(this.t1); clearTimeout(this.t2); clearTimeout(this.t3);
+    clearTimeout(this.t4); clearTimeout(this.t5); clearInterval(this.iv);
+    window.removeEventListener('pointermove', this.onMove);
+    window.removeEventListener('pointerup', this.onUp);
+  }
+
+  seed() {
+    const P = []; let s = 20260809;
+    const rnd = () => { s = (s * 1103515245 + 12345) % 2147483648; return s / 2147483648; };
+    for (let i = 0; i < 240; i++) {
+      const yn = Math.pow(rnd(), 1 / 2.6);
+      const size = 1.6 + 2.9 * Math.min(1, 0.3 * rnd() + 0.8 * yn);
+      P.push({
+        x: rnd(), y: 0.02 + 0.98 * yn, r: size / 2,
+        a: 0.18 + 0.37 * ((size - 2) / 2.5),
+        amp: 12 + 16 * rnd(), per: 9 + 7 * rnd(), ph: rnd() * 6.2832,
+        vamp: 2 + 3 * rnd(), blur: size > 4.1
+      });
+    }
+    this.P = P;
+  }
+
+  density() {
+    const sc = this.state.screen;
+    if (sc === 'ob1') return 1.6;
+    if (sc === 'ob5' || sc === 'ob5b') return 1.25;
+    if (sc === 'gate') return 1.15;
+    if (sc === 'yir') return 1.35;
+    return 1;
+  }
+
+  loop() {
+    this.raf = requestAnimationFrame(this.loop);
+    const now = performance.now();
+    if (this.state.reduceMotion) {
+      if (this.staticDone === this.density()) return;
+      this.staticDone = this.density();
+      this.draw(6.4);
+      return;
+    }
+    this.staticDone = null;
+    const fps = this.state.lowPower ? 12 : 60;
+    if (this.last && now - this.last < 1000 / fps - 1) return;
+    this.last = now;
+    this.draw(now / 1000);
+  }
+
+  draw(t) {
+    const cv = this.canvasRef.current; if (!cv) return;
+    const w = cv.clientWidth, h = cv.clientHeight; if (!w || !h) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    const ctx = cv.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    const n = Math.min(this.P.length, Math.round(150 * this.density()));
+    const shared = Math.sin(t * 0.2618);
+    ctx.fillStyle = '#C87941';
+    let filtered = false;
+    for (let i = 0; i < n; i++) {
+      const p = this.P[i];
+      const x = p.x * w + p.amp * Math.sin((t * 6.2832) / p.per + p.ph) + 14 * shared * (0.55 + 0.45 * p.y);
+      const y = p.y * h + p.vamp * Math.sin((t * 6.2832) / (p.per * 1.7) + p.ph);
+      const fade = Math.pow(Math.max(0, Math.min(1, y / h)), 1.25);
+      if (fade <= 0.002) continue;
+      if (p.blur !== filtered) { ctx.filter = p.blur ? 'blur(1.5px)' : 'none'; filtered = p.blur; }
+      ctx.globalAlpha = p.a * fade;
+      ctx.beginPath(); ctx.arc(x, y, p.r, 0, 6.2832); ctx.fill();
+    }
+    ctx.filter = 'none'; ctx.globalAlpha = 1;
+  }
+
+  ORDER = ['ob1', 'ob2', 'ob3', 'ob4', 'ob5', 'ob6', 'ob7', 'ob8', 'ob9', 'ob10', 'ob11', 'ob12'];
+
+  go(id) {
+    return () => {
+      clearInterval(this.iv);
+      if (id === 'ob10') {
+        this.setState({ screen: id, reveal: 0, sheet: false });
+        this.iv = setInterval(() => {
+          if (this.state.reveal >= 14) { clearInterval(this.iv); return; }
+          this.setState({ reveal: this.state.reveal + 1 });
+        }, 40);
+        return;
+      }
+      if (id === 'stack') {
+        this.setState({ screen: id, sheet: false, swipe: null, gate: 'ask', barsIn: false });
+        clearTimeout(this.t6);
+        this.t6 = setTimeout(() => this.setState({ barsIn: true }), 60);
+        return;
+      }
+      this.setState({ screen: id, sheet: false, swipe: null, gate: 'ask' });
+    };
+  }
+
+  next = () => {
+    const i = this.ORDER.indexOf(this.state.screen);
+    const nx = i < 0 || i === this.ORDER.length - 1 ? 'gate' : this.ORDER[i + 1];
+    this.go(nx)();
+  };
+
+  toggle(k) { return () => this.setState({ [k]: !this.state[k] }); }
+
+  fmt(h, short) {
+    let hh = ((Math.floor(h) % 24) + 24) % 24;
+    const m = Math.round((h - Math.floor(h)) * 60);
+    const ap = hh < 12 ? 'AM' : 'PM';
+    let d = hh % 12; if (d === 0) d = 12;
+    if (short) return d + (ap === 'AM' ? 'a' : 'p');
+    return d + ':' + String(m).padStart(2, '0') + ' ' + ap;
+  }
+
+  railDown(key, min, max) {
+    return (e) => {
+      const r = e.currentTarget.getBoundingClientRect();
+      const pos = (cx) => Math.max(min, Math.min(max, min + ((cx - r.left) / r.width) * (max - min)));
+      const p = pos(e.clientX);
+      const v0 = this.state[key];
+      const idx = Math.abs(p - v0[0]) <= Math.abs(p - v0[1]) ? 0 : 1;
+      const move = (ev) => {
+        const v = this.state[key].slice();
+        v[idx] = Math.round(pos(ev.clientX) * 4) / 4;
+        if (idx === 0) v[0] = Math.min(v[0], v[1] - 0.5); else v[1] = Math.max(v[1], v[0] + 0.5);
+        this.setState({ [key]: v });
+      };
+      move(e); this.dragFn = move;
+    };
+  }
+
+  ageDown = (e) => {
+    const sx = e.clientX, sa = this.state.age;
+    this.dragFn = (ev) => {
+      const a = Math.max(18, Math.min(90, sa + Math.round((sx - ev.clientX) / 18)));
+      if (a !== this.state.age) this.setState({ age: a });
+    };
+  };
+
+  rail(key, title, min, max) {
+    const v = this.state[key];
+    const pos = (x) => ((x - min) / (max - min)) * 100;
+    const ticks = [];
+    for (let h = min; h <= max + 0.001; h += 0.5) {
+      const major = Math.abs(h - Math.round(h)) < 0.01 && Math.round(h) % 2 === 0;
+      ticks.push({ x: pos(h) + '%', h: major ? '14px' : '7px', c: major ? 'rgba(255,255,255,0.38)' : 'rgba(255,255,255,0.15)', lab: major ? this.fmt(h, true) : '' });
+    }
+    return {
+      key, title, ticks,
+      text: this.fmt(v[0]) + ' – ' + this.fmt(v[1]),
+      left: pos(v[0]) + '%', w: (pos(v[1]) - pos(v[0])) + '%',
+      a: pos(v[0]) + '%', b: pos(v[1]) + '%',
+      down: this.railDown(key, min, max)
+    };
+  }
+
+  sleepCurve() {
+    const w = (this.state.wake[0] + this.state.wake[1]) / 2;
+    const b = (this.state.bed[0] + this.state.bed[1]) / 2;
+    const awake = Math.max(8, b - w);
+    const H = 520, W = 84;
+    let d = '';
+    for (let i = 0; i <= 60; i++) {
+      const t = i / 60, hour = w - 1.5 + t * 24, x1 = hour - w;
+      let e = 0;
+      if (x1 >= 0 && x1 <= awake) {
+        const u = x1 / awake;
+        e = Math.sin(Math.PI * u) * 0.95 - 0.28 * Math.sin(2 * Math.PI * u);
+      } else e = 0.04;
+      const px = 8 + Math.max(0, Math.min(1, e)) * (W - 16);
+      d += (i === 0 ? 'M' : 'L') + px.toFixed(1) + ' ' + (t * H).toFixed(1);
+    }
+    return d;
+  }
+
+  log(id) {
+    return (e) => {
+      if (e && e.stopPropagation) e.stopPropagation();
+      const t = Object.assign({}, this.state.taken);
+      t[id] = !t[id];
+      this.setState({ taken: t, ring: t[id] ? id : null });
+      clearTimeout(this.t3);
+      this.t3 = setTimeout(() => this.setState({ ring: null }), 620);
+    };
+  }
+
+  rowDown(id) {
+    return (e) => {
+      const sx = e.clientX, sy = e.clientY;
+      let mode = null;
+      this.dragFn = (ev) => {
+        const dx = ev.clientX - sx, dy = ev.clientY - sy;
+        if (!mode) {
+          if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) mode = 'x';
+          else if (Math.abs(dy) > 6) { this.dragFn = null; return; }
+          else return;
+        }
+        this.setState({ swipe: { id, dx: Math.max(-124, Math.min(0, dx)) } });
+      };
+    };
+  }
+
+  polar(h, r) { const a = (h / 24) * 6.2832 - 1.5708; return [130 + r * Math.cos(a), 130 + r * Math.sin(a)]; }
+
+  arcPath(h1, h2, r) {
+    const p1 = this.polar(h1, r), p2 = this.polar(h2, r);
+    const d = ((h2 - h1) % 24 + 24) % 24;
+    return 'M' + p1[0].toFixed(1) + ' ' + p1[1].toFixed(1) + ' A' + r + ' ' + r + ' 0 ' + (d > 12 ? 1 : 0) + ' 1 ' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1);
+  }
+
+  dialDown = (e) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const toH = (ev) => {
+      const x = ev.clientX - r.left - r.width / 2, y = ev.clientY - r.top - r.height / 2;
+      let a = Math.atan2(y, x) + 1.5708; if (a < 0) a += 6.2832;
+      return (Math.round((a / 6.2832) * 96) / 4) % 24;
+    };
+    const h0 = toH(e);
+    const gap = (a, b) => { const d = Math.abs(a - b) % 24; return Math.min(d, 24 - d); };
+    const key = gap(h0, this.state.bedT) <= gap(h0, this.state.wakeT) ? 'bedT' : 'wakeT';
+    const move = (ev) => this.setState({ [key]: toH(ev) });
+    move(e); this.dragFn = move;
+  };
+
+  stripDown(key, min, max) {
+    return (e) => {
+      const r = e.currentTarget.getBoundingClientRect();
+      const at = (cx) => Math.max(min, Math.min(max, min + Math.round((((cx - r.left) / r.width) * (max - min)) * 2) / 2));
+      const a0 = at(e.clientX);
+      this.setState({ [key]: [a0, Math.min(max, a0 + 1)] });
+      this.dragFn = (ev) => {
+        const b = at(ev.clientX);
+        this.setState({ [key]: [Math.min(a0, b), Math.max(a0 + 0.5, b)] });
+      };
+    };
+  }
+
+  mealStrip(key, label) {
+    const v = this.state[key], min = 5, max = 23, steps = (max - min) * 2;
+    const blocks = [];
+    for (let i = 0; i < steps; i++) {
+      const h = min + i / 2;
+      const on = h >= v[0] - 0.001 && h < v[1] - 0.001;
+      blocks.push({ k: key + i, bg: on ? 'linear-gradient(180deg,#E8A87C,#8A4E24)' : 'rgba(255,255,255,0.07)', hh: on ? '30px' : '12px' });
+    }
+    const labs = [];
+    for (let h = 6; h <= 22; h += 4) labs.push({ k: key + 'l' + h, lab: this.fmt(h, true), x: ((h - min) / (max - min)) * 100 + '%' });
+    return { k: key, key, label, blocks, labs, text: this.fmt(v[0]) + ' – ' + this.fmt(v[1]), down: this.stripDown(key, min, max) };
+  }
+
+  SNAPS = [66, 310, 620];
+
+  snapSheet(moved) {
+    const h = this.state.sheetH;
+    const best = moved
+      ? this.SNAPS.reduce((a, s) => (Math.abs(s - h) < Math.abs(a - h) ? s : a), this.SNAPS[0])
+      : (h > 450 ? 310 : (h > 150 ? 66 : 310));
+    this.setState({ sheetH: best, sheetDragging: false });
+  }
+
+  sheetDown = (e) => {
+    if (this.sheetRelease) { this.sheetRelease = null; }
+    const y0 = e.clientY, h0 = this.state.sheetH;
+    const g = { moved: false };
+    this.sheetGesture = g;
+    this.setState({ sheetDragging: true });
+    this.dragFn = (ev) => {
+      if (Math.abs(ev.clientY - y0) > 3) g.moved = true;
+      this.setState({ sheetH: Math.max(66, Math.min(620, h0 - (ev.clientY - y0))) });
+    };
+    this.sheetRelease = () => {
+      if (this.sheetGesture !== g) return;
+      this.sheetGesture = null;
+      this.snapSheet(g.moved);
+    };
+  };
+
+  goalDown = (e) => {
+    const sx = e.clientX, i0 = this.state.goalIdx;
+    this.dragFn = (ev) => this.setState({ goalDX: ev.clientX - sx });
+    this.goalRelease = () => {
+      const dx = this.state.goalDX;
+      let i = i0;
+      if (dx < -45) i = Math.min(this.GOALS.length - 1, i0 + 1);
+      else if (dx > 45) i = Math.max(0, i0 - 1);
+      else if (Math.abs(dx) < 6) { const g = Object.assign({}, this.state.goalSel); g[i0] = !g[i0]; this.setState({ goalSel: g }); }
+      this.setState({ goalIdx: i, goalDX: 0 });
+    };
+  };
+
+  monthGrid() {
+    let s = 991; const r = () => { s = (s * 1103515245 + 12345) % 2147483648; return s / 2147483648; };
+    const first = new Date(2026, 7, 1).getDay();
+    const cells = [];
+    for (let i = 0; i < first; i++) cells.push({ k: 'p' + i, empty: true, n: '', bg: 'transparent', bd: 'none', ring: 'none', fg: 'transparent' });
+    for (let d = 1; d <= 31; d++) {
+      const u = r();
+      let st = d > 9 ? 'future' : (d === 9 ? 'today' : (u > 0.2 ? 'full' : (u > 0.1 ? 'part' : 'miss')));
+      const map = {
+        full: { bg: '#C87941', bd: 'none', ring: 'none', fg: '#0A0A0A' },
+        part: { bg: 'rgba(200,121,65,0.35)', bd: 'none', ring: 'none', fg: '#fff' },
+        miss: { bg: 'rgba(255,255,255,0.45)', bd: 'none', ring: 'none', fg: 'rgba(255,255,255,0.62)' },
+        future: { bg: 'transparent', bd: '1px solid rgba(255,255,255,0.10)', ring: 'none', fg: 'rgba(255,255,255,0.28)' },
+        today: { bg: '#C87941', bd: 'none', ring: '0 0 0 2px #E8A87C', fg: '#0A0A0A' }
+      };
+      cells.push(Object.assign({ k: 'd' + d, empty: false, n: String(d) }, map[st]));
+    }
+    return cells;
+  }
+
+  scan = () => {
+    clearTimeout(this.t1); clearTimeout(this.t2);
+    this.setState({ builder: 'scanning', toast: false });
+    this.t1 = setTimeout(() => {
+      if (this.state.scanFail) { this.setState({ builder: 'fail' }); return; }
+      this.setState({ toast: true });
+      this.t2 = setTimeout(() => this.setState({
+        builder: 'list', toast: false, added: Math.min(this.BUILD.length, this.state.added + 1)
+      }), 1150);
+    }, 1100);
+  };
+
+  addManual = () => this.setState({ builder: 'list', added: Math.min(this.BUILD.length, this.state.added + 1), scanFail: false });
+
+  gateYes = () => {
+    this.setState({ gate: 'filling' });
+    this.t4 = setTimeout(() => this.setState({ gate: 'wipe' }), 540);
+    this.t5 = setTimeout(() => {
+      const t = Object.assign({}, this.state.taken); t.d7 = true;
+      this.setState({ taken: t, screen: 'today', gate: 'ask' });
+    }, 980);
+  };
+
+  streakCols() {
+    let s = 991; const r = () => { s = (s * 1103515245 + 12345) % 2147483648; return s / 2147483648; };
+    const cols = [];
+    for (let c = 0; c < 12; c++) {
+      const days = [];
+      for (let d = 0; d < 7; d++) {
+        const idx = c * 7 + d;
+        const u = r();
+        let st = u > 0.19 ? 'full' : (u > 0.09 ? 'part' : 'miss');
+        if (idx > 83) st = 'future';
+        if (idx === 83) st = 'today';
+        const map = {
+          full: { bg: '#C87941', bd: 'none', ring: 'none' },
+          part: { bg: 'rgba(200,121,65,0.35)', bd: 'none', ring: 'none' },
+          miss: { bg: 'transparent', bd: '1px solid rgba(200,121,65,0.35)', ring: 'none' },
+          future: { bg: 'transparent', bd: '1px solid rgba(255,255,255,0.04)', ring: 'none' },
+          today: { bg: '#C87941', bd: 'none', ring: '0 0 0 2px #E8A87C' }
+        };
+        days.push(Object.assign({ k: 'd' + idx }, map[st]));
+      }
+      cols.push({ k: 'c' + c, days, lab: c % 4 === 0 ? ['J', 'M', 'A', ''][c / 4] : '' });
+    }
+    return cols;
+  }
+
+  renderVals() {
+    const st = this.state;
+    const S = (id) => st.screen === id;
+    const copper = '#C87941';
+    const dim = 'rgba(255,255,255,0.62)';
+
+    const s = {
+      ob1: S('ob1'), ob2: S('ob2'), ob3: S('ob3'), ob4: S('ob4'), ob5: S('ob5') || S('ob5b'),
+      ob6: S('ob6'), ob7: S('ob7'), ob8: S('ob8'), ob9: S('ob9'), ob10: S('ob10'),
+      ob11: S('ob11'), ob12: S('ob12'), gate: S('gate'),
+      today: S('today') || (S('gate') && st.gate === 'wipe'), stack: S('stack'), item: S('item'),
+      analysis: S('analysis'), profile: S('profile'), yir: S('yir'),
+      rt: S('st_rt'), ax3: S('st_ax3'),
+      onboarding: st.screen.indexOf('ob') === 0,
+      cinematic: st.screen.indexOf('ob') === 0 || st.screen === 'gate' || st.screen === 'yir',
+      tabs: ['today', 'stack', 'analysis', 'profile', 'item'].indexOf(st.screen) >= 0
+    };
+
+    const step = this.ORDER.indexOf(st.screen === 'ob5b' ? 'ob5' : st.screen);
+    const segs = this.ORDER.map((id, i) => ({ k: id, bg: i <= step ? copper : 'rgba(255,255,255,0.10)' }));
+
+    const groups = [
+      { title: 'Onboarding', ids: [['ob1', 'Cold open'], ['ob2', 'About you'], ['ob3', 'Build your stack'], ['ob4', 'Injectables'], ['ob5', 'The audit'], ['ob5b', 'Audit — no overlaps'], ['ob6', 'Goals'], ['ob7', 'Progress photo'], ['ob8', 'Sleep'], ['ob9', 'Meals'], ['ob10', 'Schedule reveal'], ['ob11', 'Notifications'], ['ob12', 'Paywall']] },
+      { title: 'The gate', ids: [['gate', 'Check-in gate']] },
+      { title: 'Main app', ids: [['today', 'Today'], ['stack', 'Stack'], ['item', 'Item detail'], ['analysis', 'Analysis'], ['profile', 'Profile'], ['yir', 'Year in review']] },
+      { title: 'Accessibility', ids: [['st_rt', 'Reduce Transparency'], ['st_ax3', 'Dynamic Type AX3']] }
+    ];
+    let num = 0;
+    const navGroups = groups.map((g) => ({
+      k: g.title, title: g.title,
+      items: g.ids.map((p) => {
+        num += 1;
+        const on = st.screen === p[0];
+        return { k: p[0], num: String(num).padStart(2, '0'), label: p[1], go: this.go(p[0]), bg: on ? 'rgba(200,121,65,0.16)' : 'transparent', fg: on ? '#E8A87C' : 'rgba(255,255,255,0.72)' };
+      })
+    }));
+
+    const tg = (k, label) => ({ k, label, go: this.toggle(k), track: st[k] ? copper : 'rgba(255,255,255,0.12)', knob: st[k] ? '16px' : '2px' });
+    const toggles = [tg('reduceMotion', 'Reduce Motion'), tg('lowPower', 'Low Power (12fps)'), tg('alerts', 'Alerts card present'), tg('emptyStack', 'Empty stack'), tg('scanFail', 'Scan fails')];
+
+    const crumbMap = { ob1: 'Cold open', ob2: 'About you', ob3: 'Build your stack', ob4: 'Injectables', ob5: 'The audit', ob5b: 'The audit — no overlaps', ob6: 'Goals', ob7: 'Progress photo', ob8: 'Sleep', ob9: 'Meals', ob10: 'Schedule reveal', ob11: 'Notifications', ob12: 'Paywall', gate: 'Check-in gate', today: 'Today', stack: 'Stack', item: 'Item detail', analysis: 'Analysis', profile: 'Profile', yir: 'Year in review', st_rt: 'Reduce Transparency', st_ax3: 'Dynamic Type AX3' };
+    const noteMap = { ob3: 'entry · scanning · populated · failure', ob5: 'the payoff', gate: 'tap YES, TAKEN', today: 'tap a circle to log · drag a row left to skip', analysis: 'the only dense screen', ob6: 'tap the glyph to select · tap edges to page' };
+
+    // about you
+    const female = st.sex === 'Female';
+    const conservative = st.sex === 'Prefer not to say';
+    const rda = conservative ? 8 : (female ? 8 : 11);
+    const ul = st.age < 19 ? 34 : 40;
+    const sexes = ['Male', 'Female', 'Prefer not to say'].map((x) => ({
+      k: x, label: x, go: () => this.setState({ sex: x }),
+      bg: st.sex === x ? 'rgba(200,121,65,0.10)' : 'rgba(255,255,255,0.055)',
+      border: st.sex === x ? '1.5px solid #C87941' : '1px solid rgba(255,255,255,0.10)',
+      fg: st.sex === x ? '#fff' : 'rgba(255,255,255,0.62)'
+    }));
+    const ageTicks = [];
+    for (let i = -10; i <= 10; i++) {
+      const a = st.age + i;
+      ageTicks.push({
+        k: 'a' + i, h: i === 0 ? '34px' : (a % 5 === 0 ? '22px' : '13px'),
+        c: i === 0 ? '#C87941' : (a % 5 === 0 ? 'rgba(255,255,255,0.38)' : 'rgba(255,255,255,0.15)'),
+        lab: a % 5 === 0 && i !== 0 && a >= 18 && a <= 90 ? String(a) : ''
+      });
+    }
+
+    // builder
+    const addedItems = this.BUILD.slice(0, st.added).map((x, i) => ({ k: x.n, n: x.n, d: x.d, op: '1', ty: '0px' }));
+    const nextItem = this.BUILD[Math.min(st.added, this.BUILD.length - 1)];
+
+    // audit
+    const scored = this.NUTRIENTS.map((x) => {
+      const p = x.amt / x.ul;
+      return Object.assign({ k: x.n, p, pctT: Math.round(p * 100) + '%', crit: p >= 1.5, over: p >= 1, near: p >= 0.8 && p < 1 }, x);
+    }).sort((a, b) => b.p - a.p);
+    const overs = scored.filter((x) => x.over);
+    const zinc = scored.filter((x) => x.n === 'Zinc')[0];
+    const closest = scored.filter((x) => !x.over)[0];
+    const clear = S('ob5b');
+    const auditTiles = (clear ? [] : overs.filter((x) => x.n !== 'Zinc')).map((x) => ({
+      k: x.n, n: x.n, sub: x.amt + ' ' + x.u + ' · ceiling ' + x.ul + ' ' + x.u, pctT: x.pctT, critW: x.crit ? '3px' : '0px'
+    }));
+
+    // goals
+    const goal = this.GOALS[st.goalIdx];
+    const selCount = Object.keys(st.goalSel).filter((k) => st.goalSel[k]).length;
+    const goalTrack = this.GOALS.map((g, i) => {
+      const on = i === st.goalIdx;
+      return {
+        k: g.t, d: g.d,
+        size: '132px',
+        scale: on ? 'scale(1)' : 'scale(0.55)',
+        op: on ? '1' : '0.5',
+        c: on ? '#C87941' : 'rgba(255,255,255,0.8)',
+        ring: on && st.goalSel[i] ? '2.5px solid #C87941' : '2.5px solid transparent'
+      };
+    });
+
+    // sleep dial
+    const dur = ((st.wakeT - st.bedT) % 24 + 24) % 24;
+    const bedP = this.polar(st.bedT, 100), wakeP = this.polar(st.wakeT, 100);
+    const dialTicks = [];
+    for (let h = 0; h < 24; h++) {
+      const a = this.polar(h, h % 6 === 0 ? 113 : 117), b = this.polar(h, 121);
+      dialTicks.push({ k: 'dt' + h, x1: a[0], y1: a[1], x2: b[0], y2: b[1], c: h % 6 === 0 ? 'rgba(255,255,255,0.38)' : 'rgba(255,255,255,0.12)' });
+    }
+    const dialLabels = [0, 6, 12, 18].map((h) => {
+      const p = this.polar(h, 136);
+      return { k: 'dl' + h, x: p[0], y: p[1] + 4, lab: h === 0 ? '12a' : this.fmt(h, true) };
+    });
+
+    const mealStrips = [this.mealStrip('breakfast', 'Breakfast'), this.mealStrip('lunch', 'Lunch'), this.mealStrip('dinner', 'Dinner')]
+      .filter((r) => !(st.fasting && r.key === 'breakfast'));
+
+    // schedule reveal
+    let ri = 0;
+    const schedule = this.BLOCKS.map((b) => ({
+      k: b.id, label: b.label.toUpperCase(), time: b.time,
+      op: (ri++) < st.reveal ? '1' : '0', ty: '0px',
+      items: b.items.map((it) => {
+        const idx = ri++;
+        return { k: it.id, n: it.n, d: it.d, why: it.why || '', hasWhy: !!it.why, op: idx < st.reveal ? '1' : '0', ty: idx < st.reveal ? '0px' : '12px' };
+      })
+    }));
+
+    // today timeline
+    const takenCount = this.BLOCKS.reduce((a, b) => a + b.items.filter((i) => st.taken[i.id]).length, 0);
+    const timeline = this.BLOCKS.map((b) => ({
+      k: b.id, label: b.label.toUpperCase(), time: b.time,
+      op: b.past ? '0.45' : '1',
+      showNow: b.id === 'b3',
+      items: b.items.map((it) => {
+        const on = !!st.taken[it.id];
+        const sw = st.swipe && st.swipe.id === it.id ? st.swipe.dx : 0;
+        return {
+          k: it.id, n: it.n, d: it.d, why: it.why || '', hasWhy: !!it.why,
+          log: this.log(it.id), down: this.rowDown(it.id),
+          fill: on ? 'linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24)' : 'transparent',
+          bd: on ? '#C87941' : 'rgba(255,255,255,0.22)',
+          ring: st.ring === it.id ? '0 0 0 6px rgba(200,121,65,0.18)' : '0 0 0 0 rgba(200,121,65,0)',
+          nameC: on ? 'rgba(255,255,255,0.62)' : '#fff',
+          tx: sw + 'px', swiping: sw < -4
+        };
+      })
+    }));
+
+    const adhPct = Math.round((takenCount / 9) * 100);
+
+    const tabs = [
+      { k: 'today', d: 'M4 11.5 12 4l8 7.5M6 10.5V20h12v-9.5', label: 'Today', id: 'today' },
+      { k: 'stack', d: 'M4 7h16M4 12h16M4 17h16', label: 'Stack', id: 'stack' },
+      { k: 'analysis', d: 'M5 20V10M12 20V4M19 20v-7', label: 'Analysis', id: 'analysis' },
+      { k: 'profile', d: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.5 20a7.5 7.5 0 0 1 15 0', label: 'Profile', id: 'profile' }
+    ].map((t) => ({ k: t.k, d: t.d, label: t.label, go: this.go(t.id), c: st.screen === t.id ? copper : 'rgba(255,255,255,0.38)', lc: st.screen === t.id ? '#FFFFFF' : 'rgba(255,255,255,0.38)' }));
+
+    const plans = [
+      { id: 'annual', n: 'Annual', p: '$29.99', sub: '7 days free, then $29.99/yr', tag: 'BEST VALUE' },
+      { id: 'monthly', n: 'Monthly', p: '$4.99', sub: 'Billed every month', tag: '' },
+      { id: 'lifetime', n: 'Lifetime', p: '$69.99', sub: 'One payment. Yours for good.', tag: 'NO SUBSCRIPTION' }
+    ].map((p) => ({
+      k: p.id, n: p.n, p: p.p, sub: p.sub, tag: p.tag, hasTag: !!p.tag,
+      go: () => this.setState({ plan: p.id }),
+      border: st.plan === p.id ? '1.5px solid #C87941' : '1px solid rgba(255,255,255,0.10)',
+      bg: st.plan === p.id ? 'rgba(200,121,65,0.10)' : 'rgba(255,255,255,0.055)',
+      dot: st.plan === p.id ? 'linear-gradient(135deg,#E8A87C,#8A4E24)' : 'transparent',
+      dotBd: st.plan === p.id ? '#C87941' : 'rgba(255,255,255,0.22)'
+    }));
+
+    const features = [
+      { f: 'Barcode scanning', a: true, b: true }, { f: 'The over-limit audit', a: true, b: true },
+      { f: 'Schedule & reminders', a: true, b: true }, { f: 'Streak & check-in', a: true, b: true },
+      { f: 'Progress photos', a: true, b: true }, { f: 'History', a: '30 days', b: 'Unlimited' },
+      { f: 'Ratios & interactions', a: false, b: true }, { f: 'Conflict auto-fix', a: false, b: true },
+      { f: 'Cost tracking', a: false, b: true }, { f: 'CSV & provider PDF', a: false, b: true }
+    ].map((x) => ({
+      k: x.f, f: x.f,
+      aT: x.a === true ? '·' : (x.a === false ? '—' : x.a),
+      bT: x.b === true ? '·' : x.b,
+      aC: x.a === false ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.62)'
+    }));
+
+    const nutrientBars = scored.map((x) => ({
+      k: x.n, n: x.n, amtT: x.amt + ' ' + x.u, ulT: x.ul + ' ' + x.u, pctT: x.pctT,
+      w: Math.min(100, x.p * 100) + '%',
+      fill: x.over ? '#F2E9E1' : (x.near ? 'repeating-linear-gradient(115deg,#C87941,#C87941 3px,#8A4E24 3px,#8A4E24 6px)' : 'linear-gradient(90deg,#8A4E24,#C87941)'),
+      rdaX: Math.min(100, (x.rda / x.ul) * 100) + '%',
+      note: x.from
+    }));
+
+    const ratios = this.RATIOS.map((r) => Object.assign({ k: r.n, badge: r.ok ? 'IN RANGE' : 'OUT OF RANGE', badgeC: r.ok ? 'rgba(255,255,255,0.38)' : '#FFFFFF' }, r));
+    const interactions = this.INTERACTIONS.map((i) => Object.assign({ k: i.a + i.b, title: i.a + ' ↔ ' + i.b, fixC: i.fixed ? 'rgba(255,255,255,0.38)' : '#FFFFFF', state: i.fixed ? 'RESOLVED' : 'UNRESOLVED', showFix: !i.fixed }, i));
+
+    return {
+      canvasRef: this.canvasRef, navGroups, toggles, s, segs,
+      crumb: crumbMap[st.screen] || '', crumbNote: noteMap[st.screen] || '',
+      next: this.next, go: this.go,
+
+      age: st.age, ageTicks, ageDown: this.ageDown,
+      ageInc: () => this.setState({ age: Math.min(90, st.age + 1) }),
+      ageDec: () => this.setState({ age: Math.max(18, st.age - 1) }),
+      sexes, rda, ul, conservative,
+      rdaW: (rda / 50) * 100 + '%', ulX: (ul / 50) * 100 + '%',
+
+      b: { entry: st.builder === 'entry', scanning: st.builder === 'scanning', fail: st.builder === 'fail', list: st.builder === 'list' },
+      scan: this.scan, addManual: this.addManual,
+      addedItems, addedCount: st.added, hasAdded: st.added > 0, noneYet: st.added === 0,
+      nextItemName: nextItem.n, nextItemDose: nextItem.d,
+      toastX: st.toast ? '0px' : '110%', toastO: st.toast ? '1' : '0',
+      barcode: [2, 5, 3, 7, 2, 4, 6, 3, 5, 2, 7, 3].map((w, i) => ({ k: 'b' + i, w: w + 'px' })),
+      doneLabel: st.added > 0 ? 'Done — ' + st.added + ' items' : 'Add your first item',
+      doneBg: st.added > 0 ? 'linear-gradient(135deg,#E8A87C,#C87941 55%,#8A4E24)' : 'transparent',
+      doneFg: st.added > 0 ? '#0A0A0A' : 'rgba(255,255,255,0.38)',
+      doneBorder: st.added > 0 ? 'none' : '1px solid rgba(255,255,255,0.10)',
+      skipToGoals: this.go('ob6'),
+
+      auditN: clear ? '85' : '45', auditUnit: clear ? '%' : 'mg',
+      auditLine1: clear ? 'selenium, daily, from 1 product' : 'zinc, daily, across 3 products',
+      auditLine2: clear ? 'of the 400 mcg ceiling — your closest call' : 'upper limit is 40',
+      auditRest: clear ? 'Nothing in your stack crosses a ceiling. We’ll keep watching as it changes.' : 'Everything else is in range.',
+      auditTiles, toGoals: this.go('ob6'),
+
+      goal, goalTrack, goalDown: this.goalDown,
+      goalTrackX: 'translateX(' + (-66 - st.goalIdx * 140 + st.goalDX * 0.8) + 'px)',
+      goalTitleC: st.goalSel[st.goalIdx] ? '#C87941' : '#fff',
+      goalSelected: !!st.goalSel[st.goalIdx],
+      goalCta: 'Continue (' + selCount + ' selected)',
+      goalDots: this.GOALS.map((g, i) => ({ k: 'gd' + i, bg: i === st.goalIdx ? '#C87941' : 'rgba(255,255,255,0.18)' })),
+
+      photoAsk: st.photo === 'ask', photoCam: st.photo === 'camera', photoDone: st.photo === 'confirm',
+      toCamera: () => this.setState({ photo: 'camera' }),
+      shoot: () => this.setState({ photo: 'confirm' }),
+      retake: () => this.setState({ photo: 'camera' }),
+
+      mealStrips, dialTicks, dialLabels,
+      dialDown: this.dialDown,
+      sleepArc: this.arcPath(st.bedT, st.wakeT, 100),
+      bedX: bedP[0], bedY: bedP[1], wakeX: wakeP[0], wakeY: wakeP[1],
+      sleepDur: Math.floor(dur) + 'h ' + String(Math.round((dur % 1) * 60)).padStart(2, '0') + 'm',
+      bedText: this.fmt(st.bedT), wakeText: this.fmt(st.wakeT),
+      fasting: st.fasting, toggleFasting: this.toggle('fasting'),
+      fastTrack: st.fasting ? copper : 'rgba(255,255,255,0.12)', fastKnob: st.fasting ? '22px' : '2px',
+      fastNote: st.fasting ? 'Breakfast is off. Anything fat-soluble moves to lunch.' : 'Fat-soluble items sit with your first meal.',
+
+      schedule,
+
+      notifMock: st.notif === 'mock', notifPrompt: st.notif === 'prompt',
+      askNotif: () => this.setState({ notif: 'prompt' }),
+      allowNotif: () => { this.setState({ notif: 'mock' }); this.go('ob12')(); },
+
+      plans, features, closePaywall: this.go('today'),
+
+      gateY: st.gate === 'wipe' ? '-100%' : '0px',
+      gateRingOffset: st.gate === 'ask' ? '100' : '0',
+      backToStack: this.go('stack'),
+      fixIt: this.go('ob10'),
+      photosCollapsed: !st.photosOpen,
+      yirNote: st.yirPhotos ? 'Photos will be included in the card. Tap again to leave them out.' : 'Photos are left out of the share card unless you add them.',
+      tabsLeft: tabs.slice(0, 2), tabsRight: tabs.slice(2),
+
+      glowPlay: st.reduceMotion ? 'paused' : 'running',
+      weekDots: ['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => ({
+        k: 'w' + i, d,
+        bg: i < 5 ? '#C87941' : (i === 5 ? 'rgba(200,121,65,0.35)' : 'transparent'),
+        bd: i > 5 ? '1px solid rgba(255,255,255,0.12)' : 'none',
+        fg: i === 5 ? '#fff' : 'rgba(255,255,255,0.38)'
+      })),
+      yAxis: [4, 3, 2, 1, 0].map((v, i) => ({ k: 'y' + v, v: String(v), y: (16 + i * 66) + 'px' })),
+      chartRef: (el) => { if (el && !el.dataset.init) { el.dataset.init = '1'; el.scrollLeft = 230; } },
+      sheetHpx: st.sheetH + 'px',
+      sheetTrans: st.sheetDragging ? 'none' : 'height 0.4s cubic-bezier(0.32,0.72,0,1)',
+      sheetDown: this.sheetDown,
+      sheetMin: st.sheetH < 150,
+      sheetChev: st.sheetH > 450 ? 'rotate(180deg)' : 'rotate(0deg)',
+      dayChart: (() => {
+        const counts = { 8: 4, 13: 2, 21: 3 };
+        const out = [];
+        for (let h = 0; h < 24; h++) {
+          const c = counts[h] || 0;
+          const h12 = h % 12 === 0 ? 12 : h % 12;
+          out.push({
+            k: 'h' + h,
+            hh: (c ? c * 66 : 5) + 'px',
+            delay: (h * 22) + 'ms',
+            bg: c ? 'linear-gradient(180deg,#E8A87C,#A55F2E)' : 'rgba(255,255,255,0.10)',
+            lab: h12 + (h < 12 ? 'a' : 'p'),
+            labC: c ? '#fff' : 'rgba(255,255,255,0.32)',
+            cnt: c ? String(c) : ''
+          });
+        }
+        return out;
+      })(),
+      stackOpen: st.stackOpen, toggleStack: this.toggle('stackOpen'),
+      stackChev: st.stackOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+      stackCount: this.STACK.reduce((a, s2) => a + s2.items.length, 0),
+
+      nutrientDots: scored.map((x) => ({
+        k: x.n, n: x.n, amtT: x.amt + ' ' + x.u, pctT: x.pctT,
+        x: Math.min(94, (Math.min(x.p, 1.6) / 1.6) * 100) + '%',
+        trackW: Math.min(62.5, (Math.min(x.p, 1.6) / 1.6) * 100) + '%',
+        dot: x.over ? '#F2E9E1' : '#C87941',
+        size: x.over ? '14px' : '10px',
+        halo: x.crit ? '0 0 0 4px rgba(255,69,58,0.35)' : (x.over ? '0 0 0 4px rgba(242,233,225,0.14)' : 'none'),
+        lineC: x.over ? 'rgba(242,233,225,0.45)' : 'rgba(200,121,65,0.35)',
+        pctC: x.over ? '#F2E9E1' : 'rgba(255,255,255,0.62)'
+      })),
+
+      monthCells: this.monthGrid(),
+      weekStarts: (() => {
+        const first = new Date(2026, 7, 1).getDay();
+        const out = []; let d = 1 - first;
+        while (d <= 31) { out.push({ k: 'ws' + d, d: d < 1 ? '1' : String(d) }); d += 7; }
+        return out;
+      })(),
+      weekdayHeads: ['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => ({ k: 'wd' + i, d })),
+      profileStats: [
+        { k: 'age', v: String(st.age), l: 'age' },
+        { k: 'streak', v: '12', l: 'day streak' },
+        { k: 'longest', v: '31', l: 'longest' }
+      ],
+      dayRows: [
+        { k: 'wake', n: 'Wake', v: this.fmt(st.wakeT) },
+        { k: 'meals', n: 'Meals', v: this.fmt(st.breakfast[0], true) + ' · ' + this.fmt(st.lunch[0], true) + ' · ' + this.fmt(st.dinner[0], true) },
+        { k: 'bed', n: 'Bed', v: this.fmt(st.bedT) }
+      ],
+      quietRows: ['Notifications', 'Units', 'Data', 'Sources & method', 'Subscription'].map((r) => ({ k: r, n: r })),
+      gateBtn: st.gate === 'ask' ? 'Yes, taken' : 'Logged',
+      gateYes: this.gateYes, gateNo: this.go('today'),
+
+      timeline, takenCount, adhPct, adhDash: (adhPct / 100) * 132 + ' 132',
+      alertsOn: st.alerts, zincT: zinc.amt + ' mg', zincUl: 'ceiling ' + zinc.ul + ' mg · across 3 products',
+      heroTime: '9:30', heroAmPm: 'PM', heroSub: 'ZMA Complex · 3 capsules',
+
+      stackSections: (st.emptyStack ? [] : this.STACK).map((sec) => ({
+        k: sec.s, s: sec.s.toUpperCase(),
+        items: sec.items.map((i) => ({
+          k: i.n, n: i.n, d: i.d, t: i.t, go: this.go('item'),
+          dotOp: i.on ? '1' : '0.5'
+        }))
+      })),
+      stackEmpty: st.emptyStack,
+      openSheet: () => this.setState({ sheet: true }),
+      closeSheet: () => this.setState({ sheet: false }),
+      sheetOpen: st.sheet,
+      sheetY: st.sheet ? '0%' : '100%', sheetO: st.sheet ? '1' : '0', sheetPE: st.sheet ? 'auto' : 'none',
+      sheetRows: [
+        { k: 'a', n: 'Scan barcode', d: 'M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M6 8v8M9 8v8M12 8v8M15.5 8v8M18 8v8' },
+        { k: 'b', n: 'Photograph label', d: 'M3 8.5A2.5 2.5 0 0 1 5.5 6H8l1.5-2h5L16 6h2.5A2.5 2.5 0 0 1 21 8.5v9A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5z' },
+        { k: 'c', n: 'Search', d: 'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14ZM16.5 16.5 21 21' },
+        { k: 'd', n: 'Enter manually', d: 'M4 20h16M6 16l10-10 3 3-10 10H6v-3Z' },
+        { k: 'e', n: 'Add a protocol', d: 'M4 6h16M4 12h10M4 18h7M17 14v6M14 17h6' },
+        { k: 'f', n: 'Add a progress photo', d: 'M3 8.5A2.5 2.5 0 0 1 5.5 6H8l1.5-2h5L16 6h2.5A2.5 2.5 0 0 1 21 8.5v9A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5zM12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z' }
+      ].map((r) => Object.assign({ go: () => this.setState({ sheet: false }) }, r)),
+
+      ingredients: this.INGREDIENTS.map((i) => Object.assign({ k: i.n }, i)),
+      nutrientBars, ratios, interactions,
+      photosOpen: st.photosOpen, togglePhotos: this.toggle('photosOpen'),
+      photoThumbs: ['3 Jan', '12 Apr', '28 Jul'].map((d, i) => ({ k: d, d })),
+      photoGrid: ['3 Jan', '1 Feb', '2 Mar', '12 Apr', '9 May', '20 Jun', '28 Jul', '9 Aug'].map((d) => ({ k: d, d })),
+      adh: st.adh, adh30: () => this.setState({ adh: 30 }), adh90: () => this.setState({ adh: 90 }),
+      adh30C: st.adh === 30 ? '#fff' : 'rgba(255,255,255,0.38)', adh90C: st.adh === 90 ? '#fff' : 'rgba(255,255,255,0.38)',
+      adhValue: st.adh === 30 ? '87%' : '81%',
+      adhBars: [72, 80, 66, 91, 88, 94, 79, 86, 90, 84, 96, 88].map((v, i) => ({ k: 'b' + i, h: v + '%' })),
+      costLocked: st.costLocked, unlock: this.go('ob12'),
+      costBlur: st.costLocked ? 'blur(7px)' : 'none',
+
+      streakCols: this.streakCols(),
+      profileRows: ['You', 'Your day', 'Notifications', 'Units', 'Data', 'Sources & method', 'Subscription'].map((r) => ({ k: r, n: r })),
+
+      yirPhotos: st.yirPhotos, toggleYir: this.toggle('yirPhotos'),
+      yirBtn: st.yirPhotos ? 'Photos included — save this' : 'Save this',
+      yirNumbers: [{ k: 'a', v: '284', l: 'days logged' }, { k: 'b', v: '31', l: 'longest streak' }, { k: 'c', v: '2,146', l: 'doses taken' }, { k: 'd', v: '4', l: 'limits caught' }],
+
+      tabs
+    };
+  }
+}
+
+</script>
+</body>
+</html>

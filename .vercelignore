@@ -1,0 +1,17 @@
+# Keeps the design source out of the upload. Paths are anchored with a leading
+# slash on purpose: a bare "capsule" would also match public/capsule, which the
+# app actually needs at runtime.
+/mockup
+/badge
+/docs
+/capsule
+/dist
+/node_modules
+*.zip
+*.py
+*.swift
+*.md
+ALL_SCREENS_1.png
+reco_reference.html
+reco_fit_reference.html
+tsconfig.tsbuildinfo

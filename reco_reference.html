@@ -1,0 +1,256 @@
+<!-- RECOMMENDER — one onboarding screen. Verified in Chromium at 402x874. PORT THIS FILE.
+
+     SELECTION: tapping a card toggles .sel — copper tint + filled tick top-right.
+       The bottom CTA counts selected cards ("Create schedule · 2") and dims to 45%
+       when none are chosen. The Shop pill stops propagation so it does not select.
+     SHOP pill is a dead link for the demo; make it look tappable and do nothing.
+
+     TYPOGRAPHY is the app's own system, NOT a serif. Title 34/700/-1.05, product
+       name 21/600/-0.6, body 14.5/-0.32, labels 13 sentence case. Uppercase is for
+       buttons only.
+
+     CIRCULAR WELL sizing — the capsule's widest frame has a 351x209 bbox in a 360px
+       frame, so its half-diagonal is 0.565 x the image box. Get this wrong and
+       overflow:hidden slices the pill and you get a flat white cut across its
+       outline. Rule: 0.565 * imageBox < (circleDiameter/2) - 10.
+       Current: 166px circle, 122px image box.
+
+     CARDS from the ITEMS array; count driven by the goals stepper. Never hardcode
+       a dim class — focus dim is computed from scroll distance.
+     DOTS: idx = round(scrollLeft / (cardWidth + gap)); active pip widens to 20px.
+     RAIL padding 0 64px 0 24px so the LAST card can reach its snap position.
+     SCROLLING: .rail is the ONLY horizontally scrollable element; .scroll is
+       overflow-x:HIDDEN or the whole page pans sideways.
+     PARTICLE WAVE: phase from POSITION, never Math.random().
+       ph = (x/W)*PI*1.7 + (y/H)*PI*0.55. Brightness rides the same wave.
+     Capsule: capsule/frame_0001.png..frame_0120.png. SPRITE SHEET + steps(120).
+     Glass: read GLASS_RULES.md before touching .card. -->
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#0E0E10;display:flex;align-items:center;justify-content:center;
+       min-height:100vh;font-family:-apple-system,"Inter","Helvetica Neue",sans-serif;}
+  .phone{width:402px;height:874px;background:#000;position:relative;
+         overflow:hidden;border-radius:44px;}
+  #pf{position:absolute;inset:0;width:402px;height:874px;}
+  .bloom{position:absolute;left:50%;top:-70px;transform:translateX(-50%);
+    width:520px;height:420px;border-radius:50%;filter:blur(60px);
+    background:radial-gradient(circle,rgba(200,132,88,.20),rgba(140,80,48,.06) 46%,transparent 70%);}
+
+  .status{position:absolute;top:0;left:0;right:0;height:54px;display:flex;
+          align-items:center;justify-content:space-between;padding:0 26px;z-index:6;
+          font-size:15px;font-weight:600;color:#fff;letter-spacing:-.2px;}
+  .prog{position:absolute;top:0;left:0;height:2px;width:62%;z-index:6;
+        background:linear-gradient(90deg,#6E3D25,#B8784F 60%,#E3B08D);}
+
+  .eyebrow{position:absolute;top:70px;left:24px;z-index:5;
+    font-size:13px;font-weight:500;letter-spacing:.03px;color:rgba(255,255,255,.42);}
+  h1{position:absolute;top:74px;left:24px;right:26px;z-index:5;
+    font-size:34px;font-weight:700;line-height:1.16;letter-spacing:-1.05px;color:#fff;}
+  .sub{position:absolute;top:172px;left:24px;right:44px;z-index:5;
+    font-size:15px;line-height:1.45;color:rgba(255,255,255,.5);letter-spacing:-.1px;}
+
+  .scroll{position:absolute;top:216px;bottom:0;left:0;right:0;z-index:4;
+    overflow-y:auto;overflow-x:hidden;padding-bottom:140px;}
+  .scroll::-webkit-scrollbar{display:none;}
+    /* the ONLY horizontally scrollable element on the screen */
+  .rail{display:flex;gap:14px;padding:0 64px 0 24px;
+    overflow-x:auto;overflow-y:hidden;
+    scroll-snap-type:x mandatory;scroll-padding-left:24px;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;overscroll-behavior-x:contain;}
+  .rail::-webkit-scrollbar{display:none;}
+  .card{position:relative;flex:none;width:314px;border-radius:26px;overflow:hidden;
+    scroll-snap-align:start;
+    padding:14px 14px 20px;
+    background:rgba(255,255,255,.075);
+    -webkit-backdrop-filter:blur(20px) saturate(180%) brightness(1.14);
+            backdrop-filter:blur(20px) saturate(180%) brightness(1.14);}
+  .card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,rgba(255,255,255,.03),rgba(255,255,255,.28) 22%,
+               rgba(255,255,255,.28) 78%,rgba(255,255,255,.03));}
+  .card{transition:opacity .25s ease;}
+
+  /* circular well, countersunk into the card */
+  .shot{position:relative;width:166px;height:166px;margin:2px auto 0;
+    border-radius:50%;overflow:hidden;display:grid;place-items:center;
+    background:radial-gradient(circle at 50% 36%,
+      rgba(255,255,255,.075),rgba(255,255,255,.02) 62%,rgba(0,0,0,.28));
+    box-shadow:inset 0 3px 8px rgba(0,0,0,.7),
+               inset 0 -1px 0 rgba(255,255,255,.055);}
+  .shot img{width:122px;height:122px;object-fit:contain;
+    filter:saturate(.72) hue-rotate(-13deg) brightness(.9) contrast(1.08)
+           drop-shadow(0 10px 20px rgba(0,0,0,.85));}
+  .plabel{position:absolute;right:13px;bottom:11px;font-size:9.5px;font-weight:600;
+    letter-spacing:1.3px;text-transform:uppercase;color:rgba(255,255,255,.3);}
+
+  .prod{margin-top:15px;padding:0 6px;text-align:center;}
+  .prod h2{font-size:21px;font-weight:600;color:#fff;
+    letter-spacing:-.6px;line-height:1.18;}
+  .prod .dose{margin-top:6px;font-size:12.5px;color:rgba(255,255,255,.46);
+    font-variant-numeric:tabular-nums;}
+
+  .wlabel{margin:18px 6px 9px;font-size:13px;font-weight:600;letter-spacing:-.1px;
+    color:#C08960;}
+  .why{padding:0 6px;font-size:14.5px;line-height:1.48;letter-spacing:-.32px;
+    color:rgba(255,255,255,.85);}
+  .why em{font-style:normal;color:#fff;}
+  .why p+p{margin-top:12px;}
+  .tick{position:absolute;top:15px;right:15px;z-index:4;width:28px;height:28px;
+    border-radius:50%;border:1.5px solid rgba(255,255,255,.24);
+    display:grid;place-items:center;transition:all .2s ease;}
+  .tick svg{width:14px;height:14px;opacity:0;transition:opacity .2s ease;}
+  .card.sel .tick{border-color:#E3B08D;background:#C08960;}
+  .card.sel .tick svg{opacity:1;}
+  .card.sel{background:rgba(226,176,141,.11);}
+
+  .actions{margin:16px 6px 0;display:flex;align-items:center;gap:12px;}
+  .shop{font-size:13px;font-weight:600;letter-spacing:-.05px;color:#E3B08D;
+    padding:8px 15px;border-radius:999px;border:1.5px solid rgba(226,176,141,.45);
+    white-space:nowrap;}
+  .more{font-size:13px;font-weight:600;letter-spacing:-.1px;color:rgba(255,255,255,.42);}
+  .more_unused{margin:15px 6px 0;font-size:13px;font-weight:600;letter-spacing:-.1px;
+    color:#C08960;}
+
+  .dots{margin:18px 0 0;display:flex;justify-content:center;gap:7px;}
+  .dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.20);
+    transition:width .25s ease,background .25s ease;}
+  .dots i.on{width:20px;border-radius:3px;background:#E3B08D;}
+
+  .out{margin:22px 24px 0;border-radius:22px;padding:18px 18px 20px;
+    background:rgba(255,255,255,.05);
+    -webkit-backdrop-filter:blur(20px) saturate(170%);backdrop-filter:blur(20px) saturate(170%);}
+  .out h3{font-size:13px;font-weight:600;letter-spacing:-.1px;
+    color:rgba(255,255,255,.45);}
+  .out p{margin-top:10px;font-size:14px;line-height:1.55;color:rgba(255,255,255,.6);}
+  .out b{color:#fff;font-weight:500;}
+
+  .scrim{position:absolute;left:0;right:0;bottom:0;height:150px;z-index:5;
+    background:linear-gradient(180deg,transparent,rgba(0,0,0,.8) 40%,#000 72%);
+    pointer-events:none;}
+  .cta{position:absolute;left:20px;right:20px;bottom:38px;height:56px;border-radius:28px;
+    display:grid;place-items:center;z-index:7;font-size:16px;font-weight:600;
+    letter-spacing:1.4px;text-transform:uppercase;color:#1A0E07;
+    transition:opacity .2s ease;
+    background:linear-gradient(162deg,#C79372,#A56A46 46%,#7A4A2C);
+    box-shadow:0 1px 0 rgba(245,230,218,.55) inset,0 -1px 0 rgba(74,66,56,.5) inset;}
+  .home{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);z-index:8;
+        width:140px;height:5px;border-radius:3px;background:rgba(255,255,255,.35);}
+</style></head>
+<body>
+<div class="phone">
+  <div class="bloom"></div>
+  <canvas id="pf" width="804" height="1748"></canvas>
+  <div class="prog"></div>
+  <div class="status"><span>9:41</span><span>&#9679;&#9679;&#9679;</span></div>
+
+  <h1>Recommendations<br>for you</h1>
+  <div class="sub">Tap all the ones you want.</div>
+
+  <div class="scroll">
+  <div class="rail" id="rail"></div>
+
+  <div class="dots" id="dots"></div>
+
+  <div class="out">
+    <h3>The six we left out</h3>
+    <p><b>Biotin, saw palmetto, keratin, silica, MSM, selenium.</b>
+    Either you already get enough, or nobody has shown it works.</p>
+  </div>
+  </div>
+
+  <div class="scrim"></div>
+  <div class="cta" id="cta">Create schedule</div>
+  <div class="home"></div>
+</div>
+
+<script>
+const ITEMS=[
+ {n:"Santa Cruz Copper&nbsp;+&nbsp;Zinc", d:"15 mg zinc · 1 mg copper · evening, with food", f:105,
+  w:`<p>Target is 11 mg a day. Diets like yours land near 7. Zinc runs
+      testosterone, skin repair and hair growth &mdash; but only moves in
+      people who are actually short.</p>
+     <p>Taken alone it blocks copper. <em>Only 4% of zinc supplements include
+      copper.</em> This one does.</p>`},
+ {n:"Nordic Naturals Omega-3", d:"1,000 mg EPA + DHA · with lunch", f:37,
+  w:`<p>A &ldquo;1,000 mg fish oil&rdquo; softgel usually holds about 300 mg of
+      the thing that actually matters. This one states EPA and DHA on the front.</p>
+     <p><em>Take it with something fatty.</em> On an empty stomach you absorb
+      less of it and burp the rest.</p>`},
+ {n:"Vital Proteins Collagen", d:"10 g peptides · any time of day", f:73,
+  w:`<p>Two meta-analyses disagree. The benefit shows up in industry-funded
+      trials and largely vanishes in independent ones.</p>
+     <p><em>We&rsquo;re not going to tell you it&rsquo;s proven.</em> It&rsquo;s
+      safe, it&rsquo;s cheap, and timing genuinely doesn&rsquo;t matter.</p>`}
+];
+
+const rail=document.getElementById('rail'), dots=document.getElementById('dots');
+rail.innerHTML=ITEMS.map((it,i)=>`
+  <div class="card${i===0?' sel':''}" data-i="${i}">
+    <div class="tick"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5 9.5 18 20 6.5"
+      stroke="#1A0E07" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="shot"><img src="capsule/frame_${String(it.f).padStart(4,'0')}.png"></div>
+    <div class="prod"><h2>${it.n}</h2><div class="dose">${it.d}</div></div>
+    <div class="wlabel">Why, exactly</div>
+    <div class="why">${it.w}</div>
+    <div class="actions"><span class="shop">Shop &#8599;</span>
+      <span class="more">Tap for the study &rarr;</span></div>
+  </div>`).join('');
+dots.innerHTML=ITEMS.map((_,i)=>`<i class="${i?'':'on'}"></i>`).join('');
+
+const cards=[...rail.children], pips=[...dots.children];
+function sync(){
+  const step=cards[0].offsetWidth+14;
+  const idx=Math.round(rail.scrollLeft/step);
+  cards.forEach((c,i)=>{
+    const dist=Math.min(1,Math.abs(rail.scrollLeft-i*step)/step);
+    c.style.opacity=(1-dist*0.62).toFixed(3);
+  });
+  pips.forEach((p,i)=>p.classList.toggle('on',i===idx));
+}
+cards.forEach(c=>c.addEventListener('click',e=>{
+  if(e.target.closest('.shop')) return;      // Shop is its own target
+  c.classList.toggle('sel'); count();
+}));
+const cta=document.getElementById('cta');
+function count(){
+  const n=rail.querySelectorAll('.card.sel').length;
+  cta.textContent = n ? `Create schedule &middot; ${n}`.replace('&middot;','·') : 'Create schedule';
+  cta.style.opacity = n ? 1 : .45;
+}
+count();
+rail.addEventListener('scroll',sync,{passive:true});
+sync();
+
+const cv=document.getElementById('pf'),cx=cv.getContext('2d');
+const W=402,H=874,N=210; cx.scale(2,2);
+let seed=7; const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const P=Array.from({length:N},()=>{
+  const x=rnd()*W, y=H*(0.06+rnd()*1.0);
+  return {x,y,r:0.5+rnd()*1.3,a:0.30+rnd()*0.58,
+    amp:13+rnd()*11,
+    // phase comes from POSITION, not random — this is what makes it a wave.
+    // neighbours share a phase, so the motion travels across the field.
+    ph:(x/W)*Math.PI*1.7 + (y/H)*Math.PI*0.55,
+    jit:rnd()*0.5};
+});
+function draw(t){
+  cx.clearRect(0,0,W,H); const wave=t/2600;
+  for(const p of P){
+    // vertical is the dominant motion so the wave reads as a swell rolling across
+    const dy=Math.sin(wave+p.ph)*p.amp;
+    const dx=Math.cos(wave*0.5+p.ph)*p.amp*0.34;
+    const fall=Math.min(1,Math.max(0.28,(p.y/H-0.02)/0.72));
+    const crest=0.40+0.60*Math.sin(wave+p.ph);
+    const o=p.a*fall*fall*crest;
+    const g=cx.createRadialGradient(p.x+dx,p.y+dy,0,p.x+dx,p.y+dy,p.r*2.6);
+    g.addColorStop(0,`rgba(240,205,175,${o*0.55})`); g.addColorStop(1,'rgba(226,176,141,0)');
+    cx.fillStyle=g; cx.beginPath(); cx.arc(p.x+dx,p.y+dy,p.r*2.6,0,7); cx.fill();
+    cx.fillStyle=`rgba(243,214,188,${Math.min(1,o*1.45)})`;
+    cx.beginPath(); cx.arc(p.x+dx,p.y+dy,p.r,0,7); cx.fill();
+  }
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+</script>
+</body></html>
