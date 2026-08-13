@@ -1,41 +1,35 @@
-# Stack — supplement audit (web)
+# Peptide Reference & Tracker
 
-Front-end-only React port of the iOS prototype in `mockup/Stack Tracker.dc.html`.
-No backend, no auth, no database. Every number, name and date is mock data and
-lives in one file: [`src/data/mock.ts`](src/data/mock.ts).
+A mobile app centered on a comprehensive peptide glossary — covering compounds like BPC-157, TB-500, IGF-1, HGH, GHK-Cu, and other longevity/performance/"looksmaxxing" peptides.
 
-```bash
-npm install
-npm run dev
-```
+The app never originates a dose, a schedule, or an administration specific. See [`legal.md`](legal.md) — that boundary is the reason the earlier version of this spec didn't work, and it is load-bearing.
 
-Opens on <http://localhost:5173>. The app renders inside a 402×874 iPhone frame
-centred on a dark page; the left rail is a dev toolbar — click any screen to jump
-straight to it, and use the toggles to force Reduce Motion, Low Power, the empty
-stack, a scan failure, or hide the alerts card.
+## Overview
 
-`npm run build` · `npm run typecheck` · `npm run preview`
+The glossary is the core of the app. Each entry covers:
 
-## Layout
+- What the peptide is
+- Its general category (healing, growth, cosmetic/skin, cognitive, etc.)
+- Route of administration type only — injected, oral or topical, without specifics
+- General storage requirements (refrigerate, protect from light)
+- General research trends, phrased at the pattern level ("commonly studied for tissue repair")
 
-```
-src/
-  data/mock.ts        all mock data, lifted verbatim from the mockup
-  state/store.tsx     app state + screen router (localStorage-backed)
-  lib/                time formatting, dial geometry, pointer-drag helper
-  components/         phone frame, particle field, tab bar, add sheet, glass/buttons
-  screens/            one file per screen (onboarding/ holds ob1–ob12)
-```
+Entries are organized so users can browse and search across the full landscape of available peptides in one place.
 
-Design source of truth, in order: `mockup/Stack Tracker.dc.html` →
-`docs/DESIGN.md` → `docs/PRODUCT.md`.
+What the glossary does **not** contain: dose amounts, frequencies, cycle durations, reconstitution ratios, or injection technique. The app has no opinion on what the correct numbers are.
 
-## Deliberately not built
+## Tracking Features
 
-Per the build brief. Both exist as clearly-marked placeholder components and are
-**not rendered anywhere**:
+Layered on top of the glossary is a personal tracking system that lets users log which peptides they're using, tied back to the relevant glossary entries. Every value here is entered by the user — the app stores and displays it back, and never populates or suggests it:
 
-- `src/components/CapsuleAnimation.tsx` — the rotating capsule. Frames are in
-  `capsule/`; their placement has not been decided.
-- `src/components/ParticleReward.tsx` — the 7-day streak reward.
-  `ParticleReward.swift` at the repo root is the iOS reference.
+- **Dosage, schedule, and cycle length** — logged by the user, in their own numbers
+- **Stack builder** — save and name a combination of peptides the user is taking
+- **Injection site log** — the user records where they administered
+- **Expiry reminders** — counted from a date the user enters
+- **Progress notes** — photos, measurements, and subjective tracking tied to an active regimen
+
+Functionally this is a food diary or symptom tracker: a blank logging structure the user fills in.
+
+## Target User
+
+People already researching or using peptides who want a well-organized, centralized reference to understand what they're taking, alongside a simple way to track their own regimen against it.

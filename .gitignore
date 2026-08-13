@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 node_modules/
 dist/
 .ssrcheck/
@@ -5,3 +6,6 @@ dist/
 .DS_Store
 
 .vercel
+=======
+.claude/settings.local.json
+>>>>>>> 105619bed05328f094f910151daa964d191dfabd
