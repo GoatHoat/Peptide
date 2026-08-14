@@ -1,0 +1,741 @@
+/* ============================================================
+   Halfpast — design tokens. Nothing outside this block defines
+   a colour. Elevation is opaque steps, never 1px hairlines.
+   ============================================================ */
+:root {
+  --bg: #000000;
+  --card: #16161a;
+  --card-hi: #1e1e22;
+  /* the Discover result card sits one step above --card in the export */
+  --card-2: #252529;
+  --purple: #7b5cfa;
+  --purple-dim: rgba(123, 92, 250, 0.35);
+
+  /* Glass, measured off the exports rather than guessed. The fill is a barely
+     there white over black; the read comes almost entirely from the rim, which
+     is directional — bright along the top and left, faint along the bottom,
+     absent on the right. That is a lit edge, not a uniform hairline. */
+  --glass: rgba(255, 255, 255, 0.022);
+  --rim-hi: rgba(255, 255, 255, 0.36);
+  --rim-lo: rgba(255, 255, 255, 0.07);
+  /* The pill reads as translucent purple but cannot be: it is greener-poor
+     than the bar underneath, so no alpha over --card reaches it. These are the
+     two ends of the gradient the export actually paints. */
+  --pill-1: #181130;
+  --pill-2: #272042;
+  --pill-rim-hi: rgba(255, 255, 255, 0.4);
+  --pill-rim-lo: rgba(255, 255, 255, 0.09);
+
+  --t1: rgba(255, 255, 255, 1);
+  --t2: rgba(255, 255, 255, 0.62);
+  --t3: rgba(255, 255, 255, 0.38);
+  --t4: rgba(255, 255, 255, 0.22);
+
+  /* the arc's unfilled segments — an opaque step, not a white alpha */
+  --track: #252528;
+  /* the calendar's empty cell */
+  --cell-empty: #0e0e11;
+
+  --margin: 20px;
+  --tab-h: 48px;
+
+  color-scheme: dark;
+}
+
+/* One material, used wherever the export shows one. */
+.glass {
+  background: var(--glass);
+  box-shadow:
+    inset 1px 1px 0 var(--rim-hi),
+    inset -1px -1px 0 var(--rim-lo);
+}
+
+/* ── the four tells that scream "website" ── */
+* {
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--t1);
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-font-smoothing: antialiased;
+  /* -apple-system resolves to real SF Pro on device — that is most of the
+     native read. Inter is only the desktop fallback, never fetched. */
+  font-family: -apple-system, 'SF Pro Text', 'SF Pro Display', Inter, system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+  font-weight: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* ============================================================
+   Type scale
+   ============================================================ */
+.t-title {
+  font-size: 33px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 38px;
+}
+.t-big {
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  line-height: 1;
+}
+.t-section {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.45px;
+}
+.t-body {
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: -0.1px;
+}
+.t-body-m {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.1px;
+}
+.t-secondary {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.t-caption {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.t-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   App shell
+   ============================================================ */
+.app {
+  position: relative;
+  width: 100%;
+  height: 100dvh; /* never vh — Safari's collapsing toolbar clips the bottom */
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* Desktop preview only: a phone-shaped box. On a real device the app is
+   the viewport and this never applies. */
+.frame-host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--card);
+}
+.frame {
+  position: relative;
+  width: 402px;
+  height: 874px;
+  overflow: hidden;
+  border-radius: 44px;
+  background: var(--bg);
+  flex: none;
+}
+
+.status {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 54px;
+  padding: 0 var(--margin);
+  padding-top: env(safe-area-inset-top);
+  display: flex;
+  align-items: center;
+  z-index: 8;
+  pointer-events: none;
+}
+.status span {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+
+/* ── the horizontal page controller ── */
+.track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  width: 300%;
+  will-change: transform;
+}
+.panel {
+  width: 33.3333%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 var(--margin);
+  /* On a device the status bar is the OS's (standalone) or Safari's (browser),
+     and the inset already accounts for it. Only the desktop phone-box draws a
+     fake one, and only there does the 54px band exist. */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: calc(var(--tab-h) + 34px + env(safe-area-inset-bottom));
+}
+.app.framed .panel {
+  padding-top: 54px;
+}
+.panel::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* ============================================================
+   Press states — a row that does nothing until you lift feels dead
+   ============================================================ */
+.pressable {
+  transition:
+    background-color 90ms ease-out,
+    transform 90ms ease-out;
+}
+.pressable:active {
+  background-color: var(--card-hi);
+  transform: scale(0.985);
+}
+
+/* ============================================================
+   Tab bar
+   ============================================================ */
+.bar {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 232px;
+  bottom: max(34px, calc(12px + env(safe-area-inset-bottom)));
+  height: var(--tab-h);
+  border-radius: 24px;
+  background: var(--card);
+  padding: 7px;
+  z-index: 20;
+  display: block;
+  /* the bar owns its own gesture — the browser must not pan or scroll on it */
+  touch-action: none;
+}
+.bar-inner {
+  position: relative;
+  height: 100%;
+}
+.pill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 17px;
+  /* glass, lit from the top-left, exactly as the export renders it */
+  background: linear-gradient(160deg, var(--pill-1), var(--pill-2));
+  will-change: transform, width;
+  pointer-events: none;
+}
+.tab {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  z-index: 1;
+}
+.tab-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  will-change: transform;
+}
+.tab-label {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  color: var(--t1);
+  overflow: hidden;
+  will-change: opacity, transform, width;
+}
+/* offscreen measurement copy — never visible, never interactive */
+.tab-measure {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  top: -9999px;
+  left: -9999px;
+}
+
+/* ============================================================
+   Today
+   ============================================================ */
+.screen-head {
+  padding-top: 18px;
+}
+.screen-sub {
+  margin-top: 6px;
+  line-height: 20px;
+  color: var(--t2);
+}
+
+.week {
+  display: flex;
+  gap: 9px;
+  margin-top: 22px;
+}
+.week-cell {
+  flex: 1;
+  height: 62px;
+  border-radius: 15px;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  position: relative;
+}
+.week-cell.today {
+  background: var(--purple);
+}
+.week-dow {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--t3);
+}
+.week-cell.today .week-dow {
+  color: var(--t2);
+}
+.week-num {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.45px;
+}
+.week-cell.today .week-num {
+  color: #fff;
+}
+.week-cell.missed .week-num {
+  color: var(--t3);
+}
+/* days that have not happened yet are glass, not a filled card */
+.week-cell.future {
+  background: var(--glass);
+  box-shadow:
+    inset 1px 1px 0 var(--rim-hi),
+    inset -1px -1px 0 var(--rim-lo);
+}
+.week-cell.future .week-num,
+.week-cell.future .week-dow {
+  color: var(--t4);
+}
+/* one property means one thing: the dot means completed, nothing else */
+.week-dot {
+  position: absolute;
+  bottom: 8px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--purple);
+}
+
+.arc-wrap {
+  position: relative;
+  height: 95px;
+  width: 368px;
+  /* the artwork runs 3px past the 20px margin on each side */
+  margin: 32px -3px 0;
+}
+.arc-wrap svg {
+  display: block;
+}
+.arc-ends {
+  position: absolute;
+  top: 77px;
+  left: -8px;
+  right: -9px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--t3);
+  font-size: 13px;
+}
+.arc-centre {
+  position: absolute;
+  top: 18px;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+.arc-count {
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  line-height: 1;
+}
+.arc-left {
+  margin-top: -1px;
+  color: var(--t2);
+  font-size: 13px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 31px;
+}
+.divider-line {
+  flex: 1;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--card-hi);
+}
+.divider-text {
+  color: var(--t3);
+}
+
+.timeline {
+  position: relative;
+  margin-top: 13px;
+  padding-left: 22px;
+  padding-right: 10px;
+}
+.rail {
+  position: absolute;
+  left: 3px;
+  top: 15px;
+  bottom: 8px;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--t1);
+}
+.dose {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card);
+  border-radius: 18px;
+  height: 64px;
+  padding: 0 16px;
+  margin-bottom: 8px;
+}
+.dose:last-child {
+  margin-bottom: 0;
+}
+/* the dose already taken is glass — the two still to come are solid */
+.dose.taken {
+  background: var(--glass);
+  box-shadow:
+    inset 1px 1px 0 var(--rim-hi),
+    inset -1px -1px 0 var(--rim-lo);
+}
+.dose-time {
+  width: 61px;
+  flex: none;
+  color: var(--t3);
+  font-size: 13px;
+}
+.dose-body {
+  flex: 1;
+  min-width: 0;
+}
+.dose-name {
+  font-size: 15px;
+  line-height: 18px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+}
+.dose.taken .dose-name {
+  color: var(--t2);
+}
+.dose-amt {
+  margin-top: 3px;
+  font-size: 12px;
+  line-height: 14px;
+  color: var(--t3);
+}
+.dose-mark {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  flex: none;
+}
+.dose-mark.on {
+  background: var(--purple);
+}
+.dose-mark.off {
+  box-shadow: inset 0 0 0 1.5px var(--t4);
+}
+
+.warn {
+  margin-top: 31px;
+  color: var(--purple);
+  font-size: 12px;
+  line-height: 15px;
+  text-align: left;
+}
+
+/* ============================================================
+   Discover
+   ============================================================ */
+.search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--card);
+  padding: 0 14px;
+  margin-top: 20px;
+}
+.search input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: 0;
+  outline: none;
+  color: var(--t1);
+  font-size: 15px;
+  letter-spacing: -0.1px;
+}
+.search input::placeholder {
+  color: var(--t3);
+}
+
+.result {
+  /* the card is inset a further 8px inside the 20px margin */
+  margin: 27px 8px 0;
+  background: var(--card-2);
+  border-radius: 22px;
+  padding: 15px 15px 9px;
+}
+.result-title {
+  line-height: 18px;
+  color: var(--purple);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+}
+/* placeholder for a paper thumbnail — --card, never white */
+.thumb {
+  margin-top: 6px;
+  height: 215px;
+  border-radius: 15px;
+  background: var(--card-hi);
+  display: grid;
+  place-items: center;
+}
+.result-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 13px;
+}
+.btn {
+  flex: 1;
+  height: 44px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+}
+.btn-fill {
+  background: var(--purple);
+  color: #000;
+}
+.btn-out {
+  box-shadow: inset 0 0 0 1.5px var(--purple);
+  color: var(--purple);
+}
+
+.papers {
+  position: relative;
+  margin-top: 12px;
+  padding-left: 22px;
+}
+.paper {
+  height: 54px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.paper-title {
+  line-height: 18px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+}
+.paper-meta {
+  margin-top: 4px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--t3);
+  font-size: 12px;
+}
+.paper-more {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--purple);
+  font-size: 12px;
+}
+
+/* ============================================================
+   You
+   ============================================================ */
+.streak {
+  margin-top: 8px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--purple);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+}
+
+.widgets {
+  display: flex;
+  gap: 12px;
+  /* the pair runs 6px wider than the margin on each side in the export */
+  margin: 19px -6px 0;
+}
+.widget {
+  width: 181px;
+  height: 176px;
+  border-radius: 22px;
+  background: var(--card);
+  flex: none;
+  padding: 12px;
+  overflow: hidden;
+}
+.widget-num {
+  text-align: center;
+  color: var(--purple);
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  line-height: 1;
+}
+.cal {
+  margin-top: 8px;
+  display: flex;
+  gap: 5px;
+}
+.cal-weeks {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 17px;
+}
+.cal-week-label {
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--t3);
+  font-size: 9px;
+  width: 12px;
+}
+.cal-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cal-dow {
+  text-align: center;
+  color: var(--t3);
+  font-size: 11px;
+  height: 13px;
+  line-height: 13px;
+}
+.cal-cell {
+  height: 14px;
+  border-radius: 5px;
+  background: var(--cell-empty);
+}
+.cal-cell.on {
+  background: var(--purple);
+}
+
+/* an intentionally empty box — the label names what belongs here */
+.widget-gap {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 18px;
+}
+.widget-gap span {
+  color: var(--t3);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.rows {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 16px;
+  border-radius: 16px;
+  background: var(--card);
+}
+.row-label {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.1px;
+}
+.row-value {
+  color: var(--t3);
+  font-size: 13px;
+}

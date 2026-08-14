@@ -1,0 +1,9 @@
+# Keeps the upload small. Without this Vercel tries to send node_modules,
+# dist, the design exports and the zip, and the upload aborts.
+node_modules
+dist
+.vite
+design
+*.zip
+*.md
+tsconfig.tsbuildinfo
