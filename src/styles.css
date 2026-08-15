@@ -474,6 +474,29 @@ button {
 .dose:last-child {
   margin-bottom: 0;
 }
+.dose {
+  -webkit-touch-callout: none;
+  transition:
+    transform 180ms ease-out,
+    background-color 180ms ease-out;
+}
+/* the row sinks while held, so the press reads as going somewhere */
+.dose.holding {
+  transform: scale(0.975);
+  background-color: var(--card-hi);
+}
+.dose.holding.taken {
+  background-color: var(--card-hi);
+}
+@media (prefers-reduced-motion: reduce) {
+  .dose,
+  .dose-mark {
+    transition: none;
+  }
+  .dose.holding {
+    transform: none;
+  }
+}
 /* the dose already taken is glass — the two still to come are solid */
 .dose.taken {
   background: var(--glass);
@@ -507,10 +530,21 @@ button {
   color: var(--t3);
 }
 .dose-mark {
+  position: relative;
   width: 24px;
   height: 24px;
   border-radius: 50%;
   flex: none;
+  transition: transform 120ms ease-out;
+}
+/* 24px is the drawn size; the tap target is the full 44 */
+.dose-mark::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+}
+.dose-mark:active {
+  transform: scale(0.88);
 }
 .dose-mark.on {
   background: var(--purple);

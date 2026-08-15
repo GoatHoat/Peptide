@@ -12,6 +12,7 @@ import { useNow } from '../lib/now';
 import { useActiveTab } from '../lib/activeTab';
 import { IconCalculator, IconPlus } from '../components/Icons';
 import { ReconCalculator } from './ReconCalculator';
+import { DoseRow } from '../components/DoseRow';
 import { syncScheduleNotifications } from '../lib/notifications';
 
 type DayState = 'completed' | 'missed' | 'today' | 'future';
@@ -82,7 +83,9 @@ export function Today() {
     setDoses((prev) => (prev ? prev.map((d) => (d.id === dose.id ? updated : d)) : prev));
     // taken/not-taken feeds the compliance map too — refresh the week
     await refreshCompliance();
-    setSheet({ kind: 'history', name: dose.name, scheduleItemId: dose.schedule_item_id });
+    /* Deliberately opens nothing. This used to push the history sheet up,
+       which offered Remove From Schedule as the response to someone simply
+       marking their supplement as taken. The sheet is a long press now. */
   };
 
   if (!user) return null;
@@ -143,28 +146,14 @@ export function Today() {
           <div className="empty-state t-body">Nothing on your schedule yet.</div>
         )}
         {doses?.map((d) => (
-          <div
+          <DoseRow
             key={d.id}
-            className={`dose pressable ${d.taken ? 'taken' : ''}`}
-            onClick={() => setSheet({ kind: 'history', name: d.name, scheduleItemId: d.schedule_item_id })}
-          >
-            <span className="dose-time">{d.scheduled_time ? d.scheduled_time.slice(0, 5) : '—'}</span>
-            <span className="dose-body">
-              <span className="dose-name" style={{ display: 'block' }}>
-                {d.name}
-              </span>
-              <span className="dose-amt" style={{ display: 'block' }}>
-                {d.amount}
-              </span>
-            </span>
-            <span
-              className={`dose-mark ${d.taken ? 'on' : 'off'}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleTaken(d);
-              }}
-            />
-          </div>
+            dose={d}
+            onToggle={toggleTaken}
+            onLongPress={(dose) =>
+              setSheet({ kind: 'history', name: dose.name, scheduleItemId: dose.schedule_item_id })
+            }
+          />
         ))}
       </div>
 
