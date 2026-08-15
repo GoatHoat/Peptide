@@ -37,7 +37,7 @@ export const GOALS: Goal[] = [
     id: 'energy',
     name: 'Energy',
     copy: 'Morning items stay in the morning block, and the streak view shows whether the days you took them differ.',
-    tags: ['Recovery', 'Muscle'],
+    tags: ['Energy', 'Recovery'],
     icon: <path {...S} d="M52 12 26 52h18l-6 32 28-42H48z" />,
   },
   {

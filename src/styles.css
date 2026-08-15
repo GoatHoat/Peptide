@@ -1444,3 +1444,9 @@ button {
   gap: 5px;
   color: var(--purple);
 }
+
+.result-kind {
+  margin-top: 3px;
+  color: var(--t3);
+  text-transform: capitalize;
+}

@@ -27,6 +27,8 @@ import {
   IconSearch,
 } from '../components/Icons';
 
+const KIND_LABEL: Record<string, string> = { peptide: 'Peptide', supplement: 'Supplement' };
+
 const CATEGORY_LABEL: Record<string, string> = {
   healing: 'Healing',
   growth: 'Growth',
@@ -150,6 +152,9 @@ export function Discover() {
       {!loading && top && (
         <div className="result">
           <div className="result-title">{top.name}</div>
+          <div className="result-kind t-caption">
+            {KIND_LABEL[top.kind ?? 'peptide']} · {CATEGORY_LABEL[top.category] ?? top.category} · {top.route}
+          </div>
           {/* The box used to be an empty placeholder. It now holds the first
               paper on file for this entry and opens it. */}
           {preview ? (
@@ -219,7 +224,7 @@ export function Discover() {
               <span style={{ color: 'var(--t3)', display: 'flex' }}>
                 <IconPerson />
               </span>
-              {CATEGORY_LABEL[r.category] ?? r.category}
+              {KIND_LABEL[r.kind ?? 'peptide']} · {CATEGORY_LABEL[r.category] ?? r.category}
               <button
                 className="paper-add pressable"
                 onClick={() => handleAddToStack(r)}

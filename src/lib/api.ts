@@ -32,6 +32,8 @@ export interface GlossaryEntry {
   research_summary: string | null;
   goal_tags: string[];
   search_keywords: string[];
+  /** peptide or supplement; absent until migration 0016 has been run */
+  kind?: 'peptide' | 'supplement' | null;
 }
 
 export interface GlossaryResearch {
