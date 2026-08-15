@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import { AuthProvider } from './lib/auth';
 import { ProfileProvider } from './lib/prefs';
+import { isSupabaseConfigured } from './lib/supabaseClient';
+import { SetupNeeded } from './screens/SetupNeeded';
 import './styles.css';
 
 // production only — a service worker in dev just serves stale bundles
@@ -14,10 +16,14 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AuthProvider>
-      <ProfileProvider>
-        <App />
-      </ProfileProvider>
-    </AuthProvider>
+    {isSupabaseConfigured ? (
+      <AuthProvider>
+        <ProfileProvider>
+          <App />
+        </ProfileProvider>
+      </AuthProvider>
+    ) : (
+      <SetupNeeded />
+    )}
   </StrictMode>,
 );
