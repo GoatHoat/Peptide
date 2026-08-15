@@ -51,6 +51,9 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
       await updateProfile(userId, {
         wake_time: state.wake,
         sleep_time: state.sleep,
+        // the supplement sheet reads these to personalise the intake
+        age: state.profile.age,
+        sex: state.profile.gender,
       }).catch(() => {});
       for (const item of state.schedule) {
         const rec = picks.find((p) => p.id === item.id);

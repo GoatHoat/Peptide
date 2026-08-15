@@ -21,12 +21,17 @@ export function Tabs({
   tabs,
   storageKey,
   defaultId,
+  jumpTo,
+  jumpToIndex = 0,
   children,
 }: {
   tabs: TabDef[];
   /** last tab is remembered, so coming back lands where you left */
   storageKey: string;
   defaultId?: string;
+  /** bump this to jump to jumpToIndex — used by "Ask a question" on a product */
+  jumpTo?: number;
+  jumpToIndex?: number;
   children: (tab: TabDef, index: number) => ReactNode;
 }) {
   const initial = (() => {
@@ -83,6 +88,15 @@ export function Tabs({
     animate(pos, t, { ...SPRING, velocity });
   };
 
+  /* A product's Ask a question button asks for the chat tab; the counter is
+     what makes two presses in a row both register. */
+  useEffect(() => {
+    if (!jumpTo) return;
+    setIndex(jumpToIndex);
+    animate(pos, jumpToIndex, SPRING);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jumpTo]);
+
   const drag = useRef({ active: false, axis: null as null | 'x' | 'y', x: 0, y: 0, start: 0, vel: 0, t: 0 });
 
   const onPointerDown = (e: React.PointerEvent) => {
@@ -126,7 +140,10 @@ export function Tabs({
     goTo(Math.round(pos.get() + d.vel * 0.2), d.vel);
   };
 
-  const trackX = useTransform(pos, (p) => `${-p * 100}%`);
+  /* A percentage translate resolves against the element's OWN width, and the
+     track is tabs.length x the viewport. Translating -100% per tab therefore
+     moved three screens at a time and left the panel off to the left. */
+  const trackX = useTransform(pos, (p) => `${(-p * 100) / tabs.length}%`);
   const lineX = useTransform(pos, (p) => {
     if (!segs.length) return 0;
     const i0 = Math.max(0, Math.min(segs.length - 1, Math.floor(p)));

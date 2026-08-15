@@ -1,5 +1,3 @@
--- Everything not yet applied, in order. Paste into the Supabase SQL editor.
-
 -- Library rebuild.
 --
 -- Fixes three things reported against the shipped data:

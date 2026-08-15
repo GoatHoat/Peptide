@@ -13,6 +13,9 @@ export interface Profile {
   larger_text: boolean;
   subscription_tier: string;
   blood_test_reminder: boolean;
+  /** collected in onboarding; drives the personalised intake */
+  age?: number | null;
+  sex?: 'm' | 'f' | 'na' | null;
   /** the waking day; absent until migration 0014 has been run */
   wake_time?: string | null;
   sleep_time?: string | null;
@@ -32,12 +35,26 @@ export interface GlossaryEntry {
   research_summary: string | null;
   goal_tags: string[];
   search_keywords: string[];
-  /** these four arrive with migration 0016 */
+  /** these arrive with migrations 0016 / 0017 */
   kind?: 'peptide' | 'supplement' | null;
   brand?: string | null;
   product_form?: string | null;
   /** the NIH Dietary Supplement Label Database filing for this product */
   label_url?: string | null;
+  timing?: 'with_food' | 'empty' | 'evening' | 'any' | null;
+  timing_note?: string | null;
+  evidence?: 'strong' | 'mixed' | 'thin' | null;
+  /** the NIH Office of Dietary Supplements fact sheet */
+  ods_url?: string | null;
+}
+
+export interface NutrientReference {
+  glossary_id: string;
+  age_band: '14-18' | '19-50' | '51+';
+  sex: 'm' | 'f' | 'any';
+  rda: number | null;
+  ul: number | null;
+  unit: string;
 }
 
 export interface GlossaryResearch {
@@ -440,6 +457,41 @@ export async function getGoalSynonyms(): Promise<GoalSynonym[]> {
   const { data, error } = await supabase.from('goal_synonyms').select('phrase, expands_to');
   if (error) throw error;
   return data as GoalSynonym[];
+}
+
+/** Reference intakes for a set of entries, all bands and both sexes. */
+export async function getNutrientReference(glossaryIds: string[]): Promise<Record<string, NutrientReference[]>> {
+  if (glossaryIds.length === 0) return {};
+  const { data, error } = await supabase
+    .from('nutrient_reference')
+    .select('*')
+    .in('glossary_id', glossaryIds);
+  if (error) return {};
+  const out: Record<string, NutrientReference[]> = {};
+  for (const r of (data ?? []) as NutrientReference[]) (out[r.glossary_id] ??= []).push(r);
+  return out;
+}
+
+/**
+ * The row that applies to this person. Sex-specific first, then the 'any' row,
+ * so a nutrient that differs by sex uses the right one and a nutrient that does
+ * not still resolves.
+ */
+export function pickReference(
+  rows: NutrientReference[] | undefined,
+  age: number | null | undefined,
+  sex: 'm' | 'f' | 'na' | null | undefined,
+): NutrientReference | null {
+  if (!rows?.length) return null;
+  const band = age == null ? '19-50' : age < 19 ? '14-18' : age < 51 ? '19-50' : '51+';
+  const s = sex === 'm' || sex === 'f' ? sex : 'any';
+  return (
+    rows.find((r) => r.age_band === band && r.sex === s) ??
+    rows.find((r) => r.age_band === band && r.sex === 'any') ??
+    rows.find((r) => r.age_band === '19-50' && r.sex === s) ??
+    rows.find((r) => r.age_band === '19-50' && r.sex === 'any') ??
+    null
+  );
 }
 
 export async function getGlossaryResearch(glossaryId: string): Promise<GlossaryResearch[]> {

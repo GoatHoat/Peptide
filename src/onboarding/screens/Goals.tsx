@@ -3,10 +3,21 @@ import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
 import { Cta, Screen } from '../chrome';
 import { GOALS } from '../goals';
 
-const SPRING = { type: 'spring' as const, stiffness: 380, damping: 34, mass: 1 };
+const SPRING = { type: 'spring' as const, stiffness: 260, damping: 30, mass: 0.9 };
 /** commit to the drag inside this many px */
 const THRESHOLD = 8;
 const RUBBER = 0.35;
+/**
+ * How far a flick carries, in seconds of projected travel. The Action Button
+ * picker lets a hard swipe run several items rather than always landing on the
+ * neighbour, so the release is projected well past the finger and only then
+ * rounded — 0.2s stopped at the next card no matter how hard you threw it.
+ */
+const FLICK_PROJECTION = 0.75;
+/** a slow drag still needs a small nudge to count */
+const MIN_FLICK = 0.35;
+/** px of travel per card, so neighbours sit just off-centre */
+const SPREAD = 250;
 
 /**
  * The Action Button picker.
@@ -82,7 +93,16 @@ export function Goals({
     if (!d.active) return;
     d.active = false;
     if (d.axis !== 'x') return;
-    goTo(Math.round(pos.get() + d.vel * 0.2), d.vel);
+    const v = d.vel;
+    const projected = pos.get() + v * FLICK_PROJECTION;
+    // a deliberate flick always moves at least one card
+    const target =
+      Math.abs(v) > MIN_FLICK
+        ? v > 0
+          ? Math.max(Math.ceil(pos.get() + 0.001), Math.round(projected))
+          : Math.min(Math.floor(pos.get() - 0.001), Math.round(projected))
+        : Math.round(projected);
+    goTo(target, v);
   };
 
   const toggle = (id: string) =>
@@ -153,16 +173,19 @@ function GoalCard({
   onTap: () => void;
 }) {
   const dist = useTransform(pos, (p) => Math.abs(p - i));
-  // 0.86 at one card away, 1 when centred — the whole travel is continuous
-  const scale = useTransform(dist, (d) => 1 - 0.14 * Math.min(1, d));
-  const opacity = useTransform(dist, (d) => (d >= 1 ? 0 : 1 - d));
-  const x = useTransform(pos, (p) => (i - p) * 88);
+  /* Neighbours stay on screen, smaller and dimmer, so the row reads as a reel
+     rather than one card appearing from nowhere. Everything is a function of
+     the same continuous value. */
+  const scale = useTransform(dist, (d) => 1 - 0.3 * Math.min(1.4, d));
+  const opacity = useTransform(dist, (d) => (d >= 2 ? 0 : Math.max(0, 1 - d * 0.62)));
+  const x = useTransform(pos, (p) => (i - p) * SPREAD);
   const pointerEvents = useTransform(dist, (d) => (d < 0.5 ? 'auto' : 'none')) as unknown as never;
+  const zIndex = useTransform(dist, (d) => Math.round(100 - d * 10));
 
   return (
     <motion.button
       className={`ob-goal-icon${on ? ' on' : ''}`}
-      style={{ x, scale, opacity, pointerEvents }}
+      style={{ x, scale, opacity, pointerEvents, zIndex }}
       onClick={onTap}
       aria-pressed={on}
       aria-label={`${goal.name}${on ? ', selected' : ''}`}

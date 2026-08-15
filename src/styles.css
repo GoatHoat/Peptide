@@ -1479,6 +1479,11 @@ button {
 .tabs {
   position: relative;
   margin-top: 18px;
+  /* The track is three panels wide and was spilling past the panel's content
+     box, so slivers of the neighbouring tabs showed down both edges. `clip`
+     rather than `hidden`: hidden would make this a scroll container and break
+     the sticky chat composer inside it. */
+  overflow-x: clip;
 }
 .tabs-bar {
   position: relative;
@@ -1537,4 +1542,308 @@ button {
   letter-spacing: 0.2px;
   text-transform: capitalize;
   flex: none;
+}
+
+/* ============================================================
+   Discover — the product list and its inline card
+   ============================================================ */
+.prod-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+.prod {
+  border-radius: 22px;
+  background: var(--card);
+  overflow: hidden;
+  transition: background-color 180ms ease-out;
+}
+.prod.open {
+  background: var(--card-hi);
+}
+.prod-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 16px;
+  text-align: left;
+  min-height: 64px;
+}
+.prod-main {
+  flex: 1;
+  min-width: 0;
+}
+.prod-name {
+  display: block;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  line-height: 22px;
+}
+.prod-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 7px;
+}
+.prod-tag {
+  font-size: 12px;
+  color: var(--t3);
+}
+.prod-dose {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--purple);
+}
+.prod-chev {
+  flex: none;
+  display: flex;
+  transition: transform 180ms ease-out;
+}
+.prod-chev.open {
+  transform: rotate(180deg);
+}
+
+/* the card that opens underneath the row */
+.prod-card {
+  padding: 0 16px 16px;
+  animation: prod-open 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes prod-open {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.prod-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 15px 16px;
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--t1);
+  text-decoration: none;
+}
+.prod.open .prod-preview {
+  background: var(--bg);
+}
+.prod-preview-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: -0.1px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.prod-preview-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+  color: var(--purple);
+}
+.prod-preview-empty {
+  padding: 14px 2px;
+  color: var(--t3);
+}
+.prod-when {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  color: var(--t2);
+}
+.prod-when-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  flex: none;
+  background: var(--card);
+  color: var(--t2);
+}
+.prod-when-chip.on {
+  background: var(--purple-dim);
+  color: var(--t1);
+}
+.prod-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.prod-btn {
+  flex: 1;
+  min-width: 140px;
+  min-height: 46px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  box-shadow: inset 0 0 0 1.5px var(--purple);
+  color: var(--purple);
+}
+.prod-btn.fill {
+  background: var(--purple);
+  color: var(--bg);
+  box-shadow: none;
+}
+.prod-btn.fill:disabled {
+  opacity: 0.65;
+}
+.prod-btn.wide {
+  flex-basis: 100%;
+}
+
+/* ============================================================
+   Ask AI
+   ============================================================ */
+.ask {
+  display: flex;
+  flex-direction: column;
+  min-height: 62vh;
+}
+.ask-thread {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 8px;
+}
+.ask-empty {
+  text-align: center;
+  padding: 30px 0 10px;
+}
+.ask-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 24px;
+  background: var(--card);
+}
+.ask-empty-line {
+  margin: 16px auto 0;
+  max-width: 260px;
+  font-size: 16px;
+  color: var(--t2);
+  line-height: 1.5;
+}
+.ask-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 22px;
+}
+.ask-example {
+  min-height: 46px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: var(--card);
+  color: var(--t2);
+  font-size: 14px;
+  text-align: left;
+}
+.ask-bubble {
+  max-width: calc(100% - 60px);
+  padding: 12px 15px;
+  border-radius: 20px;
+  font-size: 15px;
+  line-height: 21px;
+  letter-spacing: -0.1px;
+  white-space: pre-wrap;
+}
+.ask-bubble.user {
+  align-self: flex-end;
+  background: var(--purple);
+  color: #fff;
+}
+.ask-bubble.assistant {
+  align-self: flex-start;
+  background: var(--card);
+  color: var(--t1);
+}
+.ask-dots {
+  display: inline-flex;
+  gap: 5px;
+  padding: 3px 0;
+}
+.ask-dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--t3);
+  animation: ask-pulse 1.2s ease-in-out infinite;
+}
+.ask-dots i:nth-child(2) { animation-delay: 0.15s; }
+.ask-dots i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes ask-pulse {
+  0%, 60%, 100% { opacity: 0.3; }
+  30% { opacity: 1; }
+}
+.ask-composer {
+  position: sticky;
+  bottom: 0;
+  padding: 12px 0 4px;
+  background: var(--bg);
+}
+.ask-input-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+.ask-input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  max-height: 132px;
+  padding: 13px 16px;
+  border-radius: 20px;
+  border: 0;
+  outline: none;
+  resize: none;
+  background: var(--card);
+  color: var(--t1);
+  font: inherit;
+  font-size: 15px;
+  line-height: 21px;
+}
+.ask-input::placeholder {
+  color: var(--t3);
+}
+.ask-send {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  display: grid;
+  place-items: center;
+  background: var(--card);
+  color: var(--t3);
+  transition: background-color 180ms ease-out, color 180ms ease-out;
+}
+.ask-send.on {
+  background: var(--purple);
+  color: var(--bg);
+}
+.ask-disclaimer {
+  margin-top: 8px;
+  text-align: center;
+  color: var(--t3);
+}
+@media (prefers-reduced-motion: reduce) {
+  .prod-card { animation: none; }
+  .ask-dots i { animation: none; opacity: 0.6; }
 }

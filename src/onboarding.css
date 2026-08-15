@@ -550,36 +550,30 @@
   user-select: none;
 }
 .ob-goal-icon {
-  width: 210px;
-  height: 210px;
-  border-radius: 34px;
+  width: 264px;
+  height: 264px;
   display: grid;
   place-items: center;
-  box-shadow: inset 0 0 0 2px var(--hairline);
-  transition:
-    box-shadow 180ms var(--ob-ease),
-    background-color 180ms var(--ob-ease);
   flex: none;
-  padding: 14px;
-}
-.ob-goal-icon.on {
-  box-shadow: inset 0 0 0 2.5px var(--accent);
-  background: var(--accent-dim);
+  /* flush on the background — no ring, no plate */
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
 }
 .ob-goal-art {
   width: 100%;
   height: 100%;
   object-fit: contain;
   pointer-events: none;
-  transition: filter 180ms var(--ob-ease), opacity 180ms var(--ob-ease);
-  opacity: 0.72;
+  transition: filter 180ms var(--ob-ease);
+  /* the tiles are dark line art; a soft shadow lifts them off flat black */
+  filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.75));
 }
 .ob-goal-icon.on .ob-goal-art {
-  opacity: 1;
-  /* the artwork is white line work; a drop-shadow in the accent lifts the
-     selected tile without recolouring the raster */
-  filter: drop-shadow(0 0 10px var(--accent));
+  filter: drop-shadow(0 0 22px var(--accent)) drop-shadow(0 14px 26px rgba(0, 0, 0, 0.75));
 }
+
 .ob-dots {
   display: flex;
   gap: 7px;
@@ -1046,13 +1040,19 @@
 }
 
 /* ── goals stage ── */
+/* wider than the screen so the neighbouring tiles are visible either side,
+   with the overflow masked to a soft edge rather than a hard cut */
 .ob-goal-stage {
   position: relative;
-  width: 210px;
-  height: 210px;
+  width: 100vw;
+  max-width: 520px;
+  height: 270px;
   display: grid;
   place-items: center;
   flex: none;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
 }
 .ob-goal-stage > * {
   position: absolute;
