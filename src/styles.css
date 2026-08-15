@@ -587,9 +587,19 @@ button {
   gap: 10px;
   margin-top: 13px;
 }
-.btn {
+/* the only row that shares width between two buttons */
+.result-actions .btn {
   flex: 1;
+  min-width: 0;
+}
+/* NOT flex: 1. This button is used inside column flex containers (.auth-form,
+   the sheets), where flex:1 resolves flex-basis:0 against the VERTICAL axis and
+   silently overrides the height — every button in a form collapsed to ~20px.
+   The one place it needs to share a row scopes it below. */
+.btn {
+  flex: none;
   height: 56px;
+  min-height: 56px;
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -956,8 +966,10 @@ button {
   padding: 18px 4px;
 }
 .add-dose {
+  flex: none;
   margin-top: 12px;
   height: 56px;
+  min-height: 56px;
   width: 100%;
   border-radius: 16px;
   box-shadow: inset 0 0 0 1.5px var(--purple);
@@ -983,8 +995,10 @@ button {
   margin-bottom: 12px;
 }
 .schedule-remove-btn {
+  flex: none;
   width: 100%;
   height: 52px;
+  min-height: 52px;
   border-radius: 16px;
   box-shadow: inset 0 0 0 1.5px var(--danger-dim);
   color: var(--danger);
