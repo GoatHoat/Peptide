@@ -5,6 +5,8 @@ import { Today } from './screens/Today';
 import { Discover } from './screens/Discover';
 import { You } from './screens/You';
 import { Auth } from './screens/Auth';
+import { Onboarding } from './onboarding/Onboarding';
+import { hasOnboarded } from './onboarding/store';
 import { useAuth } from './lib/auth';
 import { usePrefs } from './lib/prefs';
 import { SheetPortalProvider } from './lib/sheetPortal';
@@ -34,7 +36,13 @@ export default function App() {
 
 function Body({ framed }: { framed: boolean }) {
   const { loading, session } = useAuth();
+  /* Onboarding owns the account creation, so it runs before the auth gate
+     rather than behind it. Once finished it is never shown again on this
+     device unless localStorage is cleared. */
+  const [onboarded, setOnboarded] = useState(() => hasOnboarded());
+
   if (loading) return <div className="app splash" />;
+  if (!onboarded) return <Onboarding onFinished={() => setOnboarded(true)} />;
   if (!session) return <AuthScreen framed={framed} />;
   return <Gate framed={framed} />;
 }

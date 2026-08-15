@@ -6,6 +6,7 @@ import { ProfileProvider } from './lib/prefs';
 import { isSupabaseConfigured } from './lib/supabaseClient';
 import { SetupNeeded } from './screens/SetupNeeded';
 import './styles.css';
+import './onboarding.css';
 
 /* production only — a service worker in dev just serves stale bundles.
  *

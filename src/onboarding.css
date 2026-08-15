@@ -912,3 +912,148 @@
     transition-duration: 120ms !important;
   }
 }
+
+/* ── welcome ── */
+.ob-welcome {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.ob-welcome-name {
+  margin-top: 20px;
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -1.4px;
+}
+.ob-welcome-line {
+  margin-top: 12px;
+  max-width: 260px;
+  font-size: 17px;
+  color: var(--t2);
+  line-height: 1.5;
+}
+
+/* ── auth ── */
+.ob-auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 28px;
+}
+.ob-provider {
+  height: 56px;
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow: inset 0 0 0 1.5px var(--hairline);
+  color: var(--t1);
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 120ms var(--ob-ease), opacity 180ms var(--ob-ease);
+}
+.ob-provider:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.ob-provider:disabled {
+  opacity: 0.45;
+}
+.ob-provider.apple {
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.5);
+}
+.ob-textlink {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  color: var(--t2);
+  font-size: 15px;
+}
+.ob-textlink.left {
+  text-align: left;
+  width: auto;
+  color: var(--accent-light);
+  font-weight: 500;
+}
+.ob-textlink b {
+  color: var(--accent-light);
+  font-weight: 600;
+}
+.ob-legal {
+  margin-top: 2px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--t3);
+  line-height: 1.5;
+}
+.ob-legal a {
+  color: var(--t2);
+}
+.ob-form {
+  margin-top: 26px;
+}
+
+/* ── meals ── */
+.ob-meal-name {
+  display: block;
+  width: 100%;
+  background: none;
+  border: 0;
+  outline: none;
+  color: var(--t1);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  padding: 0;
+}
+.ob-add {
+  width: 100%;
+  height: 52px;
+  margin-top: 12px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1.5px var(--hairline);
+  color: var(--t2);
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* ── goals stage ── */
+.ob-goal-stage {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.ob-goal-stage > * {
+  position: absolute;
+}
+
+/* ── the drawing arc on the loading screens ── */
+.ob-arc-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: ob-draw 1400ms var(--ob-ease) infinite;
+}
+@keyframes ob-draw {
+  0% { stroke-dashoffset: 1; }
+  55% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 0; opacity: 0.25; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ob-arc-draw {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 0.6;
+  }
+}
