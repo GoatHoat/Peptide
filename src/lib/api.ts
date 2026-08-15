@@ -13,6 +13,9 @@ export interface Profile {
   larger_text: boolean;
   subscription_tier: string;
   blood_test_reminder: boolean;
+  /** the waking day; absent until migration 0014 has been run */
+  wake_time?: string | null;
+  sleep_time?: string | null;
 }
 
 export type GlossaryCategory = 'healing' | 'growth' | 'cosmetic' | 'cognitive' | 'other';

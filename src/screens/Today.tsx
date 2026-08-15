@@ -5,6 +5,7 @@ import { AddSchedule } from './AddSchedule';
 import { DoseHistory } from './DoseHistory';
 import { DayDoses } from './DayDoses';
 import { useAuth } from '../lib/auth';
+import { usePrefs } from '../lib/prefs';
 import { ensureTodayDoses, getComplianceMap, getDosesForDate, setDoseTaken, type Dose } from '../lib/api';
 import { addDays, formatDisplayDate, formatShortDate, parseHour, startOfWeekMonday, toISODate } from '../lib/date';
 import { useNow } from '../lib/now';
@@ -31,6 +32,7 @@ type SheetState =
 
 export function Today() {
   const { user } = useAuth();
+  const { profile } = usePrefs();
   const activeTab = useActiveTab();
   const [doses, setDoses] = useState<Dose[] | null>(null);
   const [compliance, setCompliance] = useState<Record<string, { total: number; taken: number }>>({});
@@ -119,7 +121,14 @@ export function Today() {
         })}
       </div>
 
-      <Arc doses={arcDoses} leftToday={leftToday} />
+      {/* the arc spans the user's own waking day, so the dividers land where
+          those times actually fall. Defaults until onboarding has set them. */}
+      <Arc
+        doses={arcDoses}
+        leftToday={leftToday}
+        dayStart={parseHour(profile?.wake_time ?? null) ?? 7}
+        dayEnd={parseHour(profile?.sleep_time ?? null) ?? 23}
+      />
 
       <div className="divider">
         <span className="divider-line" />

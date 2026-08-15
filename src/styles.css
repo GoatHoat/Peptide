@@ -1363,3 +1363,13 @@ button {
   color: var(--t3);
   line-height: 16px;
 }
+
+/* the taken segment wipes on from the left — ease-in, so it starts slow */
+.arc-fill {
+  transition: stroke-dashoffset 620ms cubic-bezier(0.42, 0, 1, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .arc-fill {
+    transition: none;  
+  }
+}
