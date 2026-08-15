@@ -1407,3 +1407,40 @@ button {
     transition: none;  
   }
 }
+
+/* the preview box holds the first paper on file rather than a placeholder */
+.thumb-paper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 7px;
+  padding: 20px 20px 18px;
+  text-align: left;
+  text-decoration: none;
+  color: var(--t1);
+}
+.thumb-kicker {
+  color: var(--t3);
+}
+.thumb-title {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  line-height: 25px;
+  /* long paper titles are normal; clamp rather than blow the box open */
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.thumb-meta {
+  color: var(--t2);
+}
+.thumb-cta {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--purple);
+}

@@ -30,7 +30,7 @@ export const GOALS: Goal[] = [
     id: 'sleep',
     name: 'Sleep',
     copy: 'Anything that belongs in your wind-down gets scheduled there, and the app checks nothing lands too close to bed.',
-    tags: ['Mood', 'Recovery'],
+    tags: ['Sleep', 'Mood'],
     icon: <path {...S} d="M62 54A24 24 0 0 1 38 24a26 26 0 1 0 24 30z" />,
   },
   {

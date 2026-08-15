@@ -9,7 +9,9 @@ import {
   getStackMembership,
   listGlossary,
   matchGoal,
+  getGlossaryResearch,
   type GlossaryEntry,
+  type GlossaryResearch,
   type GoalSynonym,
 } from '../lib/api';
 import { computeMatchReason } from '../lib/matchReason';
@@ -44,6 +46,8 @@ export function Discover() {
   const [justAdded, setJustAdded] = useState<GlossaryEntry | null>(null);
   const [schedulingEntry, setSchedulingEntry] = useState<GlossaryEntry | null>(null);
   const [synonyms, setSynonyms] = useState<GoalSynonym[]>([]);
+  /** the paper shown inside the preview box for whatever is on top */
+  const [preview, setPreview] = useState<GlossaryResearch | null>(null);
 
   useEffect(() => {
     getGoalSynonyms().then(setSynonyms);
@@ -63,6 +67,23 @@ export function Discover() {
 
   const top = results[0] ?? null;
   const rest = results.slice(1);
+
+  /* The preview follows whatever is on top, so it changes with the search
+     rather than showing a paper for something no longer on screen. */
+  useEffect(() => {
+    let live = true;
+    if (!top) {
+      setPreview(null);
+      return;
+    }
+    setPreview(null);
+    getGlossaryResearch(top.id)
+      .then((rows) => live && setPreview(rows[0] ?? null))
+      .catch(() => live && setPreview(null));
+    return () => {
+      live = false;
+    };
+  }, [top?.id]);
   const topReason = top ? computeMatchReason(top, query, synonyms) : null;
   const detailReason = detailEntry ? computeMatchReason(detailEntry, query, synonyms) : null;
 
@@ -129,11 +150,36 @@ export function Discover() {
       {!loading && top && (
         <div className="result">
           <div className="result-title">{top.name}</div>
-          <div className="thumb">
-            <span style={{ color: 'var(--t4)', display: 'flex' }}>
-              <IconDoc />
-            </span>
-          </div>
+          {/* The box used to be an empty placeholder. It now holds the first
+              paper on file for this entry and opens it. */}
+          {preview ? (
+            <a
+              className="thumb thumb-paper pressable"
+              href={preview.url ?? undefined}
+              target={preview.url ? '_blank' : undefined}
+              rel="noreferrer"
+              onClick={(e) => {
+                if (!preview.url) {
+                  e.preventDefault();
+                  setDetailEntry(top);
+                }
+              }}
+            >
+              <span className="thumb-kicker t-label">Latest paper</span>
+              <span className="thumb-title">{preview.title}</span>
+              {preview.meta && <span className="thumb-meta t-caption">{preview.meta}</span>}
+              <span className="thumb-cta t-body-m">
+                {preview.url ? 'Read the paper' : 'See what we have'}
+                <IconChevron />
+              </span>
+            </a>
+          ) : (
+            <button className="thumb pressable" onClick={() => setDetailEntry(top)}>
+              <span style={{ color: 'var(--t4)', display: 'flex' }}>
+                <IconDoc />
+              </span>
+            </button>
+          )}
           <div className="result-actions">
             <button
               className="btn btn-fill pressable"
