@@ -167,9 +167,7 @@ function GoalCard({
       aria-pressed={on}
       aria-label={`${goal.name}${on ? ', selected' : ''}`}
     >
-      <svg width="96" height="96" viewBox="0 0 96 96" style={{ color: on ? 'var(--accent)' : 'var(--accent-light)' }} aria-hidden>
-        {goal.icon}
-      </svg>
+      <img className="ob-goal-art" src={goal.img} alt="" draggable={false} />
     </motion.button>
   );
 }

@@ -535,10 +535,12 @@
 }
 
 /* ── goals ── */
+/* .ob-body is not a flex container, so flex:1 here did nothing and the whole
+   composition sat at the top of the screen. A definite height is what lets
+   justify-content actually centre it. */
 .ob-goals {
   position: relative;
-  flex: 1;
-  min-height: 0;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -548,18 +550,35 @@
   user-select: none;
 }
 .ob-goal-icon {
-  width: 200px;
-  height: 200px;
-  border-radius: 100px;
+  width: 210px;
+  height: 210px;
+  border-radius: 34px;
   display: grid;
   place-items: center;
   box-shadow: inset 0 0 0 2px var(--hairline);
-  transition: box-shadow 180ms var(--ob-ease);
+  transition:
+    box-shadow 180ms var(--ob-ease),
+    background-color 180ms var(--ob-ease);
   flex: none;
+  padding: 14px;
 }
 .ob-goal-icon.on {
-  box-shadow: inset 0 0 0 3px var(--accent);
+  box-shadow: inset 0 0 0 2.5px var(--accent);
   background: var(--accent-dim);
+}
+.ob-goal-art {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  transition: filter 180ms var(--ob-ease), opacity 180ms var(--ob-ease);
+  opacity: 0.72;
+}
+.ob-goal-icon.on .ob-goal-art {
+  opacity: 1;
+  /* the artwork is white line work; a drop-shadow in the accent lifts the
+     selected tile without recolouring the raster */
+  filter: drop-shadow(0 0 10px var(--accent));
 }
 .ob-dots {
   display: flex;
@@ -1029,8 +1048,8 @@
 /* ── goals stage ── */
 .ob-goal-stage {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 210px;
+  height: 210px;
   display: grid;
   place-items: center;
   flex: none;
