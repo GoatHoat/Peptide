@@ -1472,3 +1472,69 @@ button {
   display: inline-flex;
   align-items: center;
 }
+
+/* ============================================================
+   Discover tabs — segmented control over a swipeable pager
+   ============================================================ */
+.tabs {
+  position: relative;
+  margin-top: 18px;
+}
+.tabs-bar {
+  position: relative;
+  display: flex;
+  gap: 22px;
+  padding-bottom: 11px;
+}
+.tabs-tab {
+  flex: none;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  color: var(--t2);
+  min-height: 34px;
+  transition: color 180ms ease-out;
+}
+.tabs-tab.on {
+  color: var(--t1);
+}
+.tabs-underline {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--purple);
+  will-change: transform, width;
+}
+.tabs-track {
+  display: flex;
+  margin-top: 4px;
+  will-change: transform;
+}
+.tabs-panel {
+  flex: none;
+  min-width: 0;
+  /* the pager only translates; each panel scrolls with the page */
+  padding-right: 0;
+}
+/* the peptide tab's standing caveat */
+.tab-note {
+  margin: 14px 0 2px;
+  color: var(--t3);
+  line-height: 1.45;
+}
+.evidence-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--purple-dim);
+  color: var(--purple);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  text-transform: capitalize;
+  flex: none;
+}

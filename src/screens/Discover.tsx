@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Sheet } from '../components/Sheet';
+import { Tabs } from '../components/Tabs';
 import { GlossaryDetail } from './GlossaryDetail';
 import { AddSchedule } from './AddSchedule';
 import { useAuth } from '../lib/auth';
@@ -67,8 +68,13 @@ export function Discover() {
     return () => clearTimeout(handle);
   }, [query]);
 
-  const top = results[0] ?? null;
-  const rest = results.slice(1);
+  const [kind, setKind] = useState<'supplement' | 'peptide'>('supplement');
+
+  /* Until migration 0016 lands nothing carries a kind, so an unset value is
+     treated as a peptide — that is what every existing entry is. */
+  const shown = results.filter((r) => (r.kind ?? 'peptide') === kind);
+  const top = shown[0] ?? null;
+  const rest = shown.slice(1);
 
   /* The preview follows whatever is on top, so it changes with the search
      rather than showing a paper for something no longer on screen. */
@@ -123,125 +129,142 @@ export function Discover() {
         <div className="screen-sub t-body">Glossary · Research</div>
       </div>
 
-      {/* Free-text match against the existing catalog (see src/lib/api.ts
-          matchGoal). Never a generated answer — always a filtered list of
-          entries that already exist, with their existing categorical info. */}
-      <div className="search">
-        <span style={{ color: 'var(--t3)', display: 'flex' }}>
-          <IconMenu />
-        </span>
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search a peptide, or describe your goal"
-          spellCheck={false}
-        />
-        <span style={{ color: 'var(--t3)', display: 'flex' }}>
-          <IconSearch />
-        </span>
-      </div>
-
-      {topReason && (
-        <div className="match-context t-caption" style={{ marginTop: 10 }}>
-          {topReason.type === 'keyword'
-            ? `Matched "${query.trim()}" via: "${topReason.keyword}"`
-            : `Understood "${query.trim()}" as related to: ${topReason.tags.map((t) => CATEGORY_LABEL[t] ?? t).join(', ')}`}
-        </div>
-      )}
-
-      {!loading && top && (
-        <div className="result">
-          <div className="result-title">{top.name}</div>
-          <div className="result-kind t-caption">
-            {KIND_LABEL[top.kind ?? 'peptide']} · {CATEGORY_LABEL[top.category] ?? top.category} · {top.route}
-          </div>
-          {/* The box used to be an empty placeholder. It now holds the first
-              paper on file for this entry and opens it. */}
-          {preview ? (
-            <a
-              className="thumb thumb-paper pressable"
-              href={preview.url ?? undefined}
-              target={preview.url ? '_blank' : undefined}
-              rel="noreferrer"
-              onClick={(e) => {
-                if (!preview.url) {
-                  e.preventDefault();
-                  setDetailEntry(top);
-                }
-              }}
-            >
-              <span className="thumb-kicker t-label">Latest paper</span>
-              <span className="thumb-title">{preview.title}</span>
-              {preview.meta && <span className="thumb-meta t-caption">{preview.meta}</span>}
-              <span className="thumb-cta t-body-m">
-                {preview.url ? 'Read the paper' : 'See what we have'}
-                <IconChevron />
-              </span>
-            </a>
-          ) : (
-            <button className="thumb pressable" onClick={() => setDetailEntry(top)}>
-              <span style={{ color: 'var(--t4)', display: 'flex' }}>
-                <IconDoc />
-              </span>
-            </button>
-          )}
-          <div className="result-actions">
-            <button
-              className="btn btn-fill pressable"
-              onClick={() => handleAddToStack(top)}
-              disabled={inStackIds.has(top.id) || addingIds.has(top.id)}
-            >
-              <IconClock color="var(--bg)" />
-              {inStackIds.has(top.id) ? 'Added to Stack' : addingIds.has(top.id) ? 'Adding…' : 'Add To Stack'}
-            </button>
-            <button className="btn btn-out pressable" onClick={() => setDetailEntry(top)}>
-              <IconChat size={15} />
-              More Info
-            </button>
-          </div>
-        </div>
-      )}
-
-      {!loading && !top && (
-        <div className="empty-state t-body" style={{ marginTop: 27 }}>
-          {query.trim() ? `Nothing in the catalog matches "${query.trim()}" yet.` : 'No matches.'}
-        </div>
-      )}
-
-      <div className="papers">
-        <span className="rail" />
-        {rest.map((r) => {
-          const reason = computeMatchReason(r, query, synonyms);
+      <Tabs
+        tabs={[
+          { id: 'ask', label: 'Ask AI' },
+          { id: 'peptide', label: 'Peptides' },
+          { id: 'supplement', label: 'Vitamins & Minerals' },
+        ]}
+        storageKey="pepstack.discover.tab"
+        defaultId="supplement"
+      >
+        {(tab) => {
+          if (tab.id === 'ask') return <AskPlaceholder />;
           return (
-          <div key={r.id} className="paper">
-            <div className="paper-title">{r.name}</div>
-            {reason?.type === 'keyword' && (
-              <div className="t-caption" style={{ color: 'var(--t3)', marginTop: 1 }}>
-                Matched: "{reason.keyword}"
-              </div>
-            )}
-            <div className="paper-meta">
-              <span style={{ color: 'var(--t3)', display: 'flex' }}>
-                <IconPerson />
-              </span>
-              {KIND_LABEL[r.kind ?? 'peptide']} · {CATEGORY_LABEL[r.category] ?? r.category}
-              <button
-                className="paper-add pressable"
-                onClick={() => handleAddToStack(r)}
-                disabled={inStackIds.has(r.id) || addingIds.has(r.id)}
-                aria-label="Add to stack"
+            <KindPanel kind={tab.id as 'peptide' | 'supplement'} onEnter={setKind}>
+        {/* Free-text match against the existing catalog (see src/lib/api.ts
+            matchGoal). Never a generated answer — always a filtered list of
+            entries that already exist, with their existing categorical info. */}
+        <div className="search">
+          <span style={{ color: 'var(--t3)', display: 'flex' }}>
+            <IconMenu />
+          </span>
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search a peptide, or describe your goal"
+            spellCheck={false}
+          />
+          <span style={{ color: 'var(--t3)', display: 'flex' }}>
+            <IconSearch />
+          </span>
+        </div>
+
+        {topReason && (
+          <div className="match-context t-caption" style={{ marginTop: 10 }}>
+            {topReason.type === 'keyword'
+              ? `Matched "${query.trim()}" via: "${topReason.keyword}"`
+              : `Understood "${query.trim()}" as related to: ${topReason.tags.map((t) => CATEGORY_LABEL[t] ?? t).join(', ')}`}
+          </div>
+        )}
+
+        {!loading && top && (
+          <div className="result">
+            <div className="result-title">{top.name}</div>
+            <div className="result-kind t-caption">
+              {KIND_LABEL[top.kind ?? 'peptide']} · {CATEGORY_LABEL[top.category] ?? top.category} · {top.route}
+            </div>
+            {/* The box used to be an empty placeholder. It now holds the first
+                paper on file for this entry and opens it. */}
+            {preview ? (
+              <a
+                className="thumb thumb-paper pressable"
+                href={preview.url ?? undefined}
+                target={preview.url ? '_blank' : undefined}
+                rel="noreferrer"
+                onClick={(e) => {
+                  if (!preview.url) {
+                    e.preventDefault();
+                    setDetailEntry(top);
+                  }
+                }}
               >
-                {inStackIds.has(r.id) ? <IconCheck size={13} color="var(--purple)" /> : <IconPlus size={13} />}
+                <span className="thumb-kicker t-label">Latest paper</span>
+                <span className="thumb-title">{preview.title}</span>
+                {preview.meta && <span className="thumb-meta t-caption">{preview.meta}</span>}
+                <span className="thumb-cta t-body-m">
+                  {preview.url ? 'Read the paper' : 'See what we have'}
+                  <IconChevron />
+                </span>
+              </a>
+            ) : (
+              <button className="thumb pressable" onClick={() => setDetailEntry(top)}>
+                <span style={{ color: 'var(--t4)', display: 'flex' }}>
+                  <IconDoc />
+                </span>
               </button>
-              <button className="paper-more" onClick={() => setDetailEntry(r)}>
-                See More
-                <IconChevron />
+            )}
+            <div className="result-actions">
+              <button
+                className="btn btn-fill pressable"
+                onClick={() => handleAddToStack(top)}
+                disabled={inStackIds.has(top.id) || addingIds.has(top.id)}
+              >
+                <IconClock color="var(--bg)" />
+                {inStackIds.has(top.id) ? 'Added to Stack' : addingIds.has(top.id) ? 'Adding…' : 'Add To Stack'}
+              </button>
+              <button className="btn btn-out pressable" onClick={() => setDetailEntry(top)}>
+                <IconChat size={15} />
+                More Info
               </button>
             </div>
           </div>
+        )}
+
+        {!loading && !top && (
+          <div className="empty-state t-body" style={{ marginTop: 27 }}>
+            {query.trim() ? `Nothing in the catalog matches "${query.trim()}" yet.` : 'No matches.'}
+          </div>
+        )}
+
+        <div className="papers">
+          <span className="rail" />
+          {rest.map((r) => {
+            const reason = computeMatchReason(r, query, synonyms);
+            return (
+            <div key={r.id} className="paper">
+              <div className="paper-title">{r.name}</div>
+              {reason?.type === 'keyword' && (
+                <div className="t-caption" style={{ color: 'var(--t3)', marginTop: 1 }}>
+                  Matched: "{reason.keyword}"
+                </div>
+              )}
+              <div className="paper-meta">
+                <span style={{ color: 'var(--t3)', display: 'flex' }}>
+                  <IconPerson />
+                </span>
+                {KIND_LABEL[r.kind ?? 'peptide']} · {CATEGORY_LABEL[r.category] ?? r.category}
+                <button
+                  className="paper-add pressable"
+                  onClick={() => handleAddToStack(r)}
+                  disabled={inStackIds.has(r.id) || addingIds.has(r.id)}
+                  aria-label="Add to stack"
+                >
+                  {inStackIds.has(r.id) ? <IconCheck size={13} color="var(--purple)" /> : <IconPlus size={13} />}
+                </button>
+                <button className="paper-more" onClick={() => setDetailEntry(r)}>
+                  See More
+                  <IconChevron />
+                </button>
+              </div>
+            </div>
+            );
+          })}
+        </div>
+            </KindPanel>
           );
-        })}
-      </div>
+        }}
+      </Tabs>
 
       <Sheet open={!!detailEntry} onClose={() => setDetailEntry(null)} title={detailEntry?.name ?? ''}>
         {detailEntry && (
@@ -294,5 +317,42 @@ export function Discover() {
         )}
       </Sheet>
     </>
+  );
+}
+
+/**
+ * Each tab renders the same list filtered to its own kind. The filter lives in
+ * the parent so the search, the preview and the stack membership are shared
+ * rather than fetched three times; this just tells the parent which kind is on
+ * screen as the pager settles.
+ */
+function KindPanel({
+  kind,
+  onEnter,
+  children,
+}: {
+  kind: 'peptide' | 'supplement';
+  onEnter: (k: 'peptide' | 'supplement') => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div onPointerDownCapture={() => onEnter(kind)}>
+      {kind === 'peptide' && (
+        <p className="tab-note t-caption">
+          Reference only. These are not over-the-counter supplements and Pepstack does not
+          recommend doses for them.
+        </p>
+      )}
+      {children}
+    </div>
+  );
+}
+
+/** Stage 4 of the build. The chat itself needs the edge function first. */
+function AskPlaceholder() {
+  return (
+    <div className="empty-state t-body" style={{ marginTop: 40, textAlign: 'center' }}>
+      Ask AI is not wired up yet — it needs the server-side function and an Anthropic key.
+    </div>
   );
 }
