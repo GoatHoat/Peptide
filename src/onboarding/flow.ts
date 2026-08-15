@@ -50,6 +50,21 @@ export const NO_BACK: ReadonlySet<Step> = new Set<Step>([
 
 export const indexOfStep = (s: Step): number => FLOW.indexOf(s);
 
+/**
+ * Steps that do not apply given what has been answered so far.
+ *
+ * Branching lives here rather than inside the screens, so the flow array stays
+ * the single description of the order and a screen still never knows what
+ * comes before or after it. Evaluated live on every move, so going back and
+ * changing an answer re-opens whatever it closed.
+ */
+export function isSkipped(step: Step, answers: { q2: string | null }): boolean {
+  // "What usually goes wrong?" has no answer for someone who has never
+  // started a routine in the first place.
+  if (step === 'q3' && answers.q2 === 'never') return true;
+  return false;
+}
+
 export function nextStep(s: Step): Step | null {
   const i = FLOW.indexOf(s);
   return i >= 0 && i < FLOW.length - 1 ? FLOW[i + 1] : null;

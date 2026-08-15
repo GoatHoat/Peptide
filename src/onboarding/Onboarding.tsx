@@ -128,7 +128,15 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           <SurveyScreen
             question={QUESTIONS[step]}
             value={state.survey[step]}
-            onPick={(v) => patch({ survey: { ...state.survey, [step]: v } })}
+            onPick={(v) =>
+              patch({
+                survey:
+                  // answering "never tried" retires q3, so its answer goes too
+                  step === 'q2' && v === 'never'
+                    ? { ...state.survey, q2: v, q3: null }
+                    : { ...state.survey, [step]: v },
+              })
+            }
             onNext={next}
           />
         );

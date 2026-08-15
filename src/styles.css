@@ -1450,3 +1450,25 @@ button {
   color: var(--t3);
   text-transform: capitalize;
 }
+
+/* branded product header inside the detail sheet */
+.glossary-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 12px;
+  color: var(--t3);
+}
+.glossary-brand-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--t2);
+}
+.glossary-brand-link {
+  margin-left: auto;
+  color: var(--purple);
+  text-decoration: none;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+}

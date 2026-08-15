@@ -32,8 +32,12 @@ export interface GlossaryEntry {
   research_summary: string | null;
   goal_tags: string[];
   search_keywords: string[];
-  /** peptide or supplement; absent until migration 0016 has been run */
+  /** these four arrive with migration 0016 */
   kind?: 'peptide' | 'supplement' | null;
+  brand?: string | null;
+  product_form?: string | null;
+  /** the NIH Dietary Supplement Label Database filing for this product */
+  label_url?: string | null;
 }
 
 export interface GlossaryResearch {
@@ -443,7 +447,9 @@ export async function getGlossaryResearch(glossaryId: string): Promise<GlossaryR
     .from('glossary_research')
     .select('*')
     .eq('glossary_id', glossaryId)
-    .order('created_at', { ascending: false });
+    // ascending, so the five read efficacy -> mechanism -> safety ->
+    // practical -> interactions rather than arriving backwards
+    .order('created_at', { ascending: true });
   if (error) throw error;
   return data as GlossaryResearch[];
 }

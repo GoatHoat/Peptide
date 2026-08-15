@@ -40,7 +40,21 @@ export function GlossaryDetail({ entry, matchContext }: Props) {
         </div>
       )}
 
+      {/* a branded product says whose label this is, and links the filing */}
+      {entry.brand && (
+        <div className="glossary-brand">
+          <span className="glossary-brand-name">{entry.brand}</span>
+          {entry.product_form && <span className="t-caption"> · {entry.product_form}</span>}
+          {entry.label_url && (
+            <a className="glossary-brand-link t-caption" href={entry.label_url} target="_blank" rel="noreferrer">
+              NIH label
+            </a>
+          )}
+        </div>
+      )}
+
       <div className="glossary-tags">
+        <span className="tag">{entry.kind === 'supplement' ? 'Supplement' : 'Peptide'}</span>
         <span className="tag">{CATEGORY_LABEL[entry.category] ?? entry.category}</span>
         <span className="tag">{ROUTE_LABEL[entry.route] ?? entry.route}</span>
         {entry.goal_tags.map((g) => (
@@ -86,7 +100,7 @@ export function GlossaryDetail({ entry, matchContext }: Props) {
       {research && research.length > 0 && (
         <div className="glossary-field">
           <div className="t-label" style={{ color: 'var(--t3)' }}>
-            Related Research
+            {research.length === 1 ? 'The paper' : `The ${research.length} papers`}
           </div>
           <div style={{ marginTop: 8 }}>
             {research.map((r) => (

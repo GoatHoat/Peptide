@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FLOW, type Step } from './flow';
+import { FLOW, isSkipped, type Step } from './flow';
 
 export interface Meal {
   id: string;
@@ -98,8 +98,21 @@ export function useOnboardingStore() {
     setState((s) => ({ ...s, step: Math.max(0, Math.min(FLOW.length - 1, step)) }));
   }, []);
 
-  const next = useCallback(() => setState((s) => ({ ...s, step: Math.min(FLOW.length - 1, s.step + 1) })), []);
-  const back = useCallback(() => setState((s) => ({ ...s, step: Math.max(0, s.step - 1) })), []);
+  /** Walk over anything the answers so far have made irrelevant. */
+  const step_ = useCallback((s: OnboardingState, dir: 1 | -1) => {
+    let i = s.step + dir;
+    while (i > 0 && i < FLOW.length - 1 && isSkipped(FLOW[i], s.survey)) i += dir;
+    return Math.max(0, Math.min(FLOW.length - 1, i));
+  }, []);
+
+  const next = useCallback(
+    () => setState((s) => ({ ...s, step: step_(s, 1) })),
+    [step_],
+  );
+  const back = useCallback(
+    () => setState((s) => ({ ...s, step: step_(s, -1) })),
+    [step_],
+  );
 
   const reset = useCallback(() => {
     try {

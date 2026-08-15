@@ -173,8 +173,8 @@ export interface Question {
 export const QUESTIONS: Record<'q1' | 'q2' | 'q3', Question> = {
   q1: {
     id: 'q1',
-    title: 'How many separate things are you taking right now?',
-    sub: 'Including anything over the counter.',
+    title: 'How many peptides or supplements are you taking right now?',
+    sub: 'Count each one separately, including anything over the counter.',
     options: [
       { id: 'none', label: 'None yet' },
       { id: '1-2', label: '1–2' },

@@ -62,7 +62,7 @@ export function Notifications({
 
 const VALUE = [
   'Your whole stack in one schedule, built around your day',
-  'A warning when two things shouldn’t share a slot',
+  'A warning when two supplements shouldn’t share a slot',
   'The research behind every suggestion, linked',
 ];
 
