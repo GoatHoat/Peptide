@@ -39,7 +39,16 @@
   --margin: 20px;
   --tab-h: 48px;
 
+  /* Larger Text multiplies this rather than zooming the layout — zoom
+     scales the whole box model (including the fixed 402x874 desktop
+     preview frame and its overflow:hidden clip), which pushed real
+     content outside the clip and broke hit-testing on real buttons. */
+  --text-scale: 1;
+
   color-scheme: dark;
+}
+.app.larger-text {
+  --text-scale: 1.14;
 }
 
 /* One material, used wherever the export shows one. */
@@ -97,44 +106,44 @@ button {
    Type scale
    ============================================================ */
 .t-title {
-  font-size: 33px;
+  font-size: calc(33px * var(--text-scale));
   font-weight: 700;
   letter-spacing: -1px;
-  line-height: 38px;
+  line-height: calc(38px * var(--text-scale));
 }
 .t-big {
-  font-size: 44px;
+  font-size: calc(44px * var(--text-scale));
   font-weight: 700;
   letter-spacing: -1.5px;
   line-height: 1;
 }
 .t-section {
-  font-size: 17px;
+  font-size: calc(17px * var(--text-scale));
   font-weight: 600;
   letter-spacing: -0.45px;
 }
 .t-body {
-  font-size: 15px;
+  font-size: calc(15px * var(--text-scale));
   font-weight: 400;
   letter-spacing: -0.1px;
 }
 .t-body-m {
-  font-size: 15px;
+  font-size: calc(15px * var(--text-scale));
   font-weight: 500;
   letter-spacing: -0.1px;
 }
 .t-secondary {
-  font-size: 13px;
+  font-size: calc(13px * var(--text-scale));
   font-weight: 400;
   letter-spacing: 0;
 }
 .t-caption {
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale));
   font-weight: 400;
   letter-spacing: 0;
 }
 .t-label {
-  font-size: 10.5px;
+  font-size: calc(10.5px * var(--text-scale));
   font-weight: 600;
   letter-spacing: 1.1px;
   text-transform: uppercase;
@@ -168,6 +177,10 @@ button {
   border-radius: 44px;
   background: var(--bg);
   flex: none;
+  /* a transform makes this the containing block for position:fixed
+     descendants (the Sheet overlay) — without it, fixed elements anchor
+     to the real browser viewport instead of this phone-mockup box. */
+  transform: translateZ(0);
 }
 
 .status {
@@ -283,7 +296,7 @@ button {
   will-change: transform;
 }
 .tab-label {
-  font-size: 14px;
+  font-size: calc(14px * var(--text-scale));
   font-weight: 600;
   letter-spacing: -0.2px;
   color: var(--t1);
@@ -296,7 +309,7 @@ button {
   visibility: hidden;
   pointer-events: none;
   white-space: nowrap;
-  font-size: 14px;
+  font-size: calc(14px * var(--text-scale));
   font-weight: 600;
   letter-spacing: -0.2px;
   top: -9999px;
@@ -311,7 +324,7 @@ button {
 }
 .screen-sub {
   margin-top: 6px;
-  line-height: 20px;
+  line-height: calc(20px * var(--text-scale));
   color: var(--t2);
 }
 
@@ -336,7 +349,7 @@ button {
   background: var(--purple);
 }
 .week-dow {
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale));
   font-weight: 500;
   color: var(--t3);
 }
@@ -344,7 +357,7 @@ button {
   color: var(--t2);
 }
 .week-num {
-  font-size: 17px;
+  font-size: calc(17px * var(--text-scale));
   font-weight: 600;
   letter-spacing: -0.45px;
 }
@@ -393,7 +406,7 @@ button {
   display: flex;
   justify-content: space-between;
   color: var(--t3);
-  font-size: 13px;
+  font-size: calc(13px * var(--text-scale));
 }
 .arc-centre {
   position: absolute;
@@ -403,7 +416,7 @@ button {
   text-align: center;
 }
 .arc-count {
-  font-size: 44px;
+  font-size: calc(44px * var(--text-scale));
   font-weight: 700;
   letter-spacing: -1.5px;
   line-height: 1;
@@ -411,7 +424,7 @@ button {
 .arc-left {
   margin-top: -1px;
   color: var(--t2);
-  font-size: 13px;
+  font-size: calc(13px * var(--text-scale));
 }
 
 .divider {
@@ -469,15 +482,15 @@ button {
   width: 61px;
   flex: none;
   color: var(--t3);
-  font-size: 13px;
+  font-size: calc(13px * var(--text-scale));
 }
 .dose-body {
   flex: 1;
   min-width: 0;
 }
 .dose-name {
-  font-size: 15px;
-  line-height: 18px;
+  font-size: calc(15px * var(--text-scale));
+  line-height: calc(18px * var(--text-scale));
   font-weight: 600;
   letter-spacing: -0.1px;
 }
@@ -486,8 +499,8 @@ button {
 }
 .dose-amt {
   margin-top: 3px;
-  font-size: 12px;
-  line-height: 14px;
+  font-size: calc(12px * var(--text-scale));
+  line-height: calc(14px * var(--text-scale));
   color: var(--t3);
 }
 .dose-mark {
@@ -506,8 +519,8 @@ button {
 .warn {
   margin-top: 31px;
   color: var(--purple);
-  font-size: 12px;
-  line-height: 15px;
+  font-size: calc(12px * var(--text-scale));
+  line-height: calc(15px * var(--text-scale));
   text-align: left;
 }
 
@@ -531,11 +544,16 @@ button {
   border: 0;
   outline: none;
   color: var(--t1);
-  font-size: 15px;
+  font-size: calc(15px * var(--text-scale));
   letter-spacing: -0.1px;
 }
 .search input::placeholder {
   color: var(--t3);
+}
+
+.match-context {
+  color: var(--t3);
+  line-height: 1.4;
 }
 
 .result {
@@ -546,9 +564,9 @@ button {
   padding: 15px 15px 9px;
 }
 .result-title {
-  line-height: 18px;
+  line-height: calc(18px * var(--text-scale));
   color: var(--purple);
-  font-size: 15px;
+  font-size: calc(15px * var(--text-scale));
   font-weight: 600;
   letter-spacing: -0.1px;
 }
@@ -574,7 +592,7 @@ button {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font-size: 15px;
+  font-size: calc(15px * var(--text-scale));
   font-weight: 600;
   letter-spacing: -0.1px;
 }
@@ -599,27 +617,40 @@ button {
   justify-content: center;
 }
 .paper-title {
-  line-height: 18px;
-  font-size: 15px;
+  line-height: calc(18px * var(--text-scale));
+  font-size: calc(15px * var(--text-scale));
   font-weight: 600;
   letter-spacing: -0.1px;
 }
 .paper-meta {
   margin-top: 4px;
-  line-height: 14px;
+  line-height: calc(14px * var(--text-scale));
   display: flex;
   align-items: center;
   gap: 6px;
   color: var(--t3);
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale));
+}
+.paper-add {
+  margin-left: auto;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 11px;
+  background: var(--card-hi);
+  color: var(--t2);
+  display: grid;
+  place-items: center;
+}
+.paper-add:disabled {
+  opacity: 0.7;
 }
 .paper-more {
-  margin-left: auto;
   display: flex;
   align-items: center;
   gap: 4px;
   color: var(--purple);
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale));
 }
 
 /* ============================================================
@@ -627,12 +658,12 @@ button {
    ============================================================ */
 .streak {
   margin-top: 8px;
-  line-height: 20px;
+  line-height: calc(20px * var(--text-scale));
   display: flex;
   align-items: center;
   gap: 7px;
   color: var(--purple);
-  font-size: 15px;
+  font-size: calc(15px * var(--text-scale));
   font-weight: 600;
   letter-spacing: -0.1px;
 }
@@ -655,7 +686,7 @@ button {
 .widget-num {
   text-align: center;
   color: var(--purple);
-  font-size: 44px;
+  font-size: calc(44px * var(--text-scale));
   font-weight: 700;
   letter-spacing: -1.5px;
   line-height: 1;
@@ -677,7 +708,7 @@ button {
   align-items: center;
   justify-content: flex-end;
   color: var(--t3);
-  font-size: 9px;
+  font-size: calc(9px * var(--text-scale));
   width: 12px;
 }
 .cal-grid {
@@ -689,9 +720,9 @@ button {
 .cal-dow {
   text-align: center;
   color: var(--t3);
-  font-size: 11px;
+  font-size: calc(11px * var(--text-scale));
   height: 13px;
-  line-height: 13px;
+  line-height: calc(13px * var(--text-scale));
 }
 .cal-cell {
   height: 14px;
@@ -711,7 +742,7 @@ button {
 }
 .widget-gap span {
   color: var(--t3);
-  font-size: 12px;
+  font-size: calc(12px * var(--text-scale));
   line-height: 1.4;
 }
 
@@ -731,11 +762,469 @@ button {
 }
 .row-label {
   flex: 1;
-  font-size: 15px;
+  font-size: calc(15px * var(--text-scale));
   font-weight: 500;
   letter-spacing: -0.1px;
 }
 .row-value {
   color: var(--t3);
-  font-size: 13px;
+  font-size: calc(13px * var(--text-scale));
 }
+
+/* ============================================================
+   Loading splash
+   ============================================================ */
+.splash {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================
+   Auth
+   ============================================================ */
+.auth-panel {
+  /* deliberately not `.panel` — that class is 33.3333% wide, sized for the
+     three-way pager inside `.track`; reused bare here it squeezed the whole
+     screen into a third of the frame's width. */
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 var(--margin);
+  padding-top: env(safe-area-inset-top);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.app.framed .auth-panel {
+  padding-top: 54px;
+}
+.auth-screen {
+  width: 100%;
+}
+.auth-head {
+  margin-bottom: 28px;
+}
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+.field-row {
+  display: flex;
+  gap: 12px;
+}
+.stack-pick-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  -webkit-overflow-scrolling: touch;
+}
+.stack-pick-row::-webkit-scrollbar {
+  display: none;
+}
+.stack-pick-chip {
+  flex: none;
+  padding: 8px 14px;
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--t2);
+  font-size: calc(13px * var(--text-scale));
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  white-space: nowrap;
+}
+.stack-pick-chip.active {
+  background: var(--purple);
+  color: var(--bg);
+}
+.field .t-label {
+  color: var(--t3);
+}
+.field-input {
+  height: 46px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 0;
+  outline: none;
+  padding: 0 14px;
+  color: var(--t1);
+  font-size: calc(15px * var(--text-scale));
+  letter-spacing: -0.1px;
+  font-family: inherit;
+  -webkit-user-select: text;
+  user-select: text;
+}
+.field-input::placeholder {
+  color: var(--t3);
+}
+.auth-error {
+  color: #ff6b6b;
+}
+.auth-switch {
+  margin-top: 20px;
+  text-align: center;
+  width: 100%;
+  color: var(--t2);
+  font-size: calc(13px * var(--text-scale));
+}
+
+/* ============================================================
+   Sheet — the one sanctioned pattern for secondary screens
+   ============================================================ */
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 40;
+}
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 82%;
+  background: var(--card);
+  border-radius: 26px 26px 0 0;
+  z-index: 41;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+}
+.sheet-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--t4);
+  margin: 10px auto 0;
+  flex: none;
+}
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px var(--margin) 4px;
+  flex: none;
+}
+.sheet-close {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  background: var(--card-hi);
+  display: grid;
+  place-items: center;
+}
+.sheet-body {
+  padding: 14px var(--margin) 4px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.sheet-empty {
+  color: var(--t3);
+  padding: 24px 0;
+  text-align: center;
+}
+
+/* ============================================================
+   Today — add dose / history / empty state
+   ============================================================ */
+.empty-state {
+  color: var(--t3);
+  padding: 18px 4px;
+}
+.add-dose {
+  margin-top: 12px;
+  height: 44px;
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: inset 0 0 0 1.5px var(--purple-dim);
+  color: var(--purple);
+  font-size: calc(14px * var(--text-scale));
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+.action-row {
+  display: flex;
+  gap: 10px;
+}
+.action-row .add-dose {
+  flex: 1;
+  min-width: 0;
+}
+.history-summary {
+  color: var(--t2);
+  margin-bottom: 12px;
+}
+.schedule-remove-btn {
+  width: 100%;
+  height: 40px;
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 107, 107, 0.5);
+  color: #ff6b6b;
+  font-size: calc(13px * var(--text-scale));
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.history-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card-hi);
+  border-radius: 15px;
+  padding: 10px 14px;
+}
+.history-meta {
+  color: var(--t3);
+  margin-top: 2px;
+}
+
+/* ============================================================
+   Discover — glossary detail sheet
+   ============================================================ */
+.glossary-tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.tag {
+  padding: 5px 10px;
+  border-radius: 10px;
+  background: var(--card-hi);
+  color: var(--t2);
+  font-size: calc(12px * var(--text-scale));
+  font-weight: 600;
+}
+.glossary-field {
+  margin-top: 16px;
+}
+.research-link {
+  display: block;
+  padding: 10px 0;
+  border-top: 1px solid var(--card-hi);
+  color: var(--t1);
+}
+.research-link:first-child {
+  border-top: 0;
+}
+
+/* ============================================================
+   My Stack
+   ============================================================ */
+.stack-list {
+  margin-top: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.stack-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border-radius: 16px;
+  min-height: 56px;
+  padding: 10px 12px;
+}
+.stack-row-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.stack-vial {
+  color: var(--purple);
+}
+.stack-name {
+  font-size: calc(15px * var(--text-scale));
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.stack-meta {
+  color: var(--t3);
+}
+.expiry-badge.soon {
+  color: var(--purple);
+}
+.expiry-badge.expired {
+  color: #ff6b6b;
+}
+.stack-expiry-btn {
+  flex: none;
+  color: var(--t3);
+  font-size: calc(12px * var(--text-scale));
+}
+.stack-remove {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 14px;
+  background: var(--card-hi);
+  display: grid;
+  place-items: center;
+}
+
+/* ============================================================
+   Progress notes
+   ============================================================ */
+.progress-list {
+  margin-top: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card);
+  border-radius: 16px;
+  padding: 10px 12px;
+}
+.progress-row-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.note-thumb {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--card-hi);
+  object-fit: cover;
+}
+.note-thumb-empty {
+  display: grid;
+  place-items: center;
+}
+.field-file {
+  color: var(--t2);
+  font-size: calc(13px * var(--text-scale));
+}
+
+/* ============================================================
+   Reconstitution calculator
+   ============================================================ */
+.recon-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.recon-input-row .field-input {
+  flex: 1;
+}
+.recon-unit {
+  flex: none;
+  color: var(--t3);
+  font-size: calc(14px * var(--text-scale));
+  font-weight: 600;
+  width: 34px;
+}
+.recon-unit-toggle {
+  flex: none;
+  display: flex;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 3px;
+  gap: 3px;
+}
+.recon-unit-btn {
+  padding: 6px 12px;
+  border-radius: 9px;
+  color: var(--t3);
+  font-size: calc(13px * var(--text-scale));
+  font-weight: 600;
+}
+.recon-unit-btn.active {
+  background: var(--purple);
+  color: var(--bg);
+}
+.recon-result {
+  margin-top: 20px;
+  background: var(--card);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.recon-result-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.recon-big {
+  font-size: calc(20px * var(--text-scale));
+  font-weight: 700;
+  color: var(--purple);
+  letter-spacing: -0.02em;
+}
+
+/* ============================================================
+   Injection site body map
+   ============================================================ */
+.bodymap-card {
+  margin-top: 13px;
+  background: var(--card);
+  border-radius: 18px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.bodymap-figure {
+  width: 128px;
+  height: 208px;
+}
+.bodymap-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+.bodymap-chip {
+  padding: 7px 12px;
+  border-radius: 12px;
+  background: var(--card-hi);
+  color: var(--t2);
+  font-size: calc(12px * var(--text-scale));
+  font-weight: 600;
+}
+.bodymap-chip.active {
+  background: var(--purple);
+  color: var(--bg);
+}
+.bodymap-detail {
+  color: var(--t2);
+  text-align: center;
+}
+.bodymap-detail strong {
+  color: var(--t1);
+  font-weight: 600;
+}
+

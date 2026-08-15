@@ -140,3 +140,56 @@ export function IconChevron({ size = 12, color = 'currentColor' }: IconProps) {
     </svg>
   );
 }
+
+export function IconClose({ size = 18, color = 'currentColor' }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
+      <g stroke={color} strokeWidth={1.7} strokeLinecap="round">
+        <line x1={size * 0.24} y1={size * 0.24} x2={size * 0.76} y2={size * 0.76} />
+        <line x1={size * 0.76} y1={size * 0.24} x2={size * 0.24} y2={size * 0.76} />
+      </g>
+    </svg>
+  );
+}
+
+export function IconPlus({ size = 16, color = 'currentColor' }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
+      <g stroke={color} strokeWidth={1.8} strokeLinecap="round">
+        <line x1={size / 2} y1={size * 0.14} x2={size / 2} y2={size * 0.86} />
+        <line x1={size * 0.14} y1={size / 2} x2={size * 0.86} y2={size / 2} />
+      </g>
+    </svg>
+  );
+}
+
+export function IconCalculator({ size = 15, color = 'currentColor' }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+      <rect x={2} y={1.5} width={12} height={13} rx={2} stroke={color} strokeWidth={1.4} />
+      <line x1={4.5} y1={4.5} x2={11.5} y2={4.5} stroke={color} strokeWidth={1.4} strokeLinecap="round" />
+      <g fill={color}>
+        <circle cx={4.8} cy={8} r={0.9} />
+        <circle cx={8} cy={8} r={0.9} />
+        <circle cx={11.2} cy={8} r={0.9} />
+        <circle cx={4.8} cy={11} r={0.9} />
+        <circle cx={8} cy={11} r={0.9} />
+        <circle cx={11.2} cy={11} r={0.9} />
+      </g>
+    </svg>
+  );
+}
+
+export function IconCheck({ size = 14, color = 'currentColor' }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
+      <path
+        d={`M${size * 0.18} ${size * 0.52} l${size * 0.28} ${size * 0.28} l${size * 0.4} ${-size * 0.5}`}
+        stroke={color}
+        strokeWidth={1.8}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}

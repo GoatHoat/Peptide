@@ -4,6 +4,11 @@ import { TabBar, TAB_SPRING } from './components/TabBar';
 import { Today } from './screens/Today';
 import { Discover } from './screens/Discover';
 import { You } from './screens/You';
+import { Auth } from './screens/Auth';
+import { useAuth } from './lib/auth';
+import { usePrefs } from './lib/prefs';
+import { SheetPortalProvider } from './lib/sheetPortal';
+import { ActiveTabProvider } from './lib/activeTab';
 
 /** Commit to an axis inside the first 10px and never revisit it. */
 const AXIS_THRESHOLD = 10;
@@ -17,17 +22,46 @@ export default function App() {
      already one above the web view — the OS's when installed, Safari's when
      not — and drawing a second one is what put a band of dead space above
      every title. */
-  if (isTouch) return <Shell framed={false} />;
+  if (isTouch) return <Body framed={false} />;
   return (
     <div className="frame-host">
       <div className="frame">
-        <Shell framed />
+        <Body framed />
       </div>
     </div>
   );
 }
 
-function Shell({ framed }: { framed: boolean }) {
+function Body({ framed }: { framed: boolean }) {
+  const { loading, session } = useAuth();
+  if (loading) return <div className="app splash" />;
+  if (!session) return <AuthScreen framed={framed} />;
+  return <Gate framed={framed} />;
+}
+
+function AuthScreen({ framed }: { framed: boolean }) {
+  return (
+    <div className={`app${framed ? ' framed' : ''}`}>
+      {framed && (
+        <div className="status">
+          <span>9:41</span>
+        </div>
+      )}
+      <div className="auth-panel">
+        <Auth />
+      </div>
+    </div>
+  );
+}
+
+/** Waits on the profile row (created by a DB trigger on signup) before rendering the app. */
+function Gate({ framed }: { framed: boolean }) {
+  const { profile, loading } = usePrefs();
+  if (loading || !profile) return <div className="app splash" />;
+  return <Shell framed={framed} largerText={profile.larger_text} />;
+}
+
+function Shell({ framed, largerText }: { framed: boolean; largerText: boolean }) {
   const hostRef = useRef<HTMLDivElement>(null);
   /** 0..2, continuous. The pill and the content both derive from this. */
   const progress = useMotionValue(0);
@@ -134,34 +168,38 @@ function Shell({ framed }: { framed: boolean }) {
   };
 
   return (
-    <div className={`app${framed ? ' framed' : ''}`} ref={hostRef}>
-      {framed && (
-        <div className="status">
-          <span>9:41</span>
-        </div>
-      )}
+    <div className={`app${framed ? ' framed' : ''}${largerText ? ' larger-text' : ''}`} ref={hostRef}>
+      <SheetPortalProvider hostRef={hostRef}>
+        <ActiveTabProvider value={index}>
+          {framed && (
+            <div className="status">
+              <span>9:41</span>
+            </div>
+          )}
 
-      <motion.div
-        className="track"
-        style={{ x: trackX }}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
-      >
-        <div className="panel">
-          <Today />
-        </div>
-        <div className="panel">
-          <Discover />
-        </div>
-        <div className="panel">
-          <You />
-        </div>
-      </motion.div>
+          <motion.div
+            className="track"
+            style={{ x: trackX }}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={endDrag}
+            onPointerCancel={endDrag}
+          >
+            <div className="panel">
+              <Today />
+            </div>
+            <div className="panel">
+              <Discover />
+            </div>
+            <div className="panel">
+              <You />
+            </div>
+          </motion.div>
 
-      <TabBar progress={progress} onSelect={goTo} />
-      <span hidden data-active-tab={index} />
+          <TabBar progress={progress} onSelect={goTo} />
+          <span hidden data-active-tab={index} />
+        </ActiveTabProvider>
+      </SheetPortalProvider>
     </div>
   );
 }
