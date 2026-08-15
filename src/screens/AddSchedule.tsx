@@ -8,7 +8,7 @@ import {
   type StackItem,
 } from '../lib/api';
 import { AmountInput } from '../components/AmountInput';
-import { formatShortDate } from '../lib/date';
+import { formatShortDate, toISODate } from '../lib/date';
 
 interface Props {
   userId: string;
@@ -34,6 +34,8 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
   const [amount, setAmount] = useState('');
   const [time, setTime] = useState('');
   const [site, setSite] = useState('');
+  // local date, so "today" means the user's today and not the server's
+  const [startDate, setStartDate] = useState(() => toISODate(new Date()));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [stack, setStack] = useState<StackItem[] | null>(null);
@@ -95,6 +97,7 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
         scheduled_time: time || null,
         glossary_id: pickedGlossaryId,
         injection_site: site.trim() || null,
+        start_date: startDate || toISODate(new Date()),
       });
       onAdded(item);
       onClose();
@@ -158,6 +161,19 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
       )}
 
       <div className="field">
+        <label className="t-label" htmlFor="sched-start">
+          Starts
+        </label>
+        <input
+          id="sched-start"
+          className="field-input"
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+        />
+      </div>
+
+      <div className="field">
         <label className="t-label" htmlFor="sched-time">
           Time (optional)
         </label>
@@ -192,7 +208,10 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
       </div>
 
       <div className="t-caption" style={{ color: 'var(--t3)', marginTop: -2 }}>
-        This repeats daily starting today. Remove it from Today whenever you want it to stop.
+        {startDate === toISODate(new Date())
+          ? 'This repeats daily from today, so it is on Today straight away.'
+          : `This repeats daily from ${formatShortDate(startDate)} — it appears on Today on that day.`}{' '}
+        Remove it from Today whenever you want it to stop.
       </div>
 
       {error && <div className="auth-error t-secondary">{error}</div>}

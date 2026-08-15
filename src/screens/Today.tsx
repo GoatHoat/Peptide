@@ -8,6 +8,7 @@ import { useAuth } from '../lib/auth';
 import { ensureTodayDoses, getComplianceMap, getDosesForDate, setDoseTaken, type Dose } from '../lib/api';
 import { addDays, formatDisplayDate, formatShortDate, parseHour, startOfWeekMonday, toISODate } from '../lib/date';
 import { useNow } from '../lib/now';
+import { useActiveTab } from '../lib/activeTab';
 import { IconCalculator, IconPlus } from '../components/Icons';
 import { ReconCalculator } from './ReconCalculator';
 import { syncScheduleNotifications } from '../lib/notifications';
@@ -30,6 +31,7 @@ type SheetState =
 
 export function Today() {
   const { user } = useAuth();
+  const activeTab = useActiveTab();
   const [doses, setDoses] = useState<Dose[] | null>(null);
   const [compliance, setCompliance] = useState<Record<string, { total: number; taken: number }>>({});
   const [sheet, setSheet] = useState<SheetState>(null);
@@ -57,9 +59,14 @@ export function Today() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, todayISO]);
 
+  /* All three screens stay mounted, so adding something to the schedule from
+     Discover left Today holding the list it fetched once on first mount — the
+     new item only appeared after the app was reopened, which read as "it went
+     in for tomorrow". Refetching when Today becomes the active tab is the same
+     fix the stack already uses; see lib/activeTab. */
   useEffect(() => {
-    load();
-  }, [load]);
+    if (activeTab === 0) load();
+  }, [load, activeTab]);
 
   const refreshCompliance = useCallback(async () => {
     if (!user) return;

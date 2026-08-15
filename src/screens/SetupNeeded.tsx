@@ -14,7 +14,7 @@ export function SetupNeeded() {
       <div className="setup-inner">
         <h1 className="setup-title">Not configured yet</h1>
         <p className="setup-body">
-          Halfpast reads every screen — your doses, stack and profile — from Supabase, so it needs
+          Pepstack reads every screen — your doses, stack and profile — from Supabase, so it needs
           your project&rsquo;s address and public key before it can start.
         </p>
 

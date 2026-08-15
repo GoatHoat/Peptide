@@ -34,7 +34,7 @@ function csvRow(values: (string | number | null | undefined)[]): string {
 
 export function buildCSV(data: ExportData): string {
   const lines: string[] = [];
-  lines.push('Halfpast Export');
+  lines.push('Pepstack Export');
   lines.push(`Generated,${new Date().toISOString()}`);
   lines.push('');
 
@@ -69,7 +69,7 @@ export function buildPDF(data: ExportData): jsPDF {
   let y = 18;
 
   doc.setFontSize(18);
-  doc.text('Halfpast Export', marginX, y);
+  doc.text('Pepstack Export', marginX, y);
   y += 6;
   doc.setFontSize(10);
   doc.setTextColor(120);
@@ -164,11 +164,11 @@ async function saveOrShare(filename: string, blob: Blob): Promise<void> {
 export async function exportCSV(userId: string): Promise<void> {
   const data = await gatherExportData(userId);
   const csv = buildCSV(data);
-  await saveOrShare(`halfpast-export-${toISODate(new Date())}.csv`, new Blob([csv], { type: 'text/csv' }));
+  await saveOrShare(`pepstack-export-${toISODate(new Date())}.csv`, new Blob([csv], { type: 'text/csv' }));
 }
 
 export async function exportPDF(userId: string): Promise<void> {
   const data = await gatherExportData(userId);
   const doc = buildPDF(data);
-  await saveOrShare(`halfpast-export-${toISODate(new Date())}.pdf`, doc.output('blob'));
+  await saveOrShare(`pepstack-export-${toISODate(new Date())}.pdf`, doc.output('blob'));
 }

@@ -89,6 +89,8 @@ export interface ScheduleItem {
   injection_site: string | null;
   active: boolean;
   created_at: string;
+  /** the first day this repeats on; absent until migration 0013 has been run */
+  start_date?: string | null;
 }
 
 export interface NewScheduleItem {
@@ -97,7 +99,13 @@ export interface NewScheduleItem {
   scheduled_time: string | null;
   glossary_id?: string | null;
   injection_site?: string | null;
+  /** YYYY-MM-DD, the user's local date. Defaults to today. */
+  start_date?: string | null;
 }
+
+/** The day an item begins, falling back to when it was created. */
+export const scheduleStart = (item: ScheduleItem): string =>
+  item.start_date ?? item.created_at.slice(0, 10);
 
 export interface ProgressNote {
   id: string;
@@ -325,6 +333,21 @@ export async function addScheduleItem(userId: string, input: NewScheduleItem): P
     .insert({ user_id: userId, ...input })
     .select()
     .single();
+
+  // Migration 0013 adds start_date. Until it has been run the column is not
+  // there and PostgREST rejects the whole insert (PGRST204), so fall back to
+  // an insert without it rather than failing to save the item at all.
+  if (error && input.start_date && /start_date/.test(error.message ?? '')) {
+    const { start_date, ...rest } = input;
+    void start_date;
+    const retry = await supabase
+      .from('schedule_items')
+      .insert({ user_id: userId, ...rest })
+      .select()
+      .single();
+    if (retry.error) throw retry.error;
+    return retry.data as ScheduleItem;
+  }
   if (error) throw error;
   return data as ScheduleItem;
 }
@@ -350,7 +373,10 @@ export async function ensureTodayDoses(userId: string): Promise<void> {
   if (existingErr) throw existingErr;
 
   const covered = new Set((existing as { schedule_item_id: string }[]).map((r) => r.schedule_item_id));
-  const missing = (items as ScheduleItem[]).filter((item) => !covered.has(item.id));
+  const missing = (items as ScheduleItem[]).filter(
+    // an item set to begin later simply has no row today yet
+    (item) => !covered.has(item.id) && scheduleStart(item) <= today,
+  );
   if (missing.length === 0) return;
 
   const { error: insertErr } = await supabase.from('doses').insert(
