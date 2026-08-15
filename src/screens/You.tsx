@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { IconClock } from '../components/Icons';
 import { Sheet } from '../components/Sheet';
 import { useAuth } from '../lib/auth';
@@ -6,7 +6,8 @@ import { usePrefs } from '../lib/prefs';
 import { getComplianceMap, getScheduleItems } from '../lib/api';
 import { exportCSV, exportPDF } from '../lib/export';
 import { checkNotificationPermission, requestNotificationPermission, syncScheduleNotifications } from '../lib/notifications';
-import { addDays, computeMonthGrid, toISODate } from '../lib/date';
+import { addDays, computeMonthGrid, startOfMonth, toISODate } from '../lib/date';
+import { useNow } from '../lib/now';
 import { MyStack } from './MyStack';
 import { ProgressNotes } from './ProgressNotes';
 import { BodyMap } from './BodyMap';
@@ -39,19 +40,22 @@ export function You() {
   const [permGranted, setPermGranted] = useState(false);
   const [requestingPerm, setRequestingPerm] = useState(false);
 
-  const today = new Date();
+  // live: rolls over at midnight and after the app comes back from the background
+  const today = useNow();
+  const todayISO = toISODate(today);
   const monthGrid = computeMonthGrid(today);
 
   useEffect(() => {
     if (!user) return;
-    const rangeStart = monthGrid[0][0];
+    const monthStart = startOfMonth(today);
     const lookback = addDays(today, -90);
-    const from = rangeStart < lookback ? rangeStart : lookback;
+    const from = monthStart < lookback ? monthStart : lookback;
     getComplianceMap(user.id, from, today).then(setCompliance);
     getScheduleItems(user.id).then((items) => setReminderCount(items.filter((i) => i.scheduled_time).length));
     checkNotificationPermission().then(setPermGranted);
+    // keyed on the date, not the clock — this refetches once a day, not every tick
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]);
+  }, [user?.id, todayISO]);
 
   const enableNotifications = async () => {
     if (!user) return;
@@ -95,31 +99,36 @@ export function You() {
       <div className="widgets">
         <div className="widget">
           <div className="widget-num">{streak}</div>
-          <div className="cal">
-            <div className="cal-weeks">
-              {monthGrid.map((row, i) => (
-                <span key={i} className="cal-week-label">
-                  {row[0].getMonth() === today.getMonth() || row[6].getMonth() === today.getMonth()
-                    ? row.find((d) => d.getMonth() === today.getMonth())?.getDate()
-                    : ''}
-                </span>
-              ))}
-            </div>
-            <div className="cal-grid">
-              {DOW.map((d, i) => (
-                <span key={i} className="cal-dow">
-                  {d}
-                </span>
-              ))}
-              {monthGrid.flatMap((row, ri) =>
-                row.map((d, ci) => {
-                  const iso = toISODate(d);
-                  const c = compliance[iso];
-                  const on = d.getMonth() === today.getMonth() && !!c && c.total > 0 && c.taken === c.total;
-                  return <span key={`${ri}-${ci}`} className={`cal-cell ${on ? 'on' : ''}`} />;
-                }),
-              )}
-            </div>
+          {/* One square per day of this month and no others — the row count
+              drives the grid, so February and a 31-day month both fit. */}
+          <div className="cal" style={{ ['--cal-rows' as string]: monthGrid.length }}>
+            <span className="cal-corner" />
+            {DOW.map((d, i) => (
+              <span key={`dow-${i}`} className="cal-dow">
+                {d}
+              </span>
+            ))}
+            {monthGrid.map((row, ri) => {
+              const firstOfRow = row.find((d): d is Date => d !== null);
+              return (
+                <Fragment key={ri}>
+                  <span className="cal-week-label">{firstOfRow ? firstOfRow.getDate() : ''}</span>
+                  {row.map((d, ci) => {
+                    if (!d) return <span key={ci} className="cal-blank" />;
+                    const iso = toISODate(d);
+                    const c = compliance[iso];
+                    const done = !!c && c.total > 0 && c.taken === c.total;
+                    return (
+                      <span
+                        key={ci}
+                        className={`cal-cell${done ? ' on' : ''}${iso === todayISO ? ' today' : ''}`}
+                        title={iso}
+                      />
+                    );
+                  })}
+                </Fragment>
+              );
+            })}
           </div>
         </div>
 

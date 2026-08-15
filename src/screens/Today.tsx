@@ -7,6 +7,7 @@ import { DayDoses } from './DayDoses';
 import { useAuth } from '../lib/auth';
 import { ensureTodayDoses, getComplianceMap, getDosesForDate, setDoseTaken, type Dose } from '../lib/api';
 import { addDays, formatDisplayDate, formatShortDate, parseHour, startOfWeekMonday, toISODate } from '../lib/date';
+import { useNow } from '../lib/now';
 import { IconCalculator, IconPlus } from '../components/Icons';
 import { ReconCalculator } from './ReconCalculator';
 import { syncScheduleNotifications } from '../lib/notifications';
@@ -33,7 +34,9 @@ export function Today() {
   const [compliance, setCompliance] = useState<Record<string, { total: number; taken: number }>>({});
   const [sheet, setSheet] = useState<SheetState>(null);
 
-  const today = new Date();
+  // live: the header date, the week strip and the arc's "now" all read from
+  // this, so the screen rolls over at midnight instead of at the next reload
+  const today = useNow();
   const todayISO = toISODate(today);
   const weekStart = startOfWeekMonday(today);
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
@@ -52,7 +55,7 @@ export function Today() {
     setCompliance(c);
     syncScheduleNotifications(user.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id]);
+  }, [user?.id, todayISO]);
 
   useEffect(() => {
     load();

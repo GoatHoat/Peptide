@@ -40,23 +40,31 @@ export function formatShortDate(iso: string): string {
   return d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
 }
 
-/** Sunday-start weeks spanning the whole month, for a calendar grid. */
-export function computeMonthGrid(monthDate: Date): Date[][] {
-  const first = startOfMonth(monthDate);
-  const gridStart = addDays(first, -first.getDay());
-  const last = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
-  const gridEnd = addDays(last, 6 - last.getDay());
+export function daysInMonth(d: Date): number {
+  return new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+}
 
-  const rows: Date[][] = [];
-  let cur = gridStart;
-  while (cur <= gridEnd) {
-    const row: Date[] = [];
-    for (let i = 0; i < 7; i++) {
-      row.push(cur);
-      cur = addDays(cur, 1);
-    }
-    rows.push(row);
-  }
+/**
+ * Sunday-start weeks covering exactly this month and no other.
+ *
+ * The slots before the 1st and after the last day are `null`, not dates from
+ * the neighbouring months: the grid carries one square per day of the month —
+ * 31 in August, 28 in a common February — and nothing else. Keeping the
+ * weekday alignment is what makes the S M T W T F S header above it true.
+ */
+export function computeMonthGrid(monthDate: Date): (Date | null)[][] {
+  const y = monthDate.getFullYear();
+  const m = monthDate.getMonth();
+  const lead = startOfMonth(monthDate).getDay(); // 0 = Sunday
+
+  const cells: (Date | null)[] = [
+    ...Array<null>(lead).fill(null),
+    ...Array.from({ length: daysInMonth(monthDate) }, (_, i) => new Date(y, m, i + 1)),
+  ];
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  const rows: (Date | null)[][] = [];
+  for (let i = 0; i < cells.length; i += 7) rows.push(cells.slice(i, i + 7));
   return rows;
 }
 

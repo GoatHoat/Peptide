@@ -262,6 +262,63 @@ export async function getScheduleItems(userId: string): Promise<ScheduleItem[]> 
   return data as ScheduleItem[];
 }
 
+/** What the user themselves last entered for this item. Never a suggestion. */
+export interface PriorEntry {
+  amount: string;
+  scheduled_time: string | null;
+  injection_site: string | null;
+  /** where it came from, so the form can say so rather than appear to know */
+  source: 'schedule' | 'log';
+  lastUsed: string | null;
+}
+
+/**
+ * The user's own most recent numbers for a given item, so adding it again does
+ * not mean retyping it.
+ *
+ * This is deliberately the only thing that ever pre-fills the amount field.
+ * The app has no recommended dose to offer — the glossary carries name,
+ * category, mechanism, storage and route and nothing else, by design (see
+ * legal.md). Prior entries are the user's own data being handed back to them,
+ * which is the food-diary model the schema was built around.
+ *
+ * Looks at a previous schedule entry first (including deactivated ones, so
+ * removing and re-adding remembers), then falls back to the dose log.
+ */
+export async function getPriorEntry(
+  userId: string,
+  opts: { name?: string | null; glossaryId?: string | null },
+): Promise<PriorEntry | null> {
+  const { name, glossaryId } = opts;
+  if (!name && !glossaryId) return null;
+
+  let schedQ = supabase
+    .from('schedule_items')
+    .select('amount, scheduled_time, injection_site')
+    .eq('user_id', userId);
+  schedQ = glossaryId ? schedQ.eq('glossary_id', glossaryId) : schedQ.eq('name', name!);
+  const { data: sched } = await schedQ.order('created_at', { ascending: false }).limit(1);
+
+  const s = sched?.[0];
+  if (s) {
+    return { ...s, source: 'schedule', lastUsed: null };
+  }
+
+  let logQ = supabase
+    .from('doses')
+    .select('amount, scheduled_time, injection_site, log_date')
+    .eq('user_id', userId);
+  logQ = glossaryId ? logQ.eq('glossary_id', glossaryId) : logQ.eq('name', name!);
+  const { data: logged } = await logQ.order('log_date', { ascending: false }).limit(1);
+
+  const d = logged?.[0];
+  if (d) {
+    const { log_date, ...rest } = d;
+    return { ...rest, source: 'log', lastUsed: log_date };
+  }
+  return null;
+}
+
 export async function addScheduleItem(userId: string, input: NewScheduleItem): Promise<ScheduleItem> {
   const { data, error } = await supabase
     .from('schedule_items')

@@ -23,6 +23,9 @@
      two ends of the gradient the export actually paints. */
   --pill-1: #181130;
   --pill-2: #272042;
+  --scrim: rgba(0, 0, 0, 0.55);
+  --danger: #ff6b6b;
+  --danger-dim: rgba(255, 107, 107, 0.55);
   --pill-rim-hi: rgba(255, 255, 255, 0.4);
   --pill-rim-lo: rgba(255, 255, 255, 0.09);
 
@@ -682,6 +685,10 @@ button {
   flex: none;
   padding: 12px;
   overflow: hidden;
+  /* the calendar below takes whatever height is left, rather than assuming
+     a row count and spilling past the corner when the month needs six */
+  display: flex;
+  flex-direction: column;
 }
 .widget-num {
   text-align: center;
@@ -691,46 +698,48 @@ button {
   letter-spacing: -1.5px;
   line-height: 1;
 }
+/* One grid: a weekday header row, then one row per week of THIS month.
+   --cal-rows comes from the data, and every row is 1fr, so a 4-row February
+   and a 6-row month both land inside the widget instead of overflowing it. */
 .cal {
   margin-top: 8px;
-  display: flex;
-  gap: 5px;
-}
-.cal-weeks {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding-top: 17px;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 13px repeat(7, minmax(0, 1fr));
+  grid-template-rows: 12px repeat(var(--cal-rows, 5), minmax(0, 1fr));
+  gap: 3px 4px;
 }
 .cal-week-label {
-  height: 14px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   color: var(--t3);
   font-size: calc(9px * var(--text-scale));
-  width: 12px;
-}
-.cal-grid {
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+  line-height: 1;
 }
 .cal-dow {
   text-align: center;
   color: var(--t3);
-  font-size: calc(11px * var(--text-scale));
-  height: 13px;
-  line-height: calc(13px * var(--text-scale));
+  font-size: calc(10px * var(--text-scale));
+  line-height: 12px;
 }
 .cal-cell {
-  height: 14px;
-  border-radius: 5px;
+  min-height: 0;
+  border-radius: 4px;
   background: var(--cell-empty);
 }
 .cal-cell.on {
   background: var(--purple);
+}
+/* today reads as an outline, so it stacks with .on rather than fighting it */
+.cal-cell.today {
+  box-shadow: inset 0 0 0 1.5px var(--purple);
+}
+/* the days before the 1st and after the last: space, not a square */
+.cal-corner,
+.cal-blank {
+  background: none;
 }
 
 /* an intentionally empty box — the label names what belongs here */
@@ -835,8 +844,11 @@ button {
 }
 .stack-pick-chip {
   flex: none;
-  padding: 8px 14px;
-  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 15px;
   background: var(--card);
   color: var(--t2);
   font-size: calc(13px * var(--text-scale));
@@ -885,7 +897,7 @@ button {
 .sheet-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
+  background: var(--scrim);
   z-index: 40;
 }
 .sheet {
@@ -947,10 +959,11 @@ button {
   height: 44px;
   width: 100%;
   border-radius: 15px;
-  box-shadow: inset 0 0 0 1.5px var(--purple-dim);
+  box-shadow: inset 0 0 0 1.5px var(--purple);
   color: var(--purple);
-  font-size: calc(14px * var(--text-scale));
+  font-size: calc(15px * var(--text-scale));
   font-weight: 600;
+  letter-spacing: -0.1px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -970,12 +983,13 @@ button {
 }
 .schedule-remove-btn {
   width: 100%;
-  height: 40px;
-  border-radius: 14px;
-  box-shadow: inset 0 0 0 1.5px rgba(255, 107, 107, 0.5);
-  color: #ff6b6b;
-  font-size: calc(13px * var(--text-scale));
+  height: 44px;
+  border-radius: 15px;
+  box-shadow: inset 0 0 0 1.5px var(--danger-dim);
+  color: var(--danger);
+  font-size: calc(15px * var(--text-scale));
   font-weight: 600;
+  letter-spacing: -0.1px;
   margin-bottom: 16px;
 }
 .history-list {
@@ -1016,13 +1030,15 @@ button {
   margin-top: 16px;
 }
 .research-link {
-  display: block;
-  padding: 10px 0;
-  border-top: 1px solid var(--card-hi);
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 11px 0;
+  box-shadow: inset 0 1.5px 0 var(--card-hi);
   color: var(--t1);
 }
 .research-link:first-child {
-  border-top: 0;
+  box-shadow: none;
 }
 
 /* ============================================================
@@ -1072,14 +1088,21 @@ button {
 }
 .stack-expiry-btn {
   flex: none;
-  color: var(--t3);
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 10px;
+  background: var(--card-hi);
+  color: var(--t2);
+  font-weight: 600;
   font-size: calc(12px * var(--text-scale));
 }
 .stack-remove {
   flex: none;
-  width: 28px;
-  height: 28px;
-  border-radius: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 17px;
   background: var(--card-hi);
   display: grid;
   place-items: center;
@@ -1153,8 +1176,11 @@ button {
   gap: 3px;
 }
 .recon-unit-btn {
-  padding: 6px 12px;
-  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 12px;
   color: var(--t3);
   font-size: calc(13px * var(--text-scale));
   font-weight: 600;
@@ -1208,7 +1234,10 @@ button {
   justify-content: center;
 }
 .bodymap-chip {
-  padding: 7px 12px;
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 14px;
   border-radius: 12px;
   background: var(--card-hi);
   color: var(--t2);
@@ -1310,4 +1339,12 @@ button {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 12.5px;
   color: var(--t1);
+}
+
+/* the form saying where a pre-filled value came from — it is always the
+   user's own prior entry, never anything the app decided */
+.prefill-note {
+  margin-top: -6px;
+  color: var(--t3);
+  line-height: 16px;
 }

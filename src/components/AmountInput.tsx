@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const UNITS = ['mcg', 'mg', 'ml', 'units'] as const;
 type Unit = (typeof UNITS)[number];
@@ -47,6 +47,23 @@ export function AmountInput({ id, label, value, onChange }: Props) {
   const initial = parseValue(value);
   const [number, setNumber] = useState(initial.number);
   const [unit, setUnit] = useState<Unit>(initial.unit);
+
+  /**
+   * `value` seeded this component's state on mount only, so a parent setting
+   * the amount later — pre-filling from what the user entered last time —
+   * updated the form's state and left this field showing nothing.
+   *
+   * Adopting `value` whenever it differs from what this component last emitted
+   * cannot loop: typing emits the same string that comes back in.
+   */
+  useEffect(() => {
+    const mine = number ? `${number} ${unit}` : '';
+    if (value === mine) return;
+    const next = parseValue(value);
+    setNumber(next.number);
+    setUnit(next.unit);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
   const commit = (nextNumber: string, nextUnit: Unit) => {
     onChange(nextNumber ? `${nextNumber} ${nextUnit}` : '');

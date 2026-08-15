@@ -1,6 +1,14 @@
-import { useEffect, useState, type FormEvent } from 'react';
-import { addScheduleItem, getStack, type ScheduleItem, type StackItem } from '../lib/api';
+import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import {
+  addScheduleItem,
+  getPriorEntry,
+  getStack,
+  type PriorEntry,
+  type ScheduleItem,
+  type StackItem,
+} from '../lib/api';
 import { AmountInput } from '../components/AmountInput';
+import { formatShortDate } from '../lib/date';
 
 interface Props {
   userId: string;
@@ -12,9 +20,13 @@ interface Props {
 
 /**
  * Set up once — name, the user's own amount, an optional time and
- * injection site. From then on it shows up as a checkbox every day; the
- * app never fills in or suggests any of these values, it just stops making
- * the user retype the same entry each morning. See legal.md.
+ * injection site. From then on it shows up as a checkbox every day.
+ *
+ * The form fills itself in from what the user entered for this item before,
+ * and says so. It has nothing else to fill in from: the app holds no
+ * recommended dose for anything, and deliberately so — the glossary carries
+ * category, mechanism, storage and route, never an amount or a frequency.
+ * See legal.md. Every number here starts as the user's own.
  */
 export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose }: Props) {
   const [name, setName] = useState(defaultName ?? '');
@@ -25,14 +37,47 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [stack, setStack] = useState<StackItem[] | null>(null);
+  const [prior, setPrior] = useState<PriorEntry | null>(null);
+  const [prefilling, setPrefilling] = useState(false);
 
   useEffect(() => {
     getStack(userId).then(setStack);
   }, [userId]);
 
+  /** Pull the user's own last numbers for this item into the empty fields. */
+  const prefillFrom = useCallback(
+    async (opts: { name?: string | null; glossaryId?: string | null }) => {
+      setPrefilling(true);
+      try {
+        const p = await getPriorEntry(userId, opts);
+        setPrior(p);
+        if (!p) return;
+        setAmount(p.amount);
+        setTime(p.scheduled_time ? p.scheduled_time.slice(0, 5) : '');
+        setSite(p.injection_site ?? '');
+      } finally {
+        setPrefilling(false);
+      }
+    },
+    [userId],
+  );
+
+  // arriving from Discover or the stack already knows which item this is
+  useEffect(() => {
+    if (glossaryId || defaultName) prefillFrom({ glossaryId, name: defaultName });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [glossaryId, defaultName]);
+
   const pickFromStack = (item: StackItem) => {
     setName(item.glossary.name);
     setPickedGlossaryId(item.glossary_id);
+    prefillFrom({ glossaryId: item.glossary_id, name: item.glossary.name });
+  };
+
+  /** Typing a name that matches something used before fills the rest in too. */
+  const onNameBlur = () => {
+    const n = name.trim();
+    if (n && !amount.trim() && !pickedGlossaryId) prefillFrom({ name: n });
   };
 
   const submit = async (e: FormEvent) => {
@@ -92,12 +137,25 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
             setName(e.target.value);
             setPickedGlossaryId(null);
           }}
+          onBlur={onNameBlur}
           placeholder="e.g. BPC-157"
           required
         />
       </div>
 
       <AmountInput id="sched-amount" label="Your dose" value={amount} onChange={setAmount} />
+
+      {prefilling && <div className="prefill-note t-caption">Checking your history…</div>}
+      {!prefilling && prior && (
+        <div className="prefill-note t-caption">
+          Filled in from {prior.source === 'schedule' ? 'when you last scheduled this' : `your log on ${formatShortDate(prior.lastUsed!)}`}. Change anything you need.
+        </div>
+      )}
+      {!prefilling && !prior && name.trim() !== '' && (
+        <div className="prefill-note t-caption">
+          First time for this one — the app has no dose to suggest, so these are yours to set.
+        </div>
+      )}
 
       <div className="field">
         <label className="t-label" htmlFor="sched-time">
