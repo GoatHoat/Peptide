@@ -1057,3 +1057,31 @@
     opacity: 0.6;
   }
 }
+
+/* ── sleep dial handles ── */
+.ob-dial {
+  touch-action: none;
+}
+.ob-dial-handle {
+  cursor: grab;
+}
+.ob-dial-handle:active {
+  cursor: grabbing;
+}
+.ob-dial-handle circle {
+  transition: r 120ms var(--ob-ease);
+}
+.ob-dial-handle:active circle:nth-child(2) {
+  r: 15;
+}
+.ob-dial-wrap {
+  position: relative;
+}
+.ob-dial-centre {
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ob-dial-handle circle {
+    transition: none;
+  }
+}

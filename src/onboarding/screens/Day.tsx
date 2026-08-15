@@ -15,9 +15,23 @@ const fmt = (t: string) => {
 
 /* ── sleep ───────────────────────────────────────────────────────────── */
 
-const DIAL = 190;
-const DIAL_R = 78;
-const DIAL_STROKE = 14;
+const DIAL = 236;
+const DIAL_R = 94;
+const DIAL_STROKE = 18;
+const HANDLE_R = 13;
+/** minutes the handles snap to */
+const SNAP = 5;
+
+const angleOf = (t: string) => (toMin(t) / 1440) * 360;
+const onRing = (deg: number, r = DIAL_R) => {
+  const rad = ((deg - 90) * Math.PI) / 180;
+  return [DIAL / 2 + r * Math.cos(rad), DIAL / 2 + r * Math.sin(rad)] as const;
+};
+const timeOf = (deg: number) => {
+  const mins = Math.round((((deg % 360) + 360) % 360 / 360) * 1440 / SNAP) * SNAP;
+  const m = mins % 1440;
+  return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+};
 
 export function Sleep({
   wake,
@@ -30,6 +44,9 @@ export function Sleep({
   onChange: (p: { wake: string; sleep: string }) => void;
   onNext: () => void;
 }) {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const dragging = useRef<'wake' | 'sleep' | null>(null);
+
   // hours in bed, wrapping past midnight
   const mins = (toMin(wake) - toMin(sleep) + 1440) % 1440;
   const hours = Math.floor(mins / 60);
@@ -37,17 +54,56 @@ export function Sleep({
 
   const c = DIAL / 2;
   const circumference = 2 * Math.PI * DIAL_R;
-  const frac = mins / 1440;
-  // the arc starts where bedtime falls on a 24h clock, midnight at the top
-  const startDeg = (toMin(sleep) / 1440) * 360;
+  const startDeg = angleOf(sleep);
+  const [wx, wy] = onRing(angleOf(wake));
+  const [sx, sy] = onRing(startDeg);
+
+  /** Angle is invariant to how the SVG is scaled, so the centre is enough. */
+  const degFromPointer = (e: { clientX: number; clientY: number }) => {
+    const box = svgRef.current!.getBoundingClientRect();
+    const dx = e.clientX - (box.left + box.width / 2);
+    const dy = e.clientY - (box.top + box.height / 2);
+    return (Math.atan2(dx, -dy) * 180) / Math.PI;
+  };
+
+  const move = (e: React.PointerEvent) => {
+    const which = dragging.current;
+    if (!which) return;
+    const t = timeOf(degFromPointer(e));
+    onChange(which === 'wake' ? { wake: t, sleep } : { wake, sleep: t });
+  };
+
+  const grab = (which: 'wake' | 'sleep') => (e: React.PointerEvent) => {
+    e.preventDefault();
+    dragging.current = which;
+    (e.currentTarget as SVGElement).setPointerCapture?.(e.pointerId);
+  };
+  const release = () => {
+    dragging.current = null;
+  };
+
+  const nudge = (which: 'wake' | 'sleep', delta: number) => {
+    const cur = which === 'wake' ? wake : sleep;
+    const t = timeOf(((toMin(cur) + delta + 1440) % 1440 / 1440) * 360);
+    onChange(which === 'wake' ? { wake: t, sleep } : { wake, sleep: t });
+  };
 
   return (
     <Screen scroll footer={<Cta onClick={onNext}>Continue</Cta>}>
       <Title>Your day, part one</Title>
-      <Sub>We schedule around the window, not the minute. Rough is fine.</Sub>
+      <Sub>Drag either end of the ring. We schedule around the window, not the minute.</Sub>
 
       <div className="ob-dial-wrap">
-        <svg width={DIAL} height={DIAL} viewBox={`0 0 ${DIAL} ${DIAL}`} aria-hidden>
+        <svg
+          ref={svgRef}
+          className="ob-dial"
+          width={DIAL}
+          height={DIAL}
+          viewBox={`0 0 ${DIAL} ${DIAL}`}
+          onPointerMove={move}
+          onPointerUp={release}
+          onPointerCancel={release}
+        >
           <circle cx={c} cy={c} r={DIAL_R} fill="none" stroke="var(--card)" strokeWidth={DIAL_STROKE} />
           <circle
             cx={c}
@@ -57,10 +113,35 @@ export function Sleep({
             stroke="var(--accent)"
             strokeWidth={DIAL_STROKE}
             strokeLinecap="round"
-            strokeDasharray={`${circumference * frac} ${circumference}`}
+            strokeDasharray={`${circumference * (mins / 1440)} ${circumference}`}
             transform={`rotate(${startDeg - 90} ${c} ${c})`}
           />
+
+          {/* twelve ticks, so the ring reads as a clock rather than a gauge */}
+          {Array.from({ length: 12 }, (_, i) => {
+            const [x1, y1] = onRing(i * 30, DIAL_R - DIAL_STROKE / 2 - 7);
+            const [x2, y2] = onRing(i * 30, DIAL_R - DIAL_STROKE / 2 - (i % 3 === 0 ? 13 : 10));
+            return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--t4)" strokeWidth="2" strokeLinecap="round" />;
+          })}
+
+          <Handle
+            x={sx}
+            y={sy}
+            label="Go to sleep"
+            value={sleep}
+            onGrab={grab('sleep')}
+            onNudge={(d) => nudge('sleep', d)}
+          />
+          <Handle
+            x={wx}
+            y={wy}
+            label="Wake up"
+            value={wake}
+            onGrab={grab('wake')}
+            onNudge={(d) => nudge('wake', d)}
+          />
         </svg>
+
         <div className="ob-dial-centre">
           <div className="ob-dial-hours">
             {hours}h{rest ? ` ${rest}m` : ''}
@@ -90,6 +171,45 @@ export function Sleep({
         </div>
       </div>
     </Screen>
+  );
+}
+
+/** A grab point on the ring. The visible dot is 13px; the target is 22. */
+function Handle({
+  x,
+  y,
+  label,
+  value,
+  onGrab,
+  onNudge,
+}: {
+  x: number;
+  y: number;
+  label: string;
+  value: string;
+  onGrab: (e: React.PointerEvent) => void;
+  onNudge: (deltaMinutes: number) => void;
+}) {
+  return (
+    <g
+      className="ob-dial-handle"
+      onPointerDown={onGrab}
+      role="slider"
+      tabIndex={0}
+      aria-label={label}
+      aria-valuetext={`${label} ${fmt(value)}`}
+      aria-valuenow={toMin(value)}
+      aria-valuemin={0}
+      aria-valuemax={1439}
+      onKeyDown={(e) => {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') onNudge(-15);
+        if (e.key === 'ArrowRight' || e.key === 'ArrowUp') onNudge(15);
+      }}
+    >
+      <circle cx={x} cy={y} r={22} fill="transparent" />
+      <circle cx={x} cy={y} r={HANDLE_R} fill="var(--bg)" stroke="var(--accent)" strokeWidth="3.5" />
+      <circle cx={x} cy={y} r={4} fill="var(--accent-light)" />
+    </g>
   );
 }
 
