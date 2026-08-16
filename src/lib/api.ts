@@ -385,7 +385,37 @@ export async function findGlossaryByName(name: string): Promise<GlossaryEntry | 
   return ((data ?? [])[0] as GlossaryEntry) ?? null;
 }
 
+/**
+ * Thrown when something tries to put a peptide on the schedule.
+ *
+ * Not a validation message for the user to work around — nothing in the UI
+ * offers this, so reaching it means a code path forgot the rule.
+ */
+export class PeptideNotSchedulable extends Error {
+  constructor(name: string) {
+    super(`${name} is a peptide. Peptides are reference only and cannot be scheduled.`);
+    this.name = 'PeptideNotSchedulable';
+  }
+}
+
 export async function addScheduleItem(userId: string, input: NewScheduleItem): Promise<ScheduleItem> {
+  /* Peptides are a reference library: no dose, no timing, not schedulable.
+     Checked here because this is the one function every path to the schedule
+     goes through — Discover, Today, and the onboarding builder all call it, and
+     a rule enforced in three screens is a rule that will be missed in the
+     fourth. The glossary row is the authority rather than the caller's word for
+     it, so a hand-built payload cannot talk its way past. */
+  if (input.glossary_id) {
+    const { data: entry } = await supabase
+      .from('glossary')
+      .select('kind, name')
+      .eq('id', input.glossary_id)
+      .maybeSingle();
+    if (entry && (entry as { kind?: string }).kind === 'peptide') {
+      throw new PeptideNotSchedulable((entry as { name?: string }).name ?? input.name);
+    }
+  }
+
   const { data, error } = await supabase
     .from('schedule_items')
     .insert({ user_id: userId, ...input })

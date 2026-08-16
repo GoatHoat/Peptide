@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Arc } from '../components/Arc';
 import { Sheet } from '../components/Sheet';
 import { AddSchedule } from './AddSchedule';
@@ -12,6 +12,7 @@ import { useNow } from '../lib/now';
 import { useActiveTab } from '../lib/activeTab';
 import { IconPlus } from '../components/Icons';
 import { DoseRow } from '../components/DoseRow';
+import { NowMarker } from '../components/NowMarker';
 import { syncScheduleNotifications } from '../lib/notifications';
 
 type DayState = 'completed' | 'missed' | 'today' | 'future' | 'empty';
@@ -100,6 +101,10 @@ export function Today() {
     .filter((d): d is { id: string; hour: number; taken: boolean } => d.hour !== null);
 
   const nowHour = today.getHours() + today.getMinutes() / 60;
+  const nowLabel = `${String(today.getHours()).padStart(2, '0')}:${String(today.getMinutes()).padStart(2, '0')}`;
+  /* Where the marker goes: before the first dose still ahead of now. -1 means
+     the whole day is behind us. */
+  const firstAhead = (doses ?? []).findIndex((d) => (parseHour(d.scheduled_time) ?? 99) >= nowHour);
   const overdue = (doses ?? []).filter((d) => !d.taken && d.scheduled_time && (parseHour(d.scheduled_time) ?? 99) <= nowHour);
 
   return (
@@ -150,16 +155,29 @@ export function Today() {
         {doses !== null && doses.length === 0 && (
           <div className="empty-state t-body">Nothing on your schedule yet.</div>
         )}
-        {doses?.map((d) => (
-          <DoseRow
-            key={d.id}
-            dose={d}
-            onToggle={toggleTaken}
-            onLongPress={(dose) =>
-              setSheet({ kind: 'history', name: dose.name, scheduleItemId: dose.schedule_item_id })
-            }
-          />
-        ))}
+        {doses?.map((d, i) => {
+          /* The marker goes in the gap before the first dose whose time has not
+             yet come. `firstAhead` is -1 when every dose is behind us, which is
+             the after-the-last case and is handled below the list instead. */
+          const showMarker = i === firstAhead;
+          return (
+            <Fragment key={d.id}>
+              {showMarker && <NowMarker time={nowLabel} scrollIntoView />}
+              <DoseRow
+                dose={d}
+                missed={(parseHour(d.scheduled_time) ?? 99) < nowHour && !d.taken}
+                onToggle={toggleTaken}
+                onLongPress={(dose) =>
+                  setSheet({ kind: 'history', name: dose.name, scheduleItemId: dose.schedule_item_id })
+                }
+              />
+            </Fragment>
+          );
+        })}
+        {/* every dose is behind us, so the marker belongs at the bottom */}
+        {doses !== null && doses.length > 0 && firstAhead === -1 && (
+          <NowMarker time={nowLabel} scrollIntoView />
+        )}
       </div>
 
       <div className="action-row">

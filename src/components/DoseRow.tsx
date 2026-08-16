@@ -10,6 +10,12 @@ interface Props {
   dose: Dose;
   onToggle: (dose: Dose) => void;
   onLongPress: (dose: Dose) => void;
+  /**
+   * Past its time and still unmarked. A copy and state change, never a colour
+   * one — nothing here goes red. Somebody who feels told off marks everything
+   * taken and the data stops meaning anything.
+   */
+  missed?: boolean;
 }
 
 /**
@@ -21,7 +27,7 @@ interface Props {
  * circle now only marks it. The sheet is a press-and-hold, the same gesture
  * iOS uses everywhere else for "show me more about this".
  */
-export function DoseRow({ dose, onToggle, onLongPress }: Props) {
+export function DoseRow({ dose, missed = false, onToggle, onLongPress }: Props) {
   const timer = useRef<number | null>(null);
   const origin = useRef({ x: 0, y: 0 });
   const [held, setHeld] = useState(false);
@@ -58,7 +64,7 @@ export function DoseRow({ dose, onToggle, onLongPress }: Props) {
 
   return (
     <div
-      className={`dose${dose.taken ? ' taken' : ''}${held ? ' holding' : ''}`}
+      className={`dose${dose.taken ? ' taken' : ''}${missed ? ' missed' : ''}${held ? ' holding' : ''}`}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={cancel}

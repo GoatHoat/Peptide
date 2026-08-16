@@ -1568,6 +1568,12 @@ button {
   position: relative;
   margin-top: 16px;
   padding-left: 22px;
+  /* Room for the open card's right-hand bleed. `.prod.open` pulls itself 12px
+     wider on both sides; on the left it has the 22px rail gutter to grow into,
+     and on the right there was nothing — so it ran 12px past the panel and was
+     sliced off by the `overflow-x: clip` the pager needs. Measured at 390px
+     wide: card right edge 382 against a panel ending at 370. */
+  padding-right: 12px;
 }
 /* the same white rail the paper list used */
 .prod-list .rail {
@@ -2130,4 +2136,40 @@ button {
   padding-top: 12px;
   border-top: 1px solid var(--hair);
   color: var(--t3);
+}
+
+/* "You are here" — the current moment, between two rows of the schedule.
+   A hairline and two labels, nothing else: it marks a position, it is not a
+   control and must not read like one. */
+.now-marker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 14px -22px;
+  padding-left: 22px;
+}
+.now-marker-label {
+  color: var(--purple);
+  font-size: calc(12px * var(--text-scale));
+  white-space: nowrap;
+}
+.now-marker-line {
+  flex: 1;
+  height: 1px;
+  background: var(--hair);
+}
+.now-marker-time {
+  color: var(--t3);
+  font-size: calc(12px * var(--text-scale));
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* A dose whose time has gone by, still unmarked. Dimmed, not alarmed. */
+.dose.missed .dose-name,
+.dose.missed .dose-amt {
+  color: var(--t3);
+}
+.dose.missed .dose-time {
+  color: var(--t4);
 }
