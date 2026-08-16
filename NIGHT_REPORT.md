@@ -181,3 +181,85 @@ Three decisions inside that are worth disagreeing with in the morning:
   onboarding sees "on an empty stomach" on the same product two taps later.
   Worth a look once 0.6 lands and the catalogue has real alternatives in it.
 - The bundle is 1,024 kB minified (319 kB gzipped); the engine added ~3 kB.
+
+---
+
+## 2026-08-15 — queue item 0.4, the iron defect
+
+**Changed.** The app no longer reads `age >= 51` as "has been through the
+menopause". `src/lib/intake.ts` is a new pure module that owns the whole
+question of which reference figure applies to a person, including the one case
+where the honest answer is two figures; `pickReference` moved into it out of
+`api.ts`, which is a data-access module and drags the Supabase client into
+anything that imports it. Iron with no answer on file now renders `18 or 8 mg
+a day` on the pill and `Daily target — 18 mg if you menstruate · 8 mg if you
+don't. Upper limit 45 mg.` on the open card, with the three-option control and
+the reason for asking directly underneath it. Migration `0019` adds
+`profiles.menstruates boolean` — **written, not applied**. 19 unit tests in
+`tests/unit/intake.spec.ts` and a Discover smoke test that answers the question
+and follows the figure down to 8 mg.
+
+Four decisions worth disagreeing with in the morning:
+
+- **The answer beats the age proxy at every age, and the control is shown at
+  51+ too.** Someone still menstruating at 52 is exactly the person the proxy
+  fails, and a control that hides itself at 51 leaves them no way to say so.
+  Unanswered at 51+ still renders the published 8 mg rather than the range —
+  the proxy is right for most people there, and turning every older woman's
+  iron entry into a question is not an improvement.
+- **13-18 year olds are left entirely alone.** No control, no range, still
+  15 mg. That band's figures carry adolescent growth as well as menstruation,
+  so there is no published "does not menstruate" figure to pair with them and
+  the 51+ figure of 8 mg is not it. Inventing one quietly is worse than the
+  gap.
+- **"Prefer not to say" on sex now gets both figures instead of none.** Iron's
+  reference rows are sex-specific, so `sex = 'na'` resolved to no row at all
+  and the entry read "no set intake" — the app knew two figures and showed
+  neither. Section 5's persona 11 asks for exactly this.
+- **The onboarding card shows the pair and the schedule stores nothing.**
+  `amount` stays empty for the ambiguous case, so the schedule row carries no
+  number and Today reads "you set the amount", the same as every other product
+  with no established figure. Writing 32 mg into someone's schedule when it
+  might be 14 is the defect with a database row behind it.
+
+**Found and did not change.**
+
+- **A user can answer the question and lose the answer.** `menstruates` does
+  not exist until migration `0019` is applied, so the write fails until then
+  and the answer only holds for the session — the same window `0018`'s four
+  columns are in. The failure is caught and takes nothing else down with it,
+  but it is silent, and it will stay silent until the morning's migration run.
+- **Which of the three buttons is pressed is session state.** "Prefer not to
+  say" stores null and so does never having answered, which is what the spec
+  asks for; the consequence is that reopening the app shows nothing pressed.
+  That is the honest reading of a null, but someone who deliberately said
+  "prefer not to say" will be shown the question again as though they had not.
+  Fixing it properly means a third value in the column.
+- **Onboarding never reads an answer that already exists.** It passes null
+  unconditionally, so a returning user who answered on the iron card and then
+  re-ran onboarding would see the range again. Onboarding runs once and before
+  Discover exists for them, so this is theoretical today.
+- **Iron's 1.8× vegetarian factor multiplies both figures, to 32 and 14.**
+  That is how ODS quotes it, and the card says so on one line: "32 mg a day if
+  you menstruate · 14 mg if you don't · oral". It is the longest dose line in
+  the app and it wraps to two lines at 393 wide. It reads fine; it is the only
+  place two rules stack on one figure, and it is worth looking at.
+
+**Out of scope but noticeable.**
+
+- **Fixed anyway, because it hid half of this item:** the recommendations
+  screen fetched the catalogue and the reference intakes as two round trips
+  and set them into state separately, while `Recommendations` snapshots its
+  cards the first render the data is non-null. Against a real server the
+  intakes always lost that race, so **every card on that screen has been
+  reading "you set the amount" regardless of what the catalogue holds** — and
+  every schedule item created by onboarding has been saved with a blank
+  amount. One `await`, one state update, both arrive together. Not strictly
+  0.4, but the iron figure could not appear on that screen at all until it was
+  fixed, so it could not be tested either.
+- The fixture gained a sixth supplement, an iron bisglycinate with the real
+  sex-specific reference rows, and it is tagged `Skin` as well as `Energy` so
+  the onboarding run reaches it — that run picks Skin & hair deliberately, to
+  keep B12's arrival attributable to the no-meat rule alone. The real
+  catalogue files iron under Energy.
+- The bundle is 1,026 kB minified (319.5 kB gzipped); this added ~2 kB.

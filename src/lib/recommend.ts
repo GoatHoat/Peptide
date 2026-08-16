@@ -126,6 +126,15 @@ const NUTRIENT = {
   niacin: [/niacin/, /nicotinamide/, /nicotinic/],
 } as const;
 
+/**
+ * Whether this entry is an iron product, by the same matcher the iron rules
+ * above use. Exported because `src/lib/intake.ts` has to recognise the same
+ * set — iron is the one reference intake that turns on menstrual status, and
+ * two definitions of "is this iron" would drift the first time a product is
+ * called something unexpected.
+ */
+export const isIron = (entry: GlossaryEntry) => hits(textOf(entry), NUTRIENT.iron);
+
 /* ── product form ────────────────────────────────────────────────────── */
 
 export type FormClass = 'capsule' | 'softgel' | 'tablet' | 'powder' | 'liquid' | 'gummy' | 'other';

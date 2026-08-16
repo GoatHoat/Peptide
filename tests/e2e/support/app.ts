@@ -1,6 +1,6 @@
 import { test as base, expect, type Page } from '@playwright/test';
 import { AUTH_STORAGE_KEY, ONBOARDED_KEY } from './env';
-import { B12_PRODUCT, seededScheduleItem, STUB_EMAIL } from './catalogue';
+import { B12_PRODUCT, IRON_PRODUCT, seededScheduleItem, STUB_EMAIL } from './catalogue';
 import { installSupabaseStub, stubSession, type Stub } from './supabaseStub';
 
 /**
@@ -162,6 +162,13 @@ export async function completeOnboarding(page: Page): Promise<void> {
      still renders and only this notices. */
   await expect(page.locator('.ob-rec').first()).toContainText(B12_PRODUCT);
   await expect(page.locator('.ob-rec-why').first()).toContainText('no reliable plant source');
+  /* Iron is the one figure the app cannot pick without being told, and this
+     flow deliberately never asks — so both figures appear here too, each with
+     the vegetarian 1.8× already applied. Quietly showing 32 mg would be the
+     same defect wearing a different screen. */
+  await expect(
+    page.locator('.ob-rec', { hasText: IRON_PRODUCT }).locator('.ob-rec-dose'),
+  ).toContainText('32 mg a day if you menstruate · 14 mg if you don’t');
   await cta(page, 'Create schedule').click();
 
   // building-schedule holds itself for 1.8s.

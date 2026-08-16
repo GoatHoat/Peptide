@@ -4,11 +4,11 @@ import { GOAL_BY_ID, DEFAULT_GOAL_IDS } from '../goals';
 import {
   getNutrientReference,
   listGlossary,
-  pickReference,
   type GlossaryEntry,
   type NutrientReference,
 } from '../../lib/api';
 import { checkPlacement, fromMinutes, toMinutes, type ScheduledItem } from '../../lib/conflicts';
+import { resolveIntake } from '../../lib/intake';
 import { recommend } from '../../lib/recommend';
 import type { Meal } from '../store';
 
@@ -93,8 +93,15 @@ export interface Recommendation {
   why: string;
   route: string;
   selected: boolean;
-  /** the intake that applies to this person, where one is established */
+  /** the intake that applies to this person, where a single figure does */
   amount: string;
+  /**
+   * Iron, for someone we have not been told about: both figures rather than a
+   * guess between them. Display only — `amount` stays empty, so the schedule
+   * stores no number, the same as anything else with no single established
+   * figure. See lib/intake.ts.
+   */
+  amountRange: { yes: string; no: string } | null;
   /** a reaction they told us about put this one on a full stomach */
   withFood: boolean;
 }
@@ -112,7 +119,11 @@ const scaled = (rda: number, factor: number) => {
 
 const doseLine = (r: Recommendation) =>
   [
-    r.amount ? `${r.amount} a day · ${r.route}` : `${r.route} · you set the amount`,
+    r.amountRange
+      ? `${r.amountRange.yes} a day if you menstruate · ${r.amountRange.no} if you don’t · ${r.route}`
+      : r.amount
+        ? `${r.amount} a day · ${r.route}`
+        : `${r.route} · you set the amount`,
     r.withFood ? 'with food' : null,
   ]
     .filter(Boolean)
@@ -130,12 +141,17 @@ export function useRecommendations(
   const [entries, setEntries] = useState<GlossaryEntry[] | null>(null);
   const [refs, setRefs] = useState<Record<string, NutrientReference[]>>({});
   useEffect(() => {
+    /* Both in one update, deliberately. `Recommendations` below snapshots the
+       cards the first render this returns anything, so entries arriving a
+       round trip ahead of the reference intakes meant every card was built
+       with no figure and read "you set the amount" — the amounts were only
+       ever going to lose that race against a real server. */
     listGlossary(200)
-      .then((rows) => {
+      .then(async (rows) => {
+        const refs = await getNutrientReference(rows.map((r) => r.id));
+        setRefs(refs);
         setEntries(rows);
-        return getNutrientReference(rows.map((r) => r.id));
       })
-      .then((m) => m && setRefs(m))
       .catch(() => setEntries([]));
   }, []);
 
@@ -158,12 +174,20 @@ export function useRecommendations(
 
     return {
       picks: result.ranked.slice(0, 6).map((s, i) => {
-        const r = pickReference(refs[s.entry.id], age, sex);
+        /* Onboarding never passes a menstrual status: it is not asked here,
+           deliberately, so iron arrives as two figures and the question waits
+           until the iron entry itself. */
+        const intake = resolveIntake(s.entry, refs[s.entry.id], age, sex, null);
+        const figure = (rda: number) => `${scaled(rda, s.amountFactor)} ${intake.unit}`;
         return {
           id: s.entry.id,
           name: s.entry.name,
           route: s.entry.route,
-          amount: r?.rda != null ? `${scaled(r.rda, s.amountFactor)} ${r.unit}` : '',
+          amount: intake.rda != null && intake.rdaIfNot == null ? figure(intake.rda) : '',
+          amountRange:
+            intake.rda != null && intake.rdaIfNot != null
+              ? { yes: figure(intake.rda), no: figure(intake.rdaIfNot) }
+              : null,
           why: s.reason,
           withFood: s.timing === 'with_food',
           selected: i < 3,

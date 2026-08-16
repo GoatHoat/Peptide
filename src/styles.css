@@ -1720,6 +1720,52 @@ button {
   padding: 12px 2px;
   color: var(--t3);
 }
+/* ── the one question asked on a card ──
+   Iron is the only figure that turns on menstrual status, so it is asked here
+   rather than in onboarding, where it would be put to everyone for the sake
+   of one entry. Same radius and inset as .prod-preview above it. */
+.prod-ask {
+  margin-top: 14px;
+  padding: 14px 15px;
+  border-radius: 16px;
+  background: var(--bg);
+}
+.prod-ask-target {
+  color: var(--t1);
+  line-height: 1.5;
+}
+.prod-ask-q {
+  display: block;
+  margin-top: 12px;
+  color: var(--t3);
+}
+.prod-ask-opts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.prod-ask-opt {
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  background: var(--card);
+  color: var(--t2);
+}
+.prod-ask-opt.on {
+  background: var(--purple-dim);
+  color: var(--t1);
+  box-shadow: inset 0 0 0 1.5px var(--purple);
+}
+.prod-ask-why {
+  margin-top: 10px;
+  color: var(--t3);
+  line-height: 1.5;
+}
+
 .prod-actions {
   display: flex;
   flex-wrap: wrap;

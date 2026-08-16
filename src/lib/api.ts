@@ -28,6 +28,13 @@ export interface Profile {
   reactions?: string[] | null;
   reactions_note?: string | null;
   form_prefs?: string[] | null;
+  /**
+   * Whether the person menstruates, which is the only thing the iron figure
+   * turns on. Absent until migration 0019 has been run, and null until they
+   * answer on the iron entry — null renders both figures rather than a guess.
+   * Never asked in onboarding; see `src/lib/intake.ts`.
+   */
+  menstruates?: boolean | null;
 }
 
 export type GlossaryCategory = 'healing' | 'growth' | 'cosmetic' | 'cognitive' | 'other';
@@ -481,27 +488,10 @@ export async function getNutrientReference(glossaryIds: string[]): Promise<Recor
   return out;
 }
 
-/**
- * The row that applies to this person. Sex-specific first, then the 'any' row,
- * so a nutrient that differs by sex uses the right one and a nutrient that does
- * not still resolves.
- */
-export function pickReference(
-  rows: NutrientReference[] | undefined,
-  age: number | null | undefined,
-  sex: 'm' | 'f' | 'na' | null | undefined,
-): NutrientReference | null {
-  if (!rows?.length) return null;
-  const band = age == null ? '19-50' : age < 19 ? '14-18' : age < 51 ? '19-50' : '51+';
-  const s = sex === 'm' || sex === 'f' ? sex : 'any';
-  return (
-    rows.find((r) => r.age_band === band && r.sex === s) ??
-    rows.find((r) => r.age_band === band && r.sex === 'any') ??
-    rows.find((r) => r.age_band === '19-50' && r.sex === s) ??
-    rows.find((r) => r.age_band === '19-50' && r.sex === 'any') ??
-    null
-  );
-}
+/* `pickReference` moved to lib/intake.ts, which owns the whole question of
+   which figure applies to a person — including the one nutrient where the
+   answer is two figures. It is pure, and this module is not: importing it from
+   here would drag the Supabase client into the unit tests. */
 
 export async function getGlossaryResearch(glossaryId: string): Promise<GlossaryResearch[]> {
   const { data, error } = await supabase

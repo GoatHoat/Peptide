@@ -48,10 +48,21 @@ single run. Do them in order; several depend on the one before.
   "what was left out". 26 unit tests in `tests/unit/recommend.spec.ts` cover one
   rule each, run by `npm test` as a new `rules` project. Iron's 1.8× vegetarian
   figure is applied; 2.5 (menstruation) is untouched — that is 0.4._
-- [ ] **0.4 — The iron defect.** Section 2.5. Stop deriving menstrual status from
+- [x] **0.4 — The iron defect.** Section 2.5. Stop deriving menstrual status from
   `age >= 51`. Render both figures for women under 51, add the optional control
   on the iron sheet, `profiles.menstruates boolean null`, and default null to the
   range. Do not add a question about it to onboarding.
+  _Done: new `src/lib/intake.ts` owns which figure applies (`pickReference`
+  moved there out of `api.ts`); iron with no answer renders "18 or 8 mg a day"
+  and the sentence the spec asks for, on the Discover card and on the
+  onboarding recommendation. The three-option control sits on the iron card
+  with the reason next to it, writing `profiles.menstruates` — migration `0019`
+  adds the column (not applied). An answer beats the age proxy at any age;
+  "prefer not to say" and null both render the range; 13-18 is left alone.
+  19 unit tests in `tests/unit/intake.spec.ts`, plus a Discover smoke test.
+  Also fixed, because it hid half of this: the recommendations screen
+  snapshotted its cards before the reference intakes arrived, so every card
+  read "you set the amount"._
 - [ ] **0.5 — Product-shaped slugs.** Section 3.1, the migration half. Move the
   existing 74 entries from ingredient-shaped slugs to `<brand>-<product>`, and
   update every foreign reference — `stack_items`, `schedule_items`,

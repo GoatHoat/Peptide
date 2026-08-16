@@ -31,6 +31,13 @@ export const SCHEDULED_PRODUCT = 'Test Brand Vitamin D3 2000 IU';
  */
 export const B12_PRODUCT = 'Test Brand Vitamin B12 Methylcobalamin';
 
+/**
+ * The one entry whose figure turns on whether the person menstruates. Its
+ * reference rows below are shaped exactly like the real ones — sex-specific,
+ * 18 mg under 51 and 8 mg over — because that difference is the whole test.
+ */
+export const IRON_PRODUCT = 'Test Brand Iron Bisglycinate';
+
 const glossary: Row[] = [
   {
     id: 'aaaaaaaa-0000-4000-8000-000000000001',
@@ -133,6 +140,30 @@ const glossary: Row[] = [
     ods_url: null,
   },
   {
+    id: 'aaaaaaaa-0000-4000-8000-000000000006',
+    slug: 'test-iron-bisglycinate',
+    name: IRON_PRODUCT,
+    category: 'other',
+    mechanism_summary: 'Iron chelated to two glycine molecules.',
+    storage_notes: 'Store cool and dry.',
+    route: 'oral',
+    research_summary: 'Fixture row. Not a real label filing.',
+    // Energy is where the real catalogue files iron; Skin is here as well so
+    // the onboarding run reaches it, since that run picks Skin & hair to keep
+    // B12 arriving on the no-meat rule alone. Deficiency-driven hair loss is a
+    // real association, so this is not a tag invented for the test's benefit.
+    goal_tags: ['Energy', 'Skin'],
+    search_keywords: ['iron', 'bisglycinate'],
+    kind: 'supplement',
+    brand: 'Test Brand',
+    product_form: 'Capsule',
+    label_url: null,
+    timing: 'empty',
+    timing_note: null,
+    evidence: 'strong',
+    ods_url: null,
+  },
+  {
     id: 'bbbbbbbb-0000-4000-8000-000000000001',
     slug: 'test-peptide-recovery',
     name: 'Test Peptide (recovery)',
@@ -158,6 +189,10 @@ const nutrient_reference: Row[] = [
   { glossary_id: glossary[0].id, age_band: '19-50', sex: 'any', rda: 15, ul: 100, unit: 'mcg' },
   { glossary_id: glossary[0].id, age_band: '51+', sex: 'any', rda: 20, ul: 100, unit: 'mcg' },
   { glossary_id: glossary[3].id, age_band: '19-50', sex: 'any', rda: 400, ul: 350, unit: 'mg' },
+  { glossary_id: glossary[5].id, age_band: '19-50', sex: 'm', rda: 8, ul: 45, unit: 'mg' },
+  { glossary_id: glossary[5].id, age_band: '19-50', sex: 'f', rda: 18, ul: 45, unit: 'mg' },
+  { glossary_id: glossary[5].id, age_band: '51+', sex: 'm', rda: 8, ul: 45, unit: 'mg' },
+  { glossary_id: glossary[5].id, age_band: '51+', sex: 'f', rda: 8, ul: 45, unit: 'mg' },
 ];
 
 /** The row the DB trigger would have created at signup. */
