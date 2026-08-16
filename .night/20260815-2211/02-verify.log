@@ -1,0 +1,37 @@
+
+> halfpast@0.1.0 build
+> tsc -b && vite build
+
+[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 873 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                          [39m[1m[2m    0.85 kB[22m[1m[22m[2m │ gzip:   0.41 kB[22m
+[2mdist/[22m[35massets/index-GyQ1ymdf.css           [39m[1m[2m   41.48 kB[22m[1m[22m[2m │ gzip:   8.11 kB[22m
+[2mdist/[22m[36massets/web-Bzt0L6lU.js              [39m[1m[2m    0.36 kB[22m[1m[22m[2m │ gzip:   0.25 kB[22m
+[2mdist/[22m[36massets/web-BZweE34U.js              [39m[1m[2m    4.59 kB[22m[1m[22m[2m │ gzip:   1.37 kB[22m
+[2mdist/[22m[36massets/web-CMTYvM70.js              [39m[1m[2m    8.73 kB[22m[1m[22m[2m │ gzip:   2.97 kB[22m
+[2mdist/[22m[36massets/purify.es-DP5U8-sc.js        [39m[1m[2m   29.17 kB[22m[1m[22m[2m │ gzip:  10.99 kB[22m
+[2mdist/[22m[36massets/index.es-C4ESWc3y.js         [39m[1m[2m  151.01 kB[22m[1m[22m[2m │ gzip:  51.65 kB[22m
+[2mdist/[22m[36massets/html2canvas.esm-CBrSDip1.js  [39m[1m[2m  201.42 kB[22m[1m[22m[2m │ gzip:  48.03 kB[22m
+[2mdist/[22m[36massets/index-b7E09G2s.js            [39m[1m[33m1,017.17 kB[39m[22m[2m │ gzip: 316.22 kB[22m
+[33m
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 8.77s[39m
+
+> halfpast@0.1.0 test
+> playwright test
+
+
+Running 4 tests using 2 workers
+
+  ✓  1 [iphone-width] › tests\e2e\boot.spec.ts:7:1 › boots to the welcome screen (1.5s)
+  ✓  2 [iphone-width] › tests\e2e\discover.spec.ts:9:1 › renders Discover with the catalogue (2.1s)
+  ✓  4 [iphone-width] › tests\e2e\today.spec.ts:9:1 › renders Today with the day materialised (1.5s)
+  ✓  3 [iphone-width] › tests\e2e\onboarding.spec.ts:9:1 › completes onboarding and lands on the app (17.2s)
+
+  4 passed (26.0s)
