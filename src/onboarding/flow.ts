@@ -11,6 +11,8 @@ export const FLOW = [
   'auth-choice',
   'auth-form',
   'profile',
+  // diet is profile information, and it wants to sit next to age and sex
+  'diet',
   'info-library',
   'info-recs',
   'q1',
@@ -19,6 +21,10 @@ export const FLOW = [
   'sleep',
   'meals',
   'current-stack',
+  // both read as follow-ups to "what are you already taking", which is where
+  // someone is already thinking about what they have tried
+  'reactions',
+  'forms',
   'goals',
   'notifications',
   'paywall',
@@ -31,8 +37,19 @@ export const FLOW = [
 
 export type Step = (typeof FLOW)[number];
 
-/** Skip is offered on the three survey questions and nowhere else. */
-export const SKIPPABLE: ReadonlySet<Step> = new Set<Step>(['q1', 'q2', 'q3']);
+/**
+ * Skip is offered on the questions and nowhere else. Every one of these has to
+ * be answerable with nothing selected: a skip means the same thing as "no
+ * preference", never an empty recommendation list.
+ */
+export const SKIPPABLE: ReadonlySet<Step> = new Set<Step>([
+  'q1',
+  'q2',
+  'q3',
+  'diet',
+  'reactions',
+  'forms',
+]);
 
 /** Welcome carries no chrome at all — no wordmark, no progress, no back. */
 export const NO_CHROME: ReadonlySet<Step> = new Set<Step>(['welcome']);

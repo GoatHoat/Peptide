@@ -45,7 +45,7 @@ export { expect };
 
 /**
  * Drops the app straight into the signed-in, already-onboarded state, so the
- * Today and Discover tests are not twenty screens of setup each. The
+ * Today and Discover tests are not the whole flow of setup each. The
  * onboarding test is the one that proves that path still works.
  */
 export async function seedSignedIn(page: Page, stub: Stub): Promise<void> {
@@ -69,6 +69,9 @@ const cta = (page: Page, name: string | RegExp) => page.getByRole('button', { na
 /** The survey options are radios, not buttons — see SurveyScreen. */
 const option = (page: Page, name: string) => page.getByRole('radio', { name });
 
+/** The three multi-select questions use checkboxes — see MultiSelectScreen. */
+const choice = (page: Page, name: string) => page.getByRole('checkbox', { name });
+
 /**
  * The whole flow, screen by screen.
  *
@@ -91,6 +94,13 @@ export async function completeOnboarding(page: Page): Promise<void> {
 
   await onScreen(page, 'About you');
   await cta(page, 'Female').click();
+  await cta(page, 'Continue').click();
+
+  await onScreen(page, /Anything you don.t eat/);
+  // "No meat at all" implies "No red meat", so this asserts the implication
+  // as well as the screen.
+  await choice(page, 'No meat at all').click();
+  await expect(choice(page, 'No red meat')).toBeChecked();
   await cta(page, 'Continue').click();
 
   await onScreen(page, 'Where this comes from');
@@ -121,6 +131,15 @@ export async function completeOnboarding(page: Page): Promise<void> {
 
   await onScreen(page, 'What are you already taking?');
   await cta(page, 'Continue').click();
+
+  await onScreen(page, /Has anything you.ve taken not agreed with you/);
+  await choice(page, 'Iron upset my stomach').click();
+  await cta(page, 'Continue').click();
+
+  // Skipped rather than answered: an empty answer has to walk through cleanly,
+  // and it is the one people will give most often.
+  await onScreen(page, 'How do you prefer to take things?');
+  await cta(page, 'Skip').click();
 
   // Goals has no heading — the CTA counts the selection instead.
   await expect(cta(page, 'Pick at least one')).toBeVisible();

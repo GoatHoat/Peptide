@@ -27,10 +27,16 @@ single run. Do them in order; several depend on the one before.
   server with Supabase stubbed inside the page (no project, no keys). Each also
   fails on any uncaught error, any `console.error`, or any Supabase call the
   stub does not model._
-- [ ] **0.2 — The three onboarding questions.** Section 1 of
+- [x] **0.2 — The three onboarding questions.** Section 1 of
   `PROMPT_PERSONALISATION.md`: diet, reactions, form preference. Screens, store
   fields, `FLOW` placement, `SKIPPABLE`, and the `profiles` columns. No
   injection option in the form question, for the reason given in the spec.
+  _Done: one `MultiSelectScreen` drives all three from `MULTI_QUESTIONS` in
+  `Survey.tsx`; `diet` after `profile`, `reactions` and `forms` after
+  `current-stack`, all three skippable; store gains `diet`, `reactions`,
+  `reactionsNote`, `forms`; migration `0018` adds the four columns (not
+  applied); answers are written by a second `updateProfile` and read back on
+  open. Flow is now 23 screens — 0.12 brings it down._
 - [ ] **0.3 — The rules engine.** Section 2. New `src/lib/recommend.ts`, pure and
   synchronous, with the diet table, the reaction table and the soft form
   re-rank. Wire it into `Results.tsx` in place of the bare `listGlossary()` call.

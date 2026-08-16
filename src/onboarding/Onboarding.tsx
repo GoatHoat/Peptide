@@ -3,7 +3,7 @@ import { FLOW, NO_CHROME, type Step } from './flow';
 import { markOnboarded, useOnboardingStore } from './store';
 import { Header } from './chrome';
 import { AuthChoice, AuthForm, Welcome } from './screens/Intro';
-import { Info, Profile, QUESTIONS, SurveyScreen } from './screens/Survey';
+import { Info, MULTI_QUESTIONS, MultiSelectScreen, Profile, QUESTIONS, SurveyScreen } from './screens/Survey';
 import { CurrentStack, Meals, Sleep } from './screens/Day';
 import { Goals } from './screens/Goals';
 import { Notifications, Paywall } from './screens/Commit';
@@ -11,7 +11,7 @@ import { Building, Done, Recommendations, ScheduleBuilder, type Recommendation }
 import { SKIP_PAYWALL } from '../lib/billing';
 import { useAuth } from '../lib/auth';
 import { supabase } from '../lib/supabaseClient';
-import { addScheduleItem, updateProfile } from '../lib/api';
+import { addScheduleItem, getProfile, updateProfile } from '../lib/api';
 import { toISODate } from '../lib/date';
 
 /**
@@ -20,7 +20,7 @@ import { toISODate } from '../lib/date';
  * FLOW enough to reorder the product.
  */
 export function Onboarding({ onFinished }: { onFinished: () => void }) {
-  const { state, step, patch, next, back, goTo } = useOnboardingStore();
+  const { state, step, patch, hydrate, next, back, goTo } = useOnboardingStore();
   const { session } = useAuth();
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signup');
   const [picks, setPicks] = useState<Recommendation[]>([]);
@@ -44,6 +44,26 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, step]);
 
+  /* Answers given on another device live on the profile row, not in this
+     device's localStorage. Read them back once so a returning user is not
+     asked the same three questions again. */
+  const hydrated = useRef(false);
+  useEffect(() => {
+    const userId = session?.user.id;
+    if (!userId || hydrated.current) return;
+    hydrated.current = true;
+    getProfile(userId)
+      .then((p) =>
+        hydrate({
+          diet: p.diet,
+          reactions: p.reactions,
+          reactionsNote: p.reactions_note,
+          forms: p.form_prefs,
+        }),
+      )
+      .catch(() => {});
+  }, [session, hydrate]);
+
   const finish = async () => {
     const userId = session?.user.id;
     if (userId) {
@@ -54,6 +74,16 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
         // the supplement sheet reads these to personalise the intake
         age: state.profile.age,
         sex: state.profile.gender,
+      }).catch(() => {});
+      /* Written on its own, because these columns arrive with migration 0018
+         and a database that has not run it yet must still keep the age, sex
+         and waking window above — one update carrying all of it would lose
+         the lot to a single unknown column. */
+      await updateProfile(userId, {
+        diet: state.diet,
+        reactions: state.reactions,
+        reactions_note: state.reactionsNote.trim() || null,
+        form_prefs: state.forms,
       }).catch(() => {});
       for (const item of state.schedule) {
         const rec = picks.find((p) => p.id === item.id);
@@ -77,6 +107,10 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
     if (step === 'q1') patch({ survey: { ...state.survey, q1: null } });
     if (step === 'q2') patch({ survey: { ...state.survey, q2: null } });
     if (step === 'q3') patch({ survey: { ...state.survey, q3: null } });
+    // an empty answer is a real answer on these three: it means no preference
+    if (step === 'diet') patch({ diet: [] });
+    if (step === 'reactions') patch({ reactions: [], reactionsNote: '' });
+    if (step === 'forms') patch({ forms: [] });
     next();
   };
 
@@ -118,6 +152,22 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
             age={state.profile.age}
             gender={state.profile.gender}
             onChange={(p) => patch({ profile: { age: p.age ?? state.profile.age, gender: p.gender } })}
+            onNext={next}
+          />
+        );
+
+      case 'diet':
+      case 'reactions':
+      case 'forms':
+        return (
+          <MultiSelectScreen
+            question={MULTI_QUESTIONS[step]}
+            value={state[step]}
+            onChange={(v) =>
+              patch(step === 'diet' ? { diet: v } : step === 'reactions' ? { reactions: v } : { forms: v })
+            }
+            note={step === 'reactions' ? state.reactionsNote : undefined}
+            onNote={step === 'reactions' ? (reactionsNote) => patch({ reactionsNote }) : undefined}
             onNext={next}
           />
         );

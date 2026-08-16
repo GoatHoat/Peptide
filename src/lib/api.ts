@@ -19,6 +19,15 @@ export interface Profile {
   /** the waking day; absent until migration 0014 has been run */
   wake_time?: string | null;
   sleep_time?: string | null;
+  /**
+   * The three personalisation answers; absent until migration 0018 has been
+   * run. `reactions_note` is free text and is deliberately never parsed by a
+   * rule — it is context for the assistant and nothing else.
+   */
+  diet?: string[] | null;
+  reactions?: string[] | null;
+  reactions_note?: string | null;
+  form_prefs?: string[] | null;
 }
 
 export type GlossaryCategory = 'healing' | 'growth' | 'cosmetic' | 'cognitive' | 'other';

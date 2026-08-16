@@ -51,3 +51,55 @@ dev-only; nothing new reaches the bundle.
   `glossary:glossary_id(*)` join returns rows without their glossary. No
   screen under test uses it; MyStack would need it before it could be tested
   the same way.
+
+---
+
+## 2026-08-15 — queue item 0.2, the three onboarding questions
+
+**Changed.** Diet, reactions and form preference are in the flow. One
+`MultiSelectScreen` renders all three from `MULTI_QUESTIONS` in `Survey.tsx`,
+reusing the existing option/tick/input classes — no new CSS. `diet` sits after
+`profile`, `reactions` and `forms` after `current-stack`, and all three are in
+`SKIPPABLE`; skipping clears to an empty array, which every downstream rule
+has to read as "no preference". "No meat at all" auto-selects "No red meat",
+and unticking "No red meat" unticks both rather than leaving a pair of answers
+that contradict each other. "Something else" on the reactions screen stores to
+`reactionsNote`, separately, and nothing parses it. No injection option, no
+topical option. Migration `0018_onboarding_answers.sql` adds `diet`,
+`reactions`, `reactions_note` and `form_prefs` — **written, not applied**.
+The onboarding smoke test walks the three new screens and asserts the answers
+reach `profiles`.
+
+**Found and did not change.**
+
+- **The flow is 23 screens now, and the paywall is still at index 17, before
+  the recommendations at 19.** Both are queue items (0.10, 0.12) and both are
+  worse than they were this morning, because I just made the flow longer
+  without moving the paywall. If only one more thing gets done tonight it
+  should be 0.10.
+- **A user mid-flow when this ships resumes on a different screen.** The step
+  index is persisted as a number and three screens were inserted ahead of it,
+  so someone parked on `goals` (12) reopens on `reactions` (13). The bounds
+  clamp holds and nothing crashes; every answer survives. I did not bump the
+  storage key, because discarding a part-finished flow to avoid one misplaced
+  screen is the worse trade.
+- **The profile write is two calls now, deliberately.** `finish()` writes age,
+  sex and the waking window first, then the four new columns separately. One
+  update carrying all of it would fail whole against a database that has not
+  run `0018` — which is every database until the migration is applied in the
+  morning — and take age and sex down with it. Same reason `0014`'s columns
+  are typed optional.
+- **Read-back is onboarding-only.** `hydrate()` fills answers from the profile
+  row on open and only where the local value is empty, so a device that has
+  answered wins over the server. Nothing outside onboarding reads the four
+  fields yet; the scorer in 0.3 is what makes them do anything at all. Until
+  then a user can answer all three questions and get exactly the same
+  recommendations as before.
+
+**Out of scope but noticeable.**
+
+- `Results.tsx` still calls `listGlossary()` and filters by goal, so the
+  reactions screen currently promises "we'll pick a different form rather than
+  skipping it" and nothing yet does that. That is 0.3, but the copy is live
+  before the behaviour is, which is the wrong order if these ship separately.
+- The bundle is still 1,017 kB minified; the three screens added ~4 kB.

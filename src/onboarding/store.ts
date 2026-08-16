@@ -12,6 +12,14 @@ export interface OnboardingState {
   auth: { userId: string | null; email: string | null };
   profile: { age: number | null; gender: 'm' | 'f' | 'na' | null };
   survey: { q1: string | null; q2: string | null; q3: string | null };
+  /** what they don't eat — the one answer that moves the most products */
+  diet: string[];
+  /** what has not agreed with them before; picks the form, never drops the nutrient */
+  reactions: string[];
+  /** free text from "something else". Context for the assistant; never parsed by a rule. */
+  reactionsNote: string;
+  /** preferred product forms. A soft re-rank, so an empty list is a valid answer. */
+  forms: string[];
   wake: string;
   sleep: string;
   meals: Meal[];
@@ -34,6 +42,10 @@ export const initialState = (): OnboardingState => ({
   auth: { userId: null, email: null },
   profile: { age: 25, gender: null },
   survey: { q1: null, q2: null, q3: null },
+  diet: [],
+  reactions: [],
+  reactionsNote: '',
+  forms: [],
   wake: '07:00',
   sleep: '23:00',
   meals: DEFAULT_MEALS.map((m) => ({ ...m })),
@@ -44,6 +56,14 @@ export const initialState = (): OnboardingState => ({
   recommendations: [],
   schedule: [],
 });
+
+/** The answers that also live on `profiles`, in this file's shape. */
+export interface PersistedAnswers {
+  diet?: string[] | null;
+  reactions?: string[] | null;
+  reactionsNote?: string | null;
+  forms?: string[] | null;
+}
 
 const KEY = 'pepstack.onboarding.v1';
 
@@ -65,6 +85,10 @@ function load(): OnboardingState {
       auth: { ...base.auth, ...parsed.auth },
       profile: { ...base.profile, ...parsed.profile },
       survey: { ...base.survey, ...parsed.survey },
+      diet: Array.isArray(parsed.diet) ? parsed.diet : [],
+      reactions: Array.isArray(parsed.reactions) ? parsed.reactions : [],
+      reactionsNote: typeof parsed.reactionsNote === 'string' ? parsed.reactionsNote : '',
+      forms: Array.isArray(parsed.forms) ? parsed.forms : [],
       meals: Array.isArray(parsed.meals) ? parsed.meals : base.meals,
       currentStack: Array.isArray(parsed.currentStack) ? parsed.currentStack : [],
       goals: Array.isArray(parsed.goals) ? parsed.goals : [],
@@ -92,6 +116,22 @@ export function useOnboardingStore() {
 
   const patch = useCallback((p: Partial<OnboardingState>) => {
     setState((s) => ({ ...s, ...p }));
+  }, []);
+
+  /**
+   * Fill in answers already on the profile row — a returning user on a new
+   * device has nothing in localStorage and should not be asked twice. Only
+   * fields still empty here are touched, so an answer given on this device
+   * always wins over an older one coming back from the server.
+   */
+  const hydrate = useCallback((p: PersistedAnswers) => {
+    setState((s) => ({
+      ...s,
+      diet: s.diet.length ? s.diet : p.diet ?? [],
+      reactions: s.reactions.length ? s.reactions : p.reactions ?? [],
+      reactionsNote: s.reactionsNote || p.reactionsNote || '',
+      forms: s.forms.length ? s.forms : p.forms ?? [],
+    }));
   }, []);
 
   const goTo = useCallback((step: number) => {
@@ -126,8 +166,8 @@ export function useOnboardingStore() {
   const step: Step = FLOW[state.step];
 
   return useMemo(
-    () => ({ state, step, patch, goTo, next, back, reset }),
-    [state, step, patch, goTo, next, back, reset],
+    () => ({ state, step, patch, hydrate, goTo, next, back, reset }),
+    [state, step, patch, hydrate, goTo, next, back, reset],
   );
 }
 
