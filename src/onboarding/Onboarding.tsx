@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { FLOW, NO_CHROME, type Step } from './flow';
 import { markOnboarded, useOnboardingStore } from './store';
 import { Header } from './chrome';
-import { AuthChoice, AuthForm, Welcome } from './screens/Intro';
+import { Auth, Welcome } from './screens/Intro';
 import { Info, MULTI_QUESTIONS, MultiSelectScreen, Profile, QUESTIONS, SurveyScreen } from './screens/Survey';
-import { CurrentStack, Meals, Sleep } from './screens/Day';
+import { CurrentStack, Day } from './screens/Day';
 import { Goals } from './screens/Goals';
 import { Notifications, Paywall } from './screens/Commit';
 import { Building, Done, Recommendations, ScheduleBuilder, type Recommendation } from './screens/Results';
@@ -38,7 +38,7 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
 
   /* signing in mid-flow moves past the auth screens on its own */
   useEffect(() => {
-    if (session && (step === 'auth-choice' || step === 'auth-form')) {
+    if (session && step === 'auth') {
       patch({ auth: { userId: session.user.id, email: session.user.email ?? null } });
       goTo(FLOW.indexOf('profile'));
     }
@@ -113,7 +113,6 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
   };
 
   const skip = () => {
-    if (step === 'q1') patch({ survey: { ...state.survey, q1: null } });
     if (step === 'q2') patch({ survey: { ...state.survey, q2: null } });
     if (step === 'q3') patch({ survey: { ...state.survey, q3: null } });
     // an empty answer is a real answer on these three: it means no preference
@@ -128,23 +127,9 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
       case 'welcome':
         return <Welcome onNext={next} />;
 
-      case 'auth-choice':
+      case 'auth':
         return (
-          <AuthChoice
-            onEmail={() => {
-              setAuthMode('signup');
-              next();
-            }}
-            onSignIn={() => {
-              setAuthMode('signin');
-              next();
-            }}
-          />
-        );
-
-      case 'auth-form':
-        return (
-          <AuthForm
+          <Auth
             mode={authMode}
             onSwitch={setAuthMode}
             onDone={async (_id, email) => {
@@ -181,11 +166,9 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           />
         );
 
-      case 'info-library':
-      case 'info-recs':
-        return <Info which={step} onNext={next} />;
+      case 'info':
+        return <Info onNext={next} />;
 
-      case 'q1':
       case 'q2':
       case 'q3':
         return (
@@ -205,11 +188,17 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           />
         );
 
-      case 'sleep':
-        return <Sleep wake={state.wake} sleep={state.sleep} onChange={patch} onNext={next} />;
-
-      case 'meals':
-        return <Meals meals={state.meals} onChange={(meals) => patch({ meals })} onNext={next} />;
+      case 'day':
+        return (
+          <Day
+            wake={state.wake}
+            sleep={state.sleep}
+            meals={state.meals}
+            onChange={patch}
+            onMeals={(meals) => patch({ meals })}
+            onNext={next}
+          />
+        );
 
       case 'current-stack':
         return (

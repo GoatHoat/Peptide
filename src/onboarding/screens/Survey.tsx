@@ -128,29 +128,28 @@ export function Profile({
   );
 }
 
-/* ── the two read-only explainers ────────────────────────────────────── */
+/* ── the one read-only explainer ─────────────────────────────────────── */
 
-export const INFO_COPY = {
-  'info-library': {
-    illustration: 'library',
-    title: 'Where this comes from',
-    body: 'Every entry is tied to published research rather than to anything we decided ourselves. You can open the papers behind any of it from Discover, at any point, without asking us.',
-  },
-  'info-recs': {
-    illustration: 'recs',
-    title: 'How a suggestion is made',
-    body: 'Suggestions are drawn from the goals you pick, your age and your sex — nothing else. You set every amount yourself; the app stores your numbers and never invents them.',
-  },
-} as const;
-
-export function Info({ which, onNext }: { which: keyof typeof INFO_COPY; onNext: () => void }) {
-  const c = INFO_COPY[which];
+/**
+ * Was two consecutive screens — "Where this comes from" and "How a suggestion
+ * is made" — neither of which asked for anything. One screen makes both
+ * points, and the second of them is now true: since the diet, reaction and
+ * form questions arrived, goals, age and sex are not "nothing else".
+ */
+export function Info({ onNext }: { onNext: () => void }) {
   return (
     <Screen center footer={<Cta onClick={onNext}>Continue</Cta>}>
-      <OnboardIllustration name={c.illustration} />
+      <OnboardIllustration name="library" />
       <div style={{ marginTop: 30 }}>
-        <Title>{c.title}</Title>
-        <Sub>{c.body}</Sub>
+        <Title>Where this comes from</Title>
+        <Sub>
+          Every entry is tied to published research rather than to anything we decided ourselves.
+          You can open the papers behind any of it from Discover, at any point.
+        </Sub>
+        <Sub>
+          What we suggest comes from the goals you pick and the answers you give us, and nothing
+          else. You set every amount yourself; the app stores your numbers and never invents them.
+        </Sub>
       </div>
     </Screen>
   );
@@ -159,29 +158,22 @@ export function Info({ which, onNext }: { which: keyof typeof INFO_COPY; onNext:
 /* ── the three survey questions ──────────────────────────────────────── */
 
 export interface Question {
-  id: 'q1' | 'q2' | 'q3';
+  id: 'q2' | 'q3';
   title: string;
   sub: string;
   options: { id: string; label: string }[];
 }
 
 /**
- * Every one of these changes something downstream. None of them exists to make
- * the user feel bad about themselves — that shape of question produces refunds
- * a week later, not engagement.
+ * None of these exists to make the user feel bad about themselves — that shape
+ * of question produces refunds a week later, not engagement.
+ *
+ * There were three. The first asked how many supplements they were taking; the
+ * `current-stack` screen asks the same thing four screens on and gets back a
+ * list the scorer reads, so the count was collected and never looked at again.
+ * The ids of the two left are unchanged on purpose — see FLOW.
  */
-export const QUESTIONS: Record<'q1' | 'q2' | 'q3', Question> = {
-  q1: {
-    id: 'q1',
-    title: 'How many peptides or supplements are you taking right now?',
-    sub: 'Count each one separately, including anything over the counter.',
-    options: [
-      { id: 'none', label: 'None yet' },
-      { id: '1-2', label: '1–2' },
-      { id: '3-5', label: '3–5' },
-      { id: '6+', label: '6 or more' },
-    ],
-  },
+export const QUESTIONS: Record<'q2' | 'q3', Question> = {
   q2: {
     id: 'q2',
     title: 'Have you started a routine and stopped before?',

@@ -129,10 +129,29 @@
   color: var(--t2);
   line-height: 1.5;
 }
+/* two paragraphs, on the one screen that has two things to say */
+.ob-sub + .ob-sub {
+  margin-top: 18px;
+}
 .ob-caption {
   font-size: 13px;
   color: var(--t3);
   line-height: 1.45;
+}
+/* the second half of a screen, in the same uppercase label the cards use */
+.ob-section {
+  margin-top: 32px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--t3);
+}
+.ob-section + .ob-caption {
+  margin-top: 6px;
+}
+.ob-section + .ob-caption + .ob-meals {
+  margin-top: 14px;
 }
 .ob-card-title {
   font-size: 17px;
@@ -1008,7 +1027,23 @@
   color: var(--t2);
 }
 .ob-form {
-  margin-top: 26px;
+  margin-top: 22px;
+}
+/* the rule either side of "or use email", on the one screen that offers two ways in */
+.ob-or {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 22px;
+  font-size: 13px;
+  color: var(--t3);
+}
+.ob-or::before,
+.ob-or::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--hairline);
 }
 
 /* ── meals ── */

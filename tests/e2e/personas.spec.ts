@@ -22,7 +22,6 @@ import { readStore, relaunch, runPersona, timeline, type Persona, type RunRecord
 /** Every persona answers these unless it says otherwise. */
 const BASE: Omit<Persona, 'n' | 'name' | 'watch'> = {
   gender: 'Female',
-  q1: 'None yet',
   q2: 'Once or twice',
   q3: 'I forget',
   goals: ['Sleep'],
@@ -134,9 +133,8 @@ test('3. omnivore, every survey question skipped', async ({ page }, info) => {
     persona({
       n: 3,
       name: 'Omnivore, every question skipped',
-      watch: 'a skip on all five optional questions has to mean "no preference", never an empty list',
+      watch: 'a skip on all four optional questions has to mean "no preference", never an empty list',
       diet: ['I eat everything'],
-      q1: null,
       q2: null,
       q3: null,
       reactions: null,
@@ -190,13 +188,13 @@ test('5. going back and changing that answer brings the question back', async ({
       q2: 'Never tried',
       hooks: {
         // q2 retired q3, so the screen after q2 is this one
-        sleep: async (page, run) => {
+        day: async (page, run) => {
           await page.getByRole('button', { name: 'Back' }).click();
           /* Back has to land on q2 and not on q3: the same rule that hid it
              going forward has to hide it coming back, or the chevron walks
              into a screen the answer says does not exist. */
           await expect(page.locator('.ob-root')).toHaveAttribute('data-step', 'q2');
-          run.notes.push('back from sleep lands on q2, stepping over the retired q3');
+          run.notes.push('back from the day screen lands on q2, stepping over the retired q3');
 
           await page.getByRole('radio', { name: 'I always stop' }).click();
           await page.getByRole('button', { name: 'Continue' }).click();
@@ -212,12 +210,12 @@ test('5. going back and changing that answer brings the question back', async ({
 
   /* The recorded timeline is what the driver drove, so the hook's own detour
      back to q2 is not in it — what is in it is the shape the detour produced:
-     sleep, then q3, then sleep again. q3 appearing after a screen that comes
+     day, then q3, then day again. q3 appearing after a screen that comes
      later in FLOW is the branch re-opening, and it is the only way that
      ordering can happen. */
   const steps = run.screens.map((s) => s.step);
-  expect(steps.filter((s) => s === 'sleep')).toHaveLength(2);
-  expect(steps.indexOf('q3')).toBeGreaterThan(steps.indexOf('sleep'));
+  expect(steps.filter((s) => s === 'day')).toHaveLength(2);
+  expect(steps.indexOf('q3')).toBeGreaterThan(steps.indexOf('day'));
   expect(run.notes).toHaveLength(2);
 });
 
@@ -568,7 +566,10 @@ test('a step index outside the flow clamps instead of blanking', async ({ page }
   const last = await page.evaluate(
     () => JSON.parse(localStorage.getItem('pepstack.onboarding.v1') ?? '{}').step,
   );
-  expect(last, 'clamped to the last step rather than off the end').toBe(22);
+  /* 18 is the last index of a 19-screen FLOW, so this is also where the length
+     of the flow is pinned: 0.12 asked for under 20 and this is what holds it
+     there. A screen added back has to change this line and say why. */
+  expect(last, 'clamped to the last step rather than off the end').toBe(18);
 
   // and the screen it clamped onto is a screen, not a blank
   await expect(page.getByRole('heading', { name: /You.re set/ })).toBeVisible();

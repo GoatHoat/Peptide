@@ -175,9 +175,24 @@ single run. Do them in order; several depend on the one before.
   dead end with nothing to suggest (verified), `DEFAULT_GOAL_IDS` is unreachable
   from the product, the progress bar moves two segments over a retired question,
   and `finish()` swallows every write error. See `NIGHT_REPORT.md`._
-- [ ] **0.12 — Trim the flow back under 20 screens.** Section 5. Cut candidates
+- [x] **0.12 — Trim the flow back under 20 screens.** Section 5. Cut candidates
   in order: the progress-photo screen, then the two consecutive info screens.
   Do not cut the three new questions to make room.
+  _Done: 23 → 19. There is no progress-photo screen in the flow — `ProgressNotes`
+  lives in the app proper and `FLOW` has never held it, so the first cut on the
+  list was already made. Four merges instead, none of them a new question:
+  `auth-choice`+`auth-form` → `auth` (the chooser's only working control was
+  "continue with email"; Apple and Google are disabled until Supabase has them
+  and now sit above the form); `info-library`+`info-recs` → `info`, whose second
+  paragraph was also factually wrong since 0.2 — it claimed goals, age and sex
+  and "nothing else"; `sleep`+`meals` → `day`, two screens whose own titles
+  said "part one" and "part two"; and `q1` cut outright — it counted what
+  `current-stack` lists four screens later, and its answer was written to the
+  store and never read by anything. q2 and q3 keep their ids, because they are
+  persisted in localStorage and renumbering would drop the answers of anyone
+  mid-flow. All 85 tests green; the twenty persona runs are 18-20 screens each,
+  ~15s of driving time against 16-22s. `FLOW.length` is now pinned by the
+  clamp test, so putting a screen back has to change that line and say why._
 
 ---
 

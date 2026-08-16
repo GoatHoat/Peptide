@@ -10,18 +10,24 @@ import { SKIP_PAYWALL } from '../lib/billing';
  */
 export const FLOW = [
   'welcome',
-  'auth-choice',
-  'auth-form',
+  // one screen, not two: the chooser's only working control was "continue with
+  // email", which led straight to the form now under it
+  'auth',
   'profile',
   // diet is profile information, and it wants to sit next to age and sex
   'diet',
-  'info-library',
-  'info-recs',
-  'q1',
+  // one explainer, not two consecutive ones
+  'info',
+  /* q1 — "how many are you taking right now" — is gone. `current-stack` asks
+     the same thing four screens later and gets a list the scorer actually
+     reads, where q1's count was written down and never read again. The two
+     that remain keep their ids: they are persisted under `survey` in
+     localStorage, and renumbering them would drop the answers of anyone
+     part-way through the flow when the build updates under them. */
   'q2',
   'q3',
-  'sleep',
-  'meals',
+  // the sleep window and the meals were "your day, part one" and "part two"
+  'day',
   'current-stack',
   // both read as follow-ups to "what are you already taking", which is where
   // someone is already thinking about what they have tried
@@ -47,7 +53,6 @@ export type Step = (typeof FLOW)[number];
  * preference", never an empty recommendation list.
  */
 export const SKIPPABLE: ReadonlySet<Step> = new Set<Step>([
-  'q1',
   'q2',
   'q3',
   'diet',

@@ -11,7 +11,8 @@ export interface OnboardingState {
   step: number;
   auth: { userId: string | null; email: string | null };
   profile: { age: number | null; gender: 'm' | 'f' | 'na' | null };
-  survey: { q1: string | null; q2: string | null; q3: string | null };
+  /** the ids start at q2 on purpose — see FLOW, where q1 was cut */
+  survey: { q2: string | null; q3: string | null };
   /** what they don't eat — the one answer that moves the most products */
   diet: string[];
   /** what has not agreed with them before; picks the form, never drops the nutrient */
@@ -41,7 +42,7 @@ export const initialState = (): OnboardingState => ({
   step: 0,
   auth: { userId: null, email: null },
   profile: { age: 25, gender: null },
-  survey: { q1: null, q2: null, q3: null },
+  survey: { q2: null, q3: null },
   diet: [],
   reactions: [],
   reactionsNote: '',
@@ -84,7 +85,9 @@ function load(): OnboardingState {
       ...parsed,
       auth: { ...base.auth, ...parsed.auth },
       profile: { ...base.profile, ...parsed.profile },
-      survey: { ...base.survey, ...parsed.survey },
+      /* Named rather than spread, so a store written before q1 was cut does
+         not carry its answer forward into a shape that no longer has it. */
+      survey: { q2: parsed.survey?.q2 ?? null, q3: parsed.survey?.q3 ?? null },
       diet: Array.isArray(parsed.diet) ? parsed.diet : [],
       reactions: Array.isArray(parsed.reactions) ? parsed.reactions : [],
       reactionsNote: typeof parsed.reactionsNote === 'string' ? parsed.reactionsNote : '',

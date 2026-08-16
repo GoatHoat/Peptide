@@ -37,7 +37,6 @@ export interface Persona {
   reactionsNote?: string;
   forms?: string[] | null;
   /** option labels; `null` presses Skip */
-  q1?: string | null;
   q2?: string | null;
   q3?: string | null;
   wake?: string;
@@ -202,13 +201,14 @@ const HANDLERS: Record<string, Handler> = {
     act: async (page) => void (await cta(page, 'Get started').click()),
   },
 
-  'auth-choice': {
-    ready: async (page) => void (await expect(heading(page, 'Create your account')).toBeVisible()),
-    act: async (page) => void (await cta(page, 'Continue with email').click()),
-  },
-
-  'auth-form': {
-    ready: async (page) => void (await expect(page.getByPlaceholder('Email')).toBeVisible()),
+  auth: {
+    ready: async (page) => {
+      await expect(heading(page, 'Create your account')).toBeVisible();
+      // the providers stay on the merged screen, switched off until Supabase
+      // has them; the form under them is the working way in
+      await expect(page.getByRole('button', { name: 'Continue with Apple' })).toBeDisabled();
+      await expect(page.getByPlaceholder('Email')).toBeVisible();
+    },
     act: async (page) => {
       await page.getByPlaceholder('Email').fill(STUB_EMAIL);
       await page.getByPlaceholder('Password', { exact: true }).fill(FORM_PASSWORD);
@@ -239,20 +239,11 @@ const HANDLERS: Record<string, Handler> = {
     act: async (page, p) => multi(page, p.diet),
   },
 
-  'info-library': {
+  info: {
     ready: async (page) => void (await expect(heading(page, 'Where this comes from')).toBeVisible()),
     act: async (page) => void (await cta(page, 'Continue').click()),
   },
 
-  'info-recs': {
-    ready: async (page) => void (await expect(heading(page, 'How a suggestion is made')).toBeVisible()),
-    act: async (page) => void (await cta(page, 'Continue').click()),
-  },
-
-  q1: {
-    ready: async (page) => void (await expect(heading(page, /How many peptides or supplements/)).toBeVisible()),
-    act: async (page, p) => single(page, p.q1),
-  },
   q2: {
     ready: async (page) => void (await expect(heading(page, /Have you started a routine/)).toBeVisible()),
     act: async (page, p) => single(page, p.q2),
@@ -262,18 +253,16 @@ const HANDLERS: Record<string, Handler> = {
     act: async (page, p) => single(page, p.q3),
   },
 
-  sleep: {
-    ready: async (page) => void (await expect(heading(page, 'Your day, part one')).toBeVisible()),
+  /* The waking window and the meals, one screen since 0.12. Both halves are
+     driven here, in that order, because the meal list sits under the dial. */
+  day: {
+    ready: async (page) => {
+      await expect(heading(page, 'Your day')).toBeVisible();
+      await expect(page.locator('.ob-dial')).toBeVisible();
+    },
     act: async (page, p) => {
       if (p.sleep) await page.locator('#ob-sleep').fill(p.sleep);
       if (p.wake) await page.locator('#ob-wake').fill(p.wake);
-      await cta(page, 'Continue').click();
-    },
-  },
-
-  meals: {
-    ready: async (page) => void (await expect(heading(page, 'Your day, part two')).toBeVisible()),
-    act: async (page, p) => {
       if (p.meals === 'none') {
         const rows = page.locator('.ob-meal');
         // each removal collapses for 200ms before it leaves the list

@@ -845,3 +845,84 @@ test that should opt out of it.
 
 Build green, `tsc --noEmit` green, 85 tests green (63 → 85: 22 new e2e).
 Bundle 1,026.53 kB minified, 319.72 kB gzipped.
+
+---
+
+## Night 12 — 0.12, trim the flow back under 20 screens
+
+**23 screens to 19.** Four cuts, none of them one of the three questions this
+whole section exists to add.
+
+**The first candidate on the list did not exist.** There is no progress-photo
+screen in onboarding. `src/screens/ProgressNotes.tsx` is in the app proper and
+`FLOW` has never referenced it, so "move it into the app" was already true. The
+audit screen the spec also asks about is not in the flow either.
+
+**`auth-choice` + `auth-form` → `auth`.** The chooser offered Apple, Google and
+email. Apple and Google are `disabled` until the providers are switched on in
+Supabase, so the screen's only working control was "continue with email" — a
+whole screen whose one live button meant "next", and the second screen anyone
+ever sees. The providers keep their place at the top for the day they ship, the
+form sits under them behind a rule reading "or use email", and the Terms and
+Privacy line moved into the footer next to the CTA where it now covers the
+submit it is about. The signup and sign-in modes, the confirm-email state and
+the mode toggle are unchanged.
+
+**`info-library` + `info-recs` → `info`.** Two consecutive screens that
+explained rather than asked. Merging them was on the list; the second one also
+needed fixing whatever happened to it, because since 0.2 its copy was false —
+it said suggestions come from "the goals you pick, your age and your sex —
+nothing else", and diet, reactions and form preference have all been feeding
+the scorer since 0.3. It now says goals and the answers you give us. That is
+the App Review paragraph as much as the user's, so it mattered that it was
+wrong.
+
+**`sleep` + `meals` → `day`.** Titled "Your day, part one" and "Your day, part
+two", which is a split naming the seam it is on the wrong side of. One screen:
+the ring, the two time cards, then a MEALS label and the list under it. Both
+halves became plain fragments — `SleepDial` and `MealList` — and `Day`
+composes them into the one `Screen`. It scrolls on a 393×852 phone, which the
+sleep screen already did.
+
+**`q1` cut.** "How many peptides or supplements are you taking right now?" was
+answered by counting, four screens before `current-stack` asks the same thing
+and gets back a list the scorer actually reads for the double-up check. Its
+answer went into the store and nothing ever read it — grep, not inference. q2
+and q3 keep their ids rather than shuffling up to q1 and q2: `survey` is
+persisted in localStorage, and renumbering would silently drop the answers of
+anyone part-way through the flow when the build updates under them. `load()`
+now names the two fields instead of spreading, so a store written before
+tonight does not carry a dead `q1` forward.
+
+Final order, 19: welcome → auth → profile → diet → info → q2 → q3 → day →
+current-stack → reactions → forms → goals → notifications → building-recs →
+recommendations → paywall → building-schedule → schedule → done.
+
+**Found and not changed:**
+
+- **q3 is now the only screen left whose answer nothing reads.** Its sub-line
+  says "This decides how the schedule is laid out" and it decides nothing —
+  `survey.q3` is written and never looked at again, exactly like the q1 that
+  went tonight. q2 at least gates q3. Either the layout should use it or the
+  sub-line is a claim the app does not keep, and which of those is a product
+  decision rather than a 3am one. I left it because the spec's twenty runs
+  lean on the q2/q3 branch and cutting into it during a trim is how you lose a
+  test that is worth more than the screen.
+- **The progress bar is one segment per `FLOW` entry, so it just got wider
+  per step.** 19 segments rather than 23, and it still moves two over the
+  retired q3. Same honest reading as night 11; nothing to fix, worth knowing
+  the number changed.
+- **`Sub` is now a paragraph rather than a subtitle** on exactly one screen.
+  `.ob-sub + .ob-sub` spaces the second one. If a third screen ever wants two
+  paragraphs this is fine; if it wants three it wants a different component.
+- **The merged auth screen has dead space mid-screen** at 393×852 with the
+  keyboard down. It fills the moment a field is focused, and the alternative
+  is centring a form that then jumps when the keyboard opens. Left as is.
+- Everything flagged in night 11 that I did not touch is still open: the
+  recommendations dead end, `DEFAULT_GOAL_IDS` being unreachable, `finish()`
+  swallowing every write, the vegan-collagen gap, and `ensureTodayDoses`
+  double-inserting under StrictMode.
+
+Build green, `tsc --noEmit` green, 85 tests green. The twenty persona runs are
+18-20 screens each and ~15s of driving time, against 22-24 screens and 16-22s
+last night. Bundle 1,025.37 kB minified, 319.31 kB gzipped.

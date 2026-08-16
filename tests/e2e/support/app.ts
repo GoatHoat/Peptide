@@ -93,8 +93,9 @@ export async function completeOnboarding(page: Page): Promise<void> {
   await onScreen(page, 'Pepstack');
   await cta(page, 'Get started').click();
 
-  await cta(page, 'Continue with email').click();
-
+  // one auth screen since 0.12: the providers sit above the form rather than
+  // on a chooser of their own
+  await onScreen(page, 'Create your account');
   await page.getByPlaceholder('Email').fill(STUB_EMAIL);
   await page.getByPlaceholder('Password', { exact: true }).fill(FORM_PASSWORD);
   await page.getByPlaceholder('Confirm password').fill(FORM_PASSWORD);
@@ -114,13 +115,6 @@ export async function completeOnboarding(page: Page): Promise<void> {
   await onScreen(page, 'Where this comes from');
   await cta(page, 'Continue').click();
 
-  await onScreen(page, 'How a suggestion is made');
-  await cta(page, 'Continue').click();
-
-  await onScreen(page, /How many peptides or supplements/);
-  await option(page, 'None yet').click();
-  await cta(page, 'Continue').click();
-
   await onScreen(page, /Have you started a routine/);
   // Not "Never tried" — that answer retires q3, and q3 is a screen worth
   // walking.
@@ -131,10 +125,8 @@ export async function completeOnboarding(page: Page): Promise<void> {
   await option(page, 'I forget').click();
   await cta(page, 'Continue').click();
 
-  await onScreen(page, 'Your day, part one');
-  await cta(page, 'Continue').click();
-
-  await onScreen(page, 'Your day, part two');
+  // the waking window and the meals, one screen since 0.12
+  await onScreen(page, 'Your day');
   await cta(page, 'Continue').click();
 
   await onScreen(page, 'What are you already taking?');
