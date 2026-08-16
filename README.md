@@ -33,3 +33,4 @@ Functionally this is a food diary or symptom tracker: a blank logging structure 
 ## Target User
 
 People already researching or using peptides who want a well-organized, centralized reference to understand what they're taking, alongside a simple way to track their own regimen against it.
+    

@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.halfpast.app',
-  appName: 'Halfpast',
+  appId: 'com.pepstack.app',
+  appName: 'Pepstack',
   webDir: 'dist'
 };
 
