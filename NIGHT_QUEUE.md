@@ -90,10 +90,24 @@ single run. Do them in order; several depend on the one before.
   contents. 42 rows have a shorter brand or name in the file than in the filing;
   all 42 are the same filing and are listed in the migration header. Flagged and
   not fixed: `listGlossary(200)` hides 86 of the resulting 286 entries._
-- [ ] **0.7 — Papers, part one: the first three goal sections.** Section 3.2.
+- [x] **0.7 — Papers, part one: the first three goal sections.** Section 3.2.
   Skin & hair, Sleep, Energy. Real PubMed records only, searched on the active
   ingredient not the brand name, every URL confirmed to resolve. Store fewer than
   five rather than padding.
+  _Done: migration `0022` inserts 440 rows — five papers for each of the 88
+  products — from 278 distinct PubMed records (not applied). Every title,
+  journal, year and PMID comes verbatim from `esummary` via the new
+  `scripts/fetch_papers.py`; `--verify` re-fetches all 278 and confirms each
+  still exists, still has the stored title, and carries no retraction type, with
+  two invented PMIDs as a control that the check can fail. Searched on 56 active
+  ingredients rather than 88 brand names, so no NCBI key was needed. Relevance,
+  not volume, was the work: same-prefix compounds (gabapentin, `Glycine max`,
+  S-adenosylmethionine) and wrong-route studies (topical rosemary, injected
+  hyaluronic acid) all ranked top-5 and are rejected by name in the script's
+  block list. `casein-decapeptide` stores 4, not 5, and is the only shortfall.
+  Caveat in `NIGHT_REPORT.md`: pubmed.ncbi.nlm.nih.gov serves this network a
+  cookie-challenge 203 for every URL alike, so the resolve check went through
+  the API — worth one plain link-check from a normal network before applying._
 - [ ] **0.8 — Papers, part two: the last three goal sections.** Focus, Training,
   Immunity & gut. Same rules.
 - [ ] **0.9 — Fix the Today arc.** Section 4. The end caps are clipped because

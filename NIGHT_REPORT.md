@@ -454,3 +454,90 @@ niacinamide is the preferred B3.
 
 Build green, `tsc --noEmit` green, 50 tests green. Bundle unchanged at 1,026 kB
 minified (319.5 kB gzipped) — no client code was touched.
+
+## Night 7 — 0.7, papers for Skin & hair, Sleep and Energy
+
+**Changed:** migration `0022_papers_part_one.sql` — 440 `glossary_research`
+rows, five papers for each of the 88 products in the first three goal sections,
+from 278 distinct PubMed records. Not applied. `scripts/fetch_papers.py`
+derives them from the E-utilities API and `scripts/build_papers_migration.py`
+turns the result into the SQL, so the file is reproducible rather than trusted.
+
+**On the thing this item is most likely to get wrong.** The spec is blunt that a
+fabricated citation is worse than no citation, so nothing here was written from
+memory: every title, journal, year and PMID is copied verbatim out of
+`esummary`, and `--verify` re-fetches all 278 afterwards to confirm the record
+still exists, the title still matches, and none carry a retraction type. All
+pass. The check also probes two invented PMIDs and fails if the API returns
+records for them — a verification that cannot fail is not one.
+
+**I could not link-check the URLs from here, and that is worth knowing.**
+`pubmed.ncbi.nlm.nih.gov` answers every request from this machine with a
+JS cookie-challenge page and HTTP 203 — the same 5,565 bytes for a real PMID as
+for a made-up one — so the status code distinguishes nothing. `eutils` is not
+intercepted, which is why the API round-trip is the check. It compares titles,
+so it is strictly stronger than a 200; but a plain link-check from a normal
+network is still worth doing once before this is applied, because the failure
+0005 records was dead links.
+
+**Volume was easy, relevance was not.** The first pass returned five results for
+almost everything and a lot of it was wrong. What it took to fix:
+
+- Queries have to be loose. PubMed ANDs every bare term, so
+  `oral ceramides skin hydration phytoceramide` returns literally zero and reads
+  as "no literature exists" rather than "bad query". Five groups were silently
+  empty or near-empty for this reason.
+- The title has to name the ingredient, or a collagen trial files itself under
+  silica and a generic vitamin E trial under gamma-tocopherol.
+- Same-prefix compounds are the nastiest failure and there is no lexical defence
+  except naming them: gabapentin is not GABA, *Glycine max* is a soybean,
+  glycine propionyl-L-carnitine is not glycine, S-adenosylmethionine is not
+  methionine. Every one of these was ranked top-5 for its group.
+- Route matters because every product here is swallowed. Rosemary oil rubbed on
+  the scalp, an ascorbate serum, hyaluronic acid injected into a lesion, borage
+  oil woven into an undershirt — all real papers about the right ingredient, all
+  useless as evidence for a capsule.
+- One got through on the journal rather than the title: "Electrolytes: clinical
+  applications" reads as human until you notice *Vet Clin North Am Equine
+  Pract*. There is now a journal filter as well, which will matter more for 0.8.
+
+The block list in the script carries every hand-rejection with its reason, so
+none of the above is invisible.
+
+**Found and did not change:**
+
+- **The NCBI API key the spec asks for was not used.** Unauthenticated is capped
+  at 3 requests a second and that was enough: searching on 56 ingredients rather
+  than 88 products means roughly 200 calls, not the ~900 the spec estimated,
+  because four melatonin products share one melatonin search. Last night's
+  report flagged getting a key first — it turned out not to be the constraint.
+  It will not be for 0.8 either. A key is a secret and there is nowhere I am
+  permitted to put one, so this is the right outcome regardless.
+- **`casein-decapeptide` has four papers, not five, and no product shows it.**
+  Alpha-casozepine has three human trials plus one ingestion study; everything
+  else the search returns is lab characterisation of casein peptides, and one
+  trial that gave the peptide to foals. It only appears in Life Extension
+  Enhanced Sleep, which is a combination product, so it fills its fifth slot
+  from ashwagandha rather than from padding. Left at four deliberately.
+- **Some groups are cited for the compound, not for the goal.** Saw palmetto's
+  literature is benign prostatic hyperplasia, not hair; grape seed's is blood
+  pressure and NAFLD, not skin; fo-ti's is largely hepatotoxicity. These are
+  correct under the spec's rule that the paper is about the compound, and I did
+  not force them toward the goal, because doing that is exactly how you end up
+  padding. But a user reading "Swanson Fo-Ti" and finding five hepatotoxicity
+  reviews is a real product moment somebody should look at with fresh eyes.
+- **`chaga` has no human trials at all** — five reviews, because *Inonotus
+  obliquus* has essentially no clinical literature. Stored as reviews, labelled
+  as reviews, not dressed up.
+- **`meta` is formatted `Kind (Journal, Year)`** to suit `yearOf` in
+  `DiscoverList.tsx`, which regex-matches the first 19xx/20xx it finds. Works
+  for all 440, but it is a formatting coupling nobody wrote down, so here it is.
+- **Two new files under `scripts/`, no new dependencies.** Both are stdlib
+  Python, not part of the bundle or the build. Kept rather than deleted because
+  they are the evidence for the migration, and 0.8 is the same job on the other
+  three sections.
+- **`supabase/PENDING.sql` is now five migrations stale.** 0018 through 0022.
+  Fifth night running.
+
+Build green, `tsc --noEmit` green, 50 tests green. Bundle unchanged at 1,026 kB
+minified (319.5 kB gzipped) — no client code was touched.
