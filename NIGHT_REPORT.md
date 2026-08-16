@@ -541,3 +541,84 @@ none of the above is invisible.
 
 Build green, `tsc --noEmit` green, 50 tests green. Bundle unchanged at 1,026 kB
 minified (319.5 kB gzipped) — no client code was touched.
+
+---
+
+## Night 8 — 0.8, papers for Focus, Training and Immunity & gut
+
+**Changed:** migration `0023_papers_part_two.sql` — 440 `glossary_research`
+rows, five papers for each of the 88 products in the last three goal sections,
+from 370 distinct PubMed records. Not applied. Both scripts from night 7 now
+take `--part 2`: `fetch_papers.py` searched 65 new ingredients and reused 11
+from part one untouched, `build_papers_migration.py` turns the result into the
+SQL. `--part 2 --verify` re-fetched all 370 records and confirms each still
+exists, still carries the title stored here, and has no retraction type; the two
+invented control PMIDs are still rejected. All pass.
+
+**The whole job was relevance, and the first pass was bad.** Volume was never
+the problem — every ingredient returned something. What it returned, top-ranked,
+was often not about a person swallowing the thing:
+
+- **uridine returned five gerbil and rat studies**, because the cognition
+  evidence for uridine is Wurtman's animal work and the human trials are of
+  Souvenaid, which never names uridine in the title. The group is gone. Cognitex
+  Elite now cites the phosphatidylserine and the blueberry polyphenols also on
+  its label, which is honest; citing gerbils would not have been.
+- **rice protein returned four fish-feed trials** — rohu, fishmeal replacement,
+  phytase in aquaculture diets. One human trial exists (whey vs rice protein,
+  2013) and that is what is stored; the product fills its other four slots from
+  the plant protein literature.
+- **mice, repeatedly**, for fisetin and magnesium L-threonate — four separate
+  papers, all in journals that publish both human and animal work, none saying
+  so in the title. Each was caught by reading the abstract.
+- **pregnancy and preterm infants led three searches** — iodine, lactoferrin,
+  multivitamins. That is real evidence about the nutrient and the wrong question
+  for the adult holding the bottle, which is the same call part one made one
+  paper at a time ("evening primrose oil to induce labour"). It is a filter now.
+  Children are deliberately still in scope: the probiotic evidence is paediatric
+  almost end to end, and dropping it would leave those five products with
+  nothing.
+
+So: two new filters (animal names matched as whole words rather than substrings,
+and the pregnancy/preterm cluster), a journal filter for feed and preprint
+venues, and 34 more entries on the block list — each with the reason, each a
+paper the API returned and I rejected after reading it. Nothing was replaced by
+an invention; every backfill is the next real result.
+
+**Found and did not change:**
+
+- **Four ingredients have fewer than five papers**: rice protein has 1,
+  Phellodendron 3, algal oil 4, magnesium L-threonate 4. No product ends up
+  short, because each of the four is a product with a second ingredient on its
+  label to fill from. That is the mechanism from night 7 working as intended,
+  but it does mean "five papers" sometimes means "three about this ingredient
+  and two about the other one on the label". The migration header lists them.
+- **Phenylethylamine has no supplementation trial at all.** The five stored are
+  a review of PEA and affect, two studies of PEA levels in depression, one of
+  PEA after MAO-B inhibition, and one on noradrenergic function — all human, all
+  about the amine, none of them a trial of taking it. Monoamine oxidase clears
+  an oral dose in minutes, which is presumably why nobody has run one. The
+  product page will read thin and it should.
+- **Turkey tail's evidence is entirely oncology**, and lithium's is largely
+  drinking-water epidemiology and psychiatric-dose therapy. Both are correct
+  under the spec's rule that the paper is about the compound, but "Host Defense
+  Turkey Tail" showing five chemotherapy adjuvant meta-analyses is a product
+  moment worth a fresh pair of eyes, the same way fo-ti's hepatotoxicity
+  reviews were last night.
+- **Yerba maté's top two results were oesophageal cancer meta-analyses.** They
+  are about drinking litres of very hot maté, not about a powdered extract, so
+  the search was pointed at the physiological literature instead. Flagging it
+  because that is a judgement call, not a filter: the cancer epidemiology is
+  real and someone may want it on the card.
+- **`0022_papers_part_one.sql` moved by five lines.** Comment rewrap only — the
+  header generator is now shared between the two parts, and one paragraph
+  rewraps. No citation, URL or row changed; `git diff` shows the five lines.
+- **`supabase/PENDING.sql` is now six migrations stale.** 0018 through 0023.
+  Sixth night running. `0023` alone is 440 rows.
+- **Still no NCBI API key, still not the constraint.** 65 ingredient searches at
+  three requests a second is about six minutes per run, and the run happened
+  four times while the filters were tuned. A key is a secret and there is
+  nowhere I am permitted to put one.
+
+Build green, `tsc --noEmit` green, 50 tests green. No client code touched;
+bundle unchanged at 1,026 kB minified (319.5 kB gzipped).

@@ -6,11 +6,11 @@
 --
 -- WHERE THESE CAME FROM. `scripts/fetch_papers.py` queries the PubMed
 -- E-utilities API — `esearch` for PMIDs, `esummary` for title, journal, year
--- and publication type — and writes `scripts/papers.json`. Every title, journal
--- and year below is copied from that file verbatim. Nothing here was written
--- from memory and nothing was adjusted to read better; where a title is odd
--- (`Cosmetic benefits of astaxanthin on humans subjects`) that is what the
--- record says. Re-run the script to regenerate this file.
+-- and publication type — and writes `scripts/papers.json`. Every title,
+-- journal and year below is copied from that file verbatim. Nothing here was
+-- written from memory and nothing was adjusted to read better; where a title
+-- is odd (`Cosmetic benefits of astaxanthin on humans subjects`) that is what
+-- the record says. Re-run the script to regenerate this file.
 --
 -- SEARCHED ON THE INGREDIENT, NOT THE BRAND, as the spec requires: the 88
 -- products reduce to 56 active ingredients, so the four melatonin products

@@ -108,8 +108,25 @@ single run. Do them in order; several depend on the one before.
   Caveat in `NIGHT_REPORT.md`: pubmed.ncbi.nlm.nih.gov serves this network a
   cookie-challenge 203 for every URL alike, so the resolve check went through
   the API — worth one plain link-check from a normal network before applying._
-- [ ] **0.8 — Papers, part two: the last three goal sections.** Focus, Training,
+- [x] **0.8 — Papers, part two: the last three goal sections.** Focus, Training,
   Immunity & gut. Same rules.
+  _Done: migration `0023` inserts 440 rows — five papers for each of the 88
+  products in the last three sections — from 370 distinct PubMed records (not
+  applied). Both scripts now take `--part 2`; 65 new ingredient searches plus 11
+  ingredients reused from part one unchanged, so lion's mane cites the same
+  papers under Focus as under Sleep. `--part 2 --verify` re-fetches all 370 and
+  confirms each still exists, still carries the stored title, and has no
+  retraction type, with two invented PMIDs as a control. Relevance was the work
+  again: the searches led with gerbils for uridine, fish-feed trials for rice
+  protein, mice for fisetin and magnesium L-threonate, and pregnancy trials for
+  iodine, lactoferrin and multivitamins. Two new filters — animal names matched
+  as whole words, and the pregnancy/preterm literature — plus 34 more block-list
+  entries, each with its reason. `uridine` was dropped as a group: every human
+  paper is orotic aciduria or cancer metabolism, so Cognitex Elite cites the
+  phosphatidylserine and blueberry also on its label. Four ingredients ran out
+  before five and each fills from a second ingredient on the same label, so no
+  product is short. 0022's header rewrapped by five comment lines, because the
+  generator is now shared; no citation in it changed._
 - [ ] **0.9 — Fix the Today arc.** Section 4. The end caps are clipped because
   the endpoints already sit at the viewBox bounds and `strokeLinecap="round"`
   adds another 4.5px past each one. Derive `R` from the width as shown. Also fix

@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
-"""Turn scripts/papers.json into supabase/migrations/0022_papers_part_one.sql.
+"""Turn the papers JSON into a migration.
 
-The mapping below is the only hand-written part: which ingredient group each of
-the 88 Skin & hair / Sleep / Energy products draws its papers from. The product
-slugs are read back out of migration 0021 rather than retyped, and the script
-fails if the mapping and the migration disagree — a typo'd slug would otherwise
-produce a row that silently matches nothing.
+    python scripts/build_papers_migration.py            # part one -> 0022
+    python scripts/build_papers_migration.py --part 2   # part two -> 0023
+
+Part one is Skin & hair / Sleep / Energy, part two is Focus / Training /
+Immunity & gut. The mapping below is the only hand-written part: which
+ingredient group each of the 88 products in a part draws its papers from. The
+product slugs are read back out of migration 0021 rather than retyped, and the
+script fails if the mapping and the migration disagree — a typo'd slug would
+otherwise produce a row that silently matches nothing.
 """
 
 import json
@@ -14,15 +18,11 @@ import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PAPERS = os.path.join(ROOT, "scripts", "papers.json")
 SOURCE = os.path.join(ROOT, "supabase", "migrations", "0021_catalogue_176.sql")
-OUT = os.path.join(ROOT, "supabase", "migrations", "0022_papers_part_one.sql")
-
-SECTIONS = ("Skin & hair", "Sleep", "Energy")
 
 # product slug -> the ingredient group(s) its papers come from. A product with
 # two groups takes them in turn, so a combination product gets both named.
-MAP = {
+MAP_PART_ONE = {
     # ---------------------------------------------------------- Skin & hair
     "sports-research-marine-collagen-unflavored": ["collagen"],
     "sports-research-hydrolyzed-collagen-peptides-vanilla": ["collagen"],
@@ -116,8 +116,187 @@ MAP = {
     "klean-athlete-klean-electrolytes": ["electrolytes"],
 }
 
+MAP_PART_TWO = {
+    # --------------------------------------------------------------- Focus
+    "jarrow-formulas-alpha-gpc-300-mg": ["alpha-gpc"],
+    "life-extension-citicoline-cdp-choline": ["citicoline"],
+    "jarrow-formulas-citicoline-cdp-choline-250-mg": ["citicoline"],
+    "thorne-phosphatidylserine": ["phosphatidylserine"],
+    "jarrow-formulas-ps100-100-mg": ["phosphatidylserine"],
+    "doctors-best-phosphatidyl-serine-with-serinaid-100-mg": ["phosphatidylserine"],
+    "now-extra-strength-lecithin": ["lecithin"],
+    "life-extension-huperzine-a-200-mcg": ["huperzine-a"],
+    "swanson-huperzine-a-200-mcg": ["huperzine-a"],
+    "host-defense-lions-mane": ["lions-mane"],
+    "host-defense-lions-mane-extract": ["lions-mane"],
+    "host-defense-brain-energy": ["lions-mane", "yerba-mate", "eleuthero"],
+    "doctors-best-bacopa-320-mg-with-synapsa": ["bacopa"],
+    "doctors-best-extra-strength-ginkgo-120-mg": ["ginkgo"],
+    "doctors-best-l-tyrosine-500-mg": ["l-tyrosine"],
+    "thorne-iodine-and-tyrosine": ["iodine", "l-tyrosine"],
+    "bulksupplements-phenylethylamine-hcl-pea": ["phenylethylamine"],
+    "doctors-best-lithium-aspartate": ["lithium-low-dose"],
+    "life-extension-cognitex-elite": ["phosphatidylserine", "blueberry"],
+    "life-extension-dopamine-advantage": ["phellodendron", "vitamin-b12"],
+    "bulksupplements-mucuna-pruriens-extract": ["mucuna"],
+    "doctors-best-vegan-omega-3-2000-mg": ["algal-omega-3", "omega-3"],
+    "life-extension-mega-epa-dha": ["omega-3"],
+    "thorne-super-epa-425-mg": ["omega-3"],
+    "klean-athlete-klean-omega": ["omega-3"],
+    "klean-athlete-klean-focus": ["acetyl-l-carnitine", "alpha-gpc", "alpha-lipoic"],
+    "sports-research-magnesium-l-threonate-2000-mg": ["magnesium-threonate", "magnesium-sleep"],
+    "doctors-best-fisetin-with-novusetin": ["fisetin"],
+    "swanson-fisetin-100-mg": ["fisetin"],
+    "supersmart-spermidine-3-mg": ["spermidine"],
+    "codeage-liposomal-urolithin-a": ["urolithin-a"],
+    "life-extension-senolytic-activator": ["fisetin", "quercetin"],
+    # ------------------------------------------------------------- Training
+    "klean-athlete-klean-creatine": ["creatine"],
+    "life-extension-creatine-capsules": ["creatine"],
+    "klean-athlete-klean-essential-aminos-hmb": ["essential-amino-acids", "hmb"],
+    "bulksupplements-l-leucine": ["leucine"],
+    "klean-athlete-klean-bcaa-peak-atp": ["bcaa", "atp-supplement"],
+    "thorne-amino-complex-lemon": ["essential-amino-acids"],
+    "klean-athlete-klean-isolate-chocolate": ["whey-protein"],
+    "klean-athlete-klean-casein-vanilla-custard": ["casein-protein"],
+    "klean-athlete-klean-plant-based-protein-vanilla": ["plant-protein"],
+    "bulksupplements-rice-protein": ["rice-protein", "plant-protein"],
+    "sports-research-whey-protein-isolate-dutch-chocolate": ["whey-protein"],
+    "klean-athlete-klean-glutamine": ["glutamine"],
+    "thorne-beta-alanine-sr": ["beta-alanine"],
+    "klean-athlete-klean-sr-beta-alanine": ["beta-alanine"],
+    "doctors-best-l-citrulline-powder": ["citrulline"],
+    "thorne-l-arginine-plus": ["arginine"],
+    "doctors-best-pure-l-arginine-powder": ["arginine"],
+    "life-extension-l-arginine-caps-700-mg": ["arginine"],
+    "life-extension-bio-collagen-with-patented-uc-ii-40-mg": ["uc-ii-collagen", "collagen-joint"],
+    "thorne-joint-support-nutrients": ["glucosamine", "msm", "boswellia", "curcumin"],
+    "thorne-boswellia-phytosome": ["boswellia"],
+    "swanson-boswellia-serrata-extract-125-mg": ["boswellia"],
+    "now-boswellia-extract-plus-turmeric-root": ["boswellia", "curcumin"],
+    "thorne-curcumin-phytosome-1000-mg": ["curcumin"],
+    "sports-research-turmeric-curcumin-c3-complex": ["curcumin"],
+    "klean-athlete-klean-endurance": ["d-ribose"],
+    "now-tribulus-1000-mg": ["tribulus"],
+    "klean-athlete-klean-multivitamin": ["multivitamin"],
+    # ------------------------------------------------------- Immunity & gut
+    "jarrow-formulas-colostrum-prime-life-400-mg": ["colostrum"],
+    "jarrow-formulas-lactoferrin-250-mg": ["lactoferrin"],
+    "life-extension-lactoferrin-caps": ["lactoferrin"],
+    "jarrow-formulas-beta-glucan-250-mg": ["beta-glucan"],
+    "solgar-echinacea-herb-extract": ["echinacea"],
+    "life-extension-echinacea-elite": ["echinacea"],
+    "life-extension-advanced-olive-leaf-vascular-support": ["olive-leaf"],
+    "bulksupplements-olive-leaf-extract": ["olive-leaf"],
+    "swanson-oregano-oil-liquid-extract": ["oregano-oil"],
+    "host-defense-turkey-tail": ["turkey-tail"],
+    "host-defense-maitake-extract": ["maitake"],
+    "host-defense-shiitake-extract": ["shiitake"],
+    "host-defense-mycommunity": ["turkey-tail", "maitake", "reishi", "chaga"],
+    "host-defense-stamets-7-extracts": ["reishi", "maitake", "cordyceps", "chaga"],
+    "solgar-flavo-zinc-lozenge": ["zinc"],
+    "klean-athlete-klean-zinc": ["zinc"],
+    "bulksupplements-bee-propolis-powder": ["propolis"],
+    "pure-encapsulations-cats-claw": ["cats-claw"],
+    "swanson-chinese-skullcap-400-mg": ["chinese-skullcap"],
+    "jarrow-formulas-saccharomyces-boulardii-mos": ["s-boulardii"],
+    "swanson-lactobacillus-rhamnosus-with-fos": ["l-rhamnosus", "fos"],
+    "jarrow-formulas-jarro-dophilus-eps-25-billion": ["probiotic-multi"],
+    "pure-encapsulations-probiotic-50b": ["probiotic-multi"],
+    "thorne-florasport-20b": ["probiotic-multi", "bacillus-subtilis"],
+    "jarrow-formulas-prebiotic-inulin-fos": ["inulin", "fos"],
+    "swanson-inulin": ["inulin"],
+    "thorne-gi-relief": ["dgl-licorice", "aloe"],
+    "jarrow-formulas-mastic-gum-1000-mg": ["mastic-gum"],
+}
 
-def catalogue_slugs():
+
+# Everything in a migration header that is true of one part and not the other.
+# The skeleton is shared so the two files read the same; the examples are not,
+# because a header that names a rejection which did not happen in that half is
+# exactly the kind of thing this file exists to avoid.
+PARTS = {
+    "1": {
+        "label": "one",
+        "sections": ("Skin & hair", "Sleep", "Energy"),
+        "map": MAP_PART_ONE,
+        "papers": os.path.join(ROOT, "scripts", "papers.json"),
+        "json_name": "scripts/papers.json",
+        "out": os.path.join(ROOT, "supabase", "migrations", "0022_papers_part_one.sql"),
+        "title": "the Skin & hair, Sleep and Energy products",
+        "odd_title": "Cosmetic benefits of astaxanthin on humans subjects",
+        "verify_cmd": "python scripts/fetch_papers.py --verify",
+        "extra": [],
+        "shared_example": "the four melatonin products",
+        "shared_tail": [
+            "-- share one set of melatonin papers rather than each getting its own search for",
+            "-- a brand name that returns nothing.",
+        ],
+        "rejected_tail": [
+            "-- with its reason. The two failure modes worth knowing about, because both",
+            "-- nearly shipped: a paper about a different compound that contains the",
+            "-- ingredient's name (glycine propionyl-L-carnitine is not glycine, Glycine max",
+            "-- is a soybean, gabapentin is not GABA, S-adenosylmethionine is not",
+            "-- methionine), and a paper about the right compound by the wrong route",
+            "-- (rosemary oil rubbed on the scalp is not a capsule).",
+        ],
+        "thin_tail": [
+            "--   The one case is a combination product, so it fills its remaining",
+            "--   slots from the other ingredient on its label rather than from",
+            "--   padding. What was rejected to get here is in the script's block",
+            "--   list: the searches keep returning lab characterisation of casein",
+            "--   peptides, and one trial that gave the peptide to foals.",
+        ],
+    },
+    "2": {
+        "label": "two",
+        "sections": ("Focus", "Training", "Immunity & gut"),
+        "map": MAP_PART_TWO,
+        "papers": os.path.join(ROOT, "scripts", "papers_part_two.json"),
+        "json_name": "scripts/papers_part_two.json",
+        "out": os.path.join(ROOT, "supabase", "migrations", "0023_papers_part_two.sql"),
+        "title": "the Focus, Training and Immunity & gut products",
+        "odd_title": "Is aura around citicoline fading? A systemic review",
+        "verify_cmd": "python scripts/fetch_papers.py --part 2 --verify",
+        "extra": [
+            "--",
+            "-- ELEVEN INGREDIENTS ARE NOT SEARCHED AGAIN. Lion's mane, curcumin, reishi,",
+            "-- chaga, cordyceps, D-ribose, essential amino acids, acetyl-L-carnitine,",
+            "-- alpha-lipoic acid, magnesium and B12 all appear in part one, and those",
+            "-- products cite the same records here: the same capsule should not carry one",
+            "-- set of papers under Sleep and a different set under Focus.",
+        ],
+        "shared_example": "the three L-arginine products",
+        "shared_tail": [
+            "-- share one set of arginine papers rather than each getting its own search for",
+            "-- a brand name that returns nothing.",
+        ],
+        "rejected_tail": [
+            "-- with its reason. Part two needed two new filters and thirty-four more",
+            "-- entries on that list: these searches kept returning work nobody swallowed.",
+            "-- five gerbil and rat studies at the top of the uridine search, four",
+            "-- fish-feed trials at the top of the rice protein search, mice for magnesium",
+            "-- L-threonate and for fisetin, and a plant-physiology paper about the",
+            "-- Phellodendron tree under drought. Animal names are now matched as whole",
+            "-- words rather than as substrings. The second filter is the pregnancy and",
+            "-- preterm-infant literature — real evidence about the nutrient, and the",
+            "-- wrong question for the adult holding the bottle; it was leading the",
+            "-- iodine, lactoferrin and multivitamin searches. Children are deliberately",
+            "-- still in scope, because the probiotic evidence is paediatric end to end.",
+        ],
+        "thin_tail": [
+            "--   Each of the four is the only product carrying that ingredient, and each",
+            "--   has a second ingredient on its label, so the remaining slots come from",
+            "--   that rather than from padding: rice protein fills from the plant protein",
+            "--   trials, Phellodendron from the B12 beside it in Dopamine Advantage, algal",
+            "--   oil from the wider omega-3 literature, and magnesium L-threonate from the",
+            "--   magnesium sleep trials part one already collected.",
+        ],
+    },
+}
+
+
+def catalogue_slugs(sections):
     """The slugs 0021 inserts, per section, in file order."""
     out, section = {}, None
     for line in open(SOURCE, encoding="utf-8"):
@@ -126,7 +305,7 @@ def catalogue_slugs():
             section = m.group(1)
             continue
         m = re.match(r"^  \('([a-z0-9.-]+)',", line)
-        if m and section in SECTIONS:
+        if m and section in sections:
             out.setdefault(section, []).append(m.group(1))
     return out
 
@@ -136,8 +315,17 @@ def q(s):
 
 
 def main():
-    papers = json.load(open(PAPERS, encoding="utf-8"))
-    by_section = catalogue_slugs()
+    part = "1"
+    if "--part" in sys.argv:
+        part = sys.argv[sys.argv.index("--part") + 1]
+    if part not in PARTS:
+        print(f"unknown part {part!r}; expected one of {sorted(PARTS)}", file=sys.stderr)
+        return 2
+    notes = PARTS[part]
+    SECTIONS, MAP = notes["sections"], notes["map"]
+
+    papers = json.load(open(notes["papers"], encoding="utf-8"))
+    by_section = catalogue_slugs(SECTIONS)
     listed = [s for sec in SECTIONS for s in by_section.get(sec, [])]
 
     unknown = [s for s in MAP if s not in listed]
@@ -166,29 +354,33 @@ def main():
     total = sum(per_product.values())
     groups_used = sorted({g for gs in MAP.values() for g in gs})
 
+    distinct = len({p["pmid"] for g in groups_used for p in papers[g]})
+
     out = []
     w = out.append
-    w("-- Papers, part one: the Skin & hair, Sleep and Energy products.")
+    w(f"-- Papers, part {notes['label']}: {notes['title']}.")
     w("--")
     w(f"-- {total} `glossary_research` rows across the {len(listed)} products migration 0021")
     w(f"-- inserts for those three sections, drawn from {len(groups_used)} ingredient groups and")
-    w(f"-- {len({p['pmid'] for g in papers for p in papers[g]})} distinct PubMed records.")
+    w(f"-- {distinct} distinct PubMed records.")
     w("--")
     w("-- WHERE THESE CAME FROM. `scripts/fetch_papers.py` queries the PubMed")
     w("-- E-utilities API — `esearch` for PMIDs, `esummary` for title, journal, year")
-    w("-- and publication type — and writes `scripts/papers.json`. Every title, journal")
-    w("-- and year below is copied from that file verbatim. Nothing here was written")
-    w("-- from memory and nothing was adjusted to read better; where a title is odd")
-    w("-- (`Cosmetic benefits of astaxanthin on humans subjects`) that is what the")
-    w("-- record says. Re-run the script to regenerate this file.")
+    w(f"-- and publication type — and writes `{notes['json_name']}`. Every title,")
+    w("-- journal and year below is copied from that file verbatim. Nothing here was")
+    w("-- written from memory and nothing was adjusted to read better; where a title")
+    w(f"-- is odd (`{notes['odd_title']}`) that is what")
+    w("-- the record says. Re-run the script to regenerate this file.")
     w("--")
-    w("-- SEARCHED ON THE INGREDIENT, NOT THE BRAND, as the spec requires: the 88")
-    w(f"-- products reduce to {len(groups_used)} active ingredients, so the four melatonin products")
-    w("-- share one set of melatonin papers rather than each getting its own search for")
-    w("-- a brand name that returns nothing.")
+    w(f"-- SEARCHED ON THE INGREDIENT, NOT THE BRAND, as the spec requires: the {len(listed)}")
+    w(f"-- products reduce to {len(groups_used)} active ingredients, so {notes['shared_example']}")
+    for line in notes["shared_tail"]:
+        w(line)
+    for line in notes["extra"]:
+        w(line)
     w("--")
-    w("-- VERIFIED. `python scripts/fetch_papers.py --verify` re-fetches all")
-    w(f"-- {len({p['pmid'] for g in papers for p in papers[g]})} distinct PMIDs through `esummary` and checks three things: the")
+    w(f"-- VERIFIED. `{notes['verify_cmd']}` re-fetches all")
+    w(f"-- {distinct} distinct PMIDs through `esummary` and checks three things: the")
     w("-- record still exists, its title still matches the one stored here, and it")
     w("-- carries no retraction publication type. All pass. It also probes two")
     w("-- non-existent PMIDs and requires the API to reject them, so a check that has")
@@ -206,12 +398,8 @@ def main():
     w("-- filters, all in the script: the title must name the ingredient; topical,")
     w("-- textile and animal work is dropped because every product here is swallowed;")
     w("-- and a hand-written block list carries the ones only reading catches, each")
-    w("-- with its reason. The two failure modes worth knowing about, because both")
-    w("-- nearly shipped: a paper about a different compound that contains the")
-    w("-- ingredient's name (glycine propionyl-L-carnitine is not glycine, Glycine max")
-    w("-- is a soybean, gabapentin is not GABA, S-adenosylmethionine is not")
-    w("-- methionine), and a paper about the right compound by the wrong route")
-    w("-- (rosemary oil rubbed on the scalp is not a capsule).")
+    for line in notes["rejected_tail"]:
+        w(line)
     w("--")
     thin = sorted((g, len(papers[g])) for g in groups_used if len(papers[g]) < 5)
     if short:
@@ -220,18 +408,15 @@ def main():
             w(f"--   {slug} — {n}")
         w("--")
     else:
-        w("-- Every one of the 88 products carries five papers.")
+        w(f"-- Every one of the {len(listed)} products carries five papers.")
         w("--")
     if thin:
         w("-- INGREDIENTS WHERE THE LITERATURE ITSELF RAN OUT before five, listed")
         w("-- because the spec asks for it even though no product ends up short:")
         for g, n in thin:
             w(f"--   {g} — {n}")
-        w("--   The one case is a combination product, so it fills its remaining")
-        w("--   slots from the other ingredient on its label rather than from")
-        w("--   padding. What was rejected to get here is in the script's block")
-        w("--   list: the searches keep returning lab characterisation of casein")
-        w("--   peptides, and one trial that gave the peptide to foals.")
+        for line in notes["thin_tail"]:
+            w(line)
         w("--")
     w("-- IDEMPOTENT. Guarded on (glossary_id, url), so re-running inserts nothing and")
     w("-- a partially-applied run completes cleanly.")
@@ -268,7 +453,7 @@ def main():
     w(");")
     w("")
 
-    with open(OUT, "w", encoding="utf-8", newline="\n") as f:
+    with open(notes["out"], "w", encoding="utf-8", newline="\n") as f:
         f.write("\n".join(out))
 
     print(json.dumps({"products": len(listed), "rows": total, "short": short}, indent=2))
