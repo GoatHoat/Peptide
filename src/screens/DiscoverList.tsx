@@ -3,6 +3,7 @@ import {
   getGlossaryResearch,
   type GlossaryEntry,
   type GlossaryResearch,
+  type IngredientHit,
   type NutrientReference,
 } from '../lib/api';
 import {
@@ -28,6 +29,7 @@ const yearOf = (meta: string | null) => meta?.match(/\b(19|20)\d{2}\b/)?.[0] ?? 
  */
 export function ProductRow({
   entry,
+  ingredientAmount,
   refs,
   age,
   sex,
@@ -42,6 +44,12 @@ export function ProductRow({
   onMenstruates,
 }: {
   entry: GlossaryEntry;
+  /**
+   * How much of the searched-for ingredient this product carries, when the row
+   * came from an ingredient search. Null otherwise — a row reached by name has
+   * no particular ingredient to report.
+   */
+  ingredientAmount?: IngredientHit | null;
   refs: NutrientReference[] | undefined;
   age: number | null | undefined;
   sex: 'm' | 'f' | 'na' | null | undefined;
@@ -98,9 +106,28 @@ export function ProductRow({
           <span className="prod-name">{entry.name}</span>
 
           <span className="prod-pills">
+            {/* First, because when you searched for an ingredient this is the
+                answer to the question you asked. */}
+            {ingredientAmount?.amount != null && (
+              <Pill icon="dose" tone="accent">
+                {ingredientAmount.amount} {ingredientAmount.unit ?? ''}
+              </Pill>
+            )}
             {ev && <Pill icon="evidence" tone={entry.evidence!}>{ev.label}</Pill>}
+            {/* Three tiers, best available first — see PROMPT_V2.md section 1.
+                A reference intake if the nutrient has one; otherwise the
+                serving the manufacturer filed, which every product has; and
+                only if both are missing does the card admit it. "No set intake"
+                used to be the answer for two thirds of the catalogue, which is
+                the least useful thing the app can say to someone who has just
+                answered twelve questions. */}
             {isSupp && rda && <Pill icon="dose" tone="accent">{rda} a day</Pill>}
-            {isSupp && !rda && <Pill icon="dose">No set intake</Pill>}
+            {isSupp && !rda && entry.serving_form && (
+              <Pill icon="dose" tone="accent">Take {entry.serving_form}</Pill>
+            )}
+            {isSupp && !rda && !entry.serving_form && (
+              <Pill icon="dose">No stated serving</Pill>
+            )}
             {isSupp && ul && <Pill icon="limit">{ul} limit</Pill>}
             {isSupp && entry.timing && <Pill icon="timing">{TIMING_LABEL[entry.timing]}</Pill>}
             {entry.product_form && <Pill icon="form">{entry.product_form}</Pill>}

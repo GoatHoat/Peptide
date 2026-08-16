@@ -41,6 +41,16 @@ export type GlossaryCategory = 'healing' | 'growth' | 'cosmetic' | 'cognitive' |
 export type GlossaryRoute = 'injected' | 'oral' | 'topical' | 'nasal';
 
 export interface GlossaryEntry {
+  /** the label's own serving, e.g. 2 — migration 0033 */
+  serving_amount?: number | null;
+  serving_unit?: string | null;
+  /** as the label prints it: "2 Capsules", "1 Scoop" */
+  serving_form?: string | null;
+  servings_per_day?: number | null;
+  /** commonly-studied range, only ever set alongside a citation id */
+  studied_low?: number | null;
+  studied_high?: number | null;
+  studied_unit?: string | null;
   id: string;
   slug: string;
   name: string;
@@ -736,4 +746,47 @@ export async function deleteAccount(): Promise<void> {
   const { error } = await supabase.rpc('delete_account');
   if (error) throw error;
   await supabase.auth.signOut();
+}
+
+// ============================================================================
+// Ingredient search
+// ============================================================================
+
+/** One product in an ingredient search, with how much of it is in there. */
+export interface IngredientHit {
+  /** 1 = the product is for this ingredient, 2 = it merely contains it */
+  section: 1 | 2;
+  glossary_id: string;
+  slug: string;
+  name: string;
+  brand: string | null;
+  kind: string | null;
+  evidence: string | null;
+  product_form: string | null;
+  amount: number | null;
+  unit: string | null;
+  /** as printed on the panel, e.g. "Zinc (as zinc picolinate)" */
+  raw_name: string;
+}
+
+/**
+ * Products containing an ingredient, whether or not the name says so.
+ *
+ * Returns an empty array when the query is not an ingredient — the caller reads
+ * that as "fall back to name and keyword matching" rather than as "no results".
+ * The two are different: "zinc" matching nothing would be a bug, "hair loss"
+ * matching nothing is simply not an ingredient search.
+ */
+export async function searchByIngredient(query: string): Promise<IngredientHit[]> {
+  const q = query.trim();
+  if (!q) return [];
+  const { data, error } = await supabase.rpc('search_by_ingredient', { query_text: q });
+  /* The function is added by migration 0032. Until that has been applied
+     PostgREST answers 404, and an ingredient search that has not been deployed
+     yet must degrade to the old name search rather than emptying the screen. */
+  if (error) {
+    if (/does not exist|not find|PGRST202/i.test(error.message ?? '')) return [];
+    throw error;
+  }
+  return (data ?? []) as IngredientHit[];
 }

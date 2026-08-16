@@ -2173,3 +2173,46 @@ button {
 .dose.missed .dose-time {
   color: var(--t4);
 }
+
+/* Ingredient search: two sections, because "products for zinc" and "products
+   that happen to contain zinc" are different answers to the same word. */
+.ing-section {
+  margin: 20px 0 -4px;
+  padding-left: 22px;
+  color: var(--t3);
+}
+.ing-also {
+  margin-top: 16px;
+  padding-left: 22px;
+}
+.ing-also-toggle {
+  padding: 10px 0;
+  border: 0;
+  background: none;
+  color: var(--purple);
+  font: inherit;
+  font-size: calc(14px * var(--text-scale));
+  text-align: left;
+}
+.ing-also-list {
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ing-also-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 0;
+  border-top: 1px solid var(--hair);
+}
+.ing-also-name {
+  font-size: calc(15px * var(--text-scale));
+  color: var(--t2);
+}
+.ing-also-amount {
+  color: var(--t3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

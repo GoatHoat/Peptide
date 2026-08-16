@@ -135,6 +135,13 @@ export async function installSupabaseStub(page: Page): Promise<Stub> {
         stub.deleted = true;
         return json(null);
       }
+      /* Ingredient search. The fixture catalogue has no ingredient rows, so
+         this returns nothing — which is exactly the "not an ingredient" path
+         the client must degrade through, and the one every existing Discover
+         test now exercises. */
+      if (relation === 'rpc/search_by_ingredient') {
+        return json([]);
+      }
       // match_goal is the only other RPC the app calls, from the search box.
       if (relation === 'rpc/match_goal') {
         const { query_text } = (request.postDataJSON() ?? {}) as { query_text?: string };

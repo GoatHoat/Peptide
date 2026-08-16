@@ -17,6 +17,8 @@ import {
   type GlossaryEntry,
   type GoalSynonym,
   type NutrientReference,
+  searchByIngredient,
+  type IngredientHit,
 } from '../lib/api';
 import { computeMatchReason } from '../lib/matchReason';
 import { IconMenu, IconSearch } from '../components/Icons';
@@ -59,6 +61,11 @@ export function Discover() {
      tab starts at a page and grows on request. Kept per kind so opening one
      tab does not reset the other. */
   const [shown, setShown] = useState<Record<string, number>>({ peptide: PAGE, supplement: PAGE });
+  /* Products found by what is inside them rather than by their name. Empty when
+     the query is not an ingredient, which is not the same as no results. */
+  const [ingredientHits, setIngredientHits] = useState<IngredientHit[]>([]);
+  /** whether the "also contains" section is expanded */
+  const [showAlso, setShowAlso] = useState(false);
 
   useEffect(() => {
     getGoalSynonyms().then(setSynonyms);
@@ -67,10 +74,24 @@ export function Discover() {
   useEffect(() => {
     setLoading(true);
     const handle = setTimeout(() => {
-      // 200 rather than the default 8 — the list is the whole library now
-      const fetcher = query.trim() ? matchGoal(query.trim()) : listGlossary(200);
-      fetcher.then((r) => {
-        setResults(r);
+      const q = query.trim();
+      if (!q) {
+        // 200 rather than the default 8 — the list is the whole library now
+        listGlossary(200).then((r) => {
+          setResults(r);
+          setIngredientHits([]);
+          setLoading(false);
+        });
+        return;
+      }
+      /* Both searches, always. Ingredient data can be incomplete and a name
+         match is still a real match, so the two are unioned rather than one
+         replacing the other — see PROMPT_V3.md section 2. An empty ingredient
+         result means "not an ingredient", not "nothing found". */
+      Promise.all([matchGoal(q), searchByIngredient(q)]).then(([byName, byIngredient]) => {
+        setIngredientHits(byIngredient);
+        const seen = new Set(byIngredient.map((h) => h.glossary_id));
+        setResults([...byName.filter((r) => !seen.has(r.id)), ...byName.filter((r) => seen.has(r.id))]);
         setLoading(false);
       });
     }, 350);
@@ -144,6 +165,17 @@ export function Discover() {
           const visible = all.slice(0, limit);
           const remaining = all.length - visible.length;
 
+          /* Ingredient results only make sense on the supplement tab: peptides
+             carry no panel and never rank in a product search. `also` is the
+             set of products that merely contain the ingredient — the ones whose
+             name gives no clue, which is the entire point of showing them. */
+          const isSupplementTab = tab.id === 'supplement';
+          const amountOf = new Map(ingredientHits.map((h) => [h.glossary_id, h]));
+          const forThis = isSupplementTab
+            ? ingredientHits.filter((h) => h.section === 1)
+            : [];
+          const also = isSupplementTab ? ingredientHits.filter((h) => h.section === 2) : [];
+
           return (
             <div>
               {tab.id === 'peptide' && (
@@ -192,12 +224,28 @@ export function Discover() {
                 </div>
               )}
 
+              {/* Two headers, and only where there is something under them.
+                  "Products for zinc" is is_primary plus a paper that actually
+                  names it; "Also contains zinc" is everything else, which is
+                  where the multivitamins land — the ones the old name search
+                  could never find. */}
+              {isSupplementTab && forThis.length > 0 && query.trim() && (
+                <div className="ing-section t-label">
+                  Products for {query.trim()}
+                </div>
+              )}
+
               <div className="prod-list">
                 <span className="rail" />
                 {visible.map((r) => (
                   <ProductRow
                     key={r.id}
                     entry={r}
+                    /* How much of the searched ingredient is in this product.
+                       The single most useful thing on the screen when someone
+                       searches "zinc", and impossible to show before the panel
+                       existed. */
+                    ingredientAmount={amountOf.get(r.id) ?? null}
                     refs={refs[r.id]}
                     age={profile?.age}
                     sex={profile?.sex}
@@ -238,6 +286,39 @@ export function Discover() {
                   >
                     See all {all.length}
                   </button>
+                </div>
+              )}
+
+              {/* The rest: products carrying the ingredient without being about
+                  it. Collapsed, because on a common ingredient this is most of
+                  the catalogue and it would bury the section above. */}
+              {isSupplementTab && also.length > 0 && query.trim() && (
+                <div className="ing-also">
+                  <button
+                    className="ing-also-toggle pressable"
+                    onClick={() => setShowAlso((v) => !v)}
+                    aria-expanded={showAlso}
+                  >
+                    {showAlso
+                      ? `Hide the ${also.length} other products`
+                      : `${also.length} more product${also.length === 1 ? '' : 's'} contain ${query.trim()}`}
+                  </button>
+                  {showAlso && (
+                    <ul className="ing-also-list">
+                      {also.map((h) => (
+                        <li key={h.glossary_id} className="ing-also-row">
+                          <span className="ing-also-name">{h.name}</span>
+                          <span className="ing-also-amount t-caption">
+                            {h.amount !== null
+                              ? `${h.amount} ${h.unit ?? ''}`.trim()
+                              : /* the label prints the blend total and not the
+                                   split, so there is genuinely no number */
+                                'amount not stated'}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               )}
 

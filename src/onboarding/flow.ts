@@ -10,8 +10,9 @@ import { SKIP_PAYWALL } from '../lib/billing';
  */
 export const FLOW = [
   'welcome',
-  // one screen, not two: the chooser's only working control was "continue with
-  // email", which led straight to the form now under it
+  // one screen, not two: email is the only way in, so a chooser offering
+  // providers that were never switched on had a single live control meaning
+  // "next". See screens/Intro.tsx.
   'auth',
   'profile',
   // diet is profile information, and it wants to sit next to age and sex

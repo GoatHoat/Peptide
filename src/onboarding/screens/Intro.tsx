@@ -19,12 +19,15 @@ export function Welcome({ onNext }: { onNext: () => void }) {
 /**
  * Account and form on one screen.
  *
- * These were two: a chooser offering Apple, Google and email, and the email
- * form behind it. Apple and Google are inert until the providers are switched
- * on in Supabase, so the chooser's only working control was "continue with
- * email" — a whole screen whose one live button meant "next". The providers
- * keep their place at the top for the day they ship; the form sits under them
- * where the chooser's third button used to point.
+ * Email is the only way in, deliberately. This was once a chooser offering
+ * Apple, Google and email, with the form behind it — but neither provider was
+ * ever switched on in Supabase, so both buttons sat permanently disabled and
+ * the chooser's one live control meant "next". A control that cannot be used is
+ * App Store Review Guideline 2.1, and it is the first thing a reviewer taps.
+ *
+ * There is a second reason not to bring them back casually. Guideline 4.8 means
+ * that if Google sign-in ever ships, Sign in with Apple ships with it — they are
+ * a pair, not two independent features. Email-only avoids that entirely.
  */
 export function Auth({
   mode,
