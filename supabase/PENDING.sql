@@ -1,4 +1,8 @@
 -- Not yet applied to the Pepstack database, in order.
+--
+-- 0026 IS URGENT. The Delete Account button is live in the shipped app and
+-- calls public.delete_account(). Until this file is run it will error for
+-- every user who taps it.
 -- Paste the whole file into the Supabase SQL editor and run it once.
 --
 -- 0025 you have already run under its old name (0018_schedule_joins_stack).
@@ -2709,4 +2713,119 @@ where s.glossary_id is not null
 -- Removing something from the schedule deliberately does NOT remove it from the
 -- stack. The stack is what you have; the schedule is when you take it. Stopping
 -- a reminder is not the same as throwing the bottle away.
+
+-- ═══════════ 0026_delete_account ═══════════
+-- Account deletion, initiated by the account holder from inside the app.
+--
+-- App Store Review Guideline 5.1.1(v) has required this since June 2022: an app
+-- that lets someone create an account must let them delete it from within the
+-- app. Offering only a "email us and we'll do it" route is an explicit
+-- rejection, and so is deleting the rows but leaving the login working.
+--
+-- WHY SECURITY DEFINER. `auth.users` is owned by the auth schema and no client
+-- role can delete from it — that is the whole reason this cannot be done with a
+-- PostgREST call from the app. The function runs as its owner so it can, and it
+-- is written so that the only row it can ever reach is the caller's own:
+--
+--   * it takes no arguments, so there is no id to tamper with
+--   * it reads `auth.uid()` from the request JWT, which the client cannot forge
+--   * it raises rather than proceeding when that is null, so it can never run
+--     unauthenticated and delete something arbitrary
+--   * `search_path` is pinned, so a shadowed table cannot redirect the deletes
+--
+-- WHAT GOES. Everything owned by the caller. Most of it would cascade from the
+-- auth.users row on its own — stacks, doses, schedule_items, progress_notes and
+-- ask_usage all declare `on delete cascade` — but the deletes are written out
+-- anyway. A cascade that is silently dropped in a later migration would
+-- otherwise turn into data left behind on an account the user believes is gone,
+-- and that is a privacy incident rather than a bug.
+--
+-- WHAT STAYS. The catalogue: glossary, glossary_research, nutrient_reference,
+-- goal_synonyms. None of it is user data — it is the same library for everyone
+-- and carries no reference back to the person who was reading it.
+
+create or replace function public.delete_account()
+returns void
+language plpgsql
+security definer
+set search_path = public, auth
+as $$
+declare
+  uid uuid := auth.uid();
+begin
+  if uid is null then
+    raise exception 'delete_account: no authenticated user'
+      using errcode = '28000';
+  end if;
+
+  -- Child rows first, so nothing depends on a parent that is already gone.
+  -- stack_items has no user_id of its own; it hangs off stacks.
+  delete from public.stack_items
+    where stack_id in (select id from public.stacks where user_id = uid);
+  delete from public.stacks         where user_id = uid;
+  delete from public.doses          where user_id = uid;
+  delete from public.schedule_items where user_id = uid;
+  delete from public.progress_notes where user_id = uid;
+  delete from public.ask_usage      where user_id = uid;
+  delete from public.profiles       where id = uid;
+
+  -- Last, and the reason this function exists: without it the rows are gone
+  -- but the credentials still work, which is a half-deleted account.
+  delete from auth.users where id = uid;
+end;
+$$;
+
+comment on function public.delete_account() is
+  'Deletes the calling user''s data and their auth record. Takes no arguments and reads auth.uid(), so it can only ever delete the caller. Required by App Store Review Guideline 5.1.1(v).';
+
+-- `authenticated` only. `anon` holds no uid, so the guard above would raise
+-- anyway, but not granting it at all is the clearer statement.
+revoke all on function public.delete_account() from public, anon;
+grant execute on function public.delete_account() to authenticated;
+
+-- ═══════════ 0027_ask_reports ═══════════
+-- Reports of objectionable assistant output.
+--
+-- App Store Review Guideline 1.2 requires an app that shows user-generated or
+-- model-generated content to give people a way to report what they find
+-- objectionable, and to act on it. A chat surface with no report control is a
+-- rejection regardless of how well the model behaves, because the reviewer is
+-- checking that the mechanism exists.
+--
+-- The row stores the question and the answer together. A report holding only
+-- "this was bad" and a timestamp cannot be acted on — whoever reads it needs to
+-- see what was asked and what came back, or there is nothing to fix.
+--
+-- WRITE-ONLY FROM THE CLIENT, deliberately. There is an insert policy and no
+-- select policy, so a person can file a report and cannot read anyone's,
+-- including their own. Reports are read from the dashboard by whoever is
+-- triaging them.
+--
+-- `on delete cascade` means deleting an account takes its reports with it. That
+-- is the right trade: 5.1.1(v) says deletion must actually delete, and a report
+-- is not worth keeping a record of a deleted user for.
+
+create table if not exists public.ask_reports (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  question text not null,
+  answer text not null,
+  reason text,
+  created_at timestamptz not null default now()
+);
+
+comment on table public.ask_reports is
+  'Assistant answers a user flagged as objectionable. Insert-only from the client; triaged from the dashboard. Required by App Store Review Guideline 1.2.';
+
+alter table public.ask_reports enable row level security;
+
+create index if not exists ask_reports_created_idx
+  on public.ask_reports (created_at desc);
+
+drop policy if exists "ask_reports: insert own" on public.ask_reports;
+create policy "ask_reports: insert own"
+  on public.ask_reports for insert
+  with check (auth.uid() = user_id);
+
+-- No select, update or delete policy. See the note above.
 
