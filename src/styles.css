@@ -1893,3 +1893,17 @@ button {
   .prod-card { animation: none; }
   .ask-dots i { animation: none; opacity: 0.6; }
 }
+
+/* paging the product list — 15 at a time rather than 128 at once */
+.prod-more {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  padding-left: 22px;
+}
+.prod-count {
+  margin-top: 14px;
+  padding-left: 22px;
+  color: var(--t3);
+  text-align: center;
+}

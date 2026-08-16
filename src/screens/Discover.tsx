@@ -29,6 +29,9 @@ const CATEGORY_LABEL: Record<string, string> = {
   other: 'Other',
 };
 
+/** rows per page */
+const PAGE = 15;
+
 const TABS = [
   { id: 'ask', label: 'Ask AI' },
   { id: 'peptide', label: 'Peptides' },
@@ -52,6 +55,10 @@ export function Discover() {
   /** set when a product's Ask a question button is pressed */
   const [askSeed, setAskSeed] = useState<string | null>(null);
   const [goAsk, setGoAsk] = useState(0);
+  /* How many rows each list shows. 128 products at once is a wall, so each
+     tab starts at a page and grows on request. Kept per kind so opening one
+     tab does not reset the other. */
+  const [shown, setShown] = useState<Record<string, number>>({ peptide: PAGE, supplement: PAGE });
 
   useEffect(() => {
     getGoalSynonyms().then(setSynonyms);
@@ -67,6 +74,7 @@ export function Discover() {
         setLoading(false);
       });
     }, 350);
+    setShown({ peptide: PAGE, supplement: PAGE });
     return () => clearTimeout(handle);
   }, [query]);
 
@@ -131,7 +139,10 @@ export function Discover() {
 
           /* Nothing carried a kind before migration 0016, so an unset value
              reads as a peptide — which is what every earlier entry is. */
-          const shown = results.filter((r) => (r.kind ?? 'peptide') === tab.id);
+          const all = results.filter((r) => (r.kind ?? 'peptide') === tab.id);
+          const limit = shown[tab.id] ?? PAGE;
+          const visible = all.slice(0, limit);
+          const remaining = all.length - visible.length;
 
           return (
             <div>
@@ -175,7 +186,7 @@ export function Discover() {
                 </div>
               )}
 
-              {!loading && shown.length === 0 && (
+              {!loading && all.length === 0 && (
                 <div className="empty-state t-body" style={{ marginTop: 24 }}>
                   {query.trim() ? `Nothing here matches "${query.trim()}" yet.` : 'Nothing here yet.'}
                 </div>
@@ -183,7 +194,7 @@ export function Discover() {
 
               <div className="prod-list">
                 <span className="rail" />
-                {shown.map((r) => (
+                {visible.map((r) => (
                   <ProductRow
                     key={r.id}
                     entry={r}
@@ -203,6 +214,27 @@ export function Discover() {
                   />
                 ))}
               </div>
+
+              {remaining > 0 && (
+                <div className="prod-more">
+                  <button
+                    className="prod-btn pressable"
+                    onClick={() => setShown((m) => ({ ...m, [tab.id]: limit + PAGE }))}
+                  >
+                    Load {Math.min(PAGE, remaining)} more
+                  </button>
+                  <button
+                    className="prod-btn pressable"
+                    onClick={() => setShown((m) => ({ ...m, [tab.id]: all.length }))}
+                  >
+                    See all {all.length}
+                  </button>
+                </div>
+              )}
+
+              {!loading && all.length > 0 && remaining === 0 && all.length > PAGE && (
+                <p className="prod-count t-caption">All {all.length} shown</p>
+              )}
             </div>
           );
         }}
