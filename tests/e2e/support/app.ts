@@ -22,23 +22,31 @@ export interface AppFixture {
  * only proves the code compiles is what these tests exist to replace.
  */
 export const test = base.extend<{ app: AppFixture }>({
-  app: async ({ page }, use) => {
-    const consoleErrors: string[] = [];
-    const pageErrors: string[] = [];
-    page.on('console', (message) => {
-      if (message.type() === 'error') consoleErrors.push(message.text());
-    });
-    page.on('pageerror', (error) => {
-      pageErrors.push(error.message);
-    });
+  app: [
+    async ({ page }, use) => {
+      const consoleErrors: string[] = [];
+      const pageErrors: string[] = [];
+      page.on('console', (message) => {
+        if (message.type() === 'error') consoleErrors.push(message.text());
+      });
+      page.on('pageerror', (error) => {
+        pageErrors.push(error.message);
+      });
 
-    const stub = await installSupabaseStub(page);
-    await use({ stub, consoleErrors, pageErrors });
+      const stub = await installSupabaseStub(page);
+      await use({ stub, consoleErrors, pageErrors });
 
-    expect(pageErrors, 'uncaught errors').toEqual([]);
-    expect(consoleErrors, 'console errors').toEqual([]);
-    expect(stub.unhandled, 'Supabase calls the stub does not model').toEqual([]);
-  },
+      expect(pageErrors, 'uncaught errors').toEqual([]);
+      expect(consoleErrors, 'console errors').toEqual([]);
+      expect(stub.unhandled, 'Supabase calls the stub does not model').toEqual([]);
+    },
+    /* auto, because a fixture is only built when a test asks for it by name —
+       and a test that forgets to ask gets no stub, no error checks, and real
+       requests leaving the browser. The symptom is a signup failing on an
+       empty response body, which reads as a broken screen rather than as a
+       missing fixture. Nothing here is worth opting out of. */
+    { auto: true },
+  ],
 });
 
 export { expect };

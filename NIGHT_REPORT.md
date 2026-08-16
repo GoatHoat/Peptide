@@ -745,3 +745,103 @@ Today with the schedule rows written. 63 tests green, unchanged count.
 
 Build green, `tsc --noEmit` green, 63 tests green. Bundle 1,026.24 kB minified,
 319.61 kB gzipped.
+
+---
+
+## Night 11 — 0.11, twenty runs through onboarding
+
+**Changed.** A persona driver and twenty runs, in `tests/e2e/personas.spec.ts`
+and `tests/e2e/support/persona.ts`. Plus the one defect they found that was
+small enough to fix.
+
+`onboarding.spec.ts` walks the flow as a straight line, which is the right
+shape for one happy path and the wrong shape for twenty — half of what is worth
+testing is the flow *not* going straight. So the driver is a loop instead: it
+reads `data-step` off `.ob-root`, does whatever the persona says for that
+screen, waits for the step to change, and repeats. Nothing in it knows the
+order of `FLOW`, so moving a screen cannot leave these passing while the
+product is broken. One new attribute in the product to make that possible:
+`data-step` on the onboarding root, because most screens say "Continue" and
+guessing which one you are on from a heading is how a reordered flow passes a
+green suite.
+
+Each run records every screen in the order it was shown, the ms spent on each,
+the progress-bar value, the final recommendation list with its dose lines and
+reasons, the "what was left out" block, the schedule it built, and anything
+that rendered blank or was clipped. That record is attached to the test as
+`run.md`, so a failure arrives with the whole run rather than one assertion.
+
+The clipping check runs on the finished screen, not the arriving one: Chrome
+counts a transformed descendant in its ancestor's scrollable overflow, so a
+screen measured mid-slide reads 60px wider than the phone — every screen, every
+run, a report of nothing twenty times over. The audit waits on the wrapper's
+own animations first, and only its own, because the two loading screens run an
+infinite one underneath that never settles.
+
+**All twenty ran green at 393 wide.** No screen rendered blank, none was
+clipped horizontally, and nothing overflowed a container that could not scroll
+— including the current-stack screen holding fifteen chips, and the meals
+screen holding none. 23 screens for most personas; 22 for the one that retired
+q3; 24 for the one that went back and re-opened it. 16–22s each of driving
+time, of which 6.3s is the three hard-coded holds (2.2 + 1.8 + 1.4) and the
+0.9s fake purchase. Whole suite 3.5 minutes, 85 tests.
+
+**The one real defect, fixed.** `ProfileProvider` fetches the profile row once,
+when the user id changes, and onboarding writes its answers straight through
+`api.ts` rather than through `prefs.save`. The user id does not change at the
+end of onboarding — so the app opened on the row as it was at signup. Persona
+13 (awake 23:00 to 07:00) is what made it visible: the Today arc spanned
+7:00 AM to 11:00 PM, the default window, while the schedule underneath it
+correctly held a 23:00 dose. Same defect silently applies to age and sex, which
+the supplement sheet uses to pick an intake figure. It corrects itself on the
+next cold start, which is the worst kind of wrong. `finish()` now awaits
+`refresh()` before handing over.
+
+**Also fixed, because it made the first four runs meaningless.** The `app`
+fixture was not `auto`, and Playwright only builds a fixture a test asks for by
+name. A test that destructured `{ page }` alone got no Supabase stub, no
+console-error check and no unhandled-call check, and its requests left the
+browser for real. The symptom was a signup failing on an empty response body,
+which reads exactly like a broken screen. It is `auto: true` now — there is no
+test that should opt out of it.
+
+**Found and not changed:**
+
+- **The recommendations screen has no empty state, and it is a dead end.**
+  Verified, not inferred: put everything your goals match into the current
+  stack and the screen renders the heading, the sub-line telling you to "untick
+  anything you don't want" with nothing to untick, the "what was left out"
+  block, and a disabled "Create schedule". The only exit is the back chevron.
+  With 286 products this needs a determined user, but it needs no bug — and the
+  empty state belongs to section B, which is a whole item.
+- **`DEFAULT_GOAL_IDS` is unreachable from the product.** The goals CTA is
+  disabled at zero selections, so nothing a user can do reaches the results
+  with an empty goal list; persona 6 had to write the store directly to get
+  there. The fallback works — it produced energy and immunity, and the
+  sub-line named them. But it is either dead code or the goals screen should
+  be skippable, and which of those is a product decision.
+- **The progress bar jumps two segments when q3 is retired.** Measured, once
+  per run, exactly where expected. The bar is one segment per `FLOW` entry
+  filled up to the current index, so the denominator is the flow rather than
+  the path this person will actually walk. I read that as the honest version —
+  a bar that renumbered itself per answer would claim progress it has not made
+  — and 0.12 changes the length anyway. Asserted rather than left to a reader,
+  so a future change to either has to say which it meant.
+- **`finish()` swallows every write.** `updateProfile` and every
+  `addScheduleItem` are `.catch(() => {})`. If the schedule write fails the
+  user still lands on Today, on an empty day, with nothing said. Section B.
+- **A vegan is still recommended collagen.** Persona 1 confirms the proposal
+  already sitting in section E of the queue: nothing on a glossary row says
+  what a product is made from, so the diet answers cannot exclude on it.
+  Collagen is bovine or marine, always.
+- `ensureTodayDoses` still double-inserts under StrictMode — persona 13's
+  Today screen shows the 23:00 magnesium twice. Night 1, still open, still out
+  of scope.
+- `pickReference` falls back to the 19-50 band for an age band it holds no row
+  for, so the 14-year-old in persona 9 gets an adult figure with nothing saying
+  so. The real catalogue does carry 24 `14-18` rows, so this only bites the
+  nutrients that have none; the test fixture has none at all, which is why it
+  showed up here. Deliberate behaviour, worth knowing about.
+
+Build green, `tsc --noEmit` green, 85 tests green (63 → 85: 22 new e2e).
+Bundle 1,026.53 kB minified, 319.72 kB gzipped.

@@ -156,10 +156,25 @@ single run. Do them in order; several depend on the one before.
   alongside the q3 branch, so no screen knows the paywall's position and back
   walks over it on the same rule forward does. The onboarding e2e walks the new
   order screen by screen and passes; 63 tests green._
-- [ ] **0.11 — Twenty onboarding runs.** Section 5. All twenty personas, end to
+- [x] **0.11 — Twenty onboarding runs.** Section 5. All twenty personas, end to
   end, recording every screen shown, timing, final recommendations, and anything
   that errored, rendered empty, or overflowed. Fix what is small; list what is
   not.
+  _Done: `tests/e2e/personas.spec.ts` runs all twenty against a driver in
+  `support/persona.ts` that reads `data-step` off the root and loops, so no test
+  knows the order of `FLOW`. Each attaches a `run.md` with every screen in
+  order, ms per screen, the progress value, the recommendations with their dose
+  lines and reasons, and the schedule. All twenty green at 393 wide: nothing
+  blank, nothing clipped, 22-24 screens each, 16-22s of driving time. One real
+  defect found and fixed — `ProfileProvider` caches the profile at signup and
+  onboarding writes past it, so the app opened on the pre-onboarding row: the
+  Today arc drew the default 07:00-23:00 window whatever was set, and the intake
+  figures used the default age and sex. Persona 13 is what showed it. Also made
+  the `app` fixture `auto`, because a test that did not name it got no stub and
+  no error checks at all. Flagged, not fixed: the recommendations screen is a
+  dead end with nothing to suggest (verified), `DEFAULT_GOAL_IDS` is unreachable
+  from the product, the progress bar moves two segments over a retired question,
+  and `finish()` swallows every write error. See `NIGHT_REPORT.md`._
 - [ ] **0.12 — Trim the flow back under 20 screens.** Section 5. Cut candidates
   in order: the progress-photo screen, then the two consecutive info screens.
   Do not cut the three new questions to make room.

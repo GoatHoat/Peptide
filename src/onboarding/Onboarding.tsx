@@ -9,6 +9,7 @@ import { Goals } from './screens/Goals';
 import { Notifications, Paywall } from './screens/Commit';
 import { Building, Done, Recommendations, ScheduleBuilder, type Recommendation } from './screens/Results';
 import { useAuth } from '../lib/auth';
+import { usePrefs } from '../lib/prefs';
 import { supabase } from '../lib/supabaseClient';
 import { addScheduleItem, getProfile, updateProfile } from '../lib/api';
 import { toISODate } from '../lib/date';
@@ -21,6 +22,7 @@ import { toISODate } from '../lib/date';
 export function Onboarding({ onFinished }: { onFinished: () => void }) {
   const { state, step, patch, hydrate, next, back, goTo } = useOnboardingStore();
   const { session } = useAuth();
+  const { refresh: refreshProfile } = usePrefs();
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signup');
   const [picks, setPicks] = useState<Recommendation[]>([]);
 
@@ -97,6 +99,14 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           start_date: toISODate(new Date()),
         }).catch(() => {});
       }
+      /* The profile provider read this row when the account was created,
+         which was before any of the above existed, and it only refetches when
+         the user id changes — which it does not, here. Without this the app
+         opens on the row as it was: the Today arc spans the default 07:00 to
+         23:00 rather than the window just set, and the intake figures use the
+         default age and sex. Both correct themselves on the next cold start,
+         which is the worst kind of wrong. */
+      await refreshProfile().catch(() => {});
     }
     markOnboarded();
     onFinished();
@@ -277,7 +287,10 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
   })();
 
   return (
-    <div className="ob-root">
+    /* data-step is the only thing outside this file that knows which screen is
+       up. Without it a test has to guess from a heading, and half the screens
+       say "Continue" — which is how a reordered flow passes a green suite. */
+    <div className="ob-root" data-step={step}>
       {!NO_CHROME.has(step) && <Header step={step} onBack={back} onSkip={skip} />}
       <div className="ob-stage">
         <div key={step} className={`ob-screen ${dir === 'fwd' ? 'enter' : 'enter-back'}`}>
