@@ -369,6 +369,22 @@ export async function getPriorEntry(
   return null;
 }
 
+/**
+ * The catalogue entry for a name the user typed, matched case-insensitively.
+ * Without this a hand-typed item carries no glossary_id, which is what kept it
+ * out of the stack — stack_items.glossary_id is NOT NULL.
+ */
+export async function findGlossaryByName(name: string): Promise<GlossaryEntry | null> {
+  const trimmed = name.trim();
+  if (!trimmed) return null;
+  const { data } = await supabase
+    .from('glossary')
+    .select('*')
+    .ilike('name', trimmed)
+    .limit(1);
+  return ((data ?? [])[0] as GlossaryEntry) ?? null;
+}
+
 export async function addScheduleItem(userId: string, input: NewScheduleItem): Promise<ScheduleItem> {
   const { data, error } = await supabase
     .from('schedule_items')
@@ -391,7 +407,30 @@ export async function addScheduleItem(userId: string, input: NewScheduleItem): P
     return retry.data as ScheduleItem;
   }
   if (error) throw error;
-  return data as ScheduleItem;
+  const item = data as ScheduleItem;
+  await linkToStack(userId, item);
+  return item;
+}
+
+/**
+ * Scheduling something means you have it, so it belongs in the stack too.
+ * Adding to the stack from Discover offered to schedule it, but the reverse
+ * never happened and the two lists drifted apart.
+ *
+ * Only an item linked to the catalogue can join — stack_items.glossary_id is
+ * NOT NULL, so a name typed freehand that matches nothing has nowhere to go.
+ * A failure here must not lose the schedule item, which is the thing the user
+ * actually asked for.
+ */
+async function linkToStack(userId: string, item: ScheduleItem): Promise<void> {
+  const glossaryId =
+    item.glossary_id ?? (await findGlossaryByName(item.name).catch(() => null))?.id ?? null;
+  if (!glossaryId) return;
+  await addToStack(userId, glossaryId).catch(() => {});
+  if (!item.glossary_id) {
+    // remember the link so the row is not re-matched by name every time
+    await supabase.from('schedule_items').update({ glossary_id: glossaryId }).eq('id', item.id);
+  }
 }
 
 export async function removeScheduleItem(id: string): Promise<void> {

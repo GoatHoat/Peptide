@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import {
   addScheduleItem,
+  findGlossaryByName,
   getPriorEntry,
   getStack,
   type PriorEntry,
@@ -77,9 +78,13 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
   };
 
   /** Typing a name that matches something used before fills the rest in too. */
-  const onNameBlur = () => {
+  const onNameBlur = async () => {
     const n = name.trim();
-    if (n && !amount.trim() && !pickedGlossaryId) prefillFrom({ name: n });
+    if (!n || pickedGlossaryId) return;
+    if (!amount.trim()) prefillFrom({ name: n });
+    // recognise a catalogue product typed by hand, so it can reach the stack
+    const match = await findGlossaryByName(n).catch(() => null);
+    if (match) setPickedGlossaryId(match.id);
   };
 
   const submit = async (e: FormEvent) => {
