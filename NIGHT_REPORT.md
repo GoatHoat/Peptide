@@ -103,3 +103,81 @@ reach `profiles`.
   skipping it" and nothing yet does that. That is 0.3, but the copy is live
   before the behaviour is, which is the wrong order if these ship separately.
 - The bundle is still 1,017 kB minified; the three screens added ~4 kB.
+
+---
+
+## 2026-08-15 — queue item 0.3, the rules engine
+
+**Changed.** `src/lib/recommend.ts` — pure, synchronous, no imports at runtime
+— now decides the order of the recommendations and the sentence on every card.
+All six diet rules, all seven reaction rules and the soft form re-rank are one
+weight table with the reason text next to the rule that produces it: one goal
+tag is worth 10, a diet priority 30, a form swap 25, a stated form preference
+6, and B12 under "no meat at all" is worth 1000, which is how it reaches the
+top of a list it matched no goal in. `Results.tsx` no longer scores anything;
+it slices six, turns a reference intake into a string, and renders. The screen
+that promised "we'll pick a different form rather than skipping it" now does
+it. 26 tests in `tests/unit/recommend.spec.ts`, one per rule, run under a new
+`rules` Playwright project with no browser and no server.
+
+Three decisions inside that are worth disagreeing with in the morning:
+
+- **A swap removes the product, never the nutrient.** With `mag-gi` answered,
+  magnesium citrate does not appear at all — the glycinate does, and the
+  citrate is named under "what was left out" with the reason. Showing someone
+  the citrate after they told you citrate loosens their stools, with or without
+  a caveat, is the contradiction the spec's twenty runs exist to find. Where
+  the catalogue has nothing to route to, the original stays with the spec's own
+  line: "This is the only iron we have — take it with food."
+- **Nothing on a card goes unexplained.** The reason line is the highest-
+  priority rule that fired, plus the sentence behind the adjusted figure or the
+  with-food chip when a louder rule owns the line. Two sentences maximum, and
+  it will not repeat itself. This is why iron reads "Bisglycinate rather than
+  sulfate… Vegetarian iron targets are 1.8× the standard…" rather than showing
+  32 mg with nothing accounting for the 32.
+- **No rule, no sentence.** `why` renders only when non-empty. The engine never
+  falls back to a generated line. `matchReason.ts`, which section 2.4 points at,
+  is search-query specific and does not apply here; the goal-tag sentence that
+  was already on these cards is the fallback and it now lives in the engine
+  with the rest of the copy.
+
+**Found and did not change.**
+
+- **A vegan is still recommended whey protein and collagen.** The diet table
+  moves nutrients up and swaps forms; it never excludes a product for
+  containing the thing the user said they do not eat. Whey is dairy and
+  collagen is bovine or marine, always. This is the loudest way the feature can
+  contradict itself and it is not fixable with a rule — no glossary column says
+  what a product is made from, and reading it off the name fails the moment a
+  product is called "Ultimate Omega". Written up as the first proposal in
+  `NIGHT_QUEUE.md`: it needs a `source` column populated during the 176-product
+  migration.
+- **"No red meat" on its own does nothing.** The spec's table names `no-meat`
+  for the iron and zinc rules, so ticking only "No red meat" produces the same
+  list as "I eat everything". Second proposal; I did not invent a weight for it.
+- **`no-fish` will suppress an algal omega-3 that does not say so.** The rule
+  keeps only products whose name, slug or keywords say algal, algae, vegan or
+  schizochytrium. A genuinely algal product named "Ultimate Omega" would be
+  dropped rather than recommended. Deliberate: recommending fish to someone who
+  does not eat fish is the worse error of the two. It will matter at 176
+  products and is another thing a `source` column solves properly.
+- **Citicoline and alpha-GPC are not treated as choline.** Neither name
+  contains the string, both are catalogued as cognitive products, and folding
+  them into a diet rule quietly is the kind of thing this file is for.
+- **The onboarding smoke test now asserts a recommendation, not just a
+  screen.** The fixture gained a B12 row tagged for goals the test run does not
+  pick, so its arrival at the top of the list is only explicable by the no-meat
+  rule, and `discover.spec` moved from four supplements to five. The final
+  assertion follows that product through to the Today timeline, which is the
+  whole chain: answer → profile → scorer → card → schedule row → dose. Vitamin
+  D3 was the product it used to follow; B12 displaced it out of the top three,
+  which is the rule working rather than a regression.
+
+**Out of scope but noticeable.**
+
+- **Nothing outside onboarding personalises anything.** Discover still shows
+  every product's own timing chip, not the one a reaction moved, because
+  Discover does not know the answers. A user who is told "with food" during
+  onboarding sees "on an empty stomach" on the same product two taps later.
+  Worth a look once 0.6 lands and the catalogue has real alternatives in it.
+- The bundle is 1,024 kB minified (319 kB gzipped); the engine added ~3 kB.

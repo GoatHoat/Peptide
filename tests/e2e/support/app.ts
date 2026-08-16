@@ -1,6 +1,6 @@
 import { test as base, expect, type Page } from '@playwright/test';
 import { AUTH_STORAGE_KEY, ONBOARDED_KEY } from './env';
-import { seededScheduleItem, STUB_EMAIL } from './catalogue';
+import { B12_PRODUCT, seededScheduleItem, STUB_EMAIL } from './catalogue';
 import { installSupabaseStub, stubSession, type Stub } from './supabaseStub';
 
 /**
@@ -156,6 +156,12 @@ export async function completeOnboarding(page: Page): Promise<void> {
 
   // building-recs holds itself for 2.2s before the list appears.
   await onScreen(page, 'What we found');
+  /* The answers reached the scorer. B12 is tagged for goals this run did not
+     pick and is first anyway, because "no meat at all" makes it required —
+     if the three questions ever stop being passed down to the rules, the list
+     still renders and only this notices. */
+  await expect(page.locator('.ob-rec').first()).toContainText(B12_PRODUCT);
+  await expect(page.locator('.ob-rec-why').first()).toContainText('no reliable plant source');
   await cta(page, 'Create schedule').click();
 
   // building-schedule holds itself for 1.8s.

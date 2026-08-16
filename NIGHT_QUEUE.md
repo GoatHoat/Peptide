@@ -37,10 +37,17 @@ single run. Do them in order; several depend on the one before.
   `reactionsNote`, `forms`; migration `0018` adds the four columns (not
   applied); answers are written by a second `updateProfile` and read back on
   open. Flow is now 23 screens — 0.12 brings it down._
-- [ ] **0.3 — The rules engine.** Section 2. New `src/lib/recommend.ts`, pure and
+- [x] **0.3 — The rules engine.** Section 2. New `src/lib/recommend.ts`, pure and
   synchronous, with the diet table, the reaction table and the soft form
   re-rank. Wire it into `Results.tsx` in place of the bare `listGlossary()` call.
   Every card carries the reason the rule fired, or nothing at all.
+  _Done: `src/lib/recommend.ts` holds all six diet rules, all seven reaction
+  rules and the soft form re-rank as one transparent weight table; `Results.tsx`
+  now only slices the list and formats an amount. Swaps route to another form of
+  the same nutrient rather than dropping it, and what was swapped appears under
+  "what was left out". 26 unit tests in `tests/unit/recommend.spec.ts` cover one
+  rule each, run by `npm test` as a new `rules` project. Iron's 1.8× vegetarian
+  figure is applied; 2.5 (menstruation) is untouched — that is 0.4._
 - [ ] **0.4 — The iron defect.** Section 2.5. Stop deriving menstrual status from
   `age >= 51`. Render both figures for women under 51, add the optional control
   on the iron sheet, `profiles.menstruates boolean null`, and default null to the
@@ -171,3 +178,29 @@ product goes here as an unchecked line with a one-paragraph case. I will decide
 in the morning.
 
 - [ ] _(add proposals here)_
+
+- [ ] **Give the catalogue a `source` column, and exclude on it.** The diet
+  table in `PROMPT_PERSONALISATION.md` moves nutrients up and swaps forms, but
+  it never excludes a product for containing the animal the user just said they
+  do not eat. So a vegan who picks Training is still shown Biochem 100% Whey
+  Isolate, and a vegan who picks Skin is still shown Vital Proteins Collagen
+  Peptides — whey is dairy and collagen is bovine or marine, always. That is the
+  most visible way this feature can contradict itself, and it is exactly what
+  section 5's twenty runs are meant to catch. I did not fix it because the fix
+  is not a rule, it is data: nothing on a glossary row says what a product is
+  made from, and deriving it from the name is guesswork the moment a product is
+  called "Ultimate Omega" rather than "Fish Oil". Proposal: add
+  `source text[] null` to `glossary` (`dairy | egg | fish | shellfish | bovine |
+  porcine | none`), populate it in the 176-product migration where the label
+  says so, and let the diet answers exclude on it with the same "swapped out,
+  and here is why" line the form swaps already use. Roughly one migration
+  column, one lookup table and four lines in `recommend.ts`.
+
+- [ ] **Decide what "No red meat" on its own should do.** It is an option on
+  the diet screen and it is the only one that currently changes nothing:
+  the table in the spec names `no-meat` for the iron and zinc rules, so someone
+  who ticks only "No red meat" gets exactly the recommendations of someone who
+  eats everything. Red meat is the main source of haem iron, so a smaller iron
+  nudge is arguably right — but the spec is deliberate about which answers move
+  which products, and inventing a weight for this one is the kind of thing that
+  should be your call rather than mine at 3am.

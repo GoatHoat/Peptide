@@ -243,6 +243,9 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           <Recommendations
             goalIds={state.goals}
             currentStack={state.currentStack}
+            diet={state.diet}
+            reactions={state.reactions}
+            forms={state.forms}
             age={state.profile.age}
             sex={state.profile.gender}
             onDone={(chosen) => {

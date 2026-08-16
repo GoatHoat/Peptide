@@ -27,6 +27,13 @@ export default defineConfig({
   },
   projects: [
     {
+      // The rule table in src/lib/recommend.ts, in Node. No browser, no
+      // server, no fixture — it is pure and it is where a wrong answer is
+      // invisible rather than a blank screen.
+      name: 'rules',
+      testDir: './tests/unit',
+    },
+    {
       name: 'iphone-width',
       // The phone layout, which is the only one shipped. Below 640 the app
       // drops the desktop frame and draws as it does on a device.

@@ -22,8 +22,8 @@ test('renders Discover with the catalogue', async ({ page, app }) => {
   await expect(supplements.getByText('Loading…')).toHaveCount(0);
   await expect(supplements.getByText(SCHEDULED_PRODUCT)).toBeVisible();
 
-  // Four supplements in the fixture and one peptide; the tabs split on `kind`,
+  // Five supplements in the fixture and one peptide; the tabs split on `kind`,
   // so a row landing on the wrong side is a filter regression, not a style one.
-  await expect(supplements.locator('.prod-row')).toHaveCount(4);
+  await expect(supplements.locator('.prod-row')).toHaveCount(5);
   await expect(page.locator('.tabs-panel').nth(1).locator('.prod-row')).toHaveCount(1);
 });

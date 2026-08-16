@@ -24,6 +24,13 @@ export const STUB_EMAIL = 'smoke@pepstack.test';
 /** The product Today's seeded schedule item points at. */
 export const SCHEDULED_PRODUCT = 'Test Brand Vitamin D3 2000 IU';
 
+/**
+ * Tagged for goals the onboarding run does not pick, so that when it turns up
+ * first on the recommendations screen the only thing that can have put it
+ * there is the no-meat rule in `src/lib/recommend.ts`.
+ */
+export const B12_PRODUCT = 'Test Brand Vitamin B12 Methylcobalamin';
+
 const glossary: Row[] = [
   {
     id: 'aaaaaaaa-0000-4000-8000-000000000001',
@@ -101,6 +108,26 @@ const glossary: Row[] = [
     product_form: 'Capsule',
     label_url: null,
     timing: 'evening',
+    timing_note: null,
+    evidence: 'strong',
+    ods_url: null,
+  },
+  {
+    id: 'aaaaaaaa-0000-4000-8000-000000000005',
+    slug: 'test-vitamin-b12',
+    name: B12_PRODUCT,
+    category: 'other',
+    mechanism_summary: 'Cobalamin, a cofactor for methionine synthase and methylmalonyl-CoA mutase.',
+    storage_notes: 'Store cool and dry. Protect from light.',
+    route: 'oral',
+    research_summary: 'Fixture row. Not a real label filing.',
+    goal_tags: ['Energy', 'Focus'],
+    search_keywords: ['b12', 'cobalamin'],
+    kind: 'supplement',
+    brand: 'Test Brand',
+    product_form: 'Powder',
+    label_url: null,
+    timing: 'any',
     timing_note: null,
     evidence: 'strong',
     ods_url: null,
