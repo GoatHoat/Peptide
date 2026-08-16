@@ -64,10 +64,12 @@ export interface Stub {
   db: Record<string, Row[]>;
   /** `METHOD /path` for every call the stub could not model. Empty is passing. */
   unhandled: string[];
+  /** set once rpc/delete_account has run, so a test can assert it was reached */
+  deleted: boolean;
 }
 
 export async function installSupabaseStub(page: Page): Promise<Stub> {
-  const stub: Stub = { db: makeTables(), unhandled: [] };
+  const stub: Stub = { db: makeTables(), unhandled: [], deleted: false };
   let generated = 0;
 
   await page.route(`${SUPABASE_URL}/**`, async (route) => {
@@ -120,7 +122,20 @@ export async function installSupabaseStub(page: Page): Promise<Stub> {
     const relation = path.slice('/rest/v1/'.length);
 
     if (relation.startsWith('rpc/')) {
-      // match_goal is the only RPC the app calls, and only from the search box.
+      /* delete_account wipes every user-owned table and then the auth record.
+         The stub mirrors that so the test can assert the data is gone rather
+         than only that the call returned 200. */
+      if (relation === 'rpc/delete_account') {
+        stub.db.stack_items = [];
+        stub.db.stacks = [];
+        stub.db.doses = [];
+        stub.db.schedule_items = [];
+        stub.db.progress_notes = [];
+        stub.db.profiles = [];
+        stub.deleted = true;
+        return json(null);
+      }
+      // match_goal is the only other RPC the app calls, from the search box.
       if (relation === 'rpc/match_goal') {
         const { query_text } = (request.postDataJSON() ?? {}) as { query_text?: string };
         const q = (query_text ?? '').toLowerCase();
@@ -136,7 +151,7 @@ export async function installSupabaseStub(page: Page): Promise<Stub> {
     const matching = () => applyFilters(table, url.searchParams);
 
     if (method === 'GET' || method === 'HEAD') {
-      const rows = withLimit(matching(), url.searchParams);
+      const rows = withLimit(withOrder(matching(), url.searchParams), url.searchParams);
       if (method === 'HEAD') {
         return route.fulfill({
           status: 200,
@@ -310,4 +325,40 @@ function applyFilters(rows: Row[], params: URLSearchParams): Row[] {
 function withLimit(rows: Row[], params: URLSearchParams): Row[] {
   const limit = Number(params.get('limit'));
   return Number.isFinite(limit) && limit > 0 ? rows.slice(0, limit) : rows;
+}
+
+/**
+ * PostgREST's `order=` parameter: `column.asc`, `column.desc.nullslast`.
+ *
+ * Modelled because callers rely on it. `getDosesForDate` orders by
+ * scheduled_time and Today's "you are here" marker assumes the list arrives in
+ * that order — without this the stub hands back insertion order and the screen
+ * under test is not the screen that ships.
+ */
+function withOrder(rows: Row[], params: URLSearchParams): Row[] {
+  const spec = params.get('order');
+  if (!spec) return rows;
+  const terms = spec.split(',').map((t) => {
+    const [column, ...flags] = t.split('.');
+    return {
+      column,
+      desc: flags.includes('desc'),
+      nullsFirst: flags.includes('nullsfirst'),
+    };
+  });
+  return [...rows].sort((a, b) => {
+    for (const { column, desc, nullsFirst } of terms) {
+      const av = a[column];
+      const bv = b[column];
+      const an = av === null || av === undefined;
+      const bn = bv === null || bv === undefined;
+      if (an && bn) continue;
+      if (an) return nullsFirst ? -1 : 1;
+      if (bn) return nullsFirst ? 1 : -1;
+      if (av === bv) continue;
+      const cmp = av < bv ? -1 : 1;
+      return desc ? -cmp : cmp;
+    }
+    return 0;
+  });
 }

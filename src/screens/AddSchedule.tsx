@@ -20,8 +20,8 @@ interface Props {
 }
 
 /**
- * Set up once — name, the user's own amount, an optional time and
- * injection site. From then on it shows up as a checkbox every day.
+ * Set up once — name, the user's own amount and an optional time. From then
+ * on it shows up as a checkbox every day.
  *
  * The form fills itself in from what the user entered for this item before,
  * and says so. It has nothing else to fill in from: the app holds no
@@ -34,7 +34,6 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
   const [pickedGlossaryId, setPickedGlossaryId] = useState<string | null>(glossaryId ?? null);
   const [amount, setAmount] = useState('');
   const [time, setTime] = useState('');
-  const [site, setSite] = useState('');
   // local date, so "today" means the user's today and not the server's
   const [startDate, setStartDate] = useState(() => toISODate(new Date()));
   const [busy, setBusy] = useState(false);
@@ -57,7 +56,6 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
         if (!p) return;
         setAmount(p.amount);
         setTime(p.scheduled_time ? p.scheduled_time.slice(0, 5) : '');
-        setSite(p.injection_site ?? '');
       } finally {
         setPrefilling(false);
       }
@@ -101,7 +99,7 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
         amount: amount.trim(),
         scheduled_time: time || null,
         glossary_id: pickedGlossaryId,
-        injection_site: site.trim() || null,
+        injection_site: null,
         start_date: startDate || toISODate(new Date()),
       });
       onAdded(item);
@@ -189,27 +187,6 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
           value={time}
           onChange={(e) => setTime(e.target.value)}
         />
-      </div>
-
-      <div className="field">
-        <label className="t-label" htmlFor="sched-site">
-          Injection site (optional)
-        </label>
-        <input
-          id="sched-site"
-          className="field-input"
-          list="sched-site-suggestions"
-          value={site}
-          onChange={(e) => setSite(e.target.value)}
-          placeholder="e.g. Abdomen"
-        />
-        <datalist id="sched-site-suggestions">
-          <option value="Abdomen" />
-          <option value="Thigh" />
-          <option value="Glute" />
-          <option value="Upper arm" />
-          <option value="Shoulder" />
-        </datalist>
       </div>
 
       <div className="t-caption" style={{ color: 'var(--t3)', marginTop: -2 }}>

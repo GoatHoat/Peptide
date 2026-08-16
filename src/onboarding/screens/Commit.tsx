@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Cta, OnboardIllustration, Screen, Sub, Title } from '../chrome';
 import { PLANS, purchase, restorePurchases, type PlanId } from '../../lib/billing';
+import { externalLink, PRIVACY_URL, TERMS_URL } from '../../lib/legal';
 
 /* ── notifications ───────────────────────────────────────────────────── */
 
@@ -107,8 +108,8 @@ export function Paywall({ onDone }: { onDone: (subscribed: boolean) => void }) {
             <button onClick={restore} disabled={busy !== null}>
               {busy === 'restore' ? 'Checking…' : 'Restore Purchases'}
             </button>
-            <a href="/terms">Terms</a>
-            <a href="/privacy">Privacy</a>
+            <a href={TERMS_URL} {...externalLink}>Terms</a>
+            <a href={PRIVACY_URL} {...externalLink}>Privacy</a>
           </div>
         </>
       }

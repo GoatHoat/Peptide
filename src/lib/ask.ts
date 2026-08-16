@@ -287,3 +287,28 @@ export function saveThread(entries: AskEntry[]): void {
     /* private mode, quota — losing the thread is survivable, crashing is not */
   }
 }
+
+/**
+ * Files a report against an assistant answer.
+ *
+ * Guideline 1.2 wants a working path from "this answer was objectionable" to
+ * somebody who can do something about it. The row carries the question and the
+ * answer, because a report without them cannot be acted on.
+ *
+ * Reports are insert-only under RLS (migration 0027) — the caller cannot read
+ * back what they filed, or anybody else's.
+ */
+export async function reportAnswer(input: {
+  userId: string;
+  question: string;
+  answer: string;
+  reason?: string;
+}): Promise<void> {
+  const { error } = await supabase.from('ask_reports').insert({
+    user_id: input.userId,
+    question: input.question.slice(0, MAX_QUESTION_CHARS),
+    answer: input.answer.slice(0, 8000),
+    reason: input.reason?.slice(0, 500) || null,
+  });
+  if (error) throw error;
+}

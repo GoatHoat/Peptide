@@ -8,6 +8,11 @@
   --card-hi: #1e1e22;
   /* the Discover result card sits one step above --card in the export */
   --card-2: #252529;
+  /* Today's cell. Lighter than --card-2, which sat at 1.18:1 against the missed
+     grey and was indistinguishable at low brightness on OLED — which is exactly
+     where this strip is read. 1.68:1 separates them without becoming a second
+     fill colour competing with the accent. */
+  --week-today: #3d3d45;
   --purple: #7b5cfa;
   --purple-dim: rgba(123, 92, 250, 0.35);
 
@@ -348,27 +353,44 @@ button {
   gap: 3px;
   position: relative;
 }
-.week-cell.today {
+/* Completed is the accent. It is the only earned state, and it is the one the
+   eye should find first when the strip is glanced at. */
+.week-cell.completed {
   background: var(--purple);
 }
+.week-cell.completed .week-num { color: #fff; }
+.week-cell.completed .week-dow { color: var(--t2); }
+
+/* Today is a light grey, deliberately lighter than missed so the two are
+   separable at low brightness on OLED — see the ratio in the commit. It is not
+   the accent any more: being today is not an achievement. */
+.week-cell.today {
+  background: var(--week-today);
+}
+.week-cell.today .week-num { color: #fff; }
+.week-cell.today .week-dow { color: var(--t2); }
 .week-dow {
   font-size: calc(11px * var(--text-scale));
   font-weight: 500;
   color: var(--t3);
-}
-.week-cell.today .week-dow {
-  color: var(--t2);
 }
 .week-num {
   font-size: calc(17px * var(--text-scale));
   font-weight: 600;
   letter-spacing: -0.45px;
 }
-.week-cell.today .week-num {
-  color: #fff;
-}
 .week-cell.missed .week-num {
   color: var(--t3);
+}
+/* A past day with nothing scheduled. Not purple — a day you did nothing is not
+   a streak you earned — and not missed either, because there was nothing to
+   miss. Same grey card as missed with a dimmer numeral: present, unremarkable. */
+.week-cell.empty {
+  background: var(--card);
+}
+.week-cell.empty .week-num,
+.week-cell.empty .week-dow {
+  color: var(--t4);
 }
 /* days that have not happened yet are glass, not a filled card */
 .week-cell.future {
@@ -380,15 +402,6 @@ button {
 .week-cell.future .week-num,
 .week-cell.future .week-dow {
   color: var(--t4);
-}
-/* one property means one thing: the dot means completed, nothing else */
-.week-dot {
-  position: absolute;
-  bottom: 8px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--purple);
 }
 
 .arc-wrap {
@@ -1555,6 +1568,12 @@ button {
   position: relative;
   margin-top: 16px;
   padding-left: 22px;
+  /* Room for the open card's right-hand bleed. `.prod.open` pulls itself 12px
+     wider on both sides; on the left it has the 22px rail gutter to grow into,
+     and on the right there was nothing — so it ran 12px past the panel and was
+     sliced off by the `overflow-x: clip` the pager needs. Measured at 390px
+     wide: card right edge 382 against a panel ending at 370. */
+  padding-right: 12px;
 }
 /* the same white rail the paper list used */
 .prod-list .rail {
@@ -2075,4 +2094,82 @@ button {
   padding-left: 22px;
   color: var(--t3);
   text-align: center;
+}
+
+/* Destructive controls. --danger is the existing error red, not a second
+   accent — it appears only where an action cannot be undone. */
+.row-label.danger { color: var(--danger); }
+
+.btn-danger {
+  height: 56px;
+  min-height: 56px;
+  flex: none;
+  border: 1px solid rgba(255, 107, 107, 0.32);
+  border-radius: var(--r);
+  background: transparent;
+  color: var(--danger);
+  font: inherit;
+  font-weight: 500;
+}
+.btn-danger:disabled { opacity: 0.4; }
+
+/* Report control under an assistant answer (App Store Guideline 1.2). Quiet by
+   design — it must be findable, not competing with the answer above it. */
+.ask-report {
+  display: inline-block;
+  margin: 8px 0 0 2px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--t3);
+  font: inherit;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.ask-report.done { text-decoration: none; }
+
+/* Sits above the actions on an opened product card. Quiet, but never absent
+   where the card shows an intake figure. */
+.prod-disclaimer {
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair);
+  color: var(--t3);
+}
+
+/* "You are here" — the current moment, between two rows of the schedule.
+   A hairline and two labels, nothing else: it marks a position, it is not a
+   control and must not read like one. */
+.now-marker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 14px -22px;
+  padding-left: 22px;
+}
+.now-marker-label {
+  color: var(--purple);
+  font-size: calc(12px * var(--text-scale));
+  white-space: nowrap;
+}
+.now-marker-line {
+  flex: 1;
+  height: 1px;
+  background: var(--hair);
+}
+.now-marker-time {
+  color: var(--t3);
+  font-size: calc(12px * var(--text-scale));
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* A dose whose time has gone by, still unmarked. Dimmed, not alarmed. */
+.dose.missed .dose-name,
+.dose.missed .dose-amt {
+  color: var(--t3);
+}
+.dose.missed .dose-time {
+  color: var(--t4);
 }

@@ -42,6 +42,23 @@ export async function restorePurchases(): Promise<boolean> {
   return false;
 }
 
-/** Lets the rest of the flow be tested without stubbing a purchase every run. */
-export const SKIP_PAYWALL =
-  (import.meta.env.VITE_SKIP_PAYWALL ?? (import.meta.env.DEV ? 'true' : 'false')) === 'true';
+/**
+ * Whether to skip the paywall screen entirely.
+ *
+ * DEFAULTS TO TRUE, INCLUDING IN PRODUCTION, and must stay that way until
+ * `purchase` above is a real StoreKit call. It previously defaulted to false
+ * outside dev, which shipped a screen quoting $4.99 and $29.99 against a
+ * function that waits 900ms and returns true. A reviewer taps Subscribe, is
+ * granted the tier, and is never shown a payment sheet — that is Guideline
+ * 3.1.1 (digital subscriptions must use in-app purchase) and Guideline 2.1
+ * (a purchase control that does not purchase), and it is the fastest possible
+ * rejection in this app.
+ *
+ * Shipping with no paywall is fine. Shipping a paywall that does not charge is
+ * not. Flip the default back in the same commit that wires RevenueCat, not
+ * before.
+ *
+ * The tests set VITE_SKIP_PAYWALL=false explicitly so the screen itself stays
+ * covered.
+ */
+export const SKIP_PAYWALL = (import.meta.env.VITE_SKIP_PAYWALL ?? 'true') === 'true';

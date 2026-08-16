@@ -385,7 +385,37 @@ export async function findGlossaryByName(name: string): Promise<GlossaryEntry | 
   return ((data ?? [])[0] as GlossaryEntry) ?? null;
 }
 
+/**
+ * Thrown when something tries to put a peptide on the schedule.
+ *
+ * Not a validation message for the user to work around — nothing in the UI
+ * offers this, so reaching it means a code path forgot the rule.
+ */
+export class PeptideNotSchedulable extends Error {
+  constructor(name: string) {
+    super(`${name} is a peptide. Peptides are reference only and cannot be scheduled.`);
+    this.name = 'PeptideNotSchedulable';
+  }
+}
+
 export async function addScheduleItem(userId: string, input: NewScheduleItem): Promise<ScheduleItem> {
+  /* Peptides are a reference library: no dose, no timing, not schedulable.
+     Checked here because this is the one function every path to the schedule
+     goes through — Discover, Today, and the onboarding builder all call it, and
+     a rule enforced in three screens is a rule that will be missed in the
+     fourth. The glossary row is the authority rather than the caller's word for
+     it, so a hand-built payload cannot talk its way past. */
+  if (input.glossary_id) {
+    const { data: entry } = await supabase
+      .from('glossary')
+      .select('kind, name')
+      .eq('id', input.glossary_id)
+      .maybeSingle();
+    if (entry && (entry as { kind?: string }).kind === 'peptide') {
+      throw new PeptideNotSchedulable((entry as { name?: string }).name ?? input.name);
+    }
+  }
+
   const { data, error } = await supabase
     .from('schedule_items')
     .insert({ user_id: userId, ...input })
@@ -687,4 +717,23 @@ export async function getProgressPhotoUrl(path: string): Promise<string> {
   const { data, error } = await supabase.storage.from('progress-photos').createSignedUrl(path, 3600);
   if (error) throw error;
   return data.signedUrl;
+}
+
+/**
+ * Deletes the signed-in user's account and everything in it, permanently.
+ *
+ * The work happens in `public.delete_account` (migration 0026) rather than as
+ * a set of deletes from here: the auth record itself is the one thing no
+ * client role can remove, and leaving it behind is a half-deleted account that
+ * can still be logged into. The function takes no arguments — it reads
+ * `auth.uid()` from the request — so there is no id for this call to get wrong.
+ *
+ * The local session is dropped afterwards. Its access token stays
+ * cryptographically valid until it expires, so signing out is what actually
+ * ends the session on the device.
+ */
+export async function deleteAccount(): Promise<void> {
+  const { error } = await supabase.rpc('delete_account');
+  if (error) throw error;
+  await supabase.auth.signOut();
 }

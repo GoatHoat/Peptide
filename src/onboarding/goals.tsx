@@ -58,6 +58,16 @@ export const GOALS: Goal[] = [
     img: '/goals/immunity.png',
 
   },
+  {
+    id: 'growth',
+    name: 'Growth',
+    copy: 'The mass and strength entries get placed around your training rather than scattered, so the ones that want food land on a meal.',
+    tags: ['Growth', 'Muscle'],
+    /* Artwork does not exist yet. The reference is deliberate, per the spec:
+       substituting one of the other six would ship a picture that means
+       something else, and a missing image is at least honest. See the report. */
+    img: '/goals/growth.png',
+  },
 ];
 
 export const GOAL_BY_ID = Object.fromEntries(GOALS.map((g) => [g.id, g]));

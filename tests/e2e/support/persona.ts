@@ -204,9 +204,13 @@ const HANDLERS: Record<string, Handler> = {
   auth: {
     ready: async (page) => {
       await expect(heading(page, 'Create your account')).toBeVisible();
-      // the providers stay on the merged screen, switched off until Supabase
-      // has them; the form under them is the working way in
-      await expect(page.getByRole('button', { name: 'Continue with Apple' })).toBeDisabled();
+      /* Email is the only way in, and the screen must not offer anything else.
+         The Apple and Google buttons used to sit here permanently disabled,
+         which is a control that cannot be used and therefore App Store Review
+         Guideline 2.1 — a reviewer taps them first. Asserting they are absent
+         rather than disabled is what stops them being drawn back in. */
+      await expect(page.getByRole('button', { name: 'Continue with Apple' })).toHaveCount(0);
+      await expect(page.getByRole('button', { name: 'Continue with Google' })).toHaveCount(0);
       await expect(page.getByPlaceholder('Email')).toBeVisible();
     },
     act: async (page) => {

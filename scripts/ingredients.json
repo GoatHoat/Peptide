@@ -1,0 +1,10080 @@
+{
+ "advanced-nutrition-by-zahler-methylfolate": {
+  "brand": "Advanced Nutrition by Zahler",
+  "ingredients": [
+   {
+    "amount": 1000,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Folate",
+    "unit": "mcg DFE"
+   }
+  ],
+  "label_id": "260230",
+  "product": "Methylfolate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "allergy-research-group-lactobacillus": {
+  "brand": "Allergy Research Group",
+  "ingredients": [
+   {
+    "amount": 0,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "L. plantarum (ATCC SD5209)",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "L. salivarius (ATCC SD5208)",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "L. rhamnosus (ATCC SD5217)",
+    "unit": "NP"
+   }
+  ],
+  "label_id": "233241",
+  "product": "Lactobacillus",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "allergy-research-group-liquid-molybdenum": {
+  "brand": "Allergy Research Group",
+  "ingredients": [
+   {
+    "amount": 75,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Molybdenum",
+    "unit": "mcg"
+   }
+  ],
+  "label_id": "233165",
+  "product": "Liquid Molybdenum",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 0.15,
+    "minDailyServings": 1,
+    "minQuantity": 0.05,
+    "notes": "1-3 drops",
+    "order": 1,
+    "unit": "mL"
+   }
+  ]
+ },
+ "aor-advanced-orthomolecular-research-advanced-active-green-tea": {
+  "brand": "AOR Advanced Orthomolecular Research Advanced",
+  "ingredients": [
+   {
+    "amount": 700,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Green Tea (Camellia sinensis) extract",
+    "unit": "mg"
+   },
+   {
+    "amount": 455,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Total Catechins",
+    "unit": "mg"
+   },
+   {
+    "amount": 7,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Caffeine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "214415",
+  "product": "Active Green Tea",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 3,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "aor-advanced-orthomolecular-research-citicoline": {
+  "brand": "AOR Advanced Orthomolecular Research",
+  "ingredients": [
+   {
+    "amount": 120,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Choline",
+    "unit": "mg"
+   },
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Xerenoos",
+    "unit": "mg"
+   },
+   {
+    "amount": 70,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Choline Bitartrate",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "305918",
+  "product": "Citicoline",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "aor-advanced-orthomolecular-research-premium-zinc-copper-balance": {
+  "brand": "AOR Advanced Orthomolecular Research Premium",
+  "ingredients": [
+   {
+    "amount": 15,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Zinc",
+    "unit": "mg"
+   },
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Copper",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "214713",
+  "product": "Zinc-Copper Balance",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "biochem-100-whey-isolate-protein-chocolate-peppermint": {
+  "brand": "Biochem",
+  "ingredients": [
+   {
+    "amount": 90,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 0.5,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Cholesterol",
+    "unit": "mg"
+   },
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Total Carbohydrates",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Total Sugars",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "Protein",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 80,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Calcium",
+    "unit": "mg"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 7,
+    "raw_name": "Iron",
+    "unit": "mg"
+   },
+   {
+    "amount": 60,
+    "in_blend": false,
+    "position": 8,
+    "raw_name": "Phosphorus",
+    "unit": "mg"
+   },
+   {
+    "amount": 22,
+    "in_blend": false,
+    "position": 9,
+    "raw_name": "Magnesium",
+    "unit": "mg"
+   },
+   {
+    "amount": 65,
+    "in_blend": false,
+    "position": 10,
+    "raw_name": "Sodium",
+    "unit": "mg"
+   },
+   {
+    "amount": 190,
+    "in_blend": false,
+    "position": 11,
+    "raw_name": "Potassium",
+    "unit": "mg"
+   },
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 12,
+    "raw_name": "Protein",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "258811",
+  "product": "100% Whey Isolate Protein Chocolate Peppermint",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": null,
+    "maxQuantity": 26.2,
+    "minDailyServings": 1,
+    "minQuantity": 26.2,
+    "notes": "1 Scoop (0.92 oz.)",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "bluebonnet-niacin-100-mg": {
+  "brand": "Bluebonnet",
+  "ingredients": [
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin B3",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "268249",
+  "product": "Niacin 100 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "bulksupplements-alpha-lipoic-acid": {
+  "brand": "BulkSupplements.com",
+  "ingredients": [
+   {
+    "amount": 600,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Alpha-Lipoic Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "310640",
+  "product": "Alpha Lipoic Acid",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 600,
+    "minDailyServings": 1,
+    "minQuantity": 600,
+    "notes": "about 1/4 tsp",
+    "order": 1,
+    "unit": "mg"
+   }
+  ]
+ },
+ "bulksupplements-amla-extract": {
+  "brand": "BulkSupplements.com",
+  "ingredients": [
+   {
+    "amount": 1000,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Amla Fruit Extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "310652",
+  "product": "Amla Extract",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1000,
+    "minDailyServings": 1,
+    "minQuantity": 1000,
+    "notes": "about 1/3 tsp",
+    "order": 1,
+    "unit": "mg"
+   }
+  ]
+ },
+ "bulksupplements-astragalus-extract": {
+  "brand": "BulkSupplements.com",
+  "ingredients": [
+   {
+    "amount": 1300,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Astragalus Root Extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "310661",
+  "product": "Astragalus Extract",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1300,
+    "minDailyServings": 1,
+    "minQuantity": 1300,
+    "notes": "About 1/2 tsp",
+    "order": 1,
+    "unit": "mg"
+   }
+  ]
+ },
+ "bulksupplements-bee-propolis-powder": {
+  "brand": "BulkSupplements.com",
+  "ingredients": [
+   {
+    "amount": 1200,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Bee Propolis, Powder",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "310672",
+  "product": "Bee Propolis Powder",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1200,
+    "minDailyServings": 1,
+    "minQuantity": 1200,
+    "notes": "about 1/2 tsp",
+    "order": 1,
+    "unit": "mg"
+   }
+  ]
+ },
+ "bulksupplements-l-leucine": {
+  "brand": "BulkSupplements.com",
+  "ingredients": [
+   {
+    "amount": 2500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "L-Leucine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "294896",
+  "product": "L-Leucine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 2500,
+    "minDailyServings": 1,
+    "minQuantity": 2500,
+    "notes": "about 1 tsp",
+    "order": 1,
+    "unit": "mg"
+   }
+  ]
+ },
+ "bulksupplements-msm-methylsulfonylmethane-1500-mg": {
+  "brand": "BulkSupplements.com",
+  "ingredients": [
+   {
+    "amount": 1500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Methylsulfonylmethane",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "311064",
+  "product": "MSM (Methylsulfonylmethane) 1500 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "bulksupplements-mucuna-pruriens-extract": {
+  "brand": "BulkSupplements.com",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Mucuna pruriens Fruit Extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "294799",
+  "product": "Mucuna Pruriens Extract",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 500,
+    "minDailyServings": 1,
+    "minQuantity": 500,
+    "notes": "About 1/5 tsp",
+    "order": 1,
+    "unit": "mg"
+   }
+  ]
+ },
+ "bulksupplements-olive-leaf-extract": {
+  "brand": "BulkSupplements.com",
+  "ingredients": [
+   {
+    "amount": 750,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Olive Leaf Extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "294586",
+  "product": "Olive Leaf Extract",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 750,
+    "minDailyServings": 1,
+    "minQuantity": 750,
+    "notes": "about 1/3 tsp",
+    "order": 1,
+    "unit": "mg"
+   }
+  ]
+ },
+ "bulksupplements-pantothenic-acid-vitamin-b5-powder-500-mg": {
+  "brand": "BulkSupplements.com",
+  "ingredients": [
+   {
+    "amount": 460,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Pantothenic Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "331066",
+  "product": "Pantothenic Acid Vitamin B5 Powder 500 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 500,
+    "minDailyServings": 1,
+    "minQuantity": 500,
+    "notes": "about 1/5 tsp",
+    "order": 1,
+    "unit": "Milligram(s)"
+   }
+  ]
+ },
+ "bulksupplements-phenylethylamine-hcl-pea": {
+  "brand": "BulkSupplements.com",
+  "ingredients": [
+   {
+    "amount": 150,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Phenylethylamine HCl",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "294578",
+  "product": "Phenylethylamine HCL (PEA)",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 150,
+    "minDailyServings": 1,
+    "minQuantity": 150,
+    "notes": "",
+    "order": 1,
+    "unit": "mg"
+   }
+  ]
+ },
+ "bulksupplements-rice-protein": {
+  "brand": "BulkSupplements.com",
+  "ingredients": [
+   {
+    "amount": 120,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Saturated Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Trans Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 0,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Cholesterol",
+    "unit": "mg"
+   },
+   {
+    "amount": 57,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "Sodium",
+    "unit": "mg"
+   },
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Total Carbohydrate",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": true,
+    "position": 7,
+    "raw_name": "Dietary Fiber",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 8,
+    "raw_name": "Total Sugars",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 9,
+    "raw_name": "Added Sugars",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 12,
+    "in_blend": false,
+    "position": 10,
+    "raw_name": "Protein",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 0,
+    "in_blend": false,
+    "position": 11,
+    "raw_name": "Vitamin D",
+    "unit": "mcg"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 12,
+    "raw_name": "Iron",
+    "unit": "mg"
+   },
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 13,
+    "raw_name": "Calcium",
+    "unit": "mg"
+   },
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 14,
+    "raw_name": "Potassium",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "294543",
+  "product": "Rice Protein",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 30,
+    "minDailyServings": 1,
+    "minQuantity": 30,
+    "notes": "About 4 tbsp",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "bulksupplements-saw-palmetto-extract-320-mg": {
+  "brand": "BulkSupplements.com",
+  "ingredients": [
+   {
+    "amount": 320,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Saw Palmetto",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "294541",
+  "product": "Saw Palmetto Extract (320 mg)",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "bulksupplements-taurine": {
+  "brand": "BulkSupplements.com",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Taurine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "294525",
+  "product": "Taurine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 500,
+    "minDailyServings": 1,
+    "minQuantity": 500,
+    "notes": "about 1/5 tsp",
+    "order": 1,
+    "unit": "mg"
+   }
+  ]
+ },
+ "bulksupplements-vitamin-b1-thiamine-mononitrate": {
+  "brand": "BulkSupplements.com",
+  "ingredients": [
+   {
+    "amount": 92,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Thiamine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "294344",
+  "product": "Vitamin B1 (Thiamine Mononitrate)",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 100,
+    "minDailyServings": 1,
+    "minQuantity": 100,
+    "notes": "",
+    "order": 1,
+    "unit": "Milligram(s)"
+   }
+  ]
+ },
+ "bulksupplements-vitamin-b12-1-methylcobalamin": {
+  "brand": "BulkSupplements.com",
+  "ingredients": [
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin B12",
+    "unit": "mcg"
+   }
+  ],
+  "label_id": "311774",
+  "product": "Vitamin B12 1% (Methylcobalamin)",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 20,
+    "minDailyServings": 1,
+    "minQuantity": 20,
+    "notes": "",
+    "order": 1,
+    "unit": "mg"
+   }
+  ]
+ },
+ "carlson-glucosamine-sulfate": {
+  "brand": "Carlson",
+  "ingredients": [
+   {
+    "amount": 700,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Glucosamine Sulfate",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "24983",
+  "product": "Glucosamine Sulfate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "codeage-berberine-phytosome": {
+  "brand": "Codeage",
+  "ingredients": [
+   {
+    "amount": 750,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Berberine Phytosome BerbActive Blend",
+    "unit": "mg"
+   },
+   {
+    "amount": 500,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Berberine",
+    "unit": "mg"
+   },
+   {
+    "amount": 150,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Phospholipid Complex",
+    "unit": "mg"
+   },
+   {
+    "amount": 100,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Alpha-Lipoic Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "333404",
+  "product": "Berberine Phytosome+",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "codeage-liposomal-urolithin-a": {
+  "brand": "Codeage",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Urolithin A",
+    "unit": "mg"
+   },
+   {
+    "amount": 150,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Trans-Resveratrol",
+    "unit": "mg"
+   },
+   {
+    "amount": 102.5,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Betaine Anhydrous",
+    "unit": "mg"
+   },
+   {
+    "amount": 60,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Coenzyme Q-10",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "333435",
+  "product": "Liposomal Urolithin A",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "deva-vegan-omega-3-dha-epa": {
+  "brand": "DEVA",
+  "ingredients": [
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Calories from Fat",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 0.5,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Total Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Microalgae Oil",
+    "unit": "mg"
+   },
+   {
+    "amount": 200,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Total Omega-3",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "304315",
+  "product": "Vegan Omega-3 DHA-EPA",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "doctors-best-astaxanthin": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 6,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Astaxanthin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "59912",
+  "product": "Astaxanthin",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "order": 1,
+    "unit": "Veggie Softgel(s)"
+   }
+  ]
+ },
+ "doctors-best-bacopa-320-mg-with-synapsa": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 320,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Synapsa",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "302639",
+  "product": "Bacopa 320 mg with Synapsa",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Veggie Capsule(s)"
+   }
+  ]
+ },
+ "doctors-best-barley-beta-glucan": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 250,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Barley Beta-Glucan",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "59950",
+  "product": "Barley Beta-Glucan",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Veggie Capsule(s)"
+   }
+  ]
+ },
+ "doctors-best-extra-strength-ginkgo-120-mg": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 120,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Ginkgo extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "202811",
+  "product": "Extra Strength Ginkgo 120 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Veggie Capsule(s)"
+   }
+  ]
+ },
+ "doctors-best-fisetin-with-novusetin": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Fisetin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "81967",
+  "product": "Fisetin With Novusetin",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Veggie Capsule(s)"
+   }
+  ]
+ },
+ "doctors-best-fully-active-b-complex": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 40,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin C",
+    "unit": "mg"
+   },
+   {
+    "amount": 60,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Thiamine",
+    "unit": "mg"
+   },
+   {
+    "amount": 75,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Riboflavin",
+    "unit": "mg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Niacin",
+    "unit": "mg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Vitamin B6",
+    "unit": "mg"
+   },
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "Folate",
+    "unit": "mcg DFE"
+   },
+   {
+    "amount": 1000,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Vitamin B12",
+    "unit": "mcg"
+   },
+   {
+    "amount": 600,
+    "in_blend": false,
+    "position": 7,
+    "raw_name": "Biotin",
+    "unit": "mcg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 8,
+    "raw_name": "Pantothenic Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "269680",
+  "product": "Fully Active B Complex",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Veggie Capsule(s)"
+   }
+  ]
+ },
+ "doctors-best-fully-active-b12-1500-mcg": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 1500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin B12",
+    "unit": "mcg"
+   }
+  ],
+  "label_id": "269679",
+  "product": "Fully Active B12 1500 mcg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Veggie Capsule(s)"
+   }
+  ]
+ },
+ "doctors-best-high-absorption-coq10-100-mg": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Coenzyme Q-10",
+    "unit": "mg"
+   },
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Bioperine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "302671",
+  "product": "High Absorption CoQ10 100 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Veggie Capsule(s)"
+   }
+  ]
+ },
+ "doctors-best-l-citrulline-powder": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "L-Citrulline",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "302684",
+  "product": "L-Citrulline Powder",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 3,
+    "minDailyServings": 1,
+    "minQuantity": 3,
+    "notes": "1 scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "doctors-best-l-tryptophan-500-mg": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "L-Tryptophan",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "302685",
+  "product": "L-Tryptophan 500 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Veggie Capsule(s)"
+   }
+  ]
+ },
+ "doctors-best-l-tyrosine-500-mg": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Tyrosine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "43427",
+  "product": "Best L-Tyrosine 500 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "doctors-best-lithium-aspartate": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Lithium",
+    "unit": "mg"
+   },
+   {
+    "amount": 125,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "from 125 mg of lithium aspartate",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "25202",
+  "product": "Best Lithium Aspartate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "doctors-best-nmn-12000-400-mg": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Beta-Nicotinamide Mononucleotide",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "270688",
+  "product": "NMN 12000 400 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "notes": "",
+    "order": 1,
+    "unit": "Veggie Capsule(s)"
+   }
+  ]
+ },
+ "doctors-best-phosphatidyl-serine-with-serinaid-100-mg": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Phosphatidylserine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "209417",
+  "product": "Phosphatidyl Serine with SerinAid 100 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 3,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "doctors-best-pure-l-arginine-powder": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 6,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "L-Arginine Hydrochloride",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "203218",
+  "product": "Pure L-Arginine Powder",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 6,
+    "minDailyServings": 1,
+    "minQuantity": 6,
+    "notes": "1 scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "doctors-best-stabilized-r-lipoic-acid-100-mg": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 150,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "D-Biotin",
+    "unit": "mcg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "R-Lipoic Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "202942",
+  "product": "Stabilized R-Lipoic Acid 100 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Veggie Capsule(s)"
+   }
+  ]
+ },
+ "doctors-best-vegan-omega-3-2000-mg": {
+  "brand": "Doctor's Best",
+  "ingredients": [
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 2000,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Elantria",
+    "unit": "mg"
+   },
+   {
+    "amount": 1300,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Total Omega-3 Fatty Acids",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "322517",
+  "product": "Vegan Omega-3 2000 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "notes": "",
+    "order": 1,
+    "unit": "Veggie Softgel(s)"
+   }
+  ]
+ },
+ "douglas-laboratories-vitamin-k2-menaquinone-7": {
+  "brand": "Douglas Laboratories",
+  "ingredients": [
+   {
+    "amount": 90,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin K2",
+    "unit": "mcg"
+   }
+  ],
+  "label_id": "244758",
+  "product": "Vitamin K2 Menaquinone-7",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "energyfirst-chromium-picolinate": {
+  "brand": "EnergyFirst",
+  "ingredients": [
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Chromium",
+    "unit": "mcg"
+   }
+  ],
+  "label_id": "57662",
+  "product": "Chromium Picolinate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "finest-nutrition-biotin-5-000-mcg": {
+  "brand": "Finest Nutrition",
+  "ingredients": [
+   {
+    "amount": 5000,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Biotin",
+    "unit": "mcg"
+   },
+   {
+    "amount": 222,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Calcium",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "60867",
+  "product": "Biotin 5,000 mcg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "gematria-vitamin-c-complex": {
+  "brand": "Gematria",
+  "ingredients": [
+   {
+    "amount": 1.3,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin C",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1.1,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Proprietary Flavonoid Blend",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Quercetin",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Rutin",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Grapefruit seed extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 5,
+    "raw_name": "Kiwi",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 6,
+    "raw_name": "Guava",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 7,
+    "raw_name": "Mango",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 8,
+    "raw_name": "Grapefruit",
+    "unit": "NP"
+   }
+  ],
+  "label_id": "3254",
+  "product": "Vitamin C Complex",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 3,
+    "minDailyServings": 2,
+    "minQuantity": 3,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "gnc-beyond-raw-chemistry-labs-betaine-anhydrous-2-5-grams": {
+  "brand": "GNC Beyond Raw Chemistry Labs",
+  "ingredients": [
+   {
+    "amount": 2.5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Betaine",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "69302",
+  "product": "Betaine Anhydrous 2.5 grams",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2.53,
+    "minDailyServings": 1,
+    "minQuantity": 2.53,
+    "notes": "1 scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "gnc-beyond-raw-digestive-enzymes": {
+  "brand": "GNC Beyond Raw",
+  "ingredients": [
+   {
+    "amount": 145.25,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "N.Zimes Proprietary Blend",
+    "unit": "mg"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Amylase",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Protease 4.5",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Lipase",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Glucoamylase",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 5,
+    "raw_name": "Protease 3",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 6,
+    "raw_name": "Bromelain",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 7,
+    "raw_name": "Protease 6",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 8,
+    "raw_name": "Papain",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 9,
+    "raw_name": "Cellulase",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 10,
+    "raw_name": "Diastase",
+    "unit": "NP"
+   },
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 11,
+    "raw_name": "CereCalase Proprietary Blend",
+    "unit": "mg"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 12,
+    "raw_name": "Hemicellulase",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 13,
+    "raw_name": "Beta-Glucanase",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 14,
+    "raw_name": "Phytase",
+    "unit": "NP"
+   }
+  ],
+  "label_id": "80096",
+  "product": "Digestive Enzymes",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "havasu-nutrition-ginkgo-biloba-phosphatidylserine": {
+  "brand": "Havasu Nutrition",
+  "ingredients": [
+   {
+    "amount": 120,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Ginkgo biloba",
+    "unit": "mg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Phosphatidylserine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "214644",
+  "product": "Ginkgo Biloba + Phosphatidylserine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "health-thru-nutrition-naturally-lutein-with-zeaxanthin-20-mg": {
+  "brand": "Health Thru Nutrition Naturally",
+  "ingredients": [
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Lutein",
+    "unit": "mg"
+   },
+   {
+    "amount": 4000,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Zeaxanthin Isomers",
+    "unit": "mcg"
+   }
+  ],
+  "label_id": "177738",
+  "product": "Lutein With Zeaxanthin 20 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "healths-harmony-california-spirulina": {
+  "brand": "Healths Harmony",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Spirulina",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "318355",
+  "product": "California Spirulina",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Vegetable Capsule(s)"
+   }
+  ]
+ },
+ "herbadiet-panax-ginseng-extract": {
+  "brand": "Herbadiet",
+  "ingredients": [
+   {
+    "amount": 300,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Panax ginseng extract powder",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "244376",
+  "product": "Panax Ginseng Extract",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 600,
+    "minDailyServings": 1,
+    "minQuantity": 300,
+    "order": 1,
+    "unit": "mg"
+   }
+  ]
+ },
+ "herbadiet-trans-resveratrol": {
+  "brand": "Herbadiet",
+  "ingredients": [
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Trans-Resveratrol",
+    "unit": "mg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Acai berry extract",
+    "unit": "mg"
+   },
+   {
+    "amount": 125,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Grape seed extract",
+    "unit": "mg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Green Tea leaf extract",
+    "unit": "mg"
+   },
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Quercetin Dihydrate",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "258199",
+  "product": "Trans-Resveratrol",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "hi-tech-pharmaceuticals-potassium-iodide-130-mg": {
+  "brand": "Hi-Tech Pharmaceuticals",
+  "ingredients": [
+   {
+    "amount": 130,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Potassium",
+    "unit": "mg"
+   },
+   {
+    "amount": 225,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Iodine",
+    "unit": "mcg"
+   }
+  ],
+  "label_id": "1982",
+  "product": "Potassium Iodide 130 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "host-defense-brain-energy": {
+  "brand": "Host Defense Mushrooms MycoBotanicals",
+  "ingredients": [
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Carbohydrates",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1.5,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Lion's Mane",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 750,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Yerba Mate",
+    "unit": "mg"
+   },
+   {
+    "amount": 750,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Eleuthero",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "312622",
+  "product": "Brain Energy",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 3,
+    "minDailyServings": 1,
+    "minQuantity": 3,
+    "notes": "1 tsp.",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "host-defense-chaga-extract": {
+  "brand": "Host Defense Mushrooms",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Chaga, Fresh",
+    "unit": "mL"
+   }
+  ],
+  "label_id": "312381",
+  "product": "Chaga Extract",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "notes": "1 full dropper",
+    "order": 1,
+    "unit": "mL"
+   }
+  ]
+ },
+ "host-defense-cordyceps": {
+  "brand": "Host Defense Mushrooms",
+  "ingredients": [
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Carbohydrates",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Cordyceps",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "312383",
+  "product": "Cordyceps",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "host-defense-lions-mane": {
+  "brand": "Host Defense Mushrooms",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Lion's Mane",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 550,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Polysaccharides",
+    "unit": "mg"
+   },
+   {
+    "amount": 5,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Fatty Acids",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "255174",
+  "product": "Lion's Mane",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "host-defense-lions-mane-extract": {
+  "brand": "Host Defense Mushrooms",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Proprietary Blend",
+    "unit": "mL"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Lion's Mane Mycelium Extract, Fresh",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Lion's Mane Fruiting Body Extract, Dried",
+    "unit": "NP"
+   }
+  ],
+  "label_id": "312396",
+  "product": "Lion's Mane Extract",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "notes": "1 full Dropper",
+    "order": 1,
+    "unit": "mL"
+   }
+  ]
+ },
+ "host-defense-maitake-extract": {
+  "brand": "Host Defense Mushrooms",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Proprietary Blend",
+    "unit": "mL"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "fresh Maitake (Grifola frondosa) mycelium extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "dried Maitake fungus extract",
+    "unit": "NP"
+   }
+  ],
+  "label_id": "74123",
+  "product": "Maitake Extract",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "notes": "~45 drops",
+    "order": 1,
+    "unit": "mL"
+   }
+  ]
+ },
+ "host-defense-mycommunity": {
+  "brand": "Host Defense Mushrooms",
+  "ingredients": [
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Carbohydrates",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 148,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Chaga",
+    "unit": "mg"
+   },
+   {
+    "amount": 142,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Maitake",
+    "unit": "mg"
+   },
+   {
+    "amount": 110,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Reishi",
+    "unit": "mg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "Cordyceps",
+    "unit": "mg"
+   },
+   {
+    "amount": 80,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Royal Sun Blazei",
+    "unit": "mg"
+   },
+   {
+    "amount": 80,
+    "in_blend": false,
+    "position": 7,
+    "raw_name": "Enokitake",
+    "unit": "mg"
+   },
+   {
+    "amount": 76,
+    "in_blend": false,
+    "position": 8,
+    "raw_name": "Mesima",
+    "unit": "mg"
+   },
+   {
+    "amount": 64,
+    "in_blend": false,
+    "position": 9,
+    "raw_name": "Lion's Mane",
+    "unit": "mg"
+   },
+   {
+    "amount": 48,
+    "in_blend": false,
+    "position": 10,
+    "raw_name": "Turkey Tails",
+    "unit": "mg"
+   },
+   {
+    "amount": 48,
+    "in_blend": false,
+    "position": 11,
+    "raw_name": "Oyster Mushroom",
+    "unit": "mg"
+   },
+   {
+    "amount": 30,
+    "in_blend": false,
+    "position": 12,
+    "raw_name": "Artist's Conk",
+    "unit": "mg"
+   },
+   {
+    "amount": 30,
+    "in_blend": false,
+    "position": 13,
+    "raw_name": "Oregon Ganoderma",
+    "unit": "mg"
+   },
+   {
+    "amount": 30,
+    "in_blend": false,
+    "position": 14,
+    "raw_name": "Agarikon",
+    "unit": "mg"
+   },
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 15,
+    "raw_name": "Amadou",
+    "unit": "mg"
+   },
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 16,
+    "raw_name": "Shiitake",
+    "unit": "mg"
+   },
+   {
+    "amount": 12,
+    "in_blend": false,
+    "position": 17,
+    "raw_name": "Birch Polypore",
+    "unit": "mg"
+   },
+   {
+    "amount": 12,
+    "in_blend": false,
+    "position": 18,
+    "raw_name": "Split Gill Polypore",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "312600",
+  "product": "MyCommunity",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "host-defense-reishi-extract": {
+  "brand": "Host Defense Mushrooms",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Proprietary Extract Blend",
+    "unit": "mL"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Reishi Mycelium Extract, Fresh",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Reishi Fruiting Body Extract, Dried",
+    "unit": "NP"
+   }
+  ],
+  "label_id": "312608",
+  "product": "Reishi Extract",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "notes": "1 full dropper",
+    "order": 1,
+    "unit": "mL"
+   }
+  ]
+ },
+ "host-defense-shiitake-extract": {
+  "brand": "Host Defense Mushrooms",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Proprietary Blend",
+    "unit": "mL"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "fresh Shiitake (Lentinula edodes) mycelium extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "dried Shiitake (Lentinula edodes) fruitbody extract",
+    "unit": "NP"
+   }
+  ],
+  "label_id": "200108",
+  "product": "Shiitake Extract",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "notes": "~45 drops",
+    "order": 1,
+    "unit": "mL"
+   }
+  ]
+ },
+ "host-defense-sleep": {
+  "brand": "Host Defense Mushrooms MycoBenefits",
+  "ingredients": [
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Vitamin B6",
+    "unit": "mg"
+   },
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Magnesium",
+    "unit": "mg"
+   },
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Passion Flower",
+    "unit": "mg"
+   },
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Lion's Mane",
+    "unit": "mg"
+   },
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "Reishi",
+    "unit": "mg"
+   },
+   {
+    "amount": 130,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Gamma-Aminobutyric Acid",
+    "unit": "mg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 7,
+    "raw_name": "L-Theanine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "335821",
+  "product": "Sleep",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "host-defense-stamets-7-extracts": {
+  "brand": "Host Defense Mushrooms",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Proprietary Blend",
+    "unit": "mL"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "fresh Royal Sun Blazei (Agaricus brasiliensis f. blazei) mycelium extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "fresh Cordyceps (Cordyceps militaris) mycelium extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "fresh Reishi (Ganoderma lucidum s.l.) mycelium extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "dried Reishi (Ganoderma lucidum s.l.) fruit body extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 5,
+    "raw_name": "fresh Maitake (Grifola frondosa) mycelium extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 6,
+    "raw_name": "fresh Lion's Mane (Hericium erinaceus) mycelium extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 7,
+    "raw_name": "fresh Chaga (Inonotus obliquus) mycelium extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 8,
+    "raw_name": "fresh Mesima (Phellinus linteus) mycelium extract",
+    "unit": "NP"
+   }
+  ],
+  "label_id": "312613",
+  "product": "Stamets 7 Extracts",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "notes": "1 full dropper",
+    "order": 1,
+    "unit": "mL"
+   }
+  ]
+ },
+ "host-defense-turkey-tail": {
+  "brand": "Host Defense Mushrooms",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Turkey Tails",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 550,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Polysaccharides",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "255175",
+  "product": "Turkey Tail",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-5-htp-100-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "5-HTP",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "307544",
+  "product": "5-HTP 100 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-alpha-gpc-300-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 300,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Alpha-Glycerylphosphorylcholine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "307550",
+  "product": "Alpha GPC 300 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-beta-glucan-250-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 250,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Saccharomyces cerevisiae Extract",
+    "unit": "mg"
+   },
+   {
+    "amount": 188,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Beta-1,3-1,6-Glucan",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "307558",
+  "product": "Beta Glucan 250 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-borage-seed-oil-1200-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1200,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Borage Seed Oil",
+    "unit": "mg"
+   },
+   {
+    "amount": 240,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Gamma-Linolenic Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "307565",
+  "product": "Borage Seed Oil 1200 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-carotenall": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 600,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin A",
+    "unit": "mcg RAE"
+   },
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Lutein",
+    "unit": "mg"
+   },
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Zeaxanthin",
+    "unit": "mg"
+   },
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Lycopene",
+    "unit": "mg"
+   },
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Astaxanthin",
+    "unit": "mcg"
+   },
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "Alpha-Carotene",
+    "unit": "mcg"
+   },
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Gamma-Tocopherol",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "307570",
+  "product": "CarotenAll",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-citicoline-cdp-choline-250-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 250,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Citicoline",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "288780",
+  "product": "Citicoline CDP Choline 250 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-colostrum-prime-life-400-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Colostrum",
+    "unit": "mg"
+   },
+   {
+    "amount": 120,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Immunoglobulins",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "307574",
+  "product": "Colostrum Prime Life 400 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-evening-primrose-1300-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 15,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 1.5,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1300,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Evening Primrose Oil",
+    "unit": "mg"
+   },
+   {
+    "amount": 130,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Gamma-Linolenic Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "307584",
+  "product": "Evening Primrose 1300 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-hyaluronic-acid-120-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 8,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Sodium",
+    "unit": "mg"
+   },
+   {
+    "amount": 120,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Hyaluronic Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "307599",
+  "product": "Hyaluronic Acid 120 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-jarro-dophilus-eps-25-billion": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 413,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Proprietary Probiotic Blend",
+    "unit": "mg"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Lacticaseibacillus rhamnosus R0011",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Lactobacillus helveticus R0052",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Pediococcus acidilactici R1001",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Lacticaseibacillus casei R0215",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 5,
+    "raw_name": "Bifidobacterium longum BB536",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 6,
+    "raw_name": "Lactiplantibacillus plantarum R1012",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 7,
+    "raw_name": "Bifidobacterium breve R0070",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 8,
+    "raw_name": "Lactococcus lactis lactis R1058",
+    "unit": "NP"
+   }
+  ],
+  "label_id": "307632",
+  "product": "Jarro-Dophilus EPS 25 Billion CFU",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-l-carnitine-500-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "L-Carnitine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "307636",
+  "product": "L-Carnitine 500 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-lactoferrin-250-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 250,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Lactoferrin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "321954",
+  "product": "Lactoferrin 250 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-mastic-gum-1000-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 1000,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Mastic Gum",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "307649",
+  "product": "Mastic Gum 1000 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-opcs-95-100-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Grape seed extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "211990",
+  "product": "OPCs + 95 100 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-pqq-20-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Pyrroloquinoline Quinone Disodium Salt",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "307710",
+  "product": "PQQ 20 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-prebiotic-inulin-fos": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 4,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Carbohydrates",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 3,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Dietary Fiber",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Inulin",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "307711",
+  "product": "Prebiotic Inulin-FOS",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 3.8,
+    "minDailyServings": 1,
+    "minQuantity": 3.8,
+    "notes": "1 Scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-ps100-100-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Phosphatidylserine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "264981",
+  "product": "PS100 100 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-qh-absorb-200-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Ubiquinol",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "307715",
+  "product": "QH-absorb 200 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-saccharomyces-boulardii-mos": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 250,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Saccharomyces boulardii",
+    "unit": "mg"
+   },
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "MOS Yeast Fraction",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "307728",
+  "product": "Saccharomyces boulardii + MOS 5 Billion CFU",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "jarrow-formulas-theanine-200-mg": {
+  "brand": "Jarrow Formulas",
+  "ingredients": [
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "L-Theanine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "307738",
+  "product": "Theanine 200 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-b-complex": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Thiamine",
+    "unit": "mg"
+   },
+   {
+    "amount": 15,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Riboflavin",
+    "unit": "mg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Niacin",
+    "unit": "mg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Vitamin B6",
+    "unit": "mg"
+   },
+   {
+    "amount": 1333,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Folate",
+    "unit": "mcg DFE"
+   },
+   {
+    "amount": 800,
+    "in_blend": true,
+    "position": 5,
+    "raw_name": "L-5-MTHF",
+    "unit": "mcg"
+   },
+   {
+    "amount": 800,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Vitamin B12",
+    "unit": "mcg"
+   },
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 7,
+    "raw_name": "Biotin",
+    "unit": "mcg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 8,
+    "raw_name": "Pantothenic Acid",
+    "unit": "mg"
+   },
+   {
+    "amount": 40,
+    "in_blend": false,
+    "position": 9,
+    "raw_name": "Choline",
+    "unit": "mg"
+   },
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 10,
+    "raw_name": "Inositol",
+    "unit": "mg"
+   },
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 11,
+    "raw_name": "BenfoPure Benfotiamine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "244203",
+  "product": "Klean B-Complex",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": null,
+    "maxQuantity": 1,
+    "minDailyServings": null,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-bcaa-peak-atp": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 35,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Carbohydrate",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Sugar Alcohol",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "L-Leucine",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "L-Isoleucine",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "L-Valine",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Peak ATP",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "293246",
+  "product": "Klean BCAA + Peak ATP Orange Flavor",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 8.6,
+    "minDailyServings": 1,
+    "minQuantity": 8.6,
+    "notes": "1 Scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-casein-vanilla-custard": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 110,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Cholesterol",
+    "unit": "mg"
+   },
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Total Carbohydrate",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Total Sugars",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 24,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Protein",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 530,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "Calcium",
+    "unit": "mg"
+   },
+   {
+    "amount": 110,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Sodium",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "293258",
+  "product": "Klean Casein Natural Vanilla Custard Flavor",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 30.7,
+    "minDailyServings": 1,
+    "minQuantity": 30.7,
+    "notes": "1 Scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-creatine": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Creatine Monohydrate",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "276540",
+  "product": "Klean Creatine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 5,
+    "minDailyServings": 1,
+    "minQuantity": 5,
+    "notes": "1 scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-electrolytes": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 7,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin B6",
+    "unit": "mg"
+   },
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Calcium",
+    "unit": "mg"
+   },
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Magnesium",
+    "unit": "mg"
+   },
+   {
+    "amount": 40,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Sodium",
+    "unit": "mg"
+   },
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Potassium",
+    "unit": "mg"
+   },
+   {
+    "amount": 60,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "Chloride",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "237074",
+  "product": "Klean Electrolytes",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-endurance": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Carbohydrates",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1.67,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Total Sugars",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 0.5,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Sugar Alcohol",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1.67,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "D-Ribose",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "243997",
+  "product": "Klean Endurance Natural Orange Vanilla Flavor",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Chewable Tablet(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-essential-aminos-hmb": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Carbohydrates",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 12.5,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Vitamin D3",
+    "unit": "mcg"
+   },
+   {
+    "amount": 210,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Calcium",
+    "unit": "mg"
+   },
+   {
+    "amount": 3.35,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Amino9 Amino Blend",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1271,
+    "in_blend": true,
+    "position": 5,
+    "raw_name": "L-Leucine",
+    "unit": "mg"
+   },
+   {
+    "amount": 487,
+    "in_blend": true,
+    "position": 6,
+    "raw_name": "L-Lysine",
+    "unit": "mg"
+   },
+   {
+    "amount": 342,
+    "in_blend": true,
+    "position": 7,
+    "raw_name": "L-Threonine",
+    "unit": "mg"
+   },
+   {
+    "amount": 280,
+    "in_blend": true,
+    "position": 8,
+    "raw_name": "L-Isoleucine",
+    "unit": "mg"
+   },
+   {
+    "amount": 264,
+    "in_blend": true,
+    "position": 9,
+    "raw_name": "L-Valine",
+    "unit": "mg"
+   },
+   {
+    "amount": 181,
+    "in_blend": true,
+    "position": 10,
+    "raw_name": "L-Phenylalanine",
+    "unit": "mg"
+   },
+   {
+    "amount": 129,
+    "in_blend": true,
+    "position": 11,
+    "raw_name": "L-Methionine",
+    "unit": "mg"
+   },
+   {
+    "amount": 109,
+    "in_blend": true,
+    "position": 12,
+    "raw_name": "L-Histidine",
+    "unit": "mg"
+   },
+   {
+    "amount": 18,
+    "in_blend": true,
+    "position": 13,
+    "raw_name": "L-Tryptophan",
+    "unit": "mg"
+   },
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 14,
+    "raw_name": "L-Glutamine",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1.5,
+    "in_blend": false,
+    "position": 15,
+    "raw_name": "MyHMB Calcium Beta-Hydroxy-Beta-Methylbutyrate-Monohydrate",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "237098",
+  "product": "Klean Essential Aminos+HMB Natural Orange Cream Flavor",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 9.15,
+    "minDailyServings": 1,
+    "minQuantity": 9.15,
+    "notes": "1 Scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-focus": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 300,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Biotin",
+    "unit": "mcg"
+   },
+   {
+    "amount": 1000,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Acetyl-L-Carnitine HCl",
+    "unit": "mg"
+   },
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Alpha Lipoic Acid",
+    "unit": "mg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Alpha-GPC",
+    "unit": "mg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "VitaBerry Fruit Blend",
+    "unit": "mg"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 5,
+    "raw_name": "Grape",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 6,
+    "raw_name": "Grape Seed Extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 7,
+    "raw_name": "Wild Blueberry",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 8,
+    "raw_name": "Wild Blueberry extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 9,
+    "raw_name": "Raspberry",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 10,
+    "raw_name": "Raspberry seed (Rubus idaeus) concentrate",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 11,
+    "raw_name": "Cranberry",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 12,
+    "raw_name": "Prune",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 13,
+    "raw_name": "Tart Cherry",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 14,
+    "raw_name": "Wild Bilberry",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 15,
+    "raw_name": "Strawberry",
+    "unit": "NP"
+   },
+   {
+    "amount": 12,
+    "in_blend": false,
+    "position": 16,
+    "raw_name": "Lutein",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "237068",
+  "product": "Klean Focus",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 3,
+    "minDailyServings": 1,
+    "minQuantity": 3,
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-glutamine": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 5000,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Glutamine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "321195",
+  "product": "Klean Glutamine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": null,
+    "maxQuantity": 5.46,
+    "minDailyServings": 1,
+    "minQuantity": 5.46,
+    "notes": "1 scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-isolate-chocolate": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 6,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Total Carbohydrates",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Dietary Fiber",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Total Sugars",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 2,
+    "in_blend": true,
+    "position": 5,
+    "raw_name": "Sugar Alcohol",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Protein",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 7,
+    "raw_name": "Calcium",
+    "unit": "mg"
+   },
+   {
+    "amount": 1.3,
+    "in_blend": false,
+    "position": 8,
+    "raw_name": "Iron",
+    "unit": "mg"
+   },
+   {
+    "amount": 120,
+    "in_blend": false,
+    "position": 9,
+    "raw_name": "Sodium",
+    "unit": "mg"
+   },
+   {
+    "amount": 220,
+    "in_blend": false,
+    "position": 10,
+    "raw_name": "Potassium",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "243801",
+  "product": "Klean Isolate Natural Chocolate Flavor",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 29,
+    "minDailyServings": 1,
+    "minQuantity": 29,
+    "notes": "1 sachet",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-magnesium": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 120,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Magnesium",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "244040",
+  "product": "Klean Magnesium",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 4,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-melatonin": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Melatonin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "237080",
+  "product": "Klean Melatonin Natural Raspberry Lemonade Flavor",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 0.86,
+    "minDailyServings": 1,
+    "minQuantity": 0.86,
+    "notes": "2 sprays",
+    "order": 1,
+    "unit": "mL"
+   }
+  ]
+ },
+ "klean-athlete-klean-multivitamin": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 1500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin A",
+    "unit": "mcg"
+   },
+   {
+    "amount": 120,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Vitamin C",
+    "unit": "mg"
+   },
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Vitamin D3",
+    "unit": "mcg"
+   },
+   {
+    "amount": 67,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Vitamin E",
+    "unit": "mg"
+   },
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Thiamine",
+    "unit": "mg"
+   },
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "Riboflavin",
+    "unit": "mg"
+   },
+   {
+    "amount": 30,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Niacin/Niacinamide",
+    "unit": "mg"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 7,
+    "raw_name": "Niacin",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 8,
+    "raw_name": "Niacinamide",
+    "unit": "NP"
+   },
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 9,
+    "raw_name": "Vitamin B6",
+    "unit": "mg"
+   },
+   {
+    "amount": 667,
+    "in_blend": false,
+    "position": 10,
+    "raw_name": "Folate",
+    "unit": "mcg DFE"
+   },
+   {
+    "amount": 400,
+    "in_blend": true,
+    "position": 11,
+    "raw_name": "L-5-MTHF",
+    "unit": "mcg"
+   },
+   {
+    "amount": 250,
+    "in_blend": false,
+    "position": 12,
+    "raw_name": "Vitamin B12",
+    "unit": "mcg"
+   },
+   {
+    "amount": 300,
+    "in_blend": false,
+    "position": 13,
+    "raw_name": "Biotin",
+    "unit": "mcg"
+   },
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 14,
+    "raw_name": "Pantothenic Acid",
+    "unit": "mg"
+   },
+   {
+    "amount": 60,
+    "in_blend": false,
+    "position": 15,
+    "raw_name": "Choline",
+    "unit": "mg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 16,
+    "raw_name": "Calcium",
+    "unit": "mg"
+   },
+   {
+    "amount": 150,
+    "in_blend": false,
+    "position": 17,
+    "raw_name": "Iodine",
+    "unit": "mcg"
+   },
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 18,
+    "raw_name": "Magnesium",
+    "unit": "mg"
+   },
+   {
+    "amount": 15,
+    "in_blend": false,
+    "position": 19,
+    "raw_name": "Zinc",
+    "unit": "mg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 20,
+    "raw_name": "Selenium",
+    "unit": "mcg"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 21,
+    "raw_name": "Copper",
+    "unit": "mg"
+   },
+   {
+    "amount": 120,
+    "in_blend": false,
+    "position": 22,
+    "raw_name": "Chromium",
+    "unit": "mcg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 23,
+    "raw_name": "Molybdenum",
+    "unit": "mcg"
+   },
+   {
+    "amount": 30,
+    "in_blend": false,
+    "position": 24,
+    "raw_name": "Potassium",
+    "unit": "mg"
+   },
+   {
+    "amount": 300,
+    "in_blend": false,
+    "position": 25,
+    "raw_name": "Proprietary Blend",
+    "unit": "mg"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 26,
+    "raw_name": "Wild Blueberry extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 27,
+    "raw_name": "Strawberry extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 28,
+    "raw_name": "Spinach powder",
+    "unit": "NP"
+   },
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 29,
+    "raw_name": "Inositol",
+    "unit": "mg"
+   },
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 30,
+    "raw_name": "Pterostilbene",
+    "unit": "mg"
+   },
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 31,
+    "raw_name": "Lutein",
+    "unit": "mg"
+   },
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 32,
+    "raw_name": "Lycopene",
+    "unit": "mg"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 33,
+    "raw_name": "Zeaxanthin",
+    "unit": "mg"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 34,
+    "raw_name": "Astaxanthin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "276544",
+  "product": "Klean Multivitamin",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "order": 1,
+    "unit": "Tablet(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-omega": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 1.5,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1250,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Marine Triglyceride concentrate",
+    "unit": "mg"
+   },
+   {
+    "amount": 500,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Eicosapentaenoic Acid",
+    "unit": "mg"
+   },
+   {
+    "amount": 250,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Docosahexaenoic Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "232697",
+  "product": "Klean Omega",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-plant-based-protein-vanilla": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 130,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 1.5,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 11,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Total Carbohydrates",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 2,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Dietary Fiber",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 5,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Total Sugars",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "Protein",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 130,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Calcium",
+    "unit": "mg"
+   },
+   {
+    "amount": 5.2,
+    "in_blend": false,
+    "position": 7,
+    "raw_name": "Iron",
+    "unit": "mg"
+   },
+   {
+    "amount": 310,
+    "in_blend": false,
+    "position": 8,
+    "raw_name": "Sodium",
+    "unit": "mg"
+   },
+   {
+    "amount": 120,
+    "in_blend": false,
+    "position": 9,
+    "raw_name": "Potassium",
+    "unit": "mg"
+   },
+   {
+    "amount": 2.5,
+    "in_blend": false,
+    "position": 10,
+    "raw_name": "Sunfiber",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 11,
+    "raw_name": "Prohydrolase",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "293425",
+  "product": "Klean Plant-Based Protein Natural Vanilla Flavor",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 36,
+    "minDailyServings": 1,
+    "minQuantity": 36,
+    "notes": "1 Scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-sr-beta-alanine": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 1.6,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "SR CarnoSyn",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "237076",
+  "product": "Klean SR Beta-Alanine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 2,
+    "minDailyServings": 2,
+    "minQuantity": 2,
+    "order": 1,
+    "unit": "Tablet(s)"
+   }
+  ]
+ },
+ "klean-athlete-klean-zinc": {
+  "brand": "Klean Athlete",
+  "ingredients": [
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Zinc",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "249882",
+  "product": "Klean Zinc Natural Orange Flavor",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Chewable Tablet(s)"
+   }
+  ]
+ },
+ "krk-supplements-choline-bitartrate": {
+  "brand": "KRK Supplements",
+  "ingredients": [
+   {
+    "amount": 900,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Choline Bitartrate",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "337329",
+  "product": "Choline Bitartrate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 2,
+    "minDailyServings": 2,
+    "minQuantity": 2,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-acetyl-l-carnitine-arginate": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 320,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Acetyl-L-Carnitine Arginate Dihydrochloride",
+    "unit": "mg"
+   },
+   {
+    "amount": 300,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Acetyl-L-Carnitine Hydrochloride",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328274",
+  "product": "Acetyl-L-Carnitine Arginate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 3,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-advanced-olive-leaf-vascular-support": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Benolea",
+    "unit": "mg"
+   },
+   {
+    "amount": 150,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Excelery",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328278",
+  "product": "Advanced Olive Leaf Vascular Support",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-bio-collagen-with-patented-uc-ii-40-mg": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 40,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "UC-II standardized Cartilage",
+    "unit": "mg"
+   },
+   {
+    "amount": 10,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Total Collagen",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "182041",
+  "product": "Bio-Collagen with Patented UC-II 40 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-black-cumin-seed-oil-and-bio-curcumin": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Thymocid organic Black Cumin seed oil",
+    "unit": "mg"
+   },
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "BCM-95 Bio-Curcumin Turmeric 25:1 extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "209156",
+  "product": "Black Cumin Seed Oil and Bio-Curcumin Turmeric Extract",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "life-extension-calm-mag": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 45,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Magnesium",
+    "unit": "mg"
+   },
+   {
+    "amount": 750,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "ATA Mg",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328306",
+  "product": "Calm-Mag",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-citicoline-cdp-choline": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 250,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Citicoline",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328397",
+  "product": "Citicoline (CDP-Choline)",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-cognitex-elite": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 160,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calcium",
+    "unit": "mg"
+   },
+   {
+    "amount": 110,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Phosphorus",
+    "unit": "mg"
+   },
+   {
+    "amount": 333,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Sibelius",
+    "unit": "mg"
+   },
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Proprietary Wildcrafted Blueberry Blend",
+    "unit": "mg"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Blueberry Fruit Extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 5,
+    "raw_name": "Blueberry Fruit Extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 6,
+    "raw_name": "Blueberry Fruit Extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 7,
+    "raw_name": "Blueberry Fruit Extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 8,
+    "raw_name": "Blueberry Fruit Extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 9,
+    "raw_name": "Blueberry Fruit Extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 125,
+    "in_blend": false,
+    "position": 10,
+    "raw_name": "Sensoril",
+    "unit": "mg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 11,
+    "raw_name": "Phosphatidylserine",
+    "unit": "mg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 12,
+    "raw_name": "Uridine-5'-Monophosphate Disodium",
+    "unit": "mg"
+   },
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 13,
+    "raw_name": "Vinpocetine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328399",
+  "product": "Cognitex Elite",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "notes": "",
+    "order": 1,
+    "unit": "Tablet(s)"
+   }
+  ]
+ },
+ "life-extension-creatine-capsules": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 11,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin C",
+    "unit": "mg"
+   },
+   {
+    "amount": 1000,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Creatine Monohydrate",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328409",
+  "product": "Creatine Capsules",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 2,
+    "minDailyServings": 2,
+    "minQuantity": 2,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-d-ribose-powder": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Carbohydrates",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 5,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Total Sugars",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 5000,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Bioenergy Ribose",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328437",
+  "product": "D-Ribose Powder",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 5000,
+    "minDailyServings": 1,
+    "minQuantity": 5000,
+    "notes": "1 Scoop",
+    "order": 1,
+    "unit": "mg"
+   }
+  ]
+ },
+ "life-extension-dopamine-advantage": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin B12",
+    "unit": "mcg"
+   },
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Phellodendron, Powder",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328435",
+  "product": "Dopamine Advantage",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-echinacea-elite": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 125,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Echinacea purpurea Aerial Parts Extract",
+    "unit": "mg"
+   },
+   {
+    "amount": 125,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Echinacea angustifolia Root Extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328440",
+  "product": "Echinacea Elite",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-enhanced-sleep-without-melatonin": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Proprietary Blend",
+    "unit": "mg"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Sensoril",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Capros",
+    "unit": "NP"
+   },
+   {
+    "amount": 150,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Casein Decapeptide",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328446",
+  "product": "Enhanced Sleep without Melatonin",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-fast-acting-liquid-melatonin": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Total Carbohydrates",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Melatonin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328461",
+  "product": "Fast-Acting Liquid Melatonin Citrus-Vanilla Flavor",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "20 drops",
+    "order": 1,
+    "unit": "mL"
+   }
+  ]
+ },
+ "life-extension-glycine-1000-mg": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 1000,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Glycine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328470",
+  "product": "Glycine 1000 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-huperzine-a-200-mcg": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Huperzine A",
+    "unit": "mcg"
+   }
+  ],
+  "label_id": "328475",
+  "product": "Huperzine A 200 mcg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 4,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-l-arginine-caps-700-mg": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin C",
+    "unit": "mg"
+   },
+   {
+    "amount": 700,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "L-Arginine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328509",
+  "product": "L-Arginine Caps 700 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-l-tryptophan-500-mg": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "L-Tryptophan",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328524",
+  "product": "L-Tryptophan 500 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-lactoferrin-caps": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 300,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Bioferrin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "231972",
+  "product": "Lactoferrin Caps",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-mega-epa-dha": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 2000,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Fish Oil Concentrate",
+    "unit": "mg"
+   },
+   {
+    "amount": 720,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Eicosapentaenoic Acid",
+    "unit": "mg"
+   },
+   {
+    "amount": 480,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Docosahexaenoic Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328568",
+  "product": "Mega EPA/DHA",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "notes": "",
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "life-extension-optimized-saffron": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 88.25,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Satiereal Saffron extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328617",
+  "product": "Optimized Saffron",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-palmettoguard": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 0.5,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 320,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Saw Palmetto fruit extract",
+    "unit": "mg"
+   },
+   {
+    "amount": 272,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Total Fatty Acids",
+    "unit": "mg"
+   },
+   {
+    "amount": 90,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Beta-Sitosterol",
+    "unit": "mg"
+   },
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "Boron",
+    "unit": "mg"
+   },
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Rosemary Leaf Extract",
+    "unit": "mcg"
+   }
+  ],
+  "label_id": "328635",
+  "product": "PalmettoGuard",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "life-extension-senolytic-activator": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 312,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Proprietary Blend",
+    "unit": "mg"
+   },
+   {
+    "amount": 56,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Fisetin",
+    "unit": "mg"
+   },
+   {
+    "amount": 109,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Galactomannans",
+    "unit": "mg"
+   },
+   {
+    "amount": 275,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Theaflavins",
+    "unit": "mg"
+   },
+   {
+    "amount": 74,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Bio-Quercetin Phytosome",
+    "unit": "mg"
+   },
+   {
+    "amount": 25,
+    "in_blend": true,
+    "position": 5,
+    "raw_name": "Quercetin",
+    "unit": "mg"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 6,
+    "raw_name": "Phosphatidylcholine Complex",
+    "unit": "NP"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 7,
+    "raw_name": "Apigenin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328654",
+  "product": "Senolytic Activator",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 3,
+    "minDailyServings": 1,
+    "minQuantity": 3,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-skin-restoring-ceramides": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 350,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Ceratiq Wheat (Triticum vulgare) oil extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "182373",
+  "product": "Skin Restoring Ceramides",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": null,
+    "maxQuantity": 1,
+    "minDailyServings": null,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Liquid Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "life-extension-tart-cherry-with-cherrypure": {
+  "brand": "Life Extension",
+  "ingredients": [
+   {
+    "amount": 480,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "CherryPURE",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328723",
+  "product": "Tart Cherry with CherryPURE",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "mytrition-l-arginine": {
+  "brand": "MyTrition",
+  "ingredients": [
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin B6",
+    "unit": "mg"
+   },
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "L-Arginine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "81308",
+  "product": "L-Arginine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "nature-made-hair-skin-nails": {
+  "brand": "Nature Made",
+  "ingredients": [
+   {
+    "amount": 750,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin A",
+    "unit": "mcg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Vitamin C",
+    "unit": "mg"
+   },
+   {
+    "amount": 2500,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Biotin",
+    "unit": "mcg"
+   },
+   {
+    "amount": 11,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Zinc",
+    "unit": "mg"
+   },
+   {
+    "amount": 0.9,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Copper",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "271631",
+  "product": "Hair-Skin-Nails",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "nature-made-l-theanine-chewable-200-mg": {
+  "brand": "Nature Made",
+  "ingredients": [
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Carbohydrates",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Total Sugars",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Sodium",
+    "unit": "mg"
+   },
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "L-Theanine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "313831",
+  "product": "L-Theanine Chewable 200 mg Tropical Fruit",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Tablet(s)"
+   }
+  ]
+ },
+ "nature-made-melatonin-200-mg-l-theanine": {
+  "brand": "Nature Made",
+  "ingredients": [
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "L-Theanine",
+    "unit": "mg"
+   },
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Melatonin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "271095",
+  "product": "Melatonin + 200 mg L-Theanine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "nature-made-super-b-complex": {
+  "brand": "Nature Made",
+  "ingredients": [
+   {
+    "amount": 150,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin C",
+    "unit": "mg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Thiamine",
+    "unit": "mg"
+   },
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Riboflavin",
+    "unit": "mg"
+   },
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Niacin",
+    "unit": "mg"
+   },
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Vitamin B6",
+    "unit": "mg"
+   },
+   {
+    "amount": 665,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "Folate",
+    "unit": "mcg DFE"
+   },
+   {
+    "amount": 400,
+    "in_blend": true,
+    "position": 6,
+    "raw_name": "Folic Acid",
+    "unit": "mcg"
+   },
+   {
+    "amount": 15,
+    "in_blend": false,
+    "position": 7,
+    "raw_name": "Vitamin B12",
+    "unit": "mcg"
+   },
+   {
+    "amount": 30,
+    "in_blend": false,
+    "position": 8,
+    "raw_name": "Biotin",
+    "unit": "mcg"
+   },
+   {
+    "amount": 5.5,
+    "in_blend": false,
+    "position": 9,
+    "raw_name": "Pantothenic Acid",
+    "unit": "mg"
+   },
+   {
+    "amount": 35,
+    "in_blend": false,
+    "position": 10,
+    "raw_name": "Calcium",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "271526",
+  "product": "Super B-Complex",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Tablet(s)"
+   }
+  ]
+ },
+ "nature-made-vitamin-b-12-500-mcg": {
+  "brand": "Nature Made",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin B12",
+    "unit": "mcg"
+   }
+  ],
+  "label_id": "302756",
+  "product": "Vitamin B-12 500 mcg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Tablet(s)"
+   }
+  ]
+ },
+ "natures-craft-turmeric-curcumin": {
+  "brand": "Natures Craft",
+  "ingredients": [
+   {
+    "amount": 600,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Turmeric",
+    "unit": "mg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Turmeric",
+    "unit": "mg"
+   },
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "BioPerine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "228793",
+  "product": "Turmeric Curcumin",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "natures-way-riboflavin-vitamin-b2-100-mg": {
+  "brand": "Nature's Way",
+  "ingredients": [
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Riboflavin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328040",
+  "product": "Riboflavin Vitamin B2 100 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "new-sun-hyaluronic-acid": {
+  "brand": "New Sun",
+  "ingredients": [
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Sodium",
+    "unit": "mg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Hyaluronic Acid",
+    "unit": "mg"
+   },
+   {
+    "amount": 900,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "MSM",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "217946",
+  "product": "Hyaluronic Acid +",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "nhc-natural-healthy-concepts-n-acetyl-cysteine": {
+  "brand": "NHC Natural Healthy Concepts",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "N-Acetyl-L-Cysteine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "230819",
+  "product": "N-Acetyl Cysteine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": null,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "nobi-nutrition-sambucus-elderberry": {
+  "brand": "Nobi Nutrition",
+  "ingredients": [
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Elderberry fruit extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "246787",
+  "product": "Sambucus Elderberry",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "now-acerola-4-1-extract-powder": {
+  "brand": "NOW",
+  "ingredients": [
+   {
+    "amount": 15,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Carbohydrate",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 160,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Vitamin C",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "313547",
+  "product": "Acerola 4:1 Extract Powder",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 3.2,
+    "minDailyServings": 1,
+    "minQuantity": 3.2,
+    "notes": "1 Level Teaspoon",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "now-b-2-100-mg": {
+  "brand": "NOW",
+  "ingredients": [
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Riboflavin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "313570",
+  "product": "B-2 100 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "now-boron-3-mg": {
+  "brand": "NOW",
+  "ingredients": [
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Boron",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "244909",
+  "product": "Boron 3 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Veg Capsule(s)"
+   }
+  ]
+ },
+ "now-boswellia-extract-plus-turmeric-root": {
+  "brand": "NOW",
+  "ingredients": [
+   {
+    "amount": 600,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Boswellia extract",
+    "unit": "mg"
+   },
+   {
+    "amount": 15,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Turmeric",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "13380",
+  "product": "Extra Strength Boswellia Extract Plus Turmeric Root",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Vegetarian Capsule(s)"
+   }
+  ]
+ },
+ "now-extra-strength-lecithin": {
+  "brand": "NOW",
+  "ingredients": [
+   {
+    "amount": 30,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "{Calories}"
+   },
+   {
+    "amount": 20,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Calories from Fat",
+    "unit": "{Calories}"
+   },
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Total Fat",
+    "unit": "g"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Saturated Fat",
+    "unit": "g"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Trans Fat",
+    "unit": "g"
+   },
+   {
+    "amount": 2,
+    "in_blend": true,
+    "position": 5,
+    "raw_name": "Polyunsaturated Fat",
+    "unit": "g"
+   },
+   {
+    "amount": 3.6,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Soy Lecithin",
+    "unit": "g"
+   },
+   {
+    "amount": 1.14,
+    "in_blend": true,
+    "position": 7,
+    "raw_name": "Phosphatidyl Choline",
+    "unit": "g"
+   }
+  ],
+  "label_id": "13590",
+  "product": "Extra Strength Lecithin",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 3,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "now-gamma-e-tocopherols": {
+  "brand": "NOW",
+  "ingredients": [
+   {
+    "amount": 40,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin E",
+    "unit": "IU"
+   },
+   {
+    "amount": 240,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Mixed Tocopherols",
+    "unit": "mg"
+   },
+   {
+    "amount": 140,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Gamma-Tocopherol",
+    "unit": "mg"
+   },
+   {
+    "amount": 30,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Delta Tocopherol",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "14558",
+  "product": "Gamma E Tocopherols",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "now-l-tyrosine": {
+  "brand": "NOW",
+  "ingredients": [
+   {
+    "amount": 350,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "L-Tyrosine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "244425",
+  "product": "L-Tyrosine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 0.35,
+    "minDailyServings": 1,
+    "minQuantity": 0.35,
+    "notes": "1/4 Level Teaspoon",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "now-maca-500-mg": {
+  "brand": "NOW",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Maca",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "313572",
+  "product": "Maca 500 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Veg Capsule(s)"
+   }
+  ]
+ },
+ "now-magnesium-malate-caps": {
+  "brand": "NOW",
+  "ingredients": [
+   {
+    "amount": 95,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Magnesium",
+    "unit": "mg"
+   },
+   {
+    "amount": 841,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Magnesium Malate",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "313611",
+  "product": "Magnesium Malate Caps",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 3,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Veg Capsule(s)"
+   }
+  ]
+ },
+ "now-melatonin-5-mg": {
+  "brand": "NOW",
+  "ingredients": [
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Melatonin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "313770",
+  "product": "Melatonin 5 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Tablet(s)"
+   }
+  ]
+ },
+ "now-sports-beta-alanine-powder": {
+  "brand": "NOW Sports",
+  "ingredients": [
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "CarnoSyn",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "314248",
+  "product": "Beta-Alanine Powder",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 4,
+    "maxQuantity": 2,
+    "minDailyServings": 3,
+    "minQuantity": 2,
+    "notes": "1/2 Level Teaspoon",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "now-tribulus-1000-mg": {
+  "brand": "NOW Sports",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Tribulus terrestris",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "28476",
+  "product": "Tribulus 1,000 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Tablet(s)"
+   }
+  ]
+ },
+ "nutracraft-rhodiola-rosea": {
+  "brand": "Nutracraft",
+  "ingredients": [
+   {
+    "amount": 900,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Rhodiola extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "246565",
+  "product": "Rhodiola Rosea",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "nutrakey-health-performance-l-citrulline-malate": {
+  "brand": "NutraKey Health Performance",
+  "ingredients": [
+   {
+    "amount": 2000,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "L-Citrulline Malate",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "240137",
+  "product": "L-Citrulline Malate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 2,
+    "minDailyServings": 2,
+    "minQuantity": 2,
+    "notes": "1 scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "nutricology-calcium-citrate": {
+  "brand": "NutriCology",
+  "ingredients": [
+   {
+    "amount": 150,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calcium",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "234781",
+  "product": "Calcium Citrate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "nutricology-magnesium-citrate": {
+  "brand": "NutriCology",
+  "ingredients": [
+   {
+    "amount": 170,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Magnesium",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "235550",
+  "product": "Magnesium Citrate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "nutricology-potassium-citrate": {
+  "brand": "NutriCology",
+  "ingredients": [
+   {
+    "amount": 99,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Potassium",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "234783",
+  "product": "Potassium Citrate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "ol-olympian-labs-ubiquinol": {
+  "brand": "OL Olympian Labs",
+  "ingredients": [
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Ubiquinol",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "9928",
+  "product": "Ubiquinol",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "oregons-wild-harvest-ashwagandha": {
+  "brand": "Oregon's Wild Harvest",
+  "ingredients": [
+   {
+    "amount": 1200,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Ashwagandha",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "323200",
+  "product": "Ashwagandha",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 3,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "procaps-laboratories-chondroitin-sulfate-1200": {
+  "brand": "ProCaps Laboratories",
+  "ingredients": [
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin C",
+    "unit": "mg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Calcium",
+    "unit": "mg"
+   },
+   {
+    "amount": 1200,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Chondroitin Sulfate",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "248425",
+  "product": "Chondroitin Sulfate 1200",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 3,
+    "minDailyServings": 1,
+    "minQuantity": 3,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "procaps-laboratories-quercetin-500": {
+  "brand": "ProCaps Laboratories",
+  "ingredients": [
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin C",
+    "unit": "mg"
+   },
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Quercetin Phospholipid Complex",
+    "unit": "mg"
+   },
+   {
+    "amount": 235,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Quercetin",
+    "unit": "mg"
+   },
+   {
+    "amount": 135,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Phospholipids",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "320266",
+  "product": "Quercetin 500",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "protocol-for-life-balance-glycine": {
+  "brand": "Protocol For Life Balance",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Glycine",
+    "unit": "g"
+   }
+  ],
+  "label_id": "14922",
+  "product": "Glycine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 0.25,
+    "minDailyServings": 1,
+    "minQuantity": 0.25,
+    "notes": "1 g",
+    "order": 1,
+    "unit": "tsp"
+   }
+  ]
+ },
+ "protocol-for-life-balance-high-potency-d3-10-000-iu-cholecalciferol": {
+  "brand": "Protocol For Life Balance",
+  "ingredients": [
+   {
+    "amount": 250,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin D3",
+    "unit": "mcg"
+   }
+  ],
+  "label_id": "72917",
+  "product": "High Potency D3 10,000 IU Cholecalciferol",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Veg Capsule(s)"
+   }
+  ]
+ },
+ "pure-advantage-creatine-monohydrate": {
+  "brand": "Pure Advantage",
+  "ingredients": [
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Creatine Monohydrate",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "231495",
+  "product": "Creatine Monohydrate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 5,
+    "minDailyServings": 1,
+    "minQuantity": 3,
+    "notes": "3/5-1 Teaspoon",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "pure-encapsulations-alpha-lipoic-acid-600-mg": {
+  "brand": "Pure Encapsulations",
+  "ingredients": [
+   {
+    "amount": 600,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Alpha Lipoic Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "293885",
+  "product": "Alpha Lipoic Acid 600 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "pure-encapsulations-amino-nr": {
+  "brand": "Pure Encapsulations",
+  "ingredients": [
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 3.3,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Vitamin B6",
+    "unit": "mg"
+   },
+   {
+    "amount": 1000,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Vitamin B12",
+    "unit": "mcg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Alpha-Lipoic Acid",
+    "unit": "mg"
+   },
+   {
+    "amount": 77,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "L-Histidine",
+    "unit": "mg"
+   },
+   {
+    "amount": 117,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "L-Isoleucine",
+    "unit": "mg"
+   },
+   {
+    "amount": 207,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "L-Leucine",
+    "unit": "mg"
+   },
+   {
+    "amount": 225,
+    "in_blend": false,
+    "position": 7,
+    "raw_name": "L-Lysine Hydrochloride Monohydrate",
+    "unit": "mg"
+   },
+   {
+    "amount": 158,
+    "in_blend": false,
+    "position": 8,
+    "raw_name": "L-Methionine",
+    "unit": "mg"
+   },
+   {
+    "amount": 86,
+    "in_blend": false,
+    "position": 9,
+    "raw_name": "L-Phenylalanine",
+    "unit": "mg"
+   },
+   {
+    "amount": 104,
+    "in_blend": false,
+    "position": 10,
+    "raw_name": "L-Threonine",
+    "unit": "mg"
+   },
+   {
+    "amount": 113,
+    "in_blend": false,
+    "position": 11,
+    "raw_name": "L-Valine",
+    "unit": "mg"
+   },
+   {
+    "amount": 41,
+    "in_blend": false,
+    "position": 12,
+    "raw_name": "L-Alanine",
+    "unit": "mg"
+   },
+   {
+    "amount": 68,
+    "in_blend": false,
+    "position": 13,
+    "raw_name": "L-Arginine Hydrochloride",
+    "unit": "mg"
+   },
+   {
+    "amount": 338,
+    "in_blend": false,
+    "position": 14,
+    "raw_name": "L-Glutamine",
+    "unit": "mg"
+   },
+   {
+    "amount": 68,
+    "in_blend": false,
+    "position": 15,
+    "raw_name": "Glycine",
+    "unit": "mg"
+   },
+   {
+    "amount": 135,
+    "in_blend": false,
+    "position": 16,
+    "raw_name": "L-Proline",
+    "unit": "mg"
+   },
+   {
+    "amount": 68,
+    "in_blend": false,
+    "position": 17,
+    "raw_name": "L-Serine",
+    "unit": "mg"
+   },
+   {
+    "amount": 36,
+    "in_blend": false,
+    "position": 18,
+    "raw_name": "L-Tyrosine",
+    "unit": "mg"
+   },
+   {
+    "amount": 33,
+    "in_blend": false,
+    "position": 19,
+    "raw_name": "L-Tryptophan",
+    "unit": "mg"
+   },
+   {
+    "amount": 23,
+    "in_blend": false,
+    "position": 20,
+    "raw_name": "Taurine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "293887",
+  "product": "Amino-NR",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 3,
+    "minDailyServings": 1,
+    "minQuantity": 3,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "pure-encapsulations-ascorbyl-palmitate": {
+  "brand": "Pure Encapsulations",
+  "ingredients": [
+   {
+    "amount": 190,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin C",
+    "unit": "mg"
+   },
+   {
+    "amount": 450,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Ascorbyl Palmitate",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "293890",
+  "product": "Ascorbyl Palmitate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "pure-encapsulations-cats-claw": {
+  "brand": "Pure Encapsulations",
+  "ingredients": [
+   {
+    "amount": 450,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Cat's Claw (Uncaria tomentosa) extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "293929",
+  "product": "Cat's Claw",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "pure-encapsulations-glycine": {
+  "brand": "Pure Encapsulations",
+  "ingredients": [
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 1500,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Glycine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "277695",
+  "product": "Glycine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 3,
+    "minDailyServings": 1,
+    "minQuantity": 3,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "pure-encapsulations-l-tryptophan": {
+  "brand": "Pure Encapsulations",
+  "ingredients": [
+   {
+    "amount": 6.7,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin B6",
+    "unit": "mg"
+   },
+   {
+    "amount": 1000,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "TryptoPure L-Tryptophan",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "294000",
+  "product": "L-Tryptophan",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "pure-encapsulations-lycopene-20-mg": {
+  "brand": "Pure Encapsulations",
+  "ingredients": [
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Lycopene",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "277768",
+  "product": "Lycopene 20 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel Capsule(s)"
+   }
+  ]
+ },
+ "pure-encapsulations-maca-3": {
+  "brand": "Pure Encapsulations",
+  "ingredients": [
+   {
+    "amount": 225,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Maca Tuber Extract",
+    "unit": "mg"
+   },
+   {
+    "amount": 225,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Maca Tuber Extract",
+    "unit": "mg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Maca Tuber Extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "302462",
+  "product": "Maca-3",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "pure-encapsulations-pantothenic-acid": {
+  "brand": "Pure Encapsulations",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Pantothenic Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "278024",
+  "product": "Pantothenic Acid",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "pure-encapsulations-probiotic-50b": {
+  "brand": "Pure Encapsulations",
+  "ingredients": [
+   {
+    "amount": 0,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Probiotic Blend",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Lactobacillus plantarum LP-115",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Lactobacillus acidophilus LA-14",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Lactobacillus rhamnosus LR-32",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Bifidobacterium animalis lactis BL-04",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 5,
+    "raw_name": "Bifidobacterium longum BL-5",
+    "unit": "NP"
+   }
+  ],
+  "label_id": "294040",
+  "product": "Probiotic 50B",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "pure-encapsulations-selenium-selenomethionine": {
+  "brand": "Pure Encapsulations",
+  "ingredients": [
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Selenium",
+    "unit": "mcg"
+   }
+  ],
+  "label_id": "184923",
+  "product": "Selenium (Selenomethionine)",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "pure-myo-inositol": {
+  "brand": "Pure",
+  "ingredients": [
+   {
+    "amount": 1860,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Myo-Inositol",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "248703",
+  "product": "Myo-Inositol",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 4,
+    "minDailyServings": 1,
+    "minQuantity": 4,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "pure-prescriptions-zinc-picolinate": {
+  "brand": "Pure Prescriptions",
+  "ingredients": [
+   {
+    "amount": 30,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Zinc",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "248640",
+  "product": "Zinc Picolinate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "quality-of-life-labs-vitapqq-pyrroloquinoline-quinone": {
+  "brand": "Quality Of Life Labs",
+  "ingredients": [
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Pyrroloquinoline Quinone Disodium Salt",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "1700",
+  "product": "VitaPQQ Pyrroloquinoline Quinone",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "solgar-earth-source-fermented-koji-iron-27-mg": {
+  "brand": "Solgar",
+  "ingredients": [
+   {
+    "amount": 27,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Iron",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "304565",
+  "product": "Earth Source Food Fermented Koji Iron 27 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Vegetable Capsule(s)"
+   }
+  ]
+ },
+ "solgar-echinacea-herb-extract": {
+  "brand": "Solgar",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Total Carbohydrates",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 125,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "standardized Echinacea extract",
+    "unit": "mg"
+   },
+   {
+    "amount": 300,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "raw Echinacea powder",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "216682",
+  "product": "Echinacea Herb Extract",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Vegetable Capsule(s)"
+   }
+  ]
+ },
+ "solgar-flavo-zinc-lozenge": {
+  "brand": "Solgar",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Total Carbohydrates",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Total Sugars",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 23,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Zinc",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "240993",
+  "product": "Flavo-Zinc Lozenge Natural Lemon Lime Flavored",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Lozenge(s)"
+   }
+  ]
+ },
+ "solgar-megasorb-coq-10-100-mg": {
+  "brand": "Solgar",
+  "ingredients": [
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Megasorb Coenzyme Q-10",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "201089",
+  "product": "Megasorb CoQ-10 100 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "solgar-sublingual-methylcobalamin-b12-5000-mcg": {
+  "brand": "Solgar",
+  "ingredients": [
+   {
+    "amount": 5000,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin B12",
+    "unit": "mcg"
+   }
+  ],
+  "label_id": "201474",
+  "product": "Sublingual Methylcobalamin (Vitamon B12) 5000 mcg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "nugget(s)"
+   }
+  ]
+ },
+ "solgar-vegetal-silica": {
+  "brand": "Solgar",
+  "ingredients": [
+   {
+    "amount": 23,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vegetal Silica extract",
+    "unit": "mg"
+   },
+   {
+    "amount": 337,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "raw Vegetal Silica powder",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "216405",
+  "product": "Vegetal Silica",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "sports-research-astaxanthin-12-mg": {
+  "brand": "Sports Research",
+  "ingredients": [
+   {
+    "amount": 12,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Icelandic Astalif",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "326237",
+  "product": "Astaxanthin 12 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "sports-research-biotin-2500-mcg": {
+  "brand": "Sports Research",
+  "ingredients": [
+   {
+    "amount": 2500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Biotin",
+    "unit": "mcg"
+   }
+  ],
+  "label_id": "326240",
+  "product": "Biotin 2500 mcg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Veggie Softgel(s)"
+   }
+  ]
+ },
+ "sports-research-collagen-peptides-matcha": {
+  "brand": "Sports Research",
+  "ingredients": [
+   {
+    "amount": 40,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 9,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Protein",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 30,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Sodium",
+    "unit": "mg"
+   },
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Bovine Collagen Peptides, Hydrolyzed",
+    "unit": "mg"
+   },
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Matcha Green Tea, Powder",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "326246",
+  "product": "Collagen Peptides Matcha 10g",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 12,
+    "minDailyServings": 1,
+    "minQuantity": 12,
+    "notes": "1 scoop (12 g)",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "sports-research-evening-primrose-oil-500-mg": {
+  "brand": "SR Sports Research",
+  "ingredients": [
+   {
+    "amount": 15,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 1.5,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1500,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Evening Primrose Seed Oil",
+    "unit": "mg"
+   },
+   {
+    "amount": 140,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Gamma Linoleic Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "268445",
+  "product": "Evening Primrose Oil 500 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 3,
+    "minDailyServings": 1,
+    "minQuantity": 3,
+    "notes": "",
+    "order": 1,
+    "unit": "Liquid Softgel(s)"
+   }
+  ]
+ },
+ "sports-research-hydrolyzed-collagen-peptides-vanilla": {
+  "brand": "SR Sports Research",
+  "ingredients": [
+   {
+    "amount": 40,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Protein",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 40,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Sodium",
+    "unit": "mg"
+   },
+   {
+    "amount": 11,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "hydrolyzed Bovine Collagen Peptides",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "268450",
+  "product": "Hydrolyzed Collagen Peptides Vanilla",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 11.65,
+    "minDailyServings": 1,
+    "minQuantity": 11.65,
+    "notes": "1 Scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "sports-research-magnesium-l-threonate-2000-mg": {
+  "brand": "Sports Research",
+  "ingredients": [
+   {
+    "amount": 144,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Magnesium",
+    "unit": "mg"
+   },
+   {
+    "amount": 2000,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Magtein",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "334884",
+  "product": "Magnesium L-Threonate 2000 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 3,
+    "minDailyServings": 1,
+    "minQuantity": 3,
+    "notes": "",
+    "order": 1,
+    "unit": "Veggie Capsule(s)"
+   }
+  ]
+ },
+ "sports-research-marine-collagen-unflavored": {
+  "brand": "Sports Research",
+  "ingredients": [
+   {
+    "amount": 35,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 9,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Protein",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Sodium",
+    "unit": "mg"
+   },
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Marine Collagen Peptides, Hydrolyzed",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "326266",
+  "product": "Marine Collagen Unflavored",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 10,
+    "minDailyServings": 1,
+    "minQuantity": 10,
+    "notes": "1 Scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "sports-research-turmeric-curcumin-c3-complex": {
+  "brand": "Sports Research",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Curcumin C3 Complex",
+    "unit": "mg"
+   },
+   {
+    "amount": 475,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Curcuminoids",
+    "unit": "mg"
+   },
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Bioperine",
+    "unit": "mg"
+   },
+   {
+    "amount": 4.75,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Piperine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "317006",
+  "product": "Turmeric Curcumin C3 Complex",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "sports-research-whey-protein-isolate-dutch-chocolate": {
+  "brand": "SR Sports Research",
+  "ingredients": [
+   {
+    "amount": 150,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 4,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 3.5,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Saturated Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 4,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Total Carbohydrate",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 2,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Dietary Fiber",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": true,
+    "position": 5,
+    "raw_name": "Total Sugars",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Protein",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 7,
+    "raw_name": "Vitamin D",
+    "unit": "mcg"
+   },
+   {
+    "amount": 133,
+    "in_blend": false,
+    "position": 8,
+    "raw_name": "Calcium",
+    "unit": "mg"
+   },
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 9,
+    "raw_name": "Iron",
+    "unit": "mg"
+   },
+   {
+    "amount": 220,
+    "in_blend": false,
+    "position": 10,
+    "raw_name": "Sodium",
+    "unit": "mg"
+   },
+   {
+    "amount": 347,
+    "in_blend": false,
+    "position": 11,
+    "raw_name": "Potassium",
+    "unit": "mg"
+   },
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 12,
+    "raw_name": "Whey Protein Isolate",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 13,
+    "raw_name": "Medium Chain Triglycerides",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1000,
+    "in_blend": false,
+    "position": 14,
+    "raw_name": "L-Leucine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "268690",
+  "product": "Whey Protein Isolate Dutch Chocolate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 40.5,
+    "minDailyServings": 1,
+    "minQuantity": 40.5,
+    "notes": "1 Scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "sundown-naturals-vitamin-a-10-000-iu": {
+  "brand": "Sundown Naturals",
+  "ingredients": [
+   {
+    "amount": 10000,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin A",
+    "unit": "IU"
+   }
+  ],
+  "label_id": "69557",
+  "product": "Vitamin A 10,000 IU",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "superiorlabs-l-lysine": {
+  "brand": "SuperiorLabs",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "L-Lysine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "255999",
+  "product": "L-Lysine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": null,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "superiorlabs-vitamin-b6": {
+  "brand": "SuperiorLabs",
+  "ingredients": [
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin B6",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "74396",
+  "product": "Vitamin B6",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "supersmart-bacopa-monnieri": {
+  "brand": "SuperSmart",
+  "ingredients": [
+   {
+    "amount": 1500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Bacopa monnieri standardized leaf extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "250150",
+  "product": "Bacopa Monnieri",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "supersmart-spermidine-3-mg": {
+  "brand": "SuperSmart",
+  "ingredients": [
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Spermidine",
+    "unit": "mg"
+   },
+   {
+    "amount": 300,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Rice Extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "332497",
+  "product": "Spermidine 3 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "swanson-5-htp-50-mg": {
+  "brand": "Swanson",
+  "ingredients": [
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "L-5-Hydroxytryptophan",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "308441",
+  "product": "5-HTP 50 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "swanson-bamboo-extract": {
+  "brand": "Swanson",
+  "ingredients": [
+   {
+    "amount": 300,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Bamboo Leaf, Stem Extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "308476",
+  "product": "Bamboo Extract",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "swanson-black-cumin-seed-oil-500-mg": {
+  "brand": "Swanson",
+  "ingredients": [
+   {
+    "amount": 3.4,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin E",
+    "unit": "mg"
+   },
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Black Cumin Seed Oil",
+    "unit": "mg"
+   },
+   {
+    "amount": 200,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Linoleic Acid",
+    "unit": "mg"
+   },
+   {
+    "amount": 85,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Oleic Acid",
+    "unit": "mg"
+   },
+   {
+    "amount": 10,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Stearic Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "308482",
+  "product": "Black Cumin Seed Oil 500 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Liquid Veggie Capsule(s)"
+   }
+  ]
+ },
+ "swanson-boswellia-serrata-extract-125-mg": {
+  "brand": "Swanson",
+  "ingredients": [
+   {
+    "amount": 125,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "5-LOXIN",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "308483",
+  "product": "Boswellia serrata Extract 125 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Veggie Capsule(s)"
+   }
+  ]
+ },
+ "swanson-chinese-skullcap-400-mg": {
+  "brand": "Swanson",
+  "ingredients": [
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Chinese Skullcap Root Concentrate",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "308550",
+  "product": "Chinese Skullcap 400 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "swanson-fisetin-100-mg": {
+  "brand": "Swanson",
+  "ingredients": [
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Fisetin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "265103",
+  "product": "Fisetin 100 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Veggie Capsule(s)"
+   }
+  ]
+ },
+ "swanson-full-spectrum-fo-ti-500-mg": {
+  "brand": "Swanson",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Fo-Ti",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "308558",
+  "product": "Full Spectrum Fo-Ti 500 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "swanson-full-spectrum-gotu-kola-435-mg": {
+  "brand": "Swanson",
+  "ingredients": [
+   {
+    "amount": 435,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Gotu Kola",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "308561",
+  "product": "Full Spectrum Gotu Kola 435 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "swanson-full-spectrum-lavender-flower-400-mg": {
+  "brand": "Swanson Premium Brand",
+  "ingredients": [
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Lavender",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "176109",
+  "product": "Full Spectrum Lavender Flower 400 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "swanson-huperzine-a-200-mcg": {
+  "brand": "Swanson",
+  "ingredients": [
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Huperzine A",
+    "unit": "mcg"
+   }
+  ],
+  "label_id": "308602",
+  "product": "Huperzine A 200 mcg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "swanson-inulin": {
+  "brand": "Swanson",
+  "ingredients": [
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 0,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 0,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Sodium",
+    "unit": "mg"
+   },
+   {
+    "amount": 5,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Total Carbohydrates",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 5,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Dietary Fiber",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 0,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "Protein",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "308631",
+  "product": "Inulin",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": null,
+    "maxQuantity": 5,
+    "minDailyServings": 1,
+    "minQuantity": 5,
+    "notes": "1 Scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "swanson-l-methionine-500-mg": {
+  "brand": "Swanson",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "L-Methionine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "308438",
+  "product": "L-Methionine 500 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "swanson-lactobacillus-rhamnosus-with-fos": {
+  "brand": "Swanson",
+  "ingredients": [
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "NutraFlora scFOS",
+    "unit": "mg"
+   },
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Lactobacillus rhamnosus",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "308638",
+  "product": "Lactobacillus rhamnosus with FOS",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Veggie EMBOCAP(s) AP"
+   }
+  ]
+ },
+ "swanson-oregano-oil-liquid-extract": {
+  "brand": "Swanson",
+  "ingredients": [
+   {
+    "amount": 13,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Oregano Essential Oil",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "308459",
+  "product": "Oregano Oil Liquid Extract Alcohol & Sugar Free",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 0.17,
+    "minDailyServings": 3,
+    "minQuantity": 0.17,
+    "notes": "4 Drops",
+    "order": 1,
+    "unit": "mL"
+   }
+  ]
+ },
+ "swanson-rosemary-extract-500-mg": {
+  "brand": "Swanson Superior Herbs",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Rosemary extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "176328",
+  "product": "Rosemary Extract 500 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "swanson-sprouted-broccoli-seed-400-mg": {
+  "brand": "Swanson GreenFoods Formulas",
+  "ingredients": [
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "organic sprouted Broccoli",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "176236",
+  "product": "Sprouted Broccoli Seed 400 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": null,
+    "maxQuantity": 1,
+    "minDailyServings": null,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Veggie Capsule(s)"
+   }
+  ]
+ },
+ "teraputics-pure-life-magnesium-l-threonate": {
+  "brand": "Teraputics Pure Life",
+  "ingredients": [
+   {
+    "amount": 144,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Magnesium",
+    "unit": "mg"
+   },
+   {
+    "amount": 2000,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Magnesium L-Threonate",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "245277",
+  "product": "Magnesium L-Threonate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": null,
+    "maxQuantity": 4,
+    "minDailyServings": null,
+    "minQuantity": 4,
+    "notes": "",
+    "order": 1,
+    "unit": "Vegan Capsule(s)"
+   }
+  ]
+ },
+ "thorne-acetyl-l-carnitine-500-mg": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Acetyl-L-Carnitine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "284202",
+  "product": "Acetyl-L-Carnitine 500 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-amino-complex-lemon": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Carbohydrate",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 1.25,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "L-Leucine",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 650,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "L-Lysine",
+    "unit": "mg"
+   },
+   {
+    "amount": 625,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "L-Isoleucine",
+    "unit": "mg"
+   },
+   {
+    "amount": 625,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "L-Valine",
+    "unit": "mg"
+   },
+   {
+    "amount": 350,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "L-Threonine",
+    "unit": "mg"
+   },
+   {
+    "amount": 150,
+    "in_blend": false,
+    "position": 7,
+    "raw_name": "L-Histidine",
+    "unit": "mg"
+   },
+   {
+    "amount": 150,
+    "in_blend": false,
+    "position": 8,
+    "raw_name": "L-Cysteine",
+    "unit": "mg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 9,
+    "raw_name": "L-Phenylalanine",
+    "unit": "mg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 10,
+    "raw_name": "L-Methionine",
+    "unit": "mg"
+   },
+   {
+    "amount": 30,
+    "in_blend": false,
+    "position": 11,
+    "raw_name": "L-Tyrosine",
+    "unit": "mg"
+   },
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 12,
+    "raw_name": "L-Tryptophan",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "323098",
+  "product": "Amino Complex Lemon Flavored",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 7.7,
+    "minDailyServings": 1,
+    "minQuantity": 7.7,
+    "notes": "One scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "thorne-basic-b-complex": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 110,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Thiamine",
+    "unit": "mg"
+   },
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Riboflavin",
+    "unit": "mg"
+   },
+   {
+    "amount": 140,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Niacin",
+    "unit": "mg"
+   },
+   {
+    "amount": 130,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Niacinamide",
+    "unit": "mg"
+   },
+   {
+    "amount": 10,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Niacin",
+    "unit": "mg"
+   },
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "Vitamin B6",
+    "unit": "mg"
+   },
+   {
+    "amount": 667,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Folate",
+    "unit": "mcg"
+   },
+   {
+    "amount": 400,
+    "in_blend": true,
+    "position": 7,
+    "raw_name": "L-5-Methyltetrahydrofolate",
+    "unit": "mcg"
+   },
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 8,
+    "raw_name": "Vitamin B12",
+    "unit": "mcg"
+   },
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 9,
+    "raw_name": "Biotin",
+    "unit": "mcg"
+   },
+   {
+    "amount": 110,
+    "in_blend": false,
+    "position": 10,
+    "raw_name": "Pantothenic Acid",
+    "unit": "mg"
+   },
+   {
+    "amount": 28,
+    "in_blend": false,
+    "position": 11,
+    "raw_name": "Choline",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "284189",
+  "product": "Basic B Complex",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-beta-alanine-sr": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 1.6,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "SR CarnoSyn",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "291773",
+  "product": "Beta Alanine-SR",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "order": 1,
+    "unit": "Tablet(s)"
+   }
+  ]
+ },
+ "thorne-biotin-8000-mcg": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 8,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Biotin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "336328",
+  "product": "Biotin 8000 mcg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-boswellia-phytosome": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 350,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Indian Frankincense Phytosome Complex",
+    "unit": "mg"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Boswellia serrata",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Phospholipid",
+    "unit": "NP"
+   }
+  ],
+  "label_id": "284197",
+  "product": "Boswellia Phytosome",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-broccoli-seed-extract": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin C",
+    "unit": "mg"
+   },
+   {
+    "amount": 145,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Mustard, Powder",
+    "unit": "mg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Sulforaphane Glucosinate",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "328824",
+  "product": "Broccoli Seed Extract",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-copper-bisglycinate": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 2,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Copper",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "291778",
+  "product": "Copper Bisglycinate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-curcumin-phytosome-1000-mg": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Meriva",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "328826",
+  "product": "Curcumin Phytosome 1000 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 2,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-florasport-20b": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 250,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Probiotic Blend",
+    "unit": "mg"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Lactobacillus paracasei UALpc-04",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Lactobacillus acidophilus UALa-01",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Bacillus subtilis DE111",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Bifidobacterium animalis lactis HN019",
+    "unit": "NP"
+   }
+  ],
+  "label_id": "298031",
+  "product": "FloraSport 20B",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-gi-relief": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 350,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Deglycyrrhizinated Licorice (DGL) extract",
+    "unit": "mg"
+   },
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Marshmallow Root Extract",
+    "unit": "mg"
+   },
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Slippery Elm",
+    "unit": "mg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Aloe vera, Dehydrate, Powder",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "337861",
+  "product": "GI Relief",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": null,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-glycine": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Glycine",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "291783",
+  "product": "Glycine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 2,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-iodine-and-tyrosine": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 225,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Iodine",
+    "unit": "mcg"
+   },
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "L-Tyrosine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "260453",
+  "product": "Iodine & Tyrosine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-iron-bisglycinate": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 25,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Ferrochel",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "321969",
+  "product": "Iron Bisglycinate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-joint-support-nutrients": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 98,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Potassium",
+    "unit": "mg"
+   },
+   {
+    "amount": 850,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Methyl Sulfonyl Methane",
+    "unit": "mg"
+   },
+   {
+    "amount": 750,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Glucosamine Sulfate",
+    "unit": "mg"
+   },
+   {
+    "amount": 350,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Indian Frankincense extract",
+    "unit": "mg"
+   },
+   {
+    "amount": 250,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Curcumin Phytosome Complex",
+    "unit": "mg"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 5,
+    "raw_name": "Curcuma longa extract",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 6,
+    "raw_name": "Phospholipid",
+    "unit": "NP"
+   },
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 7,
+    "raw_name": "Bromelain",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "284229",
+  "product": "Joint Support Nutrients",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 4,
+    "minDailyServings": 1,
+    "minQuantity": 4,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-l-arginine-plus": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 300,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin C",
+    "unit": "mg"
+   },
+   {
+    "amount": 920,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Folate",
+    "unit": "mcg DFE"
+   },
+   {
+    "amount": 552,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Quatrefolic",
+    "unit": "mcg"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "L-Arginine",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Greenselect",
+    "unit": "mg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 5,
+    "raw_name": "Bio-Enhanced",
+    "unit": "mg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 6,
+    "raw_name": "Trans-Resveratrol",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "336346",
+  "product": "L-Arginine Plus",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 3,
+    "minDailyServings": 2,
+    "minQuantity": 3,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-magnesium-bisglycinate": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Magnesium",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "298074",
+  "product": "Magnesium Bisglycinate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 3.11,
+    "minDailyServings": 1,
+    "minQuantity": 3.11,
+    "notes": "One Scoop",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "thorne-niacinamide": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 500,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Niacin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "337868",
+  "product": "Niacinamide",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-pantethine": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 250,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Pantethine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "291791",
+  "product": "Pantethine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-pharmagaba-250": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 250,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Gamma-Aminobutyric Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "284252",
+  "product": "PharmaGABA-250",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-phosphatidylserine": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 100,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Phosphatidylserine Isolate",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "323123",
+  "product": "Phosphatidylserine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-riboflavin-5-phosphate": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 36.5,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Riboflavin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "288632",
+  "product": "Riboflavin 5'-Phosphate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "thorne-super-epa-425-mg": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Fat",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 813,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Total Omega-3 Fatty Acids",
+    "unit": "mg"
+   },
+   {
+    "amount": 425,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "Eicosapentaenoic Acid",
+    "unit": "mg"
+   },
+   {
+    "amount": 270,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Docosahexaenoic Acid",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "313923",
+  "product": "Super EPA 425 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Gelcap(s)"
+   }
+  ]
+ },
+ "thorne-theanine": {
+  "brand": "Thorne",
+  "ingredients": [
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Suntheanine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "298051",
+  "product": "Theanine",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 3,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "trace-minerals-research-ionic-manganese-10-mg": {
+  "brand": "Trace Minerals Research",
+  "ingredients": [
+   {
+    "amount": 30,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Magnesium",
+    "unit": "mg"
+   },
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Manganese",
+    "unit": "mg"
+   },
+   {
+    "amount": 70,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Chloride",
+    "unit": "mg"
+   },
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Ionic Trace Minerals",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "78968",
+  "product": "Ionic Manganese 10 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1.25,
+    "minDailyServings": 1,
+    "minQuantity": 1.25,
+    "notes": "1/4 teaspoon",
+    "order": 1,
+    "unit": "mL"
+   }
+  ]
+ },
+ "village-vitality-sleep-with-valerian-and-melatonin": {
+  "brand": "Village Vitality",
+  "ingredients": [
+   {
+    "amount": 1000,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Proprietary Blend",
+    "unit": "mg"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 1,
+    "raw_name": "Valerian",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Hops",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 3,
+    "raw_name": "fresh Skullcap",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 4,
+    "raw_name": "Passion Flower",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 5,
+    "raw_name": "Chamomile",
+    "unit": "NP"
+   },
+   {
+    "amount": 0,
+    "in_blend": true,
+    "position": 6,
+    "raw_name": "fresh California Poppy",
+    "unit": "NP"
+   },
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 7,
+    "raw_name": "Melatonin",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "216782",
+  "product": "Sleep with Valerian & Melatonin",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 2,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Veggie Cap(s)"
+   }
+  ]
+ },
+ "vincos-magnesium-glycinate": {
+  "brand": "Vinco's",
+  "ingredients": [
+   {
+    "amount": 2000,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Magnesium Glycinate",
+    "unit": "mg"
+   },
+   {
+    "amount": 300,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Magnesium",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "33919",
+  "product": "Magnesium Glycinate",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 0.5,
+    "notes": "3-6 g",
+    "order": 1,
+    "unit": "Gram(s)"
+   }
+  ]
+ },
+ "vital-proteins-collagen-peptides": {
+  "brand": "Vital Proteins",
+  "ingredients": [
+   {
+    "amount": 10,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "Calorie(s)"
+   },
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Protein",
+    "unit": "Gram(s)"
+   },
+   {
+    "amount": 20,
+    "in_blend": false,
+    "position": 2,
+    "raw_name": "Sodium",
+    "unit": "mg"
+   },
+   {
+    "amount": 3.3,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Collagen Peptides",
+    "unit": "Gram(s)"
+   }
+  ],
+  "label_id": "246526",
+  "product": "Collagen Peptides",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 6,
+    "minDailyServings": 2,
+    "minQuantity": 6,
+    "notes": "",
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "vitamin-world-acidophilus-and-psyllium-husk": {
+  "brand": "Vitamin World",
+  "ingredients": [
+   {
+    "amount": 15,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Calories",
+    "unit": "{Calories}"
+   },
+   {
+    "amount": 3,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Total Carbohydrates",
+    "unit": "g"
+   },
+   {
+    "amount": 3,
+    "in_blend": true,
+    "position": 2,
+    "raw_name": "Dietary Fiber",
+    "unit": "g"
+   },
+   {
+    "amount": 4000,
+    "in_blend": false,
+    "position": 3,
+    "raw_name": "Psyllium Husk",
+    "unit": "mg"
+   },
+   {
+    "amount": 66.6,
+    "in_blend": false,
+    "position": 4,
+    "raw_name": "Lactobacillus Acidophilus",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "21135",
+  "product": "Acidophilus & Psyllium Husk",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 4,
+    "minDailyServings": 1,
+    "minQuantity": 4,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "vitamin-world-natural-e-400-iu-d-alpha-tocopherol": {
+  "brand": "Vitamin World",
+  "ingredients": [
+   {
+    "amount": 400,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Vitamin E",
+    "unit": "IU"
+   }
+  ],
+  "label_id": "60526",
+  "product": "Natural E-400 IU D-Alpha Tocopherol",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "wakunaga-of-america-kyolic-aged-garlic-extract": {
+  "brand": "Wakunaga of America",
+  "ingredients": [
+   {
+    "amount": 1,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Aged Garlic extract",
+    "unit": "mL"
+   }
+  ],
+  "label_id": "81014",
+  "product": "Kyolic Aged Garlic Extract",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 0.25,
+    "minDailyServings": 2,
+    "minQuantity": 0.25,
+    "notes": "1 capsule",
+    "order": 1,
+    "unit": "tsp"
+   }
+  ]
+ },
+ "wonder-laboratories-silymarin-milk-thistle": {
+  "brand": "Wonder Laboratories",
+  "ingredients": [
+   {
+    "amount": 250,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Milk Thistle",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "262670",
+  "product": "Silymarin Milk Thistle",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 2,
+    "maxQuantity": 1,
+    "minDailyServings": 2,
+    "minQuantity": 1,
+    "notes": "",
+    "order": 1,
+    "unit": "Softgel(s)"
+   }
+  ]
+ },
+ "woodstock-vitamins-l-theanine-200-mg": {
+  "brand": "Woodstock Vitamins",
+  "ingredients": [
+   {
+    "amount": 200,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "L-Theanine",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "263070",
+  "product": "L-Theanine 200 mg",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ },
+ "zhou-saw-palmetto": {
+  "brand": "ZHOU",
+  "ingredients": [
+   {
+    "amount": 450,
+    "in_blend": false,
+    "position": 0,
+    "raw_name": "Saw Palmetto",
+    "unit": "mg"
+   },
+   {
+    "amount": 50,
+    "in_blend": false,
+    "position": 1,
+    "raw_name": "Saw Palmetto berries extract",
+    "unit": "mg"
+   }
+  ],
+  "label_id": "71374",
+  "product": "Saw Palmetto",
+  "serving": [
+   {
+    "inSFB": true,
+    "maxDailyServings": 1,
+    "maxQuantity": 1,
+    "minDailyServings": 1,
+    "minQuantity": 1,
+    "order": 1,
+    "unit": "Capsule(s)"
+   }
+  ]
+ }
+}

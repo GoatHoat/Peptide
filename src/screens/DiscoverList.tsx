@@ -80,9 +80,15 @@ export function ProductRow({
   const intake = resolveIntake(entry, refs, age, sex, menstruates);
   const rda = intakeLabel(intake);
   const ul = limitLabel(intake);
+  /* Peptides are a reference library and nothing else: no amount, no upper
+     limit, no timing, ever. CLAUDE.md, legal.md and PROMPT_V2.md section 3 all
+     say so, and the reason is that a dose or a schedule for an unapproved
+     compound is the thing that got the first version of this app rejected.
+     Enforced here rather than by leaving the columns empty, because a column
+     that happens to be null today is not a rule. */
   const isSupp = (entry.kind ?? 'peptide') === 'supplement';
   const ev = entry.evidence ? EVIDENCE[entry.evidence] : null;
-  const asksMenstrual = !!onMenstruates && offersMenstrualStatus(entry, age, sex);
+  const asksMenstrual = isSupp && !!onMenstruates && offersMenstrualStatus(entry, age, sex);
   const chosen = picked ?? (menstruates === true ? 'yes' : menstruates === false ? 'no' : null);
 
   return (
@@ -95,8 +101,8 @@ export function ProductRow({
             {ev && <Pill icon="evidence" tone={entry.evidence!}>{ev.label}</Pill>}
             {isSupp && rda && <Pill icon="dose" tone="accent">{rda} a day</Pill>}
             {isSupp && !rda && <Pill icon="dose">No set intake</Pill>}
-            {ul && <Pill icon="limit">{ul} limit</Pill>}
-            {entry.timing && <Pill icon="timing">{TIMING_LABEL[entry.timing]}</Pill>}
+            {isSupp && ul && <Pill icon="limit">{ul} limit</Pill>}
+            {isSupp && entry.timing && <Pill icon="timing">{TIMING_LABEL[entry.timing]}</Pill>}
             {entry.product_form && <Pill icon="form">{entry.product_form}</Pill>}
             {!entry.product_form && entry.route && <Pill icon="route">{ROUTE_LABEL[entry.route] ?? entry.route}</Pill>}
             {entry.goal_tags?.slice(0, 2).map((g) => (
@@ -148,7 +154,7 @@ export function ProductRow({
             </div>
           )}
 
-          {entry.timing_note && <p className="prod-evidence t-caption">{entry.timing_note}</p>}
+          {isSupp && entry.timing_note && <p className="prod-evidence t-caption">{entry.timing_note}</p>}
 
           {preview === 'loading' && <div className="prod-preview-empty t-caption">Loading the paper…</div>}
 
@@ -175,6 +181,24 @@ export function ProductRow({
 
           {preview === null && (
             <div className="prod-preview-empty t-caption">No paper on file for this one yet.</div>
+          )}
+
+          {/* Two different sentences, because the two kinds of entry carry
+              different risks. A supplement card shows an intake and an upper
+              limit, which are the numbers most likely to be read as
+              instructions, so it says whose numbers they are. A peptide card
+              shows no numbers at all and says why — see legal.md. */}
+          {isSupp ? (
+            <p className="prod-disclaimer t-caption">
+              Reference intakes are the published NIH figures for your age and sex, not a
+              recommendation. Pepstack does not give medical advice — talk to a healthcare
+              professional before starting anything.
+            </p>
+          ) : (
+            <p className="prod-disclaimer t-caption">
+              Reference only. Pepstack gives no amount, no schedule and no guidance for
+              peptides — just what it is and the research below.
+            </p>
           )}
 
           <div className="prod-actions">
