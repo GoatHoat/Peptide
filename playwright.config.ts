@@ -12,6 +12,11 @@ import { BASE_URL, PORT, SUPABASE_ANON_KEY, SUPABASE_URL } from './tests/e2e/sup
  */
 export default defineConfig({
   testDir: './tests/e2e',
+  /* Compile the app once before the workers start. Vite transpiles on demand,
+     so without this the first navigation of a run pays for the whole module
+     graph and could outlast the test timeout — which read as a broken screen
+     rather than a cold server. See support/warmup.ts. */
+  globalSetup: './tests/e2e/support/warmup.ts',
   fullyParallel: true,
   workers: 2,
   // One retry, because this runs unattended overnight and a machine stall
