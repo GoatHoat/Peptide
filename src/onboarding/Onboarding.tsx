@@ -60,7 +60,9 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
         if (!rec) continue;
         await addScheduleItem(userId, {
           name: rec.name,
-          amount: '',
+          // the person's own reference intake where one exists; blank means
+          // there is no established amount and they set it themselves
+          amount: rec.amount,
           scheduled_time: `${item.time}:00`,
           glossary_id: rec.id,
           start_date: toISODate(new Date()),
@@ -191,6 +193,8 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           <Recommendations
             goalIds={state.goals}
             currentStack={state.currentStack}
+            age={state.profile.age}
+            sex={state.profile.gender}
             onDone={(chosen) => {
               setPicks(chosen);
               patch({ recommendations: chosen.map((c) => ({ id: c.id, selected: true })) });

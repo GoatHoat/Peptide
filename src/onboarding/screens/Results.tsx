@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Cta, OnboardIllustration, Screen, Sub, Title } from '../chrome';
 import { GOAL_BY_ID, DEFAULT_GOAL_IDS } from '../goals';
-import { listGlossary, type GlossaryEntry } from '../../lib/api';
+import {
+  getNutrientReference,
+  listGlossary,
+  pickReference,
+  type GlossaryEntry,
+  type NutrientReference,
+} from '../../lib/api';
 import { checkPlacement, fromMinutes, toMinutes, type ScheduledItem } from '../../lib/conflicts';
 import type { Meal } from '../store';
 
@@ -86,13 +92,25 @@ export interface Recommendation {
   why: string;
   route: string;
   selected: boolean;
+  /** the intake that applies to this person, where one is established */
+  amount: string;
 }
 
-export function useRecommendations(goalIds: string[], currentStack: string[]) {
+export function useRecommendations(
+  goalIds: string[],
+  currentStack: string[],
+  age?: number | null,
+  sex?: 'm' | 'f' | 'na' | null,
+) {
   const [entries, setEntries] = useState<GlossaryEntry[] | null>(null);
+  const [refs, setRefs] = useState<Record<string, NutrientReference[]>>({});
   useEffect(() => {
     listGlossary(200)
-      .then(setEntries)
+      .then((rows) => {
+        setEntries(rows);
+        return getNutrientReference(rows.map((r) => r.id));
+      })
+      .then((m) => m && setRefs(m))
       .catch(() => setEntries([]));
   }, []);
 
@@ -102,7 +120,13 @@ export function useRecommendations(goalIds: string[], currentStack: string[]) {
     const wanted = new Set(ids.flatMap((g) => GOAL_BY_ID[g]?.tags ?? []));
     const already = new Set(currentStack.map((s) => s.toLowerCase()));
 
+    /* Supplements only. Ranking peptides for a specific person is a
+       recommendation whether or not an amount is attached, and it is the same
+       rule the assistant is held to — enforced here in code rather than left
+       to whatever the tag overlap happens to return. Every goal was returning
+       two to four peptides in its top six before this. */
     const scored = entries
+      .filter((e) => (e.kind ?? 'peptide') === 'supplement')
       .map((e) => {
         const hits = (e.goal_tags ?? []).filter((t) => wanted.has(t));
         return { e, hits };
@@ -113,32 +137,40 @@ export function useRecommendations(goalIds: string[], currentStack: string[]) {
     const goalNames = ids.map((g) => GOAL_BY_ID[g]?.name ?? g);
 
     return {
-      picks: scored.slice(0, 6).map(({ e, hits }, i) => ({
-        id: e.id,
-        name: e.name,
-        route: e.route,
-        why: `Tagged ${hits.join(' and ')} — matches ${goalNames.length > 1 ? 'your goals' : goalNames[0]?.toLowerCase()}.`,
-        selected: i < 3,
-      })),
+      picks: scored.slice(0, 6).map(({ e, hits }, i) => {
+        const r = pickReference(refs[e.id], age, sex);
+        return {
+          id: e.id,
+          name: e.name,
+          route: e.route,
+          amount: r?.rda != null ? `${r.rda} ${r.unit}` : '',
+          why: `Tagged ${hits.join(' and ')} — matches ${goalNames.length > 1 ? 'your goals' : goalNames[0]?.toLowerCase()}.`,
+          selected: i < 3,
+        };
+      }),
       leftOut: {
         alreadyTaking: entries.filter((e) => already.has(e.name.toLowerCase())).map((e) => e.name),
         noMatch: scored.length > 6 ? scored.slice(6).map((x) => x.e.name) : [],
         goalNames,
       },
     };
-  }, [entries, goalIds, currentStack]);
+  }, [entries, refs, goalIds, currentStack, age, sex]);
 }
 
 export function Recommendations({
   goalIds,
   currentStack,
+  age,
+  sex,
   onDone,
 }: {
   goalIds: string[];
   currentStack: string[];
+  age?: number | null;
+  sex?: 'm' | 'f' | 'na' | null;
   onDone: (picks: Recommendation[]) => void;
 }) {
-  const data = useRecommendations(goalIds, currentStack);
+  const data = useRecommendations(goalIds, currentStack, age, sex);
   const [picks, setPicks] = useState<Recommendation[] | null>(null);
 
   useEffect(() => {
@@ -185,7 +217,9 @@ export function Recommendations({
               {/* The app holds no dose for anything and will not invent one --
                   the glossary carries category, mechanism, storage and route,
                   never an amount. See legal.md. The slot stays, labelled. */}
-              <span className="ob-rec-dose">{r.route} · you set the amount</span>
+              <span className="ob-rec-dose">
+                {r.amount ? `${r.amount} a day · ${r.route}` : `${r.route} · you set the amount`}
+              </span>
               <span className="ob-rec-why">{r.why}</span>
               <span className="ob-rec-link">Read the research →</span>
             </span>

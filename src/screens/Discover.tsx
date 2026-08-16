@@ -94,7 +94,9 @@ export function Discover() {
     try {
       await addToStack(user.id, entry.id);
       setInStackIds((prev) => new Set(prev).add(entry.id));
-      setSchedulingEntry(entry);
+      /* Peptides go in the stack as a reference, never onto a schedule with an
+         amount attached — the same split the tabs exist to express. */
+      if ((entry.kind ?? 'peptide') === 'supplement') setSchedulingEntry(entry);
     } finally {
       setAddingIds((prev) => {
         const next = new Set(prev);
