@@ -263,3 +263,92 @@ Four decisions worth disagreeing with in the morning:
   keep B12's arrival attributable to the no-meat rule alone. The real
   catalogue files iron under Energy.
 - The bundle is 1,026 kB minified (319.5 kB gzipped); this added ~2 kB.
+
+---
+
+## 2026-08-15 — queue item 0.5, product-shaped slugs
+
+**Changed.** One file: `supabase/migrations/0020_product_shaped_slugs.sql`,
+**written, not applied**. It renames all 74 supplement slugs from
+ingredient-shaped to `<brand>-<product>` — `magnesium-glycinate` becomes
+`vincos-magnesium-glycinate`, `zinc` becomes
+`aor-advanced-orthomolecular-research-premium-zinc-copper-balance`. The 74
+peptides keep their compound names; they have no brand and never had this
+problem. The derivation is written into the migration header rather than left
+implicit, because 0.6 has to produce 176 more slugs that agree with these:
+`slugify(brand) || '-' || slugify(name minus the brand prefix)`, apostrophes
+dropped, `.com` dropped, `&` to "and", everything else non-alphanumeric to one
+hyphen, nothing truncated.
+
+It is idempotent by state rather than by guard: for each pair, the new slug
+already present means done, the old one present means rename, neither present
+means say so. It refuses to run if the mapping is not exactly 74 rows, if any
+two rows target the same slug (the temp table's unique constraint), if both
+shapes of one product exist at once, or if any ingredient-shaped slug survives
+the loop.
+
+**Found and did not change.**
+
+- **There are no foreign references to update, and that is the answer, not an
+  omission.** `stack_items`, `schedule_items`, `doses`, `glossary_research` and
+  `nutrient_reference` all key on `glossary.id`, a uuid; this migration updates
+  a column on the row it keeps, so every one of them still points at the right
+  product. `match_goal` (0009) searches name, category, both summaries,
+  `goal_tags` and `search_keywords` — never the slug. I grepped before assuming
+  it, as the item asks.
+- **`src/lib/conflicts.ts` looks like it hardcodes four slugs and does not.**
+  `'zinc'`, `'omega-3'`, `'glycine'`, `'calcium'`, `'iron'`, `'magnesium'` are
+  matched as substrings of the *item name*, not the slug — the file says so at
+  the top. Left alone. It is the one thing in `src/lib` a grep for slugs turns
+  up, and it is a false positive.
+- **The rename is provably neutral for the rules engine.** `recommend.ts` folds
+  the slug into the text it matches nutrient rules against. Every DSLD product
+  name is brand-prefixed in all 74 rows, so the new slug is exactly
+  `slugify(name)` — the haystack holds no word it did not already hold. I
+  checked all 74 products against all 15 regex groups the engine uses (the nine
+  nutrients, the four prefer sets, the two avoid sets): zero products change
+  group in either direction. The unit fixtures in `recommend.spec.ts` already
+  derive their slug from the name, so the engine has in fact been tested against
+  the new shape since 0.3.
+- **I could not execute the SQL.** No Postgres and no Docker on this machine,
+  and rule 8 forbids a remote database — correctly, this is exactly the
+  migration you would not want to find out about at 176 rows. So it is verified
+  by construction and unrun: the 74 pairs in the file are byte-identical to a
+  derivation script's output, no source or target repeats, no target collides
+  with any of the 128 slugs across every migration in the tree, and every
+  `raise` has as many arguments as placeholders. The PL/pgSQL itself has never
+  been through a parser. Read the `do` block before pasting it.
+- **Re-running 0016 or 0017 after this will duplicate 74 products.** Both insert
+  `on conflict (slug)`, and after 0020 their conflict targets do not exist, so
+  they insert rather than update — and nothing in the schema would reject it.
+  Written into the migration header. I did not add a unique index on
+  `label_url` to catch it, because 0.6 may legitimately file one DSLD label
+  under two goal sections and I would be planting a landmine for it.
+
+**Out of scope but noticeable.**
+
+- **`supabase/PENDING.sql` is stale and this makes it worse.** It is a verbatim
+  copy of 0017 and nothing else. 0018 (the onboarding answers), 0019
+  (`menstruates`) and now 0020 are not in it. If that file is what gets pasted
+  in the morning, the three columns the last two nights added still will not
+  exist and the slugs will not move. Queue item A owns that file and the item I
+  was given says nothing else goes in this commit, so I left it — but this is
+  the third night in a row it has drifted further from the truth.
+- **Four products are now unfindable by their ingredient name, and were
+  already.** `coq10` is "OL Olympian Labs Ubiquinol", `probiotics` is "Allergy
+  Research Group Lactobacillus", `iodine` is "Hi-Tech Pharmaceuticals Potassium
+  Iodide", `nac` is "NHC Natural Healthy Concepts N-Acetyl Cysteine". Search
+  never read the slug, so nothing regressed tonight — but the slug was the last
+  place the word "CoQ10" appeared anywhere on those rows, and now it does not
+  appear at all. `search_keywords` is the right home for it and 0.6 is the right
+  time, when the catalogue that has to carry them is going in anyway.
+- **`AOR Advanced Orthomolecular Research Premium` is stored as a brand and is
+  not one** — "Premium" belongs to the product line, and the same company is
+  filed as `AOR Advanced Orthomolecular Research` on two other rows. It produces
+  the second-longest slug in the set at 63 characters. Correcting the `brand`
+  column is a data fix, not this item, and it would change the slug it derives,
+  so it wants doing before 0.6 rather than after.
+- The e2e fixture slugs stay `test-vitamin-d3` and friends. They are a stub
+  catalogue, not the real one, and renaming them would prove nothing.
+- Bundle unchanged at 1,026 kB minified (319.5 kB gzipped). No client code was
+  touched.

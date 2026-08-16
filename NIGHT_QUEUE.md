@@ -63,12 +63,21 @@ single run. Do them in order; several depend on the one before.
   Also fixed, because it hid half of this: the recommendations screen
   snapshotted its cards before the reference intakes arrived, so every card
   read "you set the amount"._
-- [ ] **0.5 — Product-shaped slugs.** Section 3.1, the migration half. Move the
+- [x] **0.5 — Product-shaped slugs.** Section 3.1, the migration half. Move the
   existing 74 entries from ingredient-shaped slugs to `<brand>-<product>`, and
   update every foreign reference — `stack_items`, `schedule_items`,
   `glossary_research`, `nutrient_reference`, and anything in `src/lib` that
   hardcodes one. Grep before assuming there are none. Do this on its own, with
   nothing else in the commit, so it can be reverted cleanly.
+  _Done: migration `0020` renames all 74 (not applied), with the derivation rule
+  written into its header for 0.6 to follow. No foreign reference needed
+  updating — every one of those tables keys on `glossary.id`, a uuid, and this
+  updates a column on the row it keeps; `match_goal` never read the slug either.
+  The only slug reader in `src/` is `recommend.ts`'s nutrient haystack, and the
+  rename is provably neutral there: every DSLD name is brand-prefixed, so the
+  new slug is exactly `slugify(name)` and no product changes rule group.
+  `conflicts.ts`'s 'zinc'/'omega-3'/'glycine' look like slugs and are not —
+  they match the item name. Nothing else in the commit._
 - [ ] **0.6 — Load the 176 products.** Section 3.1. `CATALOG_BRANDED_176.md` is
   at the repo root. Verify every DSLD label ID resolves before inserting; drop
   any that do not and list them. Do not substitute a different product silently.
