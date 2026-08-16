@@ -1545,31 +1545,45 @@ button {
 }
 
 /* ============================================================
-   Discover — the product list and its inline card
+   Discover — a flush list against a rail. A row only becomes a
+   card once it is opened.
    ============================================================ */
 .prod-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 14px;
+  position: relative;
+  margin-top: 16px;
+  padding-left: 22px;
+}
+/* the same white rail the paper list used */
+.prod-list .rail {
+  position: absolute;
+  left: 3px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--t1);
 }
 .prod {
-  border-radius: 22px;
-  background: var(--card);
-  overflow: hidden;
-  transition: background-color 180ms ease-out;
+  border-radius: 18px;
+  background: none;
+  transition:
+    background-color 200ms ease-out,
+    padding 200ms ease-out,
+    margin 200ms ease-out;
 }
+/* only the open one is a card */
 .prod.open {
-  background: var(--card-hi);
+  background: var(--card);
+  margin: 10px -12px;
+  padding: 2px 12px 12px;
 }
 .prod-row {
   width: 100%;
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 15px 16px;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px 0;
   text-align: left;
-  min-height: 64px;
 }
 .prod-main {
   flex: 1;
@@ -1577,57 +1591,113 @@ button {
 }
 .prod-name {
   display: block;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 600;
   letter-spacing: -0.2px;
-  line-height: 22px;
+  line-height: 21px;
 }
-.prod-meta {
+.prod-pills {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 7px;
-  margin-top: 7px;
-}
-.prod-tag {
-  font-size: 12px;
-  color: var(--t3);
-}
-.prod-dose {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--purple);
+  gap: 6px;
+  margin-top: 8px;
 }
 .prod-chev {
   flex: none;
   display: flex;
-  transition: transform 180ms ease-out;
+  margin-top: 4px;
+  transition: transform 200ms ease-out;
 }
 .prod-chev.open {
   transform: rotate(180deg);
 }
 
-/* the card that opens underneath the row */
+/* ── the pills ──
+   NOT `.pill`: the tab bar's travelling indicator already owns that class and
+   is position:absolute, which took these out of flow and stacked every one of
+   them at the same coordinates off the left edge. */
+.tagpill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 9px 0 7px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: -0.05px;
+  white-space: nowrap;
+  flex: none;
+  background: var(--card);
+  color: var(--t2);
+}
+.tagpill-icon {
+  display: flex;
+  opacity: 0.85;
+}
+.tagpill-accent {
+  background: var(--purple-dim);
+  color: var(--t1);
+}
+.tagpill-strong {
+  background: var(--purple-dim);
+  color: var(--t1);
+}
+.tagpill-mixed {
+  background: var(--card-hi);
+  color: var(--t2);
+}
+.tagpill-thin {
+  background: var(--card);
+  color: var(--t3);
+}
+/* inside an open card the row background is --card, so the pills need to lift */
+.prod.open .tagpill {
+  background: var(--card-hi);
+}
+.prod.open .tagpill-accent,
+.prod.open .tagpill-strong {
+  background: var(--purple-dim);
+}
+
+/* ── the opened card ── */
 .prod-card {
-  padding: 0 16px 16px;
+  padding: 2px 0 4px;
   animation: prod-open 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 @keyframes prod-open {
   from { opacity: 0; transform: translateY(-6px); }
   to { opacity: 1; transform: translateY(0); }
 }
+.prod-evidence {
+  margin-bottom: 12px;
+  color: var(--t2);
+  line-height: 1.5;
+}
+.prod-evidence b {
+  color: var(--t1);
+  font-weight: 600;
+}
 .prod-preview {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 15px 16px;
+  padding: 14px 15px;
   border-radius: 16px;
-  background: var(--card);
+  background: var(--bg);
   color: var(--t1);
   text-decoration: none;
 }
-.prod.open .prod-preview {
-  background: var(--bg);
+.prod-preview-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--t3);
+}
+.prod-preview-year {
+  margin-left: auto;
+  font-weight: 600;
 }
 .prod-preview-title {
   font-size: 15px;
@@ -1647,32 +1717,8 @@ button {
   color: var(--purple);
 }
 .prod-preview-empty {
-  padding: 14px 2px;
+  padding: 12px 2px;
   color: var(--t3);
-}
-.prod-when {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
-  color: var(--t2);
-}
-.prod-when-chip {
-  display: inline-flex;
-  align-items: center;
-  height: 30px;
-  padding: 0 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-  flex: none;
-  background: var(--card);
-  color: var(--t2);
-}
-.prod-when-chip.on {
-  background: var(--purple-dim);
-  color: var(--t1);
 }
 .prod-actions {
   display: flex;

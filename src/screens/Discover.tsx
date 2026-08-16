@@ -180,6 +180,7 @@ export function Discover() {
               )}
 
               <div className="prod-list">
+                <span className="rail" />
                 {shown.map((r) => (
                   <ProductRow
                     key={r.id}
