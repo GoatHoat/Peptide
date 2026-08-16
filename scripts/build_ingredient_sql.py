@@ -157,8 +157,11 @@ def main() -> int:
         ",\n".join(values),
         ") as v(slug, ingredient_key, raw_name, amount, unit, is_primary, position)",
         "join public.glossary g on g.slug = v.slug",
-        "on conflict (glossary_id, raw_name) do update set",
+        # matches the unique constraint in 0028: position is what is unique
+        # within a product, and a label can print the same name twice
+        "on conflict (glossary_id, position) do update set",
         "  ingredient_key = excluded.ingredient_key,",
+        "  raw_name = excluded.raw_name,",
         "  amount = excluded.amount,",
         "  unit = excluded.unit,",
         "  is_primary = excluded.is_primary,",

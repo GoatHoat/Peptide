@@ -20,7 +20,13 @@ export function Sheet({ open, onClose, title, children }: Props) {
     ? { duration: 0 }
     : { type: 'spring' as const, stiffness: 380, damping: 34, mass: 1 };
 
-  if (!portalTarget) return null;
+  /* Falling back to document.body rather than rendering nothing.
+     SheetPortalProvider exists to escape `.track`'s transform, which only
+     matters inside the tab pager; a sheet opened from a screen outside it — the
+     catch-up screen, before the app — has no track to escape and rendering
+     null there is simply a sheet that does not open. */
+  const target = portalTarget ?? (typeof document === 'undefined' ? null : document.body);
+  if (!target) return null;
 
   return createPortal(
     <AnimatePresence>
@@ -53,6 +59,6 @@ export function Sheet({ open, onClose, title, children }: Props) {
         </>
       )}
     </AnimatePresence>,
-    portalTarget,
+    target,
   );
 }

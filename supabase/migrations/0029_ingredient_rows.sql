@@ -584,6 +584,36 @@ insert into public.ingredient_synonym (ingredient_key, synonym) values
   ('zinc', 'zinc picolinate')
 on conflict (synonym) do update set ingredient_key = excluded.ingredient_key;
 
+-- ── constraint repair ───────────────────────────────────────────────────────
+-- 0028 shipped with `unique (glossary_id, raw_name)` and was applied before that
+-- was found to be wrong: four products legitimately repeat a raw_name at
+-- different amounts (Thorne Basic B Complex lists Niacin twice, as the total and
+-- as the free-acid portion; Cognitex Elite lists six blueberry extracts).
+-- ON CONFLICT DO UPDATE cannot touch the same row twice, so the key moves to
+-- position, which is unique per product across all 652 rows.
+do $$
+declare c text;
+begin
+  select conname into c
+    from pg_constraint
+   where conrelid = 'public.glossary_ingredient'::regclass
+     and contype = 'u'
+     and pg_get_constraintdef(oid) like '%raw_name%';
+  if c is not null then
+    execute format('alter table public.glossary_ingredient drop constraint %I', c);
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint
+     where conrelid = 'public.glossary_ingredient'::regclass
+       and conname = 'glossary_ingredient_glossary_id_position_key'
+  ) then
+    alter table public.glossary_ingredient
+      add constraint glossary_ingredient_glossary_id_position_key
+      unique (glossary_id, position);
+  end if;
+end $$;
+
 insert into public.glossary_ingredient
   (glossary_id, ingredient_key, raw_name, amount, unit, is_primary, position)
 select g.id, v.ingredient_key, v.raw_name, v.amount, v.unit, v.is_primary, v.position
@@ -1242,12 +1272,12 @@ from (values
   ('zhou-saw-palmetto', 'saw-palmetto', 'Saw Palmetto berries extract', 50, 'mg', true, 1)
 ) as v(slug, ingredient_key, raw_name, amount, unit, is_primary, position)
 join public.glossary g on g.slug = v.slug
-on conflict (glossary_id, raw_name) do update set
+on conflict (glossary_id, position) do update set
   ingredient_key = excluded.ingredient_key,
+  raw_name = excluded.raw_name,
   amount = excluded.amount,
   unit = excluded.unit,
-  is_primary = excluded.is_primary,
-  position = excluded.position;
+  is_primary = excluded.is_primary;
 
 do $$
 declare

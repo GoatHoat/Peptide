@@ -5,6 +5,14 @@ import { Today } from './screens/Today';
 import { Discover } from './screens/Discover';
 import { You } from './screens/You';
 import { Auth } from './screens/Auth';
+import { CatchUp } from './screens/CatchUp';
+import {
+  getMissedSince,
+  setDoseTaken,
+  skipDose,
+  touchLastOpened,
+  type Dose,
+} from './lib/api';
 import { Onboarding } from './onboarding/Onboarding';
 import { hasOnboarded } from './onboarding/store';
 import { useAuth } from './lib/auth';
@@ -44,6 +52,60 @@ function Body({ framed }: { framed: boolean }) {
   if (loading) return <div className="app splash" />;
   if (!onboarded) return <Onboarding onFinished={() => setOnboarded(true)} />;
   if (!session) return <AuthScreen framed={framed} />;
+  return <CatchUpGate framed={framed} />;
+}
+
+/**
+ * The catch-up screen, before the app.
+ *
+ * Fires when a scheduled dose came due while the app was closed and is still
+ * unmarked. `touchLastOpened` stamps this open and returns the previous one in
+ * a single round trip, so two launches cannot race each other into consuming
+ * the same window.
+ *
+ * A null previous open means a first launch on this device, and never fires —
+ * somebody installing the app must not be told they missed a week.
+ */
+function CatchUpGate({ framed }: { framed: boolean }) {
+  const { user } = useAuth();
+  const [missed, setMissed] = useState<Dose[] | null>(null);
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    let live = true;
+    touchLastOpened()
+      .then(async (previous) => {
+        if (!live || !previous) return [];
+        return getMissedSince(user.id, previous, new Date());
+      })
+      .then((rows) => {
+        if (!live) return;
+        setMissed(rows ?? []);
+        setChecked(true);
+      })
+      .catch(() => live && setChecked(true));
+    return () => {
+      live = false;
+    };
+  }, [user?.id]);
+
+  /* The app renders while the check is in flight rather than behind a spinner.
+     A blank screen on every launch to ask a question that usually has no answer
+     is a worse trade than the screen appearing a moment later. */
+  if (checked && missed && missed.length > 0 && user) {
+    return (
+      <CatchUp
+        doses={missed}
+        onTaken={(dose) => setDoseTaken(dose.id, true).then(() => undefined)}
+        onSkipped={(dose, reason, note) =>
+          skipDose({ userId: user.id, doseId: dose.id, reason, note })
+        }
+        onDismiss={() => setMissed([])}
+      />
+    );
+  }
+
   return <Gate framed={framed} />;
 }
 

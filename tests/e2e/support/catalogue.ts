@@ -231,6 +231,7 @@ export function makeTables(): Record<string, Row[]> {
     progress_notes: [],
     ask_usage: [],
     ask_reports: [],
+    dose_skips: [],
   };
 }
 

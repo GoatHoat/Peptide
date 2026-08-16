@@ -66,10 +66,12 @@ export interface Stub {
   unhandled: string[];
   /** set once rpc/delete_account has run, so a test can assert it was reached */
   deleted: boolean;
+  /** what touch_last_opened returns; null (the default) means first launch */
+  lastOpened: string | null;
 }
 
 export async function installSupabaseStub(page: Page): Promise<Stub> {
-  const stub: Stub = { db: makeTables(), unhandled: [], deleted: false };
+  const stub: Stub = { db: makeTables(), unhandled: [], deleted: false, lastOpened: null };
   let generated = 0;
 
   await page.route(`${SUPABASE_URL}/**`, async (route) => {
@@ -134,6 +136,13 @@ export async function installSupabaseStub(page: Page): Promise<Stub> {
         stub.db.profiles = [];
         stub.deleted = true;
         return json(null);
+      }
+      /* The catch-up screen stamps every app open. Returning null is the
+         first-launch answer, which is what every existing test wants: none of
+         them is about catch-up, and firing it would put a screen in front of
+         the one under test. */
+      if (relation === 'rpc/touch_last_opened') {
+        return json(stub.lastOpened ?? null);
       }
       /* Ingredient search. The fixture catalogue has no ingredient rows, so
          this returns nothing — which is exactly the "not an ingredient" path

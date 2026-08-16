@@ -1,7 +1,8 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useAuth } from '../lib/auth';
 import {
   addProgressNote,
+  deleteProgressNote,
   getProgressNotes,
   getProgressPhotoUrl,
   uploadProgressPhoto,
@@ -24,6 +25,24 @@ export function ProgressNotes() {
   const { user } = useAuth();
   const [notes, setNotes] = useState<ProgressNote[] | null>(null);
   const [open, setOpen] = useState(false);
+  /* Press and hold to delete, the same gesture DoseRow uses for its history
+     sheet — the one iOS uses everywhere for "show me more about this". A tap
+     must not delete anything, and there is no swipe-to-delete here to discover
+     by accident. */
+  const [confirming, setConfirming] = useState<ProgressNote | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [held, setHeld] = useState<string | null>(null);
+  const timer = useRef<number | null>(null);
+  const origin = useRef({ x: 0, y: 0 });
+
+  const cancelHold = () => {
+    if (timer.current !== null) {
+      clearTimeout(timer.current);
+      timer.current = null;
+    }
+    setHeld(null);
+  };
+  useEffect(() => cancelHold, []);
 
   const load = () => {
     if (user) getProgressNotes(user.id).then(setNotes);
@@ -45,7 +64,34 @@ export function ProgressNotes() {
 
       <div className="progress-list">
         {notes?.map((n) => (
-          <div key={n.id} className="progress-row">
+          <div
+            key={n.id}
+            className={`progress-row${held === n.id ? ' holding' : ''}`}
+            onPointerDown={(e) => {
+              origin.current = { x: e.clientX, y: e.clientY };
+              setHeld(n.id);
+              timer.current = window.setTimeout(() => {
+                setHeld(null);
+                timer.current = null;
+                setConfirming(n);
+              }, 450);
+            }}
+            /* A scroll is a drag, not a hold. 10px of travel cancels it, the
+               same tolerance DoseRow uses. */
+            onPointerMove={(e) => {
+              if (
+                Math.abs(e.clientX - origin.current.x) > 10 ||
+                Math.abs(e.clientY - origin.current.y) > 10
+              ) {
+                cancelHold();
+              }
+            }}
+            onPointerUp={cancelHold}
+            onPointerCancel={cancelHold}
+            onPointerLeave={cancelHold}
+            /* the iOS callout menu would otherwise hijack the same gesture */
+            onContextMenu={(e) => e.preventDefault()}
+          >
             {n.photo_path ? (
               <NoteThumb path={n.photo_path} />
             ) : (
@@ -74,6 +120,45 @@ export function ProgressNotes() {
         <IconPlus size={15} color="var(--purple)" />
         Add note
       </button>
+
+      <Sheet
+        open={!!confirming}
+        onClose={() => setConfirming(null)}
+        title={confirming ? formatShortDate(confirming.note_date) : ''}
+      >
+        <div className="t-body" style={{ color: 'var(--t2)', marginBottom: 18 }}>
+          Delete this note{confirming?.photo_path ? ' and its photo' : ''}? This cannot be
+          undone.
+        </div>
+        <button
+          className="btn btn-danger pressable"
+          style={{ width: '100%' }}
+          disabled={deleting}
+          onClick={async () => {
+            if (!confirming) return;
+            setDeleting(true);
+            try {
+              await deleteProgressNote(confirming);
+              /* Dropped from the list here rather than refetching: the row is
+                 gone and a round trip would leave it on screen meanwhile. */
+              setNotes((prev) => (prev ? prev.filter((x) => x.id !== confirming.id) : prev));
+              setConfirming(null);
+            } finally {
+              setDeleting(false);
+            }
+          }}
+        >
+          {deleting ? 'Deleting…' : 'Delete note'}
+        </button>
+        <button
+          className="btn btn-out pressable"
+          style={{ width: '100%', marginTop: 10 }}
+          disabled={deleting}
+          onClick={() => setConfirming(null)}
+        >
+          Keep it
+        </button>
+      </Sheet>
 
       <Sheet open={open} onClose={() => setOpen(false)} title="Add progress note">
         <AddNoteForm

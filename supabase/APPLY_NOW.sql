@@ -1,3 +1,4 @@
+-- ==================== 0029_ingredient_rows.sql ====================
 -- The ingredient panel for all 250 catalogue products, and the synonym
 -- dictionary that makes it searchable.
 --
@@ -583,6 +584,36 @@ insert into public.ingredient_synonym (ingredient_key, synonym) values
   ('zinc', 'zinc oxide'),
   ('zinc', 'zinc picolinate')
 on conflict (synonym) do update set ingredient_key = excluded.ingredient_key;
+
+-- ── constraint repair ───────────────────────────────────────────────────────
+-- 0028 shipped with `unique (glossary_id, raw_name)` and was applied before that
+-- was found to be wrong: four products legitimately repeat a raw_name at
+-- different amounts (Thorne Basic B Complex lists Niacin twice, as the total and
+-- as the free-acid portion; Cognitex Elite lists six blueberry extracts).
+-- ON CONFLICT DO UPDATE cannot touch the same row twice, so the key moves to
+-- position, which is unique per product across all 652 rows.
+do $$
+declare c text;
+begin
+  select conname into c
+    from pg_constraint
+   where conrelid = 'public.glossary_ingredient'::regclass
+     and contype = 'u'
+     and pg_get_constraintdef(oid) like '%raw_name%';
+  if c is not null then
+    execute format('alter table public.glossary_ingredient drop constraint %I', c);
+  end if;
+
+  if not exists (
+    select 1 from pg_constraint
+     where conrelid = 'public.glossary_ingredient'::regclass
+       and conname = 'glossary_ingredient_glossary_id_position_key'
+  ) then
+    alter table public.glossary_ingredient
+      add constraint glossary_ingredient_glossary_id_position_key
+      unique (glossary_id, position);
+  end if;
+end $$;
 
 insert into public.glossary_ingredient
   (glossary_id, ingredient_key, raw_name, amount, unit, is_primary, position)
@@ -1247,8 +1278,7 @@ on conflict (glossary_id, position) do update set
   raw_name = excluded.raw_name,
   amount = excluded.amount,
   unit = excluded.unit,
-  is_primary = excluded.is_primary,
-  position = excluded.position;
+  is_primary = excluded.is_primary;
 
 do $$
 declare
@@ -1262,3 +1292,676 @@ begin
   raise notice 'ingredients: % rows across % products, % carrying a key',
     rows_in, products, keyed;
 end $$;
+
+-- ==================== 0030_growth_goal_tag.sql ====================
+-- Growth as a goal tag.
+--
+-- PROMPT_V2.md section 2 says "Growth already exists as a goal_tags value on
+-- catalogue rows, so the tag vocabulary does not need extending". It does not.
+-- `growth` exists as a `category` on 19 rows — a different column with a
+-- different job — and no row anywhere carries 'Growth' in `goal_tags`.
+--
+-- That distinction matters: `match_goal` (migration 0009) and
+-- `src/lib/recommend.ts` both search `goal_tags`, so a Growth goal shipped
+-- against the untouched vocabulary would have matched nothing and returned an
+-- empty list to anyone who picked it. The spec says to add it properly if it is
+-- not in the canonical list, so this is that.
+--
+-- WHAT GETS THE TAG. Every row already categorised `growth` — the creatines,
+-- the proteins, the amino acids, the beta-alanines, the tribulus. The tag is
+-- appended, never replacing what is there, so a product already tagged Muscle
+-- and Recovery keeps both and gains Growth.
+--
+-- Idempotent: the guard means a second run appends nothing.
+
+update public.glossary
+set goal_tags = array_append(goal_tags, 'Growth')
+where category = 'growth'
+  and not ('Growth' = any(goal_tags));
+
+do $$
+declare
+  tagged integer;
+begin
+  select count(*) into tagged
+  from public.glossary
+  where 'Growth' = any(goal_tags);
+
+  raise notice 'growth goal: % products now carry the Growth tag', tagged;
+
+  -- Not fatal, because the catalogue migrations may not have been applied yet
+  -- and this file should not block the ones after it. Loud, because a Growth
+  -- goal that matches nothing is a screen that looks broken.
+  if tagged = 0 then
+    raise warning 'no products carry the Growth tag — apply 0021 before this, or the Growth goal will return an empty list';
+  end if;
+end $$;
+
+-- ==================== 0031_peptides_have_no_dose.sql ====================
+-- Peptides carry no dose and no timing, enforced by the database.
+--
+-- CLAUDE.md: "Peptides are a reference library only: no doses, no
+-- recommendations, no ranking, no injection-related UI or questions anywhere in
+-- the product." legal.md records that app-sourced dosing for these compounds is
+-- what got the first version rejected. PROMPT_V2.md section 3 asks for it to be
+-- enforced in code rather than in copy.
+--
+-- The client already refuses to render or schedule them. This is the layer
+-- under that, because a UI rule is one careless conditional away from being
+-- untrue, and the rows outlive any particular screen.
+--
+-- WHAT IS CONSTRAINED. `timing` and `timing_note` must be null on a peptide
+-- row. A reference intake must not join to one. The columns PROMPT_V2.md
+-- section 1 will add — serving_amount, studied_low, studied_high — are not
+-- constrained here because they do not exist yet; extend this check in the
+-- migration that adds them.
+--
+-- WHY A TRIGGER AND NOT A CHECK CONSTRAINT. A check constraint on `glossary`
+-- alone cannot see `nutrient_reference`, and splitting the rule across two
+-- mechanisms would leave the important half unenforced.
+
+-- 1. No peptide row may carry timing.
+update public.glossary
+set timing = null, timing_note = null
+where kind = 'peptide' and (timing is not null or timing_note is not null);
+
+alter table public.glossary
+  drop constraint if exists glossary_peptides_have_no_timing;
+alter table public.glossary
+  add constraint glossary_peptides_have_no_timing
+  check (kind <> 'peptide' or (timing is null and timing_note is null));
+
+-- 2. No reference intake may point at a peptide.
+delete from public.nutrient_reference nr
+using public.glossary g
+where nr.glossary_id = g.id and g.kind = 'peptide';
+
+create or replace function public.nutrient_reference_rejects_peptides()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+begin
+  if exists (
+    select 1 from public.glossary g
+    where g.id = new.glossary_id and g.kind = 'peptide'
+  ) then
+    raise exception
+      'nutrient_reference: % is a peptide and cannot carry a reference intake',
+      new.glossary_id
+      using errcode = '23514';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists nutrient_reference_no_peptides on public.nutrient_reference;
+create trigger nutrient_reference_no_peptides
+  before insert or update on public.nutrient_reference
+  for each row execute function public.nutrient_reference_rejects_peptides();
+
+-- 3. Nothing may schedule a peptide. The client refuses first; this is what
+--    makes it true rather than merely usual.
+create or replace function public.schedule_items_reject_peptides()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+begin
+  if new.glossary_id is not null and exists (
+    select 1 from public.glossary g
+    where g.id = new.glossary_id and g.kind = 'peptide'
+  ) then
+    raise exception
+      'schedule_items: peptides are reference only and cannot be scheduled'
+      using errcode = '23514';
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists schedule_items_no_peptides on public.schedule_items;
+create trigger schedule_items_no_peptides
+  before insert or update on public.schedule_items
+  for each row execute function public.schedule_items_reject_peptides();
+
+do $$
+declare
+  bad integer;
+begin
+  select count(*) into bad
+  from public.glossary
+  where kind = 'peptide' and (timing is not null or timing_note is not null);
+  raise notice 'peptides carrying timing after cleanup: %', bad;
+
+  select count(*) into bad
+  from public.schedule_items s
+  join public.glossary g on g.id = s.glossary_id
+  where g.kind = 'peptide';
+  if bad > 0 then
+    -- Pre-existing rows are left alone rather than deleted: they are a user's
+    -- own data and removing them silently is worse than reporting them.
+    raise warning
+      '% scheduled item(s) already point at a peptide. The trigger blocks new ones; these need a decision.',
+      bad;
+  end if;
+end $$;
+
+-- ==================== 0032_ingredient_search.sql ====================
+-- Ingredient-aware search, and the abstract column it needs.
+--
+-- Searching "zinc" returns only products with zinc in the title, which is a
+-- fraction of the products containing zinc. `search_by_ingredient` resolves the
+-- query through the synonym dictionary and joins the panel instead, so the
+-- multivitamin carrying 15 mg of it is found by the word.
+--
+-- TWO SECTIONS, NOT ONE LIST. PROMPT_V3.md section 2 asks for products *for*
+-- the ingredient separated from products that merely *contain* it, and asks
+-- that the first section require the ingredient to appear in one of the
+-- product's five citations. That article test is applied only to the first
+-- section, deliberately: a 25-ingredient multivitamin has five papers about
+-- multivitamins and none about its 8 mg of zinc, so using it as a filter would
+-- hide exactly the products whose hidden ingredients cause the interactions
+-- this whole feature exists to catch. They belong in section two, not nowhere.
+--
+--   section 1 "Products for zinc"     is_primary and the ingredient is named in
+--                                     a citation title or abstract
+--   section 2 "Also contains zinc"    everything else, amount shown
+--
+-- Both sorted by amount descending, nulls last — a product that does not say
+-- how much cannot be ranked above one that does.
+
+-- The article test needs the citation text searchable. Title is already stored;
+-- abstract comes from the same PubMed esummary call that fetched the rest.
+alter table public.glossary_research
+  add column if not exists abstract text;
+
+comment on column public.glossary_research.abstract is
+  'Populated from PubMed. Searched alongside title to decide whether a paper is actually about a given ingredient.';
+
+create index if not exists glossary_research_text_idx
+  on public.glossary_research using gin (
+    to_tsvector('english', coalesce(title, '') || ' ' || coalesce(abstract, ''))
+  );
+
+/**
+ * Every product containing `query_text`, in two sections.
+ *
+ * `section` is 1 for "products for this" and 2 for "also contains this".
+ * Returns no rows when the query does not resolve to an ingredient, which the
+ * caller reads as "not an ingredient search" and falls back to name matching.
+ */
+create or replace function public.search_by_ingredient(query_text text)
+returns table (
+  section     integer,
+  glossary_id uuid,
+  slug        text,
+  name        text,
+  brand       text,
+  kind        text,
+  evidence    text,
+  product_form text,
+  amount      numeric,
+  unit        text,
+  raw_name    text
+)
+language sql
+stable
+set search_path = public
+as $$
+  with key as (
+    select public.resolve_ingredient_key(query_text) as k
+  ),
+  -- the printed names this key goes by, for the citation text search
+  words as (
+    select distinct s.synonym as w
+    from public.ingredient_synonym s, key
+    where s.ingredient_key = key.k
+    union
+    select key.k from key
+  ),
+  hits as (
+    select
+      gi.glossary_id,
+      gi.is_primary,
+      gi.amount,
+      gi.unit,
+      gi.raw_name,
+      row_number() over (
+        partition by gi.glossary_id order by gi.is_primary desc, gi.amount desc nulls last
+      ) as rn
+    from public.glossary_ingredient gi, key
+    where key.k is not null and gi.ingredient_key = key.k
+  ),
+  -- does any of this product's papers actually name the ingredient?
+  cited as (
+    select distinct r.glossary_id
+    from public.glossary_research r
+    where exists (
+      select 1 from words
+      where coalesce(r.title, '') || ' ' || coalesce(r.abstract, '') ilike '%' || words.w || '%'
+    )
+  )
+  select
+    case when h.is_primary and c.glossary_id is not null then 1 else 2 end as section,
+    g.id, g.slug, g.name, g.brand, g.kind, g.evidence, g.product_form,
+    h.amount, h.unit, h.raw_name
+  from hits h
+  join public.glossary g on g.id = h.glossary_id
+  left join cited c on c.glossary_id = h.glossary_id
+  where h.rn = 1
+    -- peptides are reference only and never rank in a product search
+    and coalesce(g.kind, 'peptide') = 'supplement'
+  order by section, h.amount desc nulls last, g.name;
+$$;
+
+comment on function public.search_by_ingredient(text) is
+  'Products containing an ingredient, split into "for this" (section 1) and "also contains" (section 2). Empty when the query is not an ingredient.';
+
+grant execute on function public.search_by_ingredient(text) to anon, authenticated;
+
+-- ==================== 0033_serving_sizes.sql ====================
+-- The serving size on every product's label.
+--
+-- PROMPT_V2.md section 1: replace "no specific recommendation" with a real
+-- number for every product, sourced rather than invented. Tier (a) is the label
+-- serving, and it is available for all 250 products in the catalogue --
+-- including the botanicals that have no reference intake and never will,
+-- because they are not nutrients and no authority publishes a figure for them.
+--
+-- This is the one number that is always true and always citable: it is what the
+-- manufacturer filed with the NIH, not the app's opinion about what anyone
+-- should take. legal.md draws exactly that line -- the app may reproduce a
+-- third party's figure, it may never originate one.
+--
+-- GENERATED from scripts/ingredients.json, which is the DSLD API response for
+-- each label. servings_per_day is the filing's own minDailyServings.
+--
+-- studied_low / studied_high (tier (c), the commonly-studied range for
+-- non-nutrients) are declared here and left null. Populating them requires
+-- tying each range to a specific paper already in that product's five
+-- citations, which is a research task per ingredient rather than a fetch. A
+-- range with no source is exactly the invented number legal.md warns about, so
+-- the columns exist and stay empty until someone does that work.
+
+alter table public.glossary
+  add column if not exists serving_amount   numeric,
+  add column if not exists serving_unit     text,
+  add column if not exists serving_form     text,
+  add column if not exists servings_per_day numeric default 1,
+  add column if not exists studied_low      numeric,
+  add column if not exists studied_high     numeric,
+  add column if not exists studied_unit     text,
+  add column if not exists studied_source_citation_id uuid
+    references public.glossary_research(id) on delete set null;
+
+comment on column public.glossary.serving_form is
+  'The serving as the label prints it -- "2 Capsules", "1 Scoop". Shown as "Take ...".';
+comment on column public.glossary.studied_low is
+  'Low end of the commonly studied range. Null unless studied_source_citation_id points at a paper in this product''s own citations.';
+
+-- A peptide has no serving and never will. See 0031.
+alter table public.glossary
+  drop constraint if exists glossary_peptides_have_no_serving;
+alter table public.glossary
+  add constraint glossary_peptides_have_no_serving
+  check (kind <> 'peptide' or (serving_amount is null and studied_low is null and studied_high is null));
+
+update public.glossary g
+set serving_amount = v.serving_amount,
+    serving_unit   = v.serving_unit,
+    serving_form   = v.serving_form,
+    servings_per_day = v.servings_per_day
+from (values
+  ('advanced-nutrition-by-zahler-methylfolate', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('allergy-research-group-lactobacillus', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('allergy-research-group-liquid-molybdenum', 0.05, 'mL', '0.05 mL', 1),
+  ('aor-advanced-orthomolecular-research-advanced-active-green-tea', 1, 'Capsule(s)', '1 Capsule', 3),
+  ('aor-advanced-orthomolecular-research-citicoline', 2, 'Capsule(s)', '2 Capsules', 1),
+  ('aor-advanced-orthomolecular-research-premium-zinc-copper-balance', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('biochem-100-whey-isolate-protein-chocolate-peppermint', 26.2, 'Gram(s)', '26.2 Grams', 1),
+  ('bluebonnet-niacin-100-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('bulksupplements-alpha-lipoic-acid', 600, 'mg', '600 mg', 1),
+  ('bulksupplements-amla-extract', 1000, 'mg', '1000 mg', 1),
+  ('bulksupplements-astragalus-extract', 1300, 'mg', '1300 mg', 1),
+  ('bulksupplements-bee-propolis-powder', 1200, 'mg', '1200 mg', 1),
+  ('bulksupplements-l-leucine', 2500, 'mg', '2500 mg', 1),
+  ('bulksupplements-msm-methylsulfonylmethane-1500-mg', 2, 'Capsule(s)', '2 Capsules', 1),
+  ('bulksupplements-mucuna-pruriens-extract', 500, 'mg', '500 mg', 1),
+  ('bulksupplements-olive-leaf-extract', 750, 'mg', '750 mg', 1),
+  ('bulksupplements-pantothenic-acid-vitamin-b5-powder-500-mg', 500, 'Milligram(s)', '500 Milligrams', 1),
+  ('bulksupplements-phenylethylamine-hcl-pea', 150, 'mg', '150 mg', 1),
+  ('bulksupplements-rice-protein', 30, 'Gram(s)', '30 Grams', 1),
+  ('bulksupplements-saw-palmetto-extract-320-mg', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('bulksupplements-taurine', 500, 'mg', '500 mg', 1),
+  ('bulksupplements-vitamin-b1-thiamine-mononitrate', 100, 'Milligram(s)', '100 Milligrams', 1),
+  ('bulksupplements-vitamin-b12-1-methylcobalamin', 20, 'mg', '20 mg', 1),
+  ('carlson-glucosamine-sulfate', 1, 'Capsule(s)', '1 Capsule', 2),
+  ('codeage-berberine-phytosome', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('codeage-liposomal-urolithin-a', 2, 'Capsule(s)', '2 Capsules', 1),
+  ('deva-vegan-omega-3-dha-epa', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('doctors-best-astaxanthin', 2, 'Veggie Softgel(s)', '2 Veggie Softgels', 1),
+  ('doctors-best-bacopa-320-mg-with-synapsa', 1, 'Veggie Capsule(s)', '1 Veggie Capsule', 1),
+  ('doctors-best-barley-beta-glucan', 1, 'Veggie Capsule(s)', '1 Veggie Capsule', 1),
+  ('doctors-best-extra-strength-ginkgo-120-mg', 1, 'Veggie Capsule(s)', '1 Veggie Capsule', 1),
+  ('doctors-best-fisetin-with-novusetin', 1, 'Veggie Capsule(s)', '1 Veggie Capsule', 1),
+  ('doctors-best-fully-active-b-complex', 1, 'Veggie Capsule(s)', '1 Veggie Capsule', 1),
+  ('doctors-best-fully-active-b12-1500-mcg', 1, 'Veggie Capsule(s)', '1 Veggie Capsule', 1),
+  ('doctors-best-high-absorption-coq10-100-mg', 1, 'Veggie Capsule(s)', '1 Veggie Capsule', 1),
+  ('doctors-best-l-citrulline-powder', 3, 'Gram(s)', '3 Grams', 1),
+  ('doctors-best-l-tryptophan-500-mg', 1, 'Veggie Capsule(s)', '1 Veggie Capsule', 1),
+  ('doctors-best-l-tyrosine-500-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('doctors-best-lithium-aspartate', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('doctors-best-nmn-12000-400-mg', 2, 'Veggie Capsule(s)', '2 Veggie Capsules', 1),
+  ('doctors-best-phosphatidyl-serine-with-serinaid-100-mg', 1, 'Softgel(s)', '1 Softgel', 3),
+  ('doctors-best-pure-l-arginine-powder', 6, 'Gram(s)', '6 Grams', 1),
+  ('doctors-best-stabilized-r-lipoic-acid-100-mg', 1, 'Veggie Capsule(s)', '1 Veggie Capsule', 1),
+  ('doctors-best-vegan-omega-3-2000-mg', 2, 'Veggie Softgel(s)', '2 Veggie Softgels', 1),
+  ('douglas-laboratories-vitamin-k2-menaquinone-7', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 1),
+  ('energyfirst-chromium-picolinate', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('finest-nutrition-biotin-5-000-mcg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('gematria-vitamin-c-complex', 3, 'Capsule(s)', '3 Capsules', 2),
+  ('gnc-beyond-raw-chemistry-labs-betaine-anhydrous-2-5-grams', 2.53, 'Gram(s)', '2.53 Grams', 1),
+  ('gnc-beyond-raw-digestive-enzymes', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('havasu-nutrition-ginkgo-biloba-phosphatidylserine', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('health-thru-nutrition-naturally-lutein-with-zeaxanthin-20-mg', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('healths-harmony-california-spirulina', 1, 'Vegetable Capsule(s)', '1 Vegetable Capsule', 1),
+  ('herbadiet-panax-ginseng-extract', 300, 'mg', '300 mg', 1),
+  ('herbadiet-trans-resveratrol', 1, 'Capsule(s)', '1 Capsule', 2),
+  ('hi-tech-pharmaceuticals-potassium-iodide-130-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('host-defense-brain-energy', 3, 'Gram(s)', '3 Grams', 1),
+  ('host-defense-chaga-extract', 1, 'mL', '1 mL', 2),
+  ('host-defense-cordyceps', 2, 'Capsule(s)', '2 Capsules', 1),
+  ('host-defense-lions-mane', 2, 'Capsule(s)', '2 Capsules', 1),
+  ('host-defense-lions-mane-extract', 1, 'mL', '1 mL', 2),
+  ('host-defense-maitake-extract', 1, 'mL', '1 mL', 2),
+  ('host-defense-mycommunity', 2, 'Capsule(s)', '2 Capsules', 1),
+  ('host-defense-reishi-extract', 1, 'mL', '1 mL', 2),
+  ('host-defense-shiitake-extract', 1, 'mL', '1 mL', 2),
+  ('host-defense-sleep', 2, 'Capsule(s)', '2 Capsules', 1),
+  ('host-defense-stamets-7-extracts', 1, 'mL', '1 mL', 2),
+  ('host-defense-turkey-tail', 2, 'Capsule(s)', '2 Capsules', 1),
+  ('jarrow-formulas-5-htp-100-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('jarrow-formulas-alpha-gpc-300-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('jarrow-formulas-beta-glucan-250-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('jarrow-formulas-borage-seed-oil-1200-mg', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('jarrow-formulas-carotenall', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('jarrow-formulas-citicoline-cdp-choline-250-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('jarrow-formulas-colostrum-prime-life-400-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('jarrow-formulas-evening-primrose-1300-mg', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('jarrow-formulas-hyaluronic-acid-120-mg', 2, 'Capsule(s)', '2 Capsules', 1),
+  ('jarrow-formulas-jarro-dophilus-eps-25-billion', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('jarrow-formulas-l-carnitine-500-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('jarrow-formulas-lactoferrin-250-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('jarrow-formulas-mastic-gum-1000-mg', 2, 'Capsule(s)', '2 Capsules', 1),
+  ('jarrow-formulas-opcs-95-100-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('jarrow-formulas-pqq-20-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('jarrow-formulas-prebiotic-inulin-fos', 3.8, 'Gram(s)', '3.8 Grams', 1),
+  ('jarrow-formulas-ps100-100-mg', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('jarrow-formulas-qh-absorb-200-mg', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('jarrow-formulas-saccharomyces-boulardii-mos', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('jarrow-formulas-theanine-200-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('klean-athlete-klean-b-complex', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 1),
+  ('klean-athlete-klean-bcaa-peak-atp', 8.6, 'Gram(s)', '8.6 Grams', 1),
+  ('klean-athlete-klean-casein-vanilla-custard', 30.7, 'Gram(s)', '30.7 Grams', 1),
+  ('klean-athlete-klean-creatine', 5, 'Gram(s)', '5 Grams', 1),
+  ('klean-athlete-klean-electrolytes', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 1),
+  ('klean-athlete-klean-endurance', 1, 'Chewable Tablet(s)', '1 Chewable Tablet', 1),
+  ('klean-athlete-klean-essential-aminos-hmb', 9.15, 'Gram(s)', '9.15 Grams', 1),
+  ('klean-athlete-klean-focus', 3, 'Vegetarian Capsule(s)', '3 Vegetarian Capsules', 1),
+  ('klean-athlete-klean-glutamine', 5.46, 'Gram(s)', '5.46 Grams', 1),
+  ('klean-athlete-klean-isolate-chocolate', 29, 'Gram(s)', '29 Grams', 1),
+  ('klean-athlete-klean-magnesium', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 1),
+  ('klean-athlete-klean-melatonin', 0.86, 'mL', '0.86 mL', 1),
+  ('klean-athlete-klean-multivitamin', 2, 'Tablet(s)', '2 Tablets', 1),
+  ('klean-athlete-klean-omega', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('klean-athlete-klean-plant-based-protein-vanilla', 36, 'Gram(s)', '36 Grams', 1),
+  ('klean-athlete-klean-sr-beta-alanine', 2, 'Tablet(s)', '2 Tablets', 2),
+  ('klean-athlete-klean-zinc', 1, 'Chewable Tablet(s)', '1 Chewable Tablet', 1),
+  ('krk-supplements-choline-bitartrate', 2, 'Capsule(s)', '2 Capsules', 2),
+  ('life-extension-acetyl-l-carnitine-arginate', 1, 'Capsule(s)', '1 Capsule', 3),
+  ('life-extension-advanced-olive-leaf-vascular-support', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 2),
+  ('life-extension-bio-collagen-with-patented-uc-ii-40-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('life-extension-black-cumin-seed-oil-and-bio-curcumin', 1, 'Softgel(s)', '1 Softgel', 2),
+  ('life-extension-calm-mag', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 1),
+  ('life-extension-citicoline-cdp-choline', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('life-extension-cognitex-elite', 2, 'Tablet(s)', '2 Tablets', 1),
+  ('life-extension-creatine-capsules', 2, 'Capsule(s)', '2 Capsules', 2),
+  ('life-extension-d-ribose-powder', 5000, 'mg', '5000 mg', 1),
+  ('life-extension-dopamine-advantage', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 1),
+  ('life-extension-echinacea-elite', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 2),
+  ('life-extension-enhanced-sleep-without-melatonin', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 1),
+  ('life-extension-fast-acting-liquid-melatonin', 1, 'mL', '1 mL', 1),
+  ('life-extension-glycine-1000-mg', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 1),
+  ('life-extension-huperzine-a-200-mcg', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 1),
+  ('life-extension-l-arginine-caps-700-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('life-extension-l-tryptophan-500-mg', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 1),
+  ('life-extension-lactoferrin-caps', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('life-extension-mega-epa-dha', 2, 'Softgel(s)', '2 Softgels', 1),
+  ('life-extension-optimized-saffron', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 2),
+  ('life-extension-palmettoguard', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('life-extension-senolytic-activator', 3, 'Capsule(s)', '3 Capsules', 1),
+  ('life-extension-skin-restoring-ceramides', 1, 'Liquid Vegetarian Capsule(s)', '1 Liquid Vegetarian Capsule', 1),
+  ('life-extension-tart-cherry-with-cherrypure', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 1),
+  ('mytrition-l-arginine', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('nature-made-hair-skin-nails', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('nature-made-l-theanine-chewable-200-mg', 1, 'Tablet(s)', '1 Tablet', 1),
+  ('nature-made-melatonin-200-mg-l-theanine', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('nature-made-super-b-complex', 1, 'Tablet(s)', '1 Tablet', 1),
+  ('nature-made-vitamin-b-12-500-mcg', 1, 'Tablet(s)', '1 Tablet', 1),
+  ('natures-craft-turmeric-curcumin', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 2),
+  ('natures-way-riboflavin-vitamin-b2-100-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('new-sun-hyaluronic-acid', 2, 'Vegetarian Capsule(s)', '2 Vegetarian Capsules', 1),
+  ('nhc-natural-healthy-concepts-n-acetyl-cysteine', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('nobi-nutrition-sambucus-elderberry', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('now-acerola-4-1-extract-powder', 3.2, 'Gram(s)', '3.2 Grams', 1),
+  ('now-b-2-100-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('now-boron-3-mg', 1, 'Veg Capsule(s)', '1 Veg Capsule', 1),
+  ('now-boswellia-extract-plus-turmeric-root', 1, 'Vegetarian Capsule(s)', '1 Vegetarian Capsule', 1),
+  ('now-extra-strength-lecithin', 2, 'Softgel(s)', '2 Softgels', 1),
+  ('now-gamma-e-tocopherols', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('now-l-tyrosine', 0.35, 'Gram(s)', '0.35 Grams', 1),
+  ('now-maca-500-mg', 1, 'Veg Capsule(s)', '1 Veg Capsule', 1),
+  ('now-magnesium-malate-caps', 1, 'Veg Capsule(s)', '1 Veg Capsule', 3),
+  ('now-melatonin-5-mg', 1, 'Tablet(s)', '1 Tablet', 1),
+  ('now-sports-beta-alanine-powder', 2, 'Gram(s)', '2 Grams', 3),
+  ('now-tribulus-1000-mg', 1, 'Tablet(s)', '1 Tablet', 1),
+  ('nutracraft-rhodiola-rosea', 2, 'Capsule(s)', '2 Capsules', 1),
+  ('nutrakey-health-performance-l-citrulline-malate', 2, 'Gram(s)', '2 Grams', 2),
+  ('nutricology-calcium-citrate', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('nutricology-magnesium-citrate', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('nutricology-potassium-citrate', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('ol-olympian-labs-ubiquinol', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('oregons-wild-harvest-ashwagandha', 1, 'Capsule(s)', '1 Capsule', 3),
+  ('procaps-laboratories-chondroitin-sulfate-1200', 3, 'Capsule(s)', '3 Capsules', 1),
+  ('procaps-laboratories-quercetin-500', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('protocol-for-life-balance-glycine', 0.25, 'tsp', '0.25 tsps', 1),
+  ('protocol-for-life-balance-high-potency-d3-10-000-iu-cholecalciferol', 1, 'Veg Capsule(s)', '1 Veg Capsule', 1),
+  ('pure-advantage-creatine-monohydrate', 3, 'Gram(s)', '3 Grams', 1),
+  ('pure-encapsulations-alpha-lipoic-acid-600-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('pure-encapsulations-amino-nr', 3, 'Capsule(s)', '3 Capsules', 1),
+  ('pure-encapsulations-ascorbyl-palmitate', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('pure-encapsulations-cats-claw', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('pure-encapsulations-glycine', 3, 'Capsule(s)', '3 Capsules', 1),
+  ('pure-encapsulations-l-tryptophan', 2, 'Capsule(s)', '2 Capsules', 1),
+  ('pure-encapsulations-lycopene-20-mg', 1, 'Softgel Capsule(s)', '1 Softgel Capsule', 1),
+  ('pure-encapsulations-maca-3', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('pure-encapsulations-pantothenic-acid', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('pure-encapsulations-probiotic-50b', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('pure-encapsulations-selenium-selenomethionine', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('pure-myo-inositol', 4, 'Capsule(s)', '4 Capsules', 1),
+  ('pure-prescriptions-zinc-picolinate', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('quality-of-life-labs-vitapqq-pyrroloquinoline-quinone', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('solgar-earth-source-fermented-koji-iron-27-mg', 1, 'Vegetable Capsule(s)', '1 Vegetable Capsule', 1),
+  ('solgar-echinacea-herb-extract', 1, 'Vegetable Capsule(s)', '1 Vegetable Capsule', 1),
+  ('solgar-flavo-zinc-lozenge', 1, 'Lozenge(s)', '1 Lozenge', 1),
+  ('solgar-megasorb-coq-10-100-mg', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('solgar-sublingual-methylcobalamin-b12-5000-mcg', 1, 'nugget(s)', '1 nugget', 1),
+  ('solgar-vegetal-silica', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('sports-research-astaxanthin-12-mg', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('sports-research-biotin-2500-mcg', 1, 'Veggie Softgel(s)', '1 Veggie Softgel', 1),
+  ('sports-research-collagen-peptides-matcha', 12, 'Gram(s)', '12 Grams', 1),
+  ('sports-research-evening-primrose-oil-500-mg', 3, 'Liquid Softgel(s)', '3 Liquid Softgels', 1),
+  ('sports-research-hydrolyzed-collagen-peptides-vanilla', 11.65, 'Gram(s)', '11.65 Grams', 1),
+  ('sports-research-magnesium-l-threonate-2000-mg', 3, 'Veggie Capsule(s)', '3 Veggie Capsules', 1),
+  ('sports-research-marine-collagen-unflavored', 10, 'Gram(s)', '10 Grams', 1),
+  ('sports-research-turmeric-curcumin-c3-complex', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('sports-research-whey-protein-isolate-dutch-chocolate', 40.5, 'Gram(s)', '40.5 Grams', 1),
+  ('sundown-naturals-vitamin-a-10-000-iu', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('superiorlabs-l-lysine', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('superiorlabs-vitamin-b6', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('supersmart-bacopa-monnieri', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('supersmart-spermidine-3-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('swanson-5-htp-50-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('swanson-bamboo-extract', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('swanson-black-cumin-seed-oil-500-mg', 1, 'Liquid Veggie Capsule(s)', '1 Liquid Veggie Capsule', 1),
+  ('swanson-boswellia-serrata-extract-125-mg', 1, 'Veggie Capsule(s)', '1 Veggie Capsule', 2),
+  ('swanson-chinese-skullcap-400-mg', 1, 'Capsule(s)', '1 Capsule', 2),
+  ('swanson-fisetin-100-mg', 1, 'Veggie Capsule(s)', '1 Veggie Capsule', 1),
+  ('swanson-full-spectrum-fo-ti-500-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('swanson-full-spectrum-gotu-kola-435-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('swanson-full-spectrum-lavender-flower-400-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('swanson-huperzine-a-200-mcg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('swanson-inulin', 5, 'Gram(s)', '5 Grams', 1),
+  ('swanson-l-methionine-500-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('swanson-lactobacillus-rhamnosus-with-fos', 1, 'Veggie EMBOCAP(s) AP', '1 Veggie EMBOCAP AP', 2),
+  ('swanson-oregano-oil-liquid-extract', 0.17, 'mL', '0.17 mL', 3),
+  ('swanson-rosemary-extract-500-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('swanson-sprouted-broccoli-seed-400-mg', 1, 'Veggie Capsule(s)', '1 Veggie Capsule', 1),
+  ('teraputics-pure-life-magnesium-l-threonate', 4, 'Vegan Capsule(s)', '4 Vegan Capsules', 1),
+  ('thorne-acetyl-l-carnitine-500-mg', 1, 'Capsule(s)', '1 Capsule', 2),
+  ('thorne-amino-complex-lemon', 7.7, 'Gram(s)', '7.7 Grams', 1),
+  ('thorne-basic-b-complex', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('thorne-beta-alanine-sr', 2, 'Tablet(s)', '2 Tablets', 1),
+  ('thorne-biotin-8000-mcg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('thorne-boswellia-phytosome', 1, 'Capsule(s)', '1 Capsule', 2),
+  ('thorne-broccoli-seed-extract', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('thorne-copper-bisglycinate', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('thorne-curcumin-phytosome-1000-mg', 1, 'Capsule(s)', '1 Capsule', 2),
+  ('thorne-florasport-20b', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('thorne-gi-relief', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('thorne-glycine', 2, 'Capsule(s)', '2 Capsules', 1),
+  ('thorne-iodine-and-tyrosine', 1, 'Capsule(s)', '1 Capsule', 2),
+  ('thorne-iron-bisglycinate', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('thorne-joint-support-nutrients', 4, 'Capsule(s)', '4 Capsules', 1),
+  ('thorne-l-arginine-plus', 3, 'Capsule(s)', '3 Capsules', 2),
+  ('thorne-magnesium-bisglycinate', 3.11, 'Gram(s)', '3.11 Grams', 1),
+  ('thorne-niacinamide', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('thorne-pantethine', 1, 'Capsule(s)', '1 Capsule', 2),
+  ('thorne-pharmagaba-250', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('thorne-phosphatidylserine', 1, 'Capsule(s)', '1 Capsule', 2),
+  ('thorne-riboflavin-5-phosphate', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('thorne-super-epa-425-mg', 1, 'Gelcap(s)', '1 Gelcap', 2),
+  ('thorne-theanine', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('trace-minerals-research-ionic-manganese-10-mg', 1.25, 'mL', '1.25 mL', 1),
+  ('village-vitality-sleep-with-valerian-and-melatonin', 1, 'Veggie Cap(s)', '1 Veggie Cap', 1),
+  ('vincos-magnesium-glycinate', 0.5, 'Gram(s)', '0.5 Grams', 1),
+  ('vital-proteins-collagen-peptides', 6, 'Capsule(s)', '6 Capsules', 2),
+  ('vitamin-world-acidophilus-and-psyllium-husk', 4, 'Capsule(s)', '4 Capsules', 1),
+  ('vitamin-world-natural-e-400-iu-d-alpha-tocopherol', 1, 'Softgel(s)', '1 Softgel', 1),
+  ('wakunaga-of-america-kyolic-aged-garlic-extract', 0.25, 'tsp', '0.25 tsps', 2),
+  ('wonder-laboratories-silymarin-milk-thistle', 1, 'Softgel(s)', '1 Softgel', 2),
+  ('woodstock-vitamins-l-theanine-200-mg', 1, 'Capsule(s)', '1 Capsule', 1),
+  ('zhou-saw-palmetto', 1, 'Capsule(s)', '1 Capsule', 1)
+) as v(slug, serving_amount, serving_unit, serving_form, servings_per_day)
+where g.slug = v.slug and g.kind = 'supplement';
+
+do $$
+declare
+  with_serving integer;
+  total        integer;
+begin
+  select count(*) filter (where serving_amount is not null), count(*)
+    into with_serving, total
+  from public.glossary where kind = 'supplement';
+  raise notice 'servings: % of % supplements carry a label serving', with_serving, total;
+end $$;
+
+-- ==================== 0034_dose_skips.sql ====================
+-- Why a dose was not taken, and when the app was last opened.
+--
+-- The catch-up screen asks one question — what got in the way — and this is
+-- where the answer goes. It exists to move the schedule, never to score the
+-- user: a person who feels judged marks everything taken and the data stops
+-- meaning anything, which is worse than not asking.
+--
+-- WHAT IT FEEDS. An aggregate goes to the assistant's system prompt: reason
+-- counts over the last 30 days and which blocks are worst. That is what lets it
+-- say "you have skipped the 3pm block eleven times, mostly 'wasn't near them' —
+-- worth moving it to dinner?" instead of recommending a fourth thing to take at
+-- 3pm.
+
+create table if not exists public.dose_skips (
+  id         uuid primary key default gen_random_uuid(),
+  user_id    uuid not null references auth.users (id) on delete cascade,
+  dose_id    uuid not null references public.doses (id) on delete cascade,
+  reason     text not null,
+  note       text,
+  created_at timestamptz not null default now(),
+  -- one answer per dose; changing your mind updates rather than stacks
+  unique (dose_id)
+);
+
+comment on table public.dose_skips is
+  'Why a scheduled dose was not taken. Feeds schedule changes and the assistant, never a score shown back to the user.';
+
+alter table public.dose_skips enable row level security;
+
+create index if not exists dose_skips_user_created_idx
+  on public.dose_skips (user_id, created_at desc);
+
+-- RLS is not optional here: this is health-adjacent personal data.
+drop policy if exists "dose_skips: own rows" on public.dose_skips;
+create policy "dose_skips: own rows"
+  on public.dose_skips for all to authenticated
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+-- ---------------------------------------------------------------- last opened
+
+-- Server-side rather than in localStorage, so the catch-up screen behaves
+-- correctly after a reinstall or on a second device. A device that has never
+-- seen the app before must not be told it missed a week.
+alter table public.profiles
+  add column if not exists last_opened_at timestamptz;
+
+comment on column public.profiles.last_opened_at is
+  'When the app was last opened. The catch-up screen fires for doses whose time passed between this and now. Null means never opened, and never fires.';
+
+/**
+ * Stamp the open, and hand back the previous value in one round trip.
+ *
+ * Two statements would race with themselves: the app reads, then writes, and a
+ * second launch in between reads the value the first one already consumed. The
+ * previous timestamp is returned by the same statement that replaces it.
+ */
+create or replace function public.touch_last_opened()
+returns timestamptz
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  previous timestamptz;
+begin
+  if auth.uid() is null then
+    raise exception 'touch_last_opened: no authenticated user' using errcode = '28000';
+  end if;
+
+  select p.last_opened_at into previous
+  from public.profiles p where p.id = auth.uid();
+
+  update public.profiles
+  set last_opened_at = now()
+  where id = auth.uid();
+
+  return previous;
+end;
+$$;
+
+comment on function public.touch_last_opened() is
+  'Records this app open and returns the previous one. Null on a first launch, which the catch-up screen reads as "do not fire".';
+
+revoke all on function public.touch_last_opened() from public, anon;
+grant execute on function public.touch_last_opened() to authenticated;
+

@@ -790,3 +790,105 @@ export async function searchByIngredient(query: string): Promise<IngredientHit[]
   }
   return (data ?? []) as IngredientHit[];
 }
+
+// ============================================================================
+// Catch-up
+// ============================================================================
+
+/** The chips offered when someone says they did not take a dose. */
+export const SKIP_REASONS = [
+  { id: 'forgot', label: 'Forgot' },
+  { id: 'not_near', label: "Wasn't near them" },
+  { id: 'ran_out', label: 'Ran out' },
+  { id: 'didnt_feel', label: "Didn't feel like it" },
+  { id: 'felt_off', label: 'Felt off last time I took it' },
+  { id: 'travelling', label: 'Was travelling' },
+  { id: 'other', label: 'Something else' },
+] as const;
+
+/**
+ * Records this app open and returns the previous one.
+ *
+ * Null on a first launch, which the catch-up screen reads as "do not fire" —
+ * a device seeing the app for the first time must not be told it missed a week.
+ */
+export async function touchLastOpened(): Promise<Date | null> {
+  const { data, error } = await supabase.rpc('touch_last_opened');
+  /* Added by migration 0034. Until it is applied the RPC is absent, and a
+     catch-up screen that has not been deployed yet must simply not fire. */
+  if (error) {
+    if (/does not exist|not find|PGRST202/i.test(error.message ?? '')) return null;
+    throw error;
+  }
+  return data ? new Date(data as string) : null;
+}
+
+/**
+ * Doses whose time passed while the app was closed, still unmarked.
+ *
+ * `since` is the previous open. A dose due at 10:30 fires when the app was last
+ * open at 21:00 the night before and is opened at 11:00; it does not fire when
+ * that same app is opened at 10:00.
+ */
+export async function getMissedSince(userId: string, since: Date, now: Date): Promise<Dose[]> {
+  const { data, error } = await supabase
+    .from('doses')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('taken', false)
+    .eq('log_date', toISODate(now))
+    .order('scheduled_time', { ascending: true });
+  if (error) throw error;
+
+  const minutes = (d: Date) => d.getHours() * 60 + d.getMinutes();
+  const sinceM = minutes(since);
+  const nowM = minutes(now);
+  const sameDay = toISODate(since) === toISODate(now);
+
+  return (data as Dose[]).filter((dose) => {
+    if (!dose.scheduled_time) return false;
+    const [h, m] = dose.scheduled_time.split(':').map(Number);
+    const at = h * 60 + (m || 0);
+    // due before now, and not already passed the last time the app was open
+    if (at > nowM) return false;
+    return sameDay ? at > sinceM : true;
+  });
+}
+
+/** Records why a dose was not taken. One answer per dose; changing it updates. */
+export async function skipDose(input: {
+  userId: string;
+  doseId: string;
+  reason: string;
+  note?: string;
+}): Promise<void> {
+  const { error } = await supabase.from('dose_skips').upsert(
+    {
+      user_id: input.userId,
+      dose_id: input.doseId,
+      reason: input.reason,
+      note: input.note?.slice(0, 500) || null,
+    },
+    { onConflict: 'dose_id' },
+  );
+  if (error) throw error;
+}
+
+/**
+ * Deletes a progress note, and its photo if it had one.
+ *
+ * The photo goes first: a storage object whose row is already gone is
+ * unreachable from the app and would sit in the bucket forever, counted against
+ * the user's data but invisible to them. A failure to remove it is swallowed
+ * rather than blocking the delete — the row is what the user asked to be rid of.
+ */
+export async function deleteProgressNote(note: {
+  id: string;
+  photo_path?: string | null;
+}): Promise<void> {
+  if (note.photo_path) {
+    await supabase.storage.from('progress-photos').remove([note.photo_path]).catch(() => undefined);
+  }
+  const { error } = await supabase.from('progress_notes').delete().eq('id', note.id);
+  if (error) throw error;
+}

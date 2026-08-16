@@ -232,8 +232,8 @@ export function You() {
 
       <Sheet open={openSheet === 'subscription'} onClose={() => setOpenSheet(null)} title="Subscription">
         <div className="t-body">
-          You're on the <strong style={{ textTransform: 'capitalize' }}>{profile.subscription_tier}</strong> tier.
-          Subscription management isn't available yet — this is a placeholder until billing is wired up.
+          Pepstack is free while it is in its first release. Everything in the app is
+          available to you, and there is nothing to manage here yet.
         </div>
       </Sheet>
 

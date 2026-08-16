@@ -2216,3 +2216,137 @@ button {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
+
+/* Why the solver placed an item where it did. Shown under the name in the
+   onboarding reveal, and only while the item is still where it was put. */
+.ob-dose-reason {
+  display: block;
+  margin-top: 3px;
+  font-size: calc(12px * var(--text-scale));
+  line-height: 1.45;
+  color: var(--t3);
+}
+/* A soft constraint the day could not satisfy. Stated, never hidden — and not
+   an error, so it does not get a colour of its own. */
+.ob-dose-compromise {
+  display: block;
+  margin-top: 2px;
+  font-size: calc(12px * var(--text-scale));
+  line-height: 1.45;
+  color: var(--t4);
+}
+
+/* Catch-up: what came due while the app was closed. Neutral throughout —
+   nothing red, no streak break, no count as a headline. */
+.catchup {
+  min-height: 100dvh;
+  padding: max(28px, env(safe-area-inset-top)) 20px max(28px, env(safe-area-inset-bottom));
+  background: var(--bg);
+}
+.catchup-head { margin-bottom: 22px; }
+.catchup-sub { color: var(--t2); margin-top: 6px; }
+.catchup-list { display: flex; flex-direction: column; gap: 14px; }
+
+.catchup-card {
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--card);
+}
+.catchup-card-head { margin-bottom: 14px; }
+.catchup-name {
+  display: block;
+  font-size: calc(16px * var(--text-scale));
+  font-weight: 500;
+}
+.catchup-due { display: block; margin-top: 3px; color: var(--t3); }
+
+/* The slider. 56px tall, 28px radius, 48px thumb — drag only. */
+.catchup-track {
+  position: relative;
+  height: 56px;
+  border-radius: 28px;
+  background: #16161a;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+}
+.catchup-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--purple);
+  border-radius: 28px;
+  transition: width 120ms linear;
+}
+.catchup-track.done .catchup-fill { transition: width 260ms var(--ease); }
+.catchup-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(14px * var(--text-scale));
+  font-weight: 500;
+  color: var(--t2);
+  pointer-events: none;
+}
+.catchup-track.done .catchup-label { color: #fff; }
+.catchup-thumb {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background: var(--purple);
+  pointer-events: none;
+}
+.catchup-track.done .catchup-thumb { opacity: 0; }
+
+/* Deliberately not a button of equal weight, and not red. */
+.catchup-no {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 8px 0;
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.62);
+  font: inherit;
+  font-size: calc(15px * var(--text-scale));
+}
+
+.catchup-dismiss {
+  display: block;
+  width: 100%;
+  margin-top: 24px;
+  padding: 16px 0;
+  border: 0;
+  background: none;
+  color: var(--t3);
+  font: inherit;
+  font-size: calc(15px * var(--text-scale));
+}
+
+.catchup-reasons { display: flex; flex-wrap: wrap; gap: 8px; }
+.catchup-reason {
+  padding: 9px 14px;
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  background: none;
+  color: var(--t2);
+  font: inherit;
+  font-size: calc(14px * var(--text-scale));
+}
+.catchup-reason.on {
+  border-color: var(--purple);
+  color: #fff;
+  background: rgba(123, 92, 250, 0.16);
+}
+
+/* A progress note being pressed and held. Same feedback as a dose row: it
+   acknowledges the gesture before the sheet arrives, so the 450ms does not
+   read as the tap having failed. */
+.progress-row.holding {
+  background: var(--card-hi);
+  border-radius: 14px;
+}

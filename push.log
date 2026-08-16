@@ -1,0 +1,28 @@
+Initialising login role...
+Connecting to remote database...
+Do you want to push these migrations to the remote database?
+ • 0029_ingredient_rows.sql
+ • 0030_growth_goal_tag.sql
+ • 0031_peptides_have_no_dose.sql
+ • 0032_ingredient_search.sql
+ • 0033_serving_sizes.sql
+ • 0034_dose_skips.sql
+
+ [Y/n] y
+Applying migration 0029_ingredient_rows.sql...
+NOTICE (00000): ingredients: 652 rows across 250 products, 620 carrying a key
+Applying migration 0030_growth_goal_tag.sql...
+NOTICE (00000): growth goal: 34 products now carry the Growth tag
+Applying migration 0031_peptides_have_no_dose.sql...
+NOTICE (00000): constraint "glossary_peptides_have_no_timing" of relation "glossary" does not exist, skipping
+NOTICE (00000): trigger "nutrient_reference_no_peptides" for relation "public.nutrient_reference" does not exist, skipping
+NOTICE (00000): trigger "schedule_items_no_peptides" for relation "public.schedule_items" does not exist, skipping
+NOTICE (00000): peptides carrying timing after cleanup: 0
+WARNING (01000): 13 scheduled item(s) already point at a peptide. The trigger blocks new ones; these need a decision.
+Applying migration 0032_ingredient_search.sql...
+Applying migration 0033_serving_sizes.sql...
+NOTICE (00000): constraint "glossary_peptides_have_no_serving" of relation "glossary" does not exist, skipping
+NOTICE (00000): servings: 250 of 250 supplements carry a label serving
+Applying migration 0034_dose_skips.sql...
+NOTICE (00000): policy "dose_skips: own rows" for relation "public.dose_skips" does not exist, skipping
+Finished supabase db push.

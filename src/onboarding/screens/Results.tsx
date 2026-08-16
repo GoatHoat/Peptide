@@ -8,6 +8,7 @@ import {
   type NutrientReference,
 } from '../../lib/api';
 import { checkPlacement, fromMinutes, toMinutes, type ScheduledItem } from '../../lib/conflicts';
+import { solve } from '../../lib/schedule';
 import { resolveIntake } from '../../lib/intake';
 import { recommend } from '../../lib/recommend';
 import type { Meal } from '../store';
@@ -356,9 +357,33 @@ export function ScheduleBuilder({
   onDone: (schedule: { id: string; time: string }[]) => void;
 }) {
   const slots = useMemo(() => buildSlots(meals, wake, sleep), [meals, wake, sleep]);
-  const [placed, setPlaced] = useState<Record<string, string>>(() =>
-    Object.fromEntries(picks.map((p, i) => [p.id, slots[i % slots.length].id])),
+
+  /* The opening layout comes from the solver, not from `i % slots.length`.
+     Round-robin put iron next to zinc as often as not and could not say why
+     anything was where it was; this places against the ingredient panel and
+     hands back a reason per item. Dragging afterwards still works and is still
+     checked by conflicts.ts — the solver decides where things start. */
+  const solution = useMemo(
+    () =>
+      solve(
+        picks.map((p) => ({ id: p.id, name: p.name })),
+        { wake, sleep, meals: meals.map((m) => ({ id: m.id, name: m.name, time: m.time })) },
+      ),
+    [picks, meals, wake, sleep],
   );
+  const reasonById = useMemo(
+    () => Object.fromEntries(solution.placements.map((pl) => [pl.itemId, pl])),
+    [solution],
+  );
+
+  const [placed, setPlaced] = useState<Record<string, string>>(() => {
+    const fromSolver = Object.fromEntries(solution.placements.map((pl) => [pl.itemId, pl.blockId]));
+    // any block the solver named must exist in the drag target list
+    const known = new Set(slots.map((s) => s.id));
+    return Object.fromEntries(
+      picks.map((p) => [p.id, known.has(fromSolver[p.id]) ? fromSolver[p.id] : slots[0].id]),
+    );
+  });
   const [dragging, setDragging] = useState<string | null>(null);
   const [over, setOver] = useState<{ slot: string; bad: boolean } | null>(null);
   const [shake, setShake] = useState<string | null>(null);
@@ -369,6 +394,9 @@ export function ScheduleBuilder({
   const slotById = Object.fromEntries(slots.map((s) => [s.id, s]));
 
   const itemsIn = (slotId: string) => picks.filter((p) => placed[p.id] === slotId);
+  /** why the solver put this here, shown under the name in the reveal */
+  const reasonFor = (id: string) => reasonById[id]?.reason ?? null;
+  const compromiseFor = (id: string) => reasonById[id]?.compromise ?? null;
 
   const others = (movingId: string): ScheduledItem[] =>
     picks
@@ -454,6 +482,17 @@ export function ScheduleBuilder({
                       {p.name}
                     </span>
                     <span className="ob-caption">{p.route} · you set the amount</span>
+                    {/* Why the solver put it here. Without this the schedule is
+                        the app moving things around for reasons the user cannot
+                        see — which is indistinguishable from moving them at
+                        random. Only shown while the item is where the solver
+                        put it; once dragged, the reason no longer holds. */}
+                    {placed[p.id] === reasonById[p.id]?.blockId && reasonFor(p.id) && (
+                      <span className="ob-dose-reason">{reasonFor(p.id)}</span>
+                    )}
+                    {placed[p.id] === reasonById[p.id]?.blockId && compromiseFor(p.id) && (
+                      <span className="ob-dose-compromise">{compromiseFor(p.id)}</span>
+                    )}
                   </span>
                   <svg className="ob-dose-grip" width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden>
                     <path d="M3 5.5h10M3 10.5h10" />

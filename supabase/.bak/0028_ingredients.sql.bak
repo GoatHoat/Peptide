@@ -32,7 +32,7 @@ create table if not exists public.glossary_ingredient (
   unit           text,
   is_primary     boolean not null default false,
   position       integer,                -- order on the label panel
-  unique (glossary_id, position)
+  unique (glossary_id, raw_name)
 );
 
 comment on table public.glossary_ingredient is
