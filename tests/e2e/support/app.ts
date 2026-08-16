@@ -13,6 +13,15 @@ export interface AppFixture {
   stub: Stub;
   consoleErrors: string[];
   pageErrors: string[];
+  /**
+   * Excuse one console line the browser writes itself.
+   *
+   * The only legitimate use is a response status the app asks for and renders —
+   * a 429 or an aborted request in `ask.spec.ts`. Chromium logs "Failed to load
+   * resource: …" for those before any of our code runs, and there is no way to
+   * suppress it from the page. Anything the app logs is still a failure.
+   */
+  allowConsoleError(pattern: RegExp): void;
 }
 
 /**
@@ -33,11 +42,20 @@ export const test = base.extend<{ app: AppFixture }>({
         pageErrors.push(error.message);
       });
 
+      const allowed: RegExp[] = [];
       const stub = await installSupabaseStub(page);
-      await use({ stub, consoleErrors, pageErrors });
+      await use({
+        stub,
+        consoleErrors,
+        pageErrors,
+        allowConsoleError: (pattern) => allowed.push(pattern),
+      });
 
       expect(pageErrors, 'uncaught errors').toEqual([]);
-      expect(consoleErrors, 'console errors').toEqual([]);
+      expect(
+        consoleErrors.filter((line) => !allowed.some((pattern) => pattern.test(line))),
+        'console errors',
+      ).toEqual([]);
       expect(stub.unhandled, 'Supabase calls the stub does not model').toEqual([]);
     },
     /* auto, because a fixture is only built when a test asks for it by name —

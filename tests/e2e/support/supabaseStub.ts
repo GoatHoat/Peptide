@@ -1,6 +1,9 @@
 import type { Page, Request } from '@playwright/test';
 import { SUPABASE_URL } from './env';
 import { INSERT_DEFAULTS, makeTables, STUB_EMAIL, STUB_USER_ID, type Row } from './catalogue';
+import { buildCards, classifyScope } from '../../../supabase/functions/ask/lib';
+import type { AskCitation, CatalogueEntry } from '../../../supabase/functions/ask/lib';
+import { ANSWER_FIXTURES, ERROR_FIXTURES, pickFixture } from '../../../supabase/functions/ask/fixtures';
 
 /**
  * A Supabase that never leaves the browser.
@@ -94,6 +97,23 @@ export async function installSupabaseStub(page: Page): Promise<Stub> {
       return miss();
     }
 
+    /* ── Edge functions ───────────────────────────────────────────────── */
+
+    if (path.startsWith('/functions/v1/')) {
+      if (path !== '/functions/v1/ask') return miss();
+      if (method !== 'POST') return miss(405);
+      if (!(request.headers()['authorization'] ?? '').toLowerCase().startsWith('bearer ')) {
+        return json({ error: { code: 'unauthorized', message: 'Sign in to ask a question.' } }, 401);
+      }
+      const body = (request.postDataJSON() ?? {}) as { question?: unknown };
+      const question = typeof body.question === 'string' ? body.question.trim() : '';
+      if (!question) {
+        return json({ error: { code: 'bad_request', message: 'Ask a question first.' } }, 400);
+      }
+      const answer = askAnswer(stub.db.glossary, question);
+      return json(answer.body, answer.status);
+    }
+
     /* ── PostgREST ────────────────────────────────────────────────────── */
 
     if (!path.startsWith('/rest/v1/')) return miss();
@@ -171,6 +191,75 @@ export async function installSupabaseStub(page: Page): Promise<Stub> {
   return stub;
 }
 
+/**
+ * The `ask` edge function's no-key path.
+ *
+ * It runs the same `lib.ts` and `fixtures.ts` the deployed function imports —
+ * not a second copy of the answers — so a change to the refusal wording or the
+ * fixture products shows up here rather than drifting away from the tests.
+ * The order is `index.ts`'s: scope first, so "is BPC-157 safe" is refused
+ * before the two stub triggers are looked at.
+ *
+ * Not modelled, because no screen depends on either: the JWT is checked for
+ * presence and never decoded, and the rolling 15/hour counter is not kept.
+ * `STUB_TRIGGERS.rate_limit` is how the 429 is reached here, which is how it is
+ * reached against a deployed function with no key too.
+ */
+function askAnswer(rows: Row[], question: string): { status: number; body: unknown } {
+  const all = rows.map(toCatalogueEntry);
+  const peptideTerms = all.filter((e) => e.kind === 'peptide').flatMap((e) => [e.name, e.slug]);
+  const bySlug = new Map<string, CatalogueEntry>(
+    all.filter((e) => e.kind !== 'peptide').map((e) => [e.slug, e]),
+  );
+
+  const usage = {
+    remaining_hour: 14,
+    remaining_day: 49,
+    resets_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+  };
+
+  const scope = classifyScope(question, peptideTerms);
+  if (scope !== 'ok') {
+    return { status: 200, body: { answer: ANSWER_FIXTURES[scope].answer, cards: [], usage, stub: true } };
+  }
+
+  const key = pickFixture(question, 'ok');
+  if (key === 'rate_limit' || key === 'server_error') {
+    return { status: ERROR_FIXTURES[key].status, body: ERROR_FIXTURES[key].body };
+  }
+
+  const fixture = ANSWER_FIXTURES[key];
+  const citations = new Map<string, AskCitation[]>(Object.entries(fixture.citations));
+  const fallback = new Map(fixture.products.map((p) => [p.slug, p]));
+  return {
+    status: 200,
+    body: {
+      answer: fixture.answer,
+      cards: buildCards(fixture.cards, bySlug, citations, fallback),
+      usage,
+      stub: true,
+    },
+  };
+}
+
+/** Same projection `index.ts` makes over a glossary row. */
+function toCatalogueEntry(row: Row): CatalogueEntry {
+  return {
+    slug: String(row.slug),
+    name: String(row.name),
+    brand: (row.brand as string) ?? null,
+    product_form: (row.product_form as string) ?? null,
+    goal_tags: Array.isArray(row.goal_tags) ? (row.goal_tags as string[]) : [],
+    kind: (row.kind as string) ?? null,
+    timing: (row.timing as string) ?? null,
+    timing_note: (row.timing_note as string) ?? null,
+    evidence: (row.evidence as string) ?? null,
+    mechanism_summary: (row.mechanism_summary as string) ?? null,
+    label_url: (row.label_url as string) ?? null,
+    ods_url: (row.ods_url as string) ?? null,
+  };
+}
+
 /** postgrest-js asks for a bare object rather than an array via Accept. */
 function wantsSingleObject(request: Request): boolean {
   return (request.headers()['accept'] ?? '').includes('vnd.pgrst.object');
@@ -204,7 +293,16 @@ function applyFilters(rows: Row[], params: URLSearchParams): Row[] {
       out = out.filter((r) => String(r[column]) <= lte[1]);
       continue;
     }
-    // not./is./like. and the embedded-table filters fall through unfiltered.
+    /* `not.is.null` is the one form the app uses (api.ts, twice) and the one
+       form that cannot fall through: `getInjectionSiteStats` calls .trim() on
+       every row it gets back, so serving it a null column is an uncaught
+       TypeError on a screen that is always mounted. Postgres would never
+       return that row. */
+    if (raw === 'not.is.null') {
+      out = out.filter((r) => r[column] !== null && r[column] !== undefined);
+      continue;
+    }
+    // other not./is./like. forms and the embedded-table filters fall through.
   }
   return out;
 }

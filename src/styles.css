@@ -1086,6 +1086,8 @@ button {
   padding: 11px 0;
   box-shadow: inset 0 1.5px 0 var(--card-hi);
   color: var(--t1);
+  /* the only link in the app that was underlined; every other one is not */
+  text-decoration: none;
 }
 .research-link:first-child {
   box-shadow: none;
@@ -1806,7 +1808,14 @@ button {
 .ask {
   display: flex;
   flex-direction: column;
-  min-height: 62vh;
+  /* Fill the panel exactly, so the composer sits on the bottom of the screen
+     rather than two thirds of the way down it with dead black underneath —
+     which is what a flat 62vh did. The terms are: the screen head and the tab
+     bar above this (150px at the default type scale), the panel's own top
+     inset, and the strip the panel reserves at the bottom for the tab bar. */
+  min-height: calc(
+    100dvh - 150px - env(safe-area-inset-top) - var(--tab-h) - 34px - env(safe-area-inset-bottom)
+  );
 }
 .ask-thread {
   flex: 1;
@@ -1818,6 +1827,9 @@ button {
 .ask-empty {
   text-align: center;
   padding: 30px 0 10px;
+  /* centred in whatever the thread is not using, so an empty chat reads as
+     laid out rather than as a screen that stopped loading */
+  margin: auto 0;
 }
 .ask-mark {
   display: inline-grid;
@@ -1868,6 +1880,103 @@ button {
   background: var(--card);
   color: var(--t1);
 }
+/* an answer is the bubble plus whatever it put under it */
+.ask-answer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.ask-stub {
+  color: var(--t3);
+  padding-left: 15px;
+}
+.ask-cards {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ask-card {
+  display: flex;
+  flex-direction: column;
+  padding: 13px 15px;
+  border-radius: 16px;
+  background: var(--card);
+}
+.ask-card-sub {
+  color: var(--t3);
+  margin-top: 2px;
+}
+.ask-card-reason {
+  color: var(--t2);
+  line-height: 18px;
+  margin-top: 7px;
+}
+.ask-card-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 9px;
+}
+/* the footer sits flush to the card's own edges, under a step */
+.ask-card-papers,
+.ask-card-papers-none {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  margin: 10px -15px -13px;
+  padding: 0 15px;
+  border-radius: 0 0 16px 16px;
+  box-shadow: inset 0 1.5px 0 var(--card-hi);
+  color: var(--t2);
+  font-size: calc(13px * var(--text-scale));
+}
+.ask-card-papers svg:last-child {
+  margin-left: auto;
+}
+.ask-card-papers-none {
+  color: var(--t3);
+}
+.ask-notice {
+  align-self: flex-start;
+  max-width: calc(100% - 60px);
+  padding: 12px 15px;
+  border-radius: 20px;
+  box-shadow: inset 0 0 0 1.5px var(--danger-dim);
+}
+.ask-notice-line {
+  color: var(--danger);
+}
+.ask-notice-wait {
+  color: var(--t2);
+  margin-top: 4px;
+}
+.ask-retry {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  margin-bottom: -10px;
+  color: var(--purple);
+  font-size: calc(15px * var(--text-scale));
+  font-weight: 500;
+  letter-spacing: -0.1px;
+}
+.ask-retry:disabled {
+  color: var(--t3);
+}
+.ask-cite-note {
+  color: var(--t2);
+}
+.ask-cite-label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 4px;
+  color: var(--purple);
+  text-decoration: none;
+}
 .ask-dots {
   display: inline-flex;
   gap: 5px;
@@ -1890,6 +1999,19 @@ button {
   position: sticky;
   bottom: 0;
   padding: 12px 0 4px;
+  background: var(--bg);
+}
+/* A sticky bottom:0 pins to the scrollport inset by the scroll container's
+   padding, and the panel reserves the tab bar's height there — so the last
+   message could scroll into the strip underneath the composer and sit over the
+   tab bar. This is the composer's own background, carried to the bottom. */
+.ask-composer::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: calc(var(--tab-h) + 34px + env(safe-area-inset-bottom));
   background: var(--bg);
 }
 .ask-input-row {
