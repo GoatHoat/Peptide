@@ -2076,3 +2076,45 @@ button {
   color: var(--t3);
   text-align: center;
 }
+
+/* Destructive controls. --danger is the existing error red, not a second
+   accent — it appears only where an action cannot be undone. */
+.row-label.danger { color: var(--danger); }
+
+.btn-danger {
+  height: 56px;
+  min-height: 56px;
+  flex: none;
+  border: 1px solid rgba(255, 107, 107, 0.32);
+  border-radius: var(--r);
+  background: transparent;
+  color: var(--danger);
+  font: inherit;
+  font-weight: 500;
+}
+.btn-danger:disabled { opacity: 0.4; }
+
+/* Report control under an assistant answer (App Store Guideline 1.2). Quiet by
+   design — it must be findable, not competing with the answer above it. */
+.ask-report {
+  display: inline-block;
+  margin: 8px 0 0 2px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--t3);
+  font: inherit;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.ask-report.done { text-decoration: none; }
+
+/* Sits above the actions on an opened product card. Quiet, but never absent
+   where the card shows an intake figure. */
+.prod-disclaimer {
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair);
+  color: var(--t3);
+}

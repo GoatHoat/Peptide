@@ -3,14 +3,14 @@ import { IconClock } from '../components/Icons';
 import { Sheet } from '../components/Sheet';
 import { useAuth } from '../lib/auth';
 import { usePrefs } from '../lib/prefs';
-import { getComplianceMap, getScheduleItems } from '../lib/api';
+import { deleteAccount, getComplianceMap, getScheduleItems } from '../lib/api';
 import { exportCSV, exportPDF } from '../lib/export';
+import { externalLink, PRIVACY_URL, TERMS_URL } from '../lib/legal';
 import { checkNotificationPermission, requestNotificationPermission, syncScheduleNotifications } from '../lib/notifications';
 import { addDays, computeMonthGrid, startOfMonth, toISODate } from '../lib/date';
 import { useNow } from '../lib/now';
 import { MyStack } from './MyStack';
 import { ProgressNotes } from './ProgressNotes';
-import { BodyMap } from './BodyMap';
 
 const DOW = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
@@ -33,12 +33,18 @@ export function You() {
   const { user, signOut } = useAuth();
   const { profile, save } = usePrefs();
   const [compliance, setCompliance] = useState<Record<string, { total: number; taken: number }>>({});
-  const [openSheet, setOpenSheet] = useState<'notifications' | 'subscription' | 'export' | null>(null);
+  const [openSheet, setOpenSheet] = useState<'notifications' | 'subscription' | 'export' | 'delete' | null>(null);
   const [exporting, setExporting] = useState<'csv' | 'pdf' | null>(null);
   const [exportError, setExportError] = useState<string | null>(null);
   const [reminderCount, setReminderCount] = useState(0);
   const [permGranted, setPermGranted] = useState(false);
   const [requestingPerm, setRequestingPerm] = useState(false);
+  /* Deleting is irreversible and sits one row below Sign Out, so it asks the
+     user to type the word rather than relying on a second tap they would give
+     without reading. */
+  const [deleteConfirm, setDeleteConfirm] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // live: rolls over at midnight and after the app comes back from the background
   const today = useNow();
@@ -141,8 +147,6 @@ export function You() {
 
       <MyStack />
 
-      <BodyMap />
-
       <ProgressNotes />
 
       <div className="rows">
@@ -176,8 +180,24 @@ export function You() {
         <div className="row pressable" onClick={() => setOpenSheet('export')}>
           <span className="row-label">Export Data</span>
         </div>
+        <a className="row pressable" href={PRIVACY_URL} {...externalLink}>
+          <span className="row-label">Privacy Policy</span>
+        </a>
+        <a className="row pressable" href={TERMS_URL} {...externalLink}>
+          <span className="row-label">Terms of Use</span>
+        </a>
         <div className="row pressable" onClick={() => signOut()}>
           <span className="row-label">Sign Out</span>
+        </div>
+        <div
+          className="row pressable"
+          onClick={() => {
+            setDeleteConfirm('');
+            setDeleteError(null);
+            setOpenSheet('delete');
+          }}
+        >
+          <span className="row-label danger">Delete Account</span>
         </div>
       </div>
 
@@ -243,6 +263,61 @@ export function You() {
         {exportError && (
           <div className="auth-error t-secondary" style={{ marginTop: 12 }}>
             {exportError}
+          </div>
+        )}
+      </Sheet>
+      <Sheet open={openSheet === 'delete'} onClose={() => setOpenSheet(null)} title="Delete Account">
+        <div className="t-body" style={{ color: 'var(--t2)', marginBottom: 14 }}>
+          This removes your profile, your stack, your whole dose history and your progress
+          notes. It cannot be undone, and it signs you out on every device.
+        </div>
+        <div className="t-body" style={{ color: 'var(--t2)', marginBottom: 18 }}>
+          If you only want your records, close this and use Export Data first — once the
+          account is gone there is nothing left to export.
+        </div>
+
+        <div className="field">
+          <label className="t-label" htmlFor="delete-confirm">
+            Type DELETE to confirm
+          </label>
+          <input
+            id="delete-confirm"
+            className="field-input"
+            autoCapitalize="characters"
+            autoCorrect="off"
+            spellCheck={false}
+            value={deleteConfirm}
+            onChange={(e) => setDeleteConfirm(e.target.value)}
+            placeholder="DELETE"
+          />
+        </div>
+
+        <button
+          className="btn btn-danger pressable"
+          style={{ marginTop: 16, width: '100%' }}
+          disabled={deleteConfirm.trim().toUpperCase() !== 'DELETE' || deleting}
+          onClick={async () => {
+            setDeleting(true);
+            setDeleteError(null);
+            try {
+              await deleteAccount();
+              /* No navigation and no success message on purpose: the auth
+                 listener sees the session end and swaps the whole app back to
+                 the sign-in screen, which is the only honest confirmation. */
+            } catch (err) {
+              setDeleteError(
+                err instanceof Error ? err.message : 'Could not delete the account. Try again.',
+              );
+              setDeleting(false);
+            }
+          }}
+        >
+          {deleting ? 'Deleting…' : 'Delete my account'}
+        </button>
+
+        {deleteError && (
+          <div className="auth-error t-secondary" style={{ marginTop: 12 }}>
+            {deleteError}
           </div>
         )}
       </Sheet>

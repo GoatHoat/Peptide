@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Cta, LogoMark, Screen, Sub, Title } from '../chrome';
 import { useAuth } from '../../lib/auth';
+import { externalLink, PRIVACY_URL, TERMS_URL } from '../../lib/legal';
 
 export function Welcome({ onNext }: { onNext: () => void }) {
   return (
@@ -34,7 +35,7 @@ export function Auth({
   onDone: (userId: string, email: string) => void;
   onSwitch: (mode: 'signin' | 'signup') => void;
 }) {
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, resetPassword } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -44,12 +45,31 @@ export function Auth({
   /** validation appears after blur, never while typing */
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [confirmSent, setConfirmSent] = useState(false);
-  /** which switched-off provider was tapped, so the screen can say so */
-  const [note, setNote] = useState<string | null>(null);
+  /** what the reset link request came back with, shown under the field */
+  const [resetNote, setResetNote] = useState<string | null>(null);
 
   const emailBad = touched.email && !/^\S+@\S+\.\S+$/.test(email);
   const passBad = touched.password && password.length < 6;
   const confirmBad = mode === 'signup' && touched.confirm && confirm !== password;
+
+  /* Always reports success, whether or not the address has an account. Saying
+     "no account for that email" turns the sign-in screen into a way to test
+     whether somebody uses the app. */
+  const sendReset = async () => {
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      setTouched((t) => ({ ...t, email: true }));
+      setResetNote('Enter your email address above first.');
+      return;
+    }
+    setBusy(true);
+    setResetNote(null);
+    try {
+      await resetPassword(email);
+      setResetNote(`If there is an account for ${email}, a reset link is on its way.`);
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -95,8 +115,9 @@ export function Auth({
             {busy ? 'Please wait…' : mode === 'signin' ? 'Sign in' : 'Create account'}
           </Cta>
           <p className="ob-legal">
-            By continuing you agree to our <a href="/terms">Terms</a> and{' '}
-            <a href="/privacy">Privacy Policy</a>.
+            By continuing you agree to our{' '}
+            <a href={TERMS_URL} {...externalLink}>Terms</a> and{' '}
+            <a href={PRIVACY_URL} {...externalLink}>Privacy Policy</a>.
           </p>
         </>
       }
@@ -107,38 +128,6 @@ export function Auth({
           ? 'Your schedule is waiting where you left it.'
           : 'So your schedule follows you between devices.'}
       </Sub>
-
-      <div className="ob-auth-buttons">
-        {/* Apple and Google are drawn but inert until the providers are enabled
-            in Supabase. Guideline 4.8 means if Google ever ships, Apple ships
-            with it — they are deliberately kept as a pair. */}
-        <button className="ob-provider apple" type="button" disabled onClick={() => setNote('apple')}>
-          <svg width="17" height="20" viewBox="0 0 17 20" fill="currentColor" aria-hidden>
-            <path d="M14.1 10.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.9-1.4-.1-2.8.9-3.6.9-.7 0-1.9-.8-3.1-.8-1.6 0-3.1.9-3.9 2.4-1.7 2.9-.4 7.2 1.2 9.5.8 1.2 1.7 2.4 3 2.4 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.1.8 1.3 0 2.1-1.2 2.9-2.3.9-1.3 1.3-2.6 1.3-2.7 0 0-2.5-1-2.6-3.9zM11.9 3.6c.7-.8 1.1-2 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z" />
-          </svg>
-          Continue with Apple
-        </button>
-        <button className="ob-provider google" type="button" disabled onClick={() => setNote('google')}>
-          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden>
-            <path fill="#4285F4" d="M17.6 9.2c0-.6-.1-1.2-.2-1.8H9v3.5h4.8a4.1 4.1 0 0 1-1.8 2.7v2.2h2.9c1.7-1.5 2.7-3.8 2.7-6.6z" />
-            <path fill="#34A853" d="M9 18c2.4 0 4.5-.8 6-2.2l-2.9-2.2a5.4 5.4 0 0 1-8-2.8H1v2.3A9 9 0 0 0 9 18z" />
-            <path fill="#FBBC05" d="M4.1 10.7a5.4 5.4 0 0 1 0-3.4V5H1a9 9 0 0 0 0 8l3.1-2.3z" />
-            <path fill="#EA4335" d="M9 3.6c1.3 0 2.5.5 3.4 1.3L15 2.3A9 9 0 0 0 1 5l3.1 2.3A5.4 5.4 0 0 1 9 3.6z" />
-          </svg>
-          Continue with Google
-        </button>
-      </div>
-
-      {note && (
-        <p className="ob-caption" style={{ marginTop: 14 }}>
-          {note === 'apple' ? 'Apple' : 'Google'} sign-in isn’t switched on yet — use email below.
-        </p>
-      )}
-
-      {/* Without this the provider buttons and the fields read as one form. */}
-      <div className="ob-or">
-        <span>or use email</span>
-      </div>
 
       <form className="ob-form" onSubmit={submit} noValidate>
         <div className="ob-field">
@@ -195,10 +184,11 @@ export function Auth({
         )}
 
         {mode === 'signin' && (
-          <button type="button" className="ob-textlink left">
+          <button type="button" className="ob-textlink left" onClick={sendReset} disabled={busy}>
             Forgot password?
           </button>
         )}
+        {resetNote && <div className="ob-caption" style={{ marginTop: 10 }}>{resetNote}</div>}
 
         {error && <div className="ob-field-err" role="alert">{error}</div>}
         <button id="ob-auth-submit" type="submit" hidden />

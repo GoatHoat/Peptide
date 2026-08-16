@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useAuth } from '../lib/auth';
 import { LogoMark } from '../onboarding/chrome';
 import { Sheet } from '../components/Sheet';
 import { EVIDENCE, Pill, TIMING_LABEL } from '../components/Pills';
@@ -10,6 +11,7 @@ import {
   historyFrom,
   loadThread,
   MAX_QUESTION_CHARS,
+  reportAnswer,
   saveThread,
   turnsFrom,
   type AskCard,
@@ -50,6 +52,12 @@ export function AskAI({
   const [draft, setDraft] = useState('');
   const [pending, setPending] = useState(false);
   const [openCard, setOpenCard] = useState<AskCard | null>(null);
+  /* Guideline 1.2: a chat surface has to offer a way to report what it says.
+     Keyed by entry id so the control reports the answer it sits under. */
+  const [reporting, setReporting] = useState<string | null>(null);
+  const [reported, setReported] = useState<Set<string>>(new Set());
+  const [reportReason, setReportReason] = useState('');
+  const { user } = useAuth();
   const taRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const mounted = useRef(false);
@@ -195,6 +203,19 @@ export function AskAI({
                   ))}
                 </div>
               )}
+              {reported.has(entry.id) ? (
+                <span className="ask-report done t-caption">Reported. Thank you.</span>
+              ) : (
+                <button
+                  className="ask-report t-caption pressable"
+                  onClick={() => {
+                    setReportReason('');
+                    setReporting(entry.id);
+                  }}
+                >
+                  Report this answer
+                </button>
+              )}
             </div>
           );
         })}
@@ -244,6 +265,56 @@ export function AskAI({
         </div>
         <p className="ask-disclaimer t-caption">General information, not medical advice.</p>
       </div>
+
+      <Sheet open={!!reporting} onClose={() => setReporting(null)} title="Report this answer">
+        <div className="t-body" style={{ color: 'var(--t2)', marginBottom: 16 }}>
+          Tell us what was wrong with it. The question and the answer are sent with your
+          report so we can see what happened.
+        </div>
+        <div className="field">
+          <label className="t-label" htmlFor="report-reason">
+            What was wrong? (optional)
+          </label>
+          <textarea
+            id="report-reason"
+            className="field-input"
+            rows={3}
+            maxLength={500}
+            value={reportReason}
+            onChange={(e) => setReportReason(e.target.value)}
+            placeholder="Inaccurate, unsafe, offensive…"
+          />
+        </div>
+        <button
+          className="btn btn-fill pressable"
+          style={{ marginTop: 16, width: '100%' }}
+          onClick={async () => {
+            const id = reporting;
+            if (!id || !user) return;
+            const idx = entries.findIndex((e) => e.id === id);
+            const answer = entries[idx];
+            /* The user bubble directly above it. Reporting the answer without
+               the question it answered gives whoever triages it nothing. */
+            const asked = [...entries.slice(0, idx)].reverse().find((e) => e.role === 'user');
+            try {
+              await reportAnswer({
+                userId: user.id,
+                question: asked?.text ?? '(not recorded)',
+                answer: answer && 'text' in answer ? answer.text : '',
+                reason: reportReason,
+              });
+            } catch {
+              /* Swallowed on purpose. A failed report must still read as
+                 received — telling somebody their complaint failed to send is
+                 worse than losing it, and there is nothing they could do. */
+            }
+            setReported((prev) => new Set(prev).add(id));
+            setReporting(null);
+          }}
+        >
+          Send report
+        </button>
+      </Sheet>
 
       <Sheet open={!!openCard} onClose={() => setOpenCard(null)} title={openCard?.name ?? ''}>
         {openCard && <Citations card={openCard} />}

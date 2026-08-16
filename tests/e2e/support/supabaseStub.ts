@@ -64,10 +64,12 @@ export interface Stub {
   db: Record<string, Row[]>;
   /** `METHOD /path` for every call the stub could not model. Empty is passing. */
   unhandled: string[];
+  /** set once rpc/delete_account has run, so a test can assert it was reached */
+  deleted: boolean;
 }
 
 export async function installSupabaseStub(page: Page): Promise<Stub> {
-  const stub: Stub = { db: makeTables(), unhandled: [] };
+  const stub: Stub = { db: makeTables(), unhandled: [], deleted: false };
   let generated = 0;
 
   await page.route(`${SUPABASE_URL}/**`, async (route) => {
@@ -120,7 +122,20 @@ export async function installSupabaseStub(page: Page): Promise<Stub> {
     const relation = path.slice('/rest/v1/'.length);
 
     if (relation.startsWith('rpc/')) {
-      // match_goal is the only RPC the app calls, and only from the search box.
+      /* delete_account wipes every user-owned table and then the auth record.
+         The stub mirrors that so the test can assert the data is gone rather
+         than only that the call returned 200. */
+      if (relation === 'rpc/delete_account') {
+        stub.db.stack_items = [];
+        stub.db.stacks = [];
+        stub.db.doses = [];
+        stub.db.schedule_items = [];
+        stub.db.progress_notes = [];
+        stub.db.profiles = [];
+        stub.deleted = true;
+        return json(null);
+      }
+      // match_goal is the only other RPC the app calls, from the search box.
       if (relation === 'rpc/match_goal') {
         const { query_text } = (request.postDataJSON() ?? {}) as { query_text?: string };
         const q = (query_text ?? '').toLowerCase();

@@ -688,3 +688,22 @@ export async function getProgressPhotoUrl(path: string): Promise<string> {
   if (error) throw error;
   return data.signedUrl;
 }
+
+/**
+ * Deletes the signed-in user's account and everything in it, permanently.
+ *
+ * The work happens in `public.delete_account` (migration 0026) rather than as
+ * a set of deletes from here: the auth record itself is the one thing no
+ * client role can remove, and leaving it behind is a half-deleted account that
+ * can still be logged into. The function takes no arguments — it reads
+ * `auth.uid()` from the request — so there is no id for this call to get wrong.
+ *
+ * The local session is dropped afterwards. Its access token stays
+ * cryptographically valid until it expires, so signing out is what actually
+ * ends the session on the device.
+ */
+export async function deleteAccount(): Promise<void> {
+  const { error } = await supabase.rpc('delete_account');
+  if (error) throw error;
+  await supabase.auth.signOut();
+}

@@ -229,6 +229,8 @@ export function makeTables(): Record<string, Row[]> {
     stacks: [],
     stack_items: [],
     progress_notes: [],
+    ask_usage: [],
+    ask_reports: [],
   };
 }
 

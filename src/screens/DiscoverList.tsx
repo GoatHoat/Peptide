@@ -177,6 +177,16 @@ export function ProductRow({
             <div className="prod-preview-empty t-caption">No paper on file for this one yet.</div>
           )}
 
+          {/* The card can show a reference intake and a tolerable upper limit,
+              which are the two numbers most likely to be read as instructions.
+              Saying whose numbers they are, next to them, is the whole point —
+              see legal.md: the app is never the source of how much. */}
+          <p className="prod-disclaimer t-caption">
+            Reference intakes are the published NIH figures for your age and sex, not a
+            recommendation. Pepstack does not give medical advice — talk to a healthcare
+            professional before starting anything.
+          </p>
+
           <div className="prod-actions">
             <button className="prod-btn fill pressable" onClick={onAdd} disabled={inStack || adding}>
               {inStack ? <IconCheck size={14} color="var(--bg)" /> : <IconPlus size={14} color="var(--bg)" />}

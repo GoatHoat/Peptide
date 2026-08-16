@@ -10,8 +10,7 @@ import { ensureTodayDoses, getComplianceMap, getDosesForDate, setDoseTaken, type
 import { addDays, formatDisplayDate, formatShortDate, parseHour, startOfWeekMonday, toISODate } from '../lib/date';
 import { useNow } from '../lib/now';
 import { useActiveTab } from '../lib/activeTab';
-import { IconCalculator, IconPlus } from '../components/Icons';
-import { ReconCalculator } from './ReconCalculator';
+import { IconPlus } from '../components/Icons';
 import { DoseRow } from '../components/DoseRow';
 import { syncScheduleNotifications } from '../lib/notifications';
 
@@ -28,7 +27,6 @@ type SheetState =
   | { kind: 'add' }
   | { kind: 'history'; name: string; scheduleItemId: string | null }
   | { kind: 'day'; date: Date }
-  | { kind: 'calculator' }
   | null;
 
 export function Today() {
@@ -162,10 +160,6 @@ export function Today() {
           <IconPlus size={15} color="var(--purple)" />
           Add to Schedule
         </button>
-        <button className="add-dose pressable" onClick={() => setSheet({ kind: 'calculator' })}>
-          <IconCalculator size={15} color="var(--purple)" />
-          Calculator
-        </button>
       </div>
 
       {overdue.length > 0 && (
@@ -185,10 +179,6 @@ export function Today() {
           onAdded={() => load()}
           onClose={() => setSheet(null)}
         />
-      </Sheet>
-
-      <Sheet open={sheet?.kind === 'calculator'} onClose={() => setSheet(null)} title="Reconstitution Calculator">
-        <ReconCalculator />
       </Sheet>
 
       <Sheet
