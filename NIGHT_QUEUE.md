@@ -127,11 +127,23 @@ single run. Do them in order; several depend on the one before.
   before five and each fills from a second ingredient on the same label, so no
   product is short. 0022's header rewrapped by five comment lines, because the
   generator is now shared; no citation in it changed._
-- [ ] **0.9 — Fix the Today arc.** Section 4. The end caps are clipped because
+- [x] **0.9 — Fix the Today arc.** Section 4. The end caps are clipped because
   the endpoints already sit at the viewBox bounds and `strokeLinecap="round"`
   adds another 4.5px past each one. Derive `R` from the width as shown. Also fix
   the stale `GAP_DEG` comment and decide what to do about doses clamped outside
   the waking window.
+  _Done: `R` now solves from the box (≈301.06), so the caps land on 0 and 368
+  instead of 4.55px outside them, and `H` 70 → 69. The arithmetic was only half
+  of it — the `<svg>` was a fixed 368px wide and left-aligned, so on a 375 or
+  390 device the right-hand end and half the bedtime label were off the screen
+  entirely; it scales to the container now (`width: 100%`, `max-width: 440px`)
+  and `.arc-ends` moved into flow. Doses outside the waking day widen the
+  window rather than clamping onto its ends, and the label moves with them.
+  Same function fixes a worse case the spec does not mention: a bedtime past
+  midnight made the span negative and drew every dose of the day as one
+  segment — the arc now ends at midnight, agreeing with the list under it,
+  which sorts by the clock. `GAP_DEG` comment corrected. Screenshotted at 375,
+  390 and 430 with 1, 2, 3 and 6 doses; 12 unit tests plus one e2e at 375._
 - [ ] **0.10 — Move the paywall.** Section 5. It sits at `FLOW` index 14, before
   `recommendations` at 16, so the user is asked to pay before seeing a single
   recommendation. Move it to immediately after. One line, highest value change

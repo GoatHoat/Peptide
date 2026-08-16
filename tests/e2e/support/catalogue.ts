@@ -244,7 +244,7 @@ export const INSERT_DEFAULTS: Record<string, Row> = {
 };
 
 /** An active schedule item, so Today has something to materialise a dose from. */
-export function seededScheduleItem(): Row {
+export function seededScheduleItem(over: Row = {}): Row {
   return {
     id: 'cccccccc-0000-4000-8000-000000000001',
     user_id: STUB_USER_ID,
@@ -256,5 +256,6 @@ export function seededScheduleItem(): Row {
     active: true,
     created_at: `${todayISO()}T06:00:00.000Z`,
     start_date: todayISO(),
+    ...over,
   };
 }

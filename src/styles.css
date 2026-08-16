@@ -393,21 +393,22 @@ button {
 
 .arc-wrap {
   position: relative;
-  height: 95px;
-  width: 368px;
-  /* the artwork runs 3px past the 20px margin on each side */
+  /* the artwork runs 3px past the 20px margin on each side. It was 368px wide
+     whatever the screen was, which put its right-hand end off a 375 or 390
+     device entirely; it scales now, and 440 is only a ceiling for tablets. */
   margin: 32px -3px 0;
+  max-width: 440px;
 }
 .arc-wrap svg {
   display: block;
+  width: 100%;
+  height: auto;
 }
+/* in flow, so the labels sit under the ends at whatever height the arc is */
 .arc-ends {
-  position: absolute;
-  top: 77px;
-  left: -8px;
-  right: -9px;
   display: flex;
   justify-content: space-between;
+  margin: 10px -4px 0;
   color: var(--t3);
   font-size: calc(13px * var(--text-scale));
 }

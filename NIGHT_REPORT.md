@@ -622,3 +622,75 @@ an invention; every backfill is the next real result.
 
 Build green, `tsc --noEmit` green, 50 tests green. No client code touched;
 bundle unchanged at 1,026 kB minified (319.5 kB gzipped).
+
+---
+
+## Night 9 — 0.9, fix the Today arc
+
+**Changed.** `src/components/Arc.tsx` and the `.arc-*` rules in `styles.css`.
+Three things, all of them the same defect wearing different clothes: the arc
+was drawn at a fixed size for a screen most people are not holding.
+
+1. **The end caps.** Fixed as the spec derives it: `R` now solves from the box,
+   `(W/2 - CAP) / sin(HALF)` ≈ 301.06, so the endpoints sit at x = 4.5 and
+   363.5 and the round caps land on 0 and 368 exactly instead of 4.55px outside
+   them. Sagitta 60.8 → 59.4. `H` drops 70 → 69 and now keeps the bottom cap
+   inside rather than 0.13px short of the edge.
+2. **The right-hand end was off the screen entirely, which the arithmetic in
+   the spec does not cover.** The `<svg>` was 368px wide at every viewport and
+   left-aligned, and `.arc-wrap` was `width: 368px`. On the 402-wide phone it
+   was drawn for, 368 = 402 − 40 of margin + the 3px of bleed each side, and it
+   fits. On a 375 the panel clips at 355 and the last 30px of arc — the whole
+   right-hand end and half the bedtime label — were simply not on the device.
+   Screenshot in the commit's diff is not possible, so: at 375 the label read
+   "11:00 P". The svg is `width: 100%; height: auto` now, so it scales with the
+   screen and the viewBox does the rest; `max-width: 440px` stops it inflating
+   on a tablet. `.arc-ends` moved from `position: absolute; top: 77px` into
+   normal flow, because the arc's height is no longer a constant to hardcode
+   under.
+3. **Doses outside the waking window.** New exported `windowFor()`: the arc
+   spans the waking day widened to hold the earliest and latest dose, rather
+   than clamping them onto the ends. A 06:00 dose for a 07:00 riser used to
+   stack onto the left end under a label reading 7:00 AM; now the label reads
+   6:00 AM. I picked widening over drawing out-of-window doses distinctly
+   because the second needs a visual language the arc does not have and the
+   design allows one accent.
+
+`GAP_DEG`'s comment fixed as asked — the value was right, "20°" was not.
+
+**Verified.** Screenshotted Today at 375, 390 and 430 wide with 1, 2, 3 and 6
+doses. Both ends round in all twelve, both labels fully on screen, segment
+count equals dose count. 12 unit tests in `tests/unit/arc.spec.ts` (the box
+invariant and every window case), and one e2e test at 375 that fails if the arc
+ever leaves the panel again or the label stops following the dose.
+
+**Found, and one of them fixed because it was the same bug:**
+
+- **A bedtime after midnight broke the arc completely, and it is reachable.**
+  The sleep dial is a full 24-hour ring snapping to 5 minutes, and it even
+  computes "hours in bed, wrapping past midnight" — so `sleep_time = 00:30` is
+  a normal answer. `dayEnd` 0.5 with `dayStart` 7 is a span of minus 6.5 hours;
+  every dose in the day clamped to one point and the arc drew as a single
+  unbroken segment reading as one dose. Six doses, one segment, no error. Fixed
+  in the same function: a `dayEnd` at or before `dayStart` means the day runs
+  past midnight, so the arc ends at 24:00 — **not** at 24.5. The list directly
+  under the arc orders by `scheduled_time`, so a 00:15 dose is the first row of
+  the day there; drawing it at the right-hand end of the arc would have made
+  the two halves of one screen disagree. One calendar day, both of them.
+- **`ensureTodayDoses` still double-inserts under StrictMode.** Every scratch
+  run showed "14 left today" for 7 schedule items. Known from night 1, still
+  there, still out of scope — but it is now the thing I trip over every time I
+  put doses on the screen, and it will be in the 0.11 persona runs on every
+  persona.
+- **`DrawingArc` in `Results.tsx` has the same shape and does not have the
+  bug.** R 150, W 220, caps land at 1.3 and 218.7 inside a 220 box. Left alone.
+  It does use `var(--accent)` where Today's arc uses `var(--purple)`; both
+  resolve to the one accent, but two names for one colour is a C-section job.
+- **`.arc-centre` is still positioned at a hardcoded `top: 18px`** over an arc
+  that now changes height with the screen. It is a big number over a wide arc
+  so it reads fine at 375–440, but it is a magic number that no longer tracks
+  what it sits on. Not fixed: moving it means deciding where the count belongs
+  relative to the sagitta, which is a design call.
+
+Build green, `tsc --noEmit` green, 63 tests green (50 → 63: 12 unit, 1 e2e).
+Bundle 1,026.26 kB minified, 319.62 kB gzipped.
