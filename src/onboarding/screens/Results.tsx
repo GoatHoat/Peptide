@@ -125,14 +125,28 @@ export function useRecommendations(
        rule the assistant is held to — enforced here in code rather than left
        to whatever the tag overlap happens to return. Every goal was returning
        two to four peptides in its top six before this. */
+    const EVIDENCE_RANK = { strong: 0, mixed: 1, thin: 2 } as const;
+    const rank = (e: GlossaryEntry) => EVIDENCE_RANK[e.evidence ?? 'thin'] ?? 2;
+
     const scored = entries
       .filter((e) => (e.kind ?? 'peptide') === 'supplement')
+      // no point suggesting what they told us they already take
+      .filter((e) => !already.has(e.name.toLowerCase()))
       .map((e) => {
         const hits = (e.goal_tags ?? []).filter((t) => wanted.has(t));
         return { e, hits };
       })
       .filter((x) => x.hits.length > 0)
-      .sort((a, b) => b.hits.length - a.hits.length || a.e.name.localeCompare(b.e.name));
+      /* Goal overlap first, then how good the evidence is. The tie-break used
+         to be the product name, which sorted alphabetically and quietly put
+         every brand beginning with A at the top of a list that looks like a
+         ranking. */
+      .sort(
+        (a, b) =>
+          b.hits.length - a.hits.length ||
+          rank(a.e) - rank(b.e) ||
+          a.e.name.localeCompare(b.e.name),
+      );
 
     const goalNames = ids.map((g) => GOAL_BY_ID[g]?.name ?? g);
 
@@ -149,7 +163,9 @@ export function useRecommendations(
         };
       }),
       leftOut: {
-        alreadyTaking: entries.filter((e) => already.has(e.name.toLowerCase())).map((e) => e.name),
+        alreadyTaking: entries
+          .filter((e) => already.has(e.name.toLowerCase()))
+          .map((e) => e.name),
         noMatch: scored.length > 6 ? scored.slice(6).map((x) => x.e.name) : [],
         goalNames,
       },
@@ -198,8 +214,9 @@ export function Recommendations({
     >
       <Title>What we found</Title>
       <Sub>
-        Matched to {data.leftOut.goalNames.join(' and ').toLowerCase()}. Untick anything you don’t
-        want.
+        Matched to {data.leftOut.goalNames.join(' and ').toLowerCase()}, ranked by how many of your
+        goals each one covers and then by the strength of the evidence. Untick anything you
+        don’t want.
       </Sub>
 
       <div className="ob-recs">
