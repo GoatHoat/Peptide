@@ -1,3 +1,5 @@
+import { SKIP_PAYWALL } from '../lib/billing';
+
 /**
  * The order of the flow, in one place.
  *
@@ -27,9 +29,11 @@ export const FLOW = [
   'forms',
   'goals',
   'notifications',
-  'paywall',
   'building-recs',
   'recommendations',
+  // after the recommendations, never before: asking for money ahead of the
+  // first suggestion is asking someone to buy a promise
+  'paywall',
   'building-schedule',
   'schedule',
   'done',
@@ -79,6 +83,10 @@ export function isSkipped(step: Step, answers: { q2: string | null }): boolean {
   // "What usually goes wrong?" has no answer for someone who has never
   // started a routine in the first place.
   if (step === 'q3' && answers.q2 === 'never') return true;
+  // Dev builds walk past the purchase so the screens after it stay reachable
+  // without stubbing a transaction every run. Here rather than in a screen, so
+  // going back lands on the same screen going forward came from.
+  if (step === 'paywall' && SKIP_PAYWALL) return true;
   return false;
 }
 

@@ -8,7 +8,6 @@ import { CurrentStack, Meals, Sleep } from './screens/Day';
 import { Goals } from './screens/Goals';
 import { Notifications, Paywall } from './screens/Commit';
 import { Building, Done, Recommendations, ScheduleBuilder, type Recommendation } from './screens/Results';
-import { SKIP_PAYWALL } from '../lib/billing';
 import { useAuth } from '../lib/auth';
 import { supabase } from '../lib/supabaseClient';
 import { addScheduleItem, getProfile, updateProfile } from '../lib/api';
@@ -219,8 +218,7 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           <Notifications
             onDone={(granted) => {
               patch({ notificationsGranted: granted });
-              // the paywall is skippable in dev so the rest stays testable
-              goTo(FLOW.indexOf(SKIP_PAYWALL ? 'building-recs' : 'paywall'));
+              next();
             }}
           />
         );

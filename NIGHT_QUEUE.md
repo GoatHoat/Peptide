@@ -144,10 +144,18 @@ single run. Do them in order; several depend on the one before.
   segment — the arc now ends at midnight, agreeing with the list under it,
   which sorts by the clock. `GAP_DEG` comment corrected. Screenshotted at 375,
   390 and 430 with 1, 2, 3 and 6 doses; 12 unit tests plus one e2e at 375._
-- [ ] **0.10 — Move the paywall.** Section 5. It sits at `FLOW` index 14, before
+- [x] **0.10 — Move the paywall.** Section 5. It sits at `FLOW` index 14, before
   `recommendations` at 16, so the user is asked to pay before seeing a single
   recommendation. Move it to immediately after. One line, highest value change
   in the file.
+  _Done: `paywall` now sits between `recommendations` and `building-schedule`.
+  Two lines rather than one, because `Onboarding.tsx` held a hardcoded
+  `goTo(... 'paywall')` out of `notifications` that would have skipped
+  `building-recs` and `recommendations` entirely in a production build; it is a
+  plain `next()` now and the dev skip moved into `isSkipped` in `flow.ts`
+  alongside the q3 branch, so no screen knows the paywall's position and back
+  walks over it on the same rule forward does. The onboarding e2e walks the new
+  order screen by screen and passes; 63 tests green._
 - [ ] **0.11 — Twenty onboarding runs.** Section 5. All twenty personas, end to
   end, recording every screen shown, timing, final recommendations, and anything
   that errored, rendered empty, or overflowed. Fix what is small; list what is

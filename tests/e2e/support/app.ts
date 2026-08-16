@@ -151,9 +151,9 @@ export async function completeOnboarding(page: Page): Promise<void> {
   await onScreen(page, 'Reminders at the right times');
   await cta(page, 'Not now').click();
 
-  await onScreen(page, 'Everything, in one place');
-  await cta(page, 'Start with Pepstack').click();
-
+  /* Straight to the recommendations. Nothing asks for money before this
+     screen, and the next assertion is what fails if the paywall moves back in
+     front of it. */
   // building-recs holds itself for 2.2s before the list appears.
   await onScreen(page, 'What we found');
   /* The answers reached the scorer. B12 is tagged for goals this run did not
@@ -170,6 +170,10 @@ export async function completeOnboarding(page: Page): Promise<void> {
     page.locator('.ob-rec', { hasText: IRON_PRODUCT }).locator('.ob-rec-dose'),
   ).toContainText('32 mg a day if you menstruate · 14 mg if you don’t');
   await cta(page, 'Create schedule').click();
+
+  // The purchase is asked for here, after the list and before the schedule.
+  await onScreen(page, 'Everything, in one place');
+  await cta(page, 'Start with Pepstack').click();
 
   // building-schedule holds itself for 1.8s.
   await onScreen(page, 'Your schedule');

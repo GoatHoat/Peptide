@@ -694,3 +694,54 @@ ever leaves the panel again or the label stops following the dose.
 
 Build green, `tsc --noEmit` green, 63 tests green (50 → 63: 12 unit, 1 e2e).
 Bundle 1,026.26 kB minified, 319.62 kB gzipped.
+
+---
+
+## Night 10 — 0.10, move the paywall
+
+**Changed.** `paywall` moved in `FLOW` from between `notifications` and
+`building-recs` to between `recommendations` and `building-schedule`. Nobody is
+asked to pay before they have seen a single suggestion.
+
+It was not one line, because two places knew where the paywall was:
+
+- `Onboarding.tsx` jumped out of `notifications` with
+  `goTo(FLOW.indexOf(SKIP_PAYWALL ? 'building-recs' : 'paywall'))`. Left alone,
+  that line would have skipped `building-recs` and `recommendations` outright
+  in a production build — the paywall's new index is past both. It is now a
+  plain `next()`, and the dev skip moved into `isSkipped` in `flow.ts` where the
+  q3 branch already lives. That keeps the claim at the top of `flow.ts` true —
+  no screen knows what comes before or after it — and it means back walks over
+  the paywall on the same rule forward does, rather than one screen holding a
+  hardcoded destination.
+- The e2e helper walked the paywall between `notifications` and the
+  recommendations. Reordered to match, so the run asserts the new order screen
+  by screen. `playwright.config.ts` already forces `VITE_SKIP_PAYWALL=false`, so
+  the test walks the shipping order rather than the dev one.
+
+**Verified.** Full onboarding e2e passes end to end with the paywall in its new
+place — recommendations render, "Create schedule" leads to the purchase screen,
+"Start with Pepstack" leads to the schedule builder, and the run still ends on
+Today with the schedule rows written. 63 tests green, unchanged count.
+
+**Found and not changed:**
+
+- **The recommendations CTA still reads "Create schedule", and now the next
+  thing it shows is a price.** Not wrong — the schedule is what it is buying
+  towards — but it is the one place the move introduces a small mismatch between
+  a button and what happens. Renaming it is a copy call (section C), and every
+  alternative I tried either says "Continue", which the standing rules forbid,
+  or pre-announces the paywall, which is a product decision.
+- **The paywall's own copy still argues for the app in general**, not for the
+  list the user has just been shown. Now that it sits directly after the
+  recommendations there is an obvious better version of that screen — it can
+  name what was found. That is new copy, so it is a proposal, not a fix.
+- **A persisted step index survives the reorder but not its meaning.**
+  `store.ts` clamps a stored `step` to the array bounds, which is all it can do;
+  someone mid-flow across this change lands on whatever now occupies that index.
+  Harmless for a build nobody has installed, worth remembering once one is.
+- `ensureTodayDoses` still double-inserts under StrictMode. Night 1, still open,
+  still out of scope, and 0.11's persona runs will hit it on every persona.
+
+Build green, `tsc --noEmit` green, 63 tests green. Bundle 1,026.24 kB minified,
+319.61 kB gzipped.
