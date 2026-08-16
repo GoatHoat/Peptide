@@ -201,7 +201,7 @@ single run. Do them in order; several depend on the one before.
 These are the "plug in a key and it works" items. Build them completely, against
 a stub, behind a flag. Never write a real key anywhere.
 
-- [ ] **Ask AI, end to end, without a key.** Follow `PROMPT_DISCOVER_AI.md`.
+- [x] **Ask AI, end to end, without a key.** Follow `PROMPT_DISCOVER_AI.md`.
   Build the Edge Function at `supabase/functions/ask/index.ts` complete with JWT
   verification, the rate limiter, the catalogue fetch, the tool schema and the
   server-side peptide rejection. When `ANTHROPIC_API_KEY` is unset it returns a
@@ -209,6 +209,19 @@ a stub, behind a flag. Never write a real key anywhere.
   the key is the only thing that should make it live. Write the fixture to cover:
   a normal three-card answer, a peptide question, a pregnancy question, a rate
   limit, and a server error.
+  _Done: `supabase/functions/ask/` — `index.ts` (Deno) does CORS, then the JWT
+  via `auth.getUser()` on the caller's bearer token, then a rolling rate limit
+  (15/hour, 50/day) off a new `ask_usage` table, then scope, then the answer;
+  `lib.ts` holds every rule that can be wrong quietly and `fixtures.ts` the five
+  canned responses. Two tools, `get_product_detail` and `show_products`, both of
+  which read the database — the model picks slugs, the server materialises every
+  card, so an invented product cannot reach the screen. Peptide and pregnancy
+  questions are refused before the model is called, with or without a key.
+  `PROMPT_DISCOVER_AI.md` does not exist in the repo and never has (`git log
+  --all` on it is empty), so the queue line itself was the spec. Migration `0024`
+  adds `ask_usage` (not applied). 27 unit tests in `tests/unit/ask.spec.ts`, and
+  `lib.ts`/`fixtures.ts` are now in `tsconfig.json` so the gate typechecks them.
+  `AskAI.tsx` is untouched — that is the next item._
 - [ ] **The chat UI against that stub.** Bubbles, typing dots, the input growing
   to five lines, the empty state, the three example prompts, the citation sheet,
   persistence across an app kill. All of it should look and behave finished.

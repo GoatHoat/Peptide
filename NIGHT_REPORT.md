@@ -926,3 +926,116 @@ recommendations → paywall → building-schedule → schedule → done.
 Build green, `tsc --noEmit` green, 85 tests green. The twenty persona runs are
 18-20 screens each and ~15s of driving time, against 22-24 screens and 16-22s
 last night. Bundle 1,025.37 kB minified, 319.31 kB gzipped.
+
+---
+
+## Night 13 — A, ask AI end to end without a key
+
+**The spec this item points at does not exist.** `PROMPT_DISCOVER_AI.md` is not
+in the repo and never has been — `git log --all -- PROMPT_DISCOVER_AI.md` is
+empty, and the only string in the tree that mentions it is the queue line
+itself. That line describes the job in enough detail to build against (JWT
+verification, the rate limiter, the catalogue fetch, the tool schema, the
+server-side peptide rejection, and five named fixtures), so it was the spec. If
+the real file exists somewhere off this machine, the two things to check
+against it first are the response body shape and where exactly the peptide line
+is drawn — everything else is mechanical.
+
+**Changed.** `supabase/functions/ask/`, three files, split on one line: what
+needs Deno, and what can be tested without it.
+
+- **`lib.ts`** — request parsing, the scope gate, the rate-limit arithmetic,
+  the prompt, the tool schemas, and turning what the model asked for into
+  cards. No Deno globals, no imports, no clock: `index.ts` passes in what it
+  read. That is what lets 27 unit tests run it in Node.
+- **`fixtures.ts`** — the five canned responses.
+- **`index.ts`** — the Deno handler. CORS, then the JWT, then the rate limit,
+  then scope, then the answer. In that order on every request, including the
+  stubbed ones.
+- **`supabase/migrations/0024_ask_rate_limit.sql`** — `ask_usage`, one row per
+  question. Not applied.
+- **`tsconfig.json`** — `lib.ts` and `fixtures.ts` added to `include`, so the
+  green gate actually typechecks them. `index.ts` stays out; it needs `Deno.env`
+  and npm: specifiers. That needed `allowImportingTsExtensions` on, because Deno
+  requires the `.ts` in `import … from './lib.ts'`. It permits, it does not
+  require, and nothing in `src/` uses it.
+
+**The rate limiter is real in both modes.** 15 an hour and 50 a day, both
+rolling — a fixed hourly bucket lets someone spend a whole allowance twice
+across the boundary. The count is taken before the model is called *and* before
+the fixtures are read, so the stub hits the same ceiling the live path does and
+the UI cannot be built against a limit that only exists in production.
+
+**The stub is not a mock.** The fixtures hold the prose and a list of slugs;
+the cards are then resolved through exactly the same `buildCards` the live path
+uses, against the real catalogue, with the real papers attached. Only the
+sentences are canned. The three products it names come from migrations 0021 and
+0022, which are written and not applied, so each fixture also carries a
+stand-in row that is used only when the slug is not in the database yet — the
+card renders either way, and gets better once those migrations are run.
+
+**Peptides and pregnancy are refused by the server, not by the prompt** — with
+or without a key, before the model is called, with fixed wording. A rule in a
+system prompt is a request; this is not. Pregnancy is checked first, so "is
+BPC-157 safe while pregnant" gets the see-a-clinician answer rather than the
+we-don't-advise-on-peptides one.
+
+**Three decisions worth arguing with in the morning:**
+
+- **The peptide gate is mention-based, and that is deliberately blunt.** Any
+  question naming a peptide gets the refusal, not just one asking for a dose.
+  It matches on the hardcoded list in `lib.ts` plus every `kind = 'peptide'`
+  name and slug in the glossary, so the library stays the authority. It also
+  refuses anything about injecting, reconstituting or syringes whatever the
+  substance — including "should I inject B12 instead", which is a real question
+  a real person might ask and will now get a flat no. The false-positive risk
+  runs the other way too: a short peptide slug like `vip` would fire on the
+  word "VIP". Tests pin the cases that matter most — collagen peptides and
+  casein decapeptide are products we sell and must not be refused.
+- **Server-side refusal fallbacks are on** (`fallbacks: 'default'`, beta
+  `server-side-fallback-2026-07-01`), because a health question can trip a
+  safety classifier and the fallback answers it instead of returning a refusal.
+  I cannot test that path — no key — so `callModel` catches a 400 that names
+  the beta and retries once without it. Six lines of insurance against every
+  request 400ing on the first morning somebody sets a key.
+- **A refused question still spends a slot.** No model call happens, so it
+  could be refunded, but `ask_usage` has no delete policy on purpose — that is
+  what stops a client clearing its own count — and adding one to refund
+  refusals would open the hole the missing policy exists to close.
+
+**Found and not changed:**
+
+- **The 176 products from 0021 carry no `timing` and no `evidence`.** Only the
+  74 older rows have those columns filled in. So a card for anything in the new
+  catalogue shows less than a card for anything in the old one, and the
+  assistant is told "evidence: not recorded" for most of the library. Nothing is
+  broken; it is a data gap that will read as an inconsistency the moment two
+  cards sit side by side.
+- **`src/screens/AskAI.tsx` is untouched** and still answers with its hardcoded
+  "I'm not connected yet" string. Wiring it is the next queue item and starting
+  it tonight would have been two items in one run.
+- **The live path has never run.** There is no key here and there should not be
+  one. Everything from `callModel` outwards — the tool loop, the block parsing,
+  the beta parameter — is written from the API docs and typechecked by nothing,
+  because `index.ts` is Deno. First run with a real key should be a cheap
+  question with the function logs open.
+- **`ask_usage` grows forever.** Rows older than a day are read by nothing. A
+  scheduled delete wants pg_cron on a live project, which is a decision about
+  the project rather than a line in a migration.
+- **The app still has injection UI, which contradicts the positioning line.**
+  `BodyMap.tsx`, `ReconCalculator.tsx` and `doses.injection_site` are all
+  live while `CLAUDE.md` says no injection-related UI or questions anywhere.
+  My scope gate now refuses injection questions in the one place the app talks
+  back, which makes the mismatch sharper rather than softer. Not mine to
+  delete — rule 7 — but it is a real inconsistency and somebody should decide
+  which side of it the product is on.
+- **One e2e flake, once.** On the first full run `onboarding.spec.ts` failed
+  its first attempt waiting 10s for the "What we found" heading and passed on
+  retry; the confirming run was clean, 112 for 112. Nothing in `src/` changed
+  tonight and the screen it waits on sits behind a timed transition, so this
+  reads as machine load — worth knowing that the 10s expect timeout is close
+  enough to the mark to lose under load.
+
+Build green, `tsc --noEmit` green, 112 tests green (85 before tonight). Bundle
+1,025.37 kB minified, 319.31 kB gzipped — unchanged, because nothing in `src/`
+changed.
