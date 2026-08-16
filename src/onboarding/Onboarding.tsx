@@ -2,16 +2,16 @@ import { useEffect, useRef, useState } from 'react';
 import { FLOW, NO_CHROME, type Step } from './flow';
 import { markOnboarded, useOnboardingStore } from './store';
 import { Header } from './chrome';
-import { AuthChoice, AuthForm, Welcome } from './screens/Intro';
-import { Info, Profile, QUESTIONS, SurveyScreen } from './screens/Survey';
-import { CurrentStack, Meals, Sleep } from './screens/Day';
+import { Auth, Welcome } from './screens/Intro';
+import { Info, MULTI_QUESTIONS, MultiSelectScreen, Profile, QUESTIONS, SurveyScreen } from './screens/Survey';
+import { CurrentStack, Day } from './screens/Day';
 import { Goals } from './screens/Goals';
 import { Notifications, Paywall } from './screens/Commit';
 import { Building, Done, Recommendations, ScheduleBuilder, type Recommendation } from './screens/Results';
-import { SKIP_PAYWALL } from '../lib/billing';
 import { useAuth } from '../lib/auth';
+import { usePrefs } from '../lib/prefs';
 import { supabase } from '../lib/supabaseClient';
-import { addScheduleItem, updateProfile } from '../lib/api';
+import { addScheduleItem, getProfile, updateProfile } from '../lib/api';
 import { toISODate } from '../lib/date';
 
 /**
@@ -20,8 +20,9 @@ import { toISODate } from '../lib/date';
  * FLOW enough to reorder the product.
  */
 export function Onboarding({ onFinished }: { onFinished: () => void }) {
-  const { state, step, patch, next, back, goTo } = useOnboardingStore();
+  const { state, step, patch, hydrate, next, back, goTo } = useOnboardingStore();
   const { session } = useAuth();
+  const { refresh: refreshProfile } = usePrefs();
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signup');
   const [picks, setPicks] = useState<Recommendation[]>([]);
 
@@ -37,12 +38,32 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
 
   /* signing in mid-flow moves past the auth screens on its own */
   useEffect(() => {
-    if (session && (step === 'auth-choice' || step === 'auth-form')) {
+    if (session && step === 'auth') {
       patch({ auth: { userId: session.user.id, email: session.user.email ?? null } });
       goTo(FLOW.indexOf('profile'));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, step]);
+
+  /* Answers given on another device live on the profile row, not in this
+     device's localStorage. Read them back once so a returning user is not
+     asked the same three questions again. */
+  const hydrated = useRef(false);
+  useEffect(() => {
+    const userId = session?.user.id;
+    if (!userId || hydrated.current) return;
+    hydrated.current = true;
+    getProfile(userId)
+      .then((p) =>
+        hydrate({
+          diet: p.diet,
+          reactions: p.reactions,
+          reactionsNote: p.reactions_note,
+          forms: p.form_prefs,
+        }),
+      )
+      .catch(() => {});
+  }, [session, hydrate]);
 
   const finish = async () => {
     const userId = session?.user.id;
@@ -54,6 +75,16 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
         // the supplement sheet reads these to personalise the intake
         age: state.profile.age,
         sex: state.profile.gender,
+      }).catch(() => {});
+      /* Written on its own, because these columns arrive with migration 0018
+         and a database that has not run it yet must still keep the age, sex
+         and waking window above — one update carrying all of it would lose
+         the lot to a single unknown column. */
+      await updateProfile(userId, {
+        diet: state.diet,
+        reactions: state.reactions,
+        reactions_note: state.reactionsNote.trim() || null,
+        form_prefs: state.forms,
       }).catch(() => {});
       for (const item of state.schedule) {
         const rec = picks.find((p) => p.id === item.id);
@@ -68,15 +99,26 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           start_date: toISODate(new Date()),
         }).catch(() => {});
       }
+      /* The profile provider read this row when the account was created,
+         which was before any of the above existed, and it only refetches when
+         the user id changes — which it does not, here. Without this the app
+         opens on the row as it was: the Today arc spans the default 07:00 to
+         23:00 rather than the window just set, and the intake figures use the
+         default age and sex. Both correct themselves on the next cold start,
+         which is the worst kind of wrong. */
+      await refreshProfile().catch(() => {});
     }
     markOnboarded();
     onFinished();
   };
 
   const skip = () => {
-    if (step === 'q1') patch({ survey: { ...state.survey, q1: null } });
     if (step === 'q2') patch({ survey: { ...state.survey, q2: null } });
     if (step === 'q3') patch({ survey: { ...state.survey, q3: null } });
+    // an empty answer is a real answer on these three: it means no preference
+    if (step === 'diet') patch({ diet: [] });
+    if (step === 'reactions') patch({ reactions: [], reactionsNote: '' });
+    if (step === 'forms') patch({ forms: [] });
     next();
   };
 
@@ -85,23 +127,9 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
       case 'welcome':
         return <Welcome onNext={next} />;
 
-      case 'auth-choice':
+      case 'auth':
         return (
-          <AuthChoice
-            onEmail={() => {
-              setAuthMode('signup');
-              next();
-            }}
-            onSignIn={() => {
-              setAuthMode('signin');
-              next();
-            }}
-          />
-        );
-
-      case 'auth-form':
-        return (
-          <AuthForm
+          <Auth
             mode={authMode}
             onSwitch={setAuthMode}
             onDone={async (_id, email) => {
@@ -122,11 +150,25 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           />
         );
 
-      case 'info-library':
-      case 'info-recs':
-        return <Info which={step} onNext={next} />;
+      case 'diet':
+      case 'reactions':
+      case 'forms':
+        return (
+          <MultiSelectScreen
+            question={MULTI_QUESTIONS[step]}
+            value={state[step]}
+            onChange={(v) =>
+              patch(step === 'diet' ? { diet: v } : step === 'reactions' ? { reactions: v } : { forms: v })
+            }
+            note={step === 'reactions' ? state.reactionsNote : undefined}
+            onNote={step === 'reactions' ? (reactionsNote) => patch({ reactionsNote }) : undefined}
+            onNext={next}
+          />
+        );
 
-      case 'q1':
+      case 'info':
+        return <Info onNext={next} />;
+
       case 'q2':
       case 'q3':
         return (
@@ -146,11 +188,17 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           />
         );
 
-      case 'sleep':
-        return <Sleep wake={state.wake} sleep={state.sleep} onChange={patch} onNext={next} />;
-
-      case 'meals':
-        return <Meals meals={state.meals} onChange={(meals) => patch({ meals })} onNext={next} />;
+      case 'day':
+        return (
+          <Day
+            wake={state.wake}
+            sleep={state.sleep}
+            meals={state.meals}
+            onChange={patch}
+            onMeals={(meals) => patch({ meals })}
+            onNext={next}
+          />
+        );
 
       case 'current-stack':
         return (
@@ -169,8 +217,7 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           <Notifications
             onDone={(granted) => {
               patch({ notificationsGranted: granted });
-              // the paywall is skippable in dev so the rest stays testable
-              goTo(FLOW.indexOf(SKIP_PAYWALL ? 'building-recs' : 'paywall'));
+              next();
             }}
           />
         );
@@ -193,6 +240,9 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           <Recommendations
             goalIds={state.goals}
             currentStack={state.currentStack}
+            diet={state.diet}
+            reactions={state.reactions}
+            forms={state.forms}
             age={state.profile.age}
             sex={state.profile.gender}
             onDone={(chosen) => {
@@ -226,7 +276,10 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
   })();
 
   return (
-    <div className="ob-root">
+    /* data-step is the only thing outside this file that knows which screen is
+       up. Without it a test has to guess from a heading, and half the screens
+       say "Continue" — which is how a reordered flow passes a green suite. */
+    <div className="ob-root" data-step={step}>
       {!NO_CHROME.has(step) && <Header step={step} onBack={back} onSkip={skip} />}
       <div className="ob-stage">
         <div key={step} className={`ob-screen ${dir === 'fwd' ? 'enter' : 'enter-back'}`}>

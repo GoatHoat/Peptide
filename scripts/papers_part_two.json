@@ -1,0 +1,4941 @@
+{
+  "vitamin-b12": [
+    {
+      "pmid": "12918012",
+      "title": "Vitamin B12 for cognition",
+      "journal": "Cochrane Database Syst Rev",
+      "year": "2003",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12918012/"
+    },
+    {
+      "pmid": "29846529",
+      "title": "Vitamin B-12 in Human Milk: A Systematic Review",
+      "journal": "Adv Nutr",
+      "year": "2018",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't",
+        "Research Support, U.S. Gov't, Non-P.H.S.",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29846529/"
+    },
+    {
+      "pmid": "35343314",
+      "title": "Vitamin B12 sources in non-animal foods: a systematic review",
+      "journal": "Crit Rev Food Sci Nutr",
+      "year": "2023",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35343314/"
+    },
+    {
+      "pmid": "34612492",
+      "title": "Vitamin B-12 and the Gastrointestinal Microbiome: A Systematic Review",
+      "journal": "Adv Nutr",
+      "year": "2022",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Systematic Review",
+        "Journal Article",
+        "Research Support, N.I.H., Extramural"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34612492/"
+    },
+    {
+      "pmid": "38944829",
+      "title": "Relationship between vitamin B12 levels and motor development: A systematic review",
+      "journal": "Clin Nutr ESPEN",
+      "year": "2024",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38944829/"
+    }
+  ],
+  "lions-mane": [
+    {
+      "pmid": "38004235",
+      "title": "The Acute and Chronic Effects of Lion's Mane Mushroom Supplementation on Cognitive Function, Stress and Mood in Young Adults: A Double-Blind, Parallel Groups, Pilot Study",
+      "journal": "Nutrients",
+      "year": "2023",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Randomized Controlled Trial",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38004235/"
+    },
+    {
+      "pmid": "39935672",
+      "title": "Theoretical Potential of Hericium Erinaceus Supplementation as an Add-On to Antipsychotics in Chronic and Treatment-Resistant Schizophrenia",
+      "journal": "Psychopharmacol Bull",
+      "year": "2025",
+      "kind": "Review",
+      "pubtype": [
+        "Journal Article",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39935672/"
+    },
+    {
+      "pmid": "36443636",
+      "title": "Hericium erinaceus mycelium-Derived Polysaccharide Alleviates Ulcerative Colitis and Modulates Gut Microbiota in Cynomolgus Monkeys",
+      "journal": "Mol Nutr Food Res",
+      "year": "2023",
+      "kind": "Study",
+      "pubtype": [
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36443636/"
+    },
+    {
+      "pmid": "29953363",
+      "title": "Dietary Supplementation of Lion's Mane Medicinal Mushroom, Hericium erinaceus (Agaricomycetes), and Spatial Memory in Wild-Type Mice",
+      "journal": "Int J Med Mushrooms",
+      "year": "2018",
+      "kind": "Study",
+      "pubtype": [
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29953363/"
+    },
+    {
+      "pmid": "41097229",
+      "title": "Management of Post-Colonoscopy Syndrome with a Nutraceutical Intervention Based on Hericium erinaceus: A Retrospective Two-Arm Multicentre Analysis",
+      "journal": "Nutrients",
+      "year": "2025",
+      "kind": "Study",
+      "pubtype": [
+        "Journal Article",
+        "Multicenter Study",
+        "Observational Study"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41097229/"
+    }
+  ],
+  "curcumin": [
+    {
+      "pmid": "34378053",
+      "title": "Anti-inflammatory effects of oral supplementation with curcumin: a systematic review and meta-analysis of randomized controlled trials",
+      "journal": "Nutr Rev",
+      "year": "2021",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34378053/"
+    },
+    {
+      "pmid": "33038707",
+      "title": "The effect of oral curcumin supplementation on health-related quality of life: A systematic review and meta-analysis of randomized controlled trials",
+      "journal": "J Affect Disord",
+      "year": "2021",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33038707/"
+    },
+    {
+      "pmid": "23922235",
+      "title": "Are curcuminoids effective C-reactive protein-lowering agents in clinical practice? Evidence from a meta-analysis",
+      "journal": "Phytother Res",
+      "year": "2014",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23922235/"
+    },
+    {
+      "pmid": "39623590",
+      "title": "Evaluation of curcumin intake in reducing exercise-induced muscle damage in athletes: a systematic review",
+      "journal": "J Int Soc Sports Nutr",
+      "year": "2024",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39623590/"
+    },
+    {
+      "pmid": "34331700",
+      "title": "Curcumin for the Treatment of Prostate Diseases: A Systematic Review of Controlled Clinical Trials",
+      "journal": "Adv Exp Med Biol",
+      "year": "2021",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34331700/"
+    }
+  ],
+  "reishi": [
+    {
+      "pmid": "38800991",
+      "title": "Ganoderma lucidum dry extract supplementation modulates T lymphocyte function in older women",
+      "journal": "Br J Nutr",
+      "year": "2024",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38800991/"
+    },
+    {
+      "pmid": "14630595",
+      "title": "Ganoderma lucidum ('Lingzhi'); acute and short-term biomarker response to supplementation",
+      "journal": "Int J Food Sci Nutr",
+      "year": "2004",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/14630595/"
+    },
+    {
+      "pmid": "39241163",
+      "title": "Efficacy of Lingzhi or Reishi Medicinal Mushroom Ganoderma lucidum (Agaricomycetes) Supplementation on Psychological Stress and Selective Fitness Profile Parameters in Female College Students in West Bengal, India",
+      "journal": "Int J Med Mushrooms",
+      "year": "2024",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39241163/"
+    },
+    {
+      "pmid": "17907228",
+      "title": "Safety and efficacy of Ganoderma lucidum (lingzhi) and San Miao San supplementation in patients with rheumatoid arthritis: a double-blind, randomized, placebo-controlled pilot trial",
+      "journal": "Arthritis Rheum",
+      "year": "2007",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/17907228/"
+    },
+    {
+      "pmid": "18048435",
+      "title": "Effect of Ganoderma lucidum capsules on T lymphocyte subsets in football players on \"living high-training low\"",
+      "journal": "Br J Sports Med",
+      "year": "2008",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/18048435/"
+    }
+  ],
+  "chaga": [
+    {
+      "pmid": "25746615",
+      "title": "Review on Chaga Medicinal Mushroom, Inonotus obliquus (Higher Basidiomycetes): Realm of Medicinal Applications and Approaches on Estimating its Resource Potential",
+      "journal": "Int J Med Mushrooms",
+      "year": "2015",
+      "kind": "Review",
+      "pubtype": [
+        "Journal Article",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25746615/"
+    },
+    {
+      "pmid": "19407959",
+      "title": "Progress of research on Inonotus obliquus",
+      "journal": "Chin J Integr Med",
+      "year": "2009",
+      "kind": "Review",
+      "pubtype": [
+        "Evaluation Study",
+        "Journal Article",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19407959/"
+    },
+    {
+      "pmid": "31209936",
+      "title": "The pharmacological potential and possible molecular mechanisms of action of Inonotus obliquus from preclinical studies",
+      "journal": "Phytother Res",
+      "year": "2019",
+      "kind": "Review",
+      "pubtype": [
+        "Journal Article",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31209936/"
+    },
+    {
+      "pmid": "41978174",
+      "title": "Inonotus obliquus Polysaccharides: Preparation, Structural Characteristics, Structure-Activity Relationships, Biological Activities and Applications",
+      "journal": "Nutrients",
+      "year": "2026",
+      "kind": "Review",
+      "pubtype": [
+        "Journal Article",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41978174/"
+    },
+    {
+      "pmid": "23679238",
+      "title": "Progress on understanding the anticancer mechanisms of medicinal mushroom: inonotus obliquus",
+      "journal": "Asian Pac J Cancer Prev",
+      "year": "2013",
+      "kind": "Review",
+      "pubtype": [
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23679238/"
+    }
+  ],
+  "cordyceps": [
+    {
+      "pmid": "15118196",
+      "title": "Cordyceps Sinensis (CordyMax Cs-4) supplementation does not improve endurance exercise performance",
+      "journal": "Int J Sport Nutr Exerc Metab",
+      "year": "2004",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15118196/"
+    },
+    {
+      "pmid": "15903375",
+      "title": "Cordyceps sinensis- and Rhodiola rosea-based supplementation in male cyclists and its effect on muscle tissue oxygen saturation",
+      "journal": "J Strength Cond Res",
+      "year": "2005",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15903375/"
+    },
+    {
+      "pmid": "33078636",
+      "title": "Effects of Concurrent Training and a Multi-Ingredient Performance Supplement Containing Rhodiola rosea and Cordyceps sinensis on Body Composition, Performance, and Health in Active Men",
+      "journal": "J Diet Suppl",
+      "year": "2021",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33078636/"
+    },
+    {
+      "pmid": "42455764",
+      "title": "Acute Cordyceps militaris supplementation and elevated resting oxygen uptake with faster reaction times: A randomized crossover trial",
+      "journal": "PLoS One",
+      "year": "2026",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42455764/"
+    },
+    {
+      "pmid": "20804368",
+      "title": "Effect of Cs-4 (Cordyceps sinensis) on exercise performance in healthy older subjects: a double-blind, placebo-controlled trial",
+      "journal": "J Altern Complement Med",
+      "year": "2010",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, N.I.H., Extramural"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/20804368/"
+    }
+  ],
+  "d-ribose": [
+    {
+      "pmid": "14660478",
+      "title": "Effect of ribose supplementation on resynthesis of adenine nucleotides after intense intermittent training in humans",
+      "journal": "Am J Physiol Regul Integr Comp Physiol",
+      "year": "2004",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/14660478/"
+    },
+    {
+      "pmid": "16521849",
+      "title": "Effects of ribose supplementation prior to and during intense exercise on anaerobic capacity and metabolic markers",
+      "journal": "Int J Sport Nutr Exerc Metab",
+      "year": "2005",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16521849/"
+    },
+    {
+      "pmid": "12660407",
+      "title": "Effects of oral D-ribose supplementation on anaerobic capacity and selected metabolic markers in healthy males",
+      "journal": "Int J Sport Nutr Exerc Metab",
+      "year": "2003",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12660407/"
+    },
+    {
+      "pmid": "35684021",
+      "title": "A Combination of Nicotinamide and D-Ribose (RiaGev) Is Safe and Effective to Increase NAD(+) Metabolome in Healthy Middle-Aged Adults: A Randomized, Triple-Blind, Placebo-Controlled, Cross-Over Pilot Clinical Trial",
+      "journal": "Nutrients",
+      "year": "2022",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35684021/"
+    },
+    {
+      "pmid": "32778175",
+      "title": "Effect of D-ribose supplementation on delayed onset muscle soreness induced by plyometric exercise in college students",
+      "journal": "J Int Soc Sports Nutr",
+      "year": "2020",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32778175/"
+    }
+  ],
+  "essential-amino-acids": [
+    {
+      "pmid": "40317042",
+      "title": "Peri-operative protein or amino acid supplementation for total joint arthroplasty: a systematic review and meta-analysis",
+      "journal": "J Orthop Surg Res",
+      "year": "2025",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40317042/"
+    },
+    {
+      "pmid": "26864356",
+      "title": "Whey protein, amino acids, and vitamin D supplementation with physical activity increases fat-free mass and strength, functionality, and quality of life and decreases inflammation in sarcopenic elderly",
+      "journal": "Am J Clin Nutr",
+      "year": "2016",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26864356/"
+    },
+    {
+      "pmid": "41321015",
+      "title": "Dileucine-supplemented essential amino acids support whole-body anabolism after resistance exercise and serum-stimulated cell-based anabolism",
+      "journal": "J Int Soc Sports Nutr",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41321015/"
+    },
+    {
+      "pmid": "39770886",
+      "title": "Effects of Nutritional Support with a Leucine-Enriched Essential Amino Acid Supplement on Body Composition, Muscle Strength, and Physical Function in Stroke Patients Undergoing Rehabilitation",
+      "journal": "Nutrients",
+      "year": "2024",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39770886/"
+    },
+    {
+      "pmid": "41863133",
+      "title": "Combined resistance exercise and essential amino acid intake enhance follistatin/myostatin ratio and muscle fitness in older women: a randomized controlled trial",
+      "journal": "J Int Soc Sports Nutr",
+      "year": "2026",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41863133/"
+    }
+  ],
+  "acetyl-l-carnitine": [
+    {
+      "pmid": "35128424",
+      "title": "l-carnitine and l-acetylcarnitine supplementation for idiopathic male infertility",
+      "journal": "Reprod Fertil",
+      "year": "2020",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35128424/"
+    },
+    {
+      "pmid": "31201734",
+      "title": "Acetyl-L-carnitine for the treatment of diabetic peripheral neuropathy",
+      "journal": "Cochrane Database Syst Rev",
+      "year": "2019",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31201734/"
+    },
+    {
+      "pmid": "29076953",
+      "title": "Acetyl-L-Carnitine Supplementation and the Treatment of Depressive Symptoms: A Systematic Review and Meta-Analysis",
+      "journal": "Psychosom Med",
+      "year": "2018",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29076953/"
+    },
+    {
+      "pmid": "21923249",
+      "title": "The supplementation of acetyl-L-carnitine decreases fatigue and increases quality of life in patients with hepatitis C treated with pegylated interferon-α 2b plus ribavirin",
+      "journal": "J Interferon Cytokine Res",
+      "year": "2011",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/21923249/"
+    },
+    {
+      "pmid": "38138300",
+      "title": "Combined Rehabilitation with Alpha Lipoic Acid, Acetyl-L-Carnitine, Resveratrol, and Cholecalciferolin Discogenic Sciatica in Young People: A Randomized Clinical Trial",
+      "journal": "Medicina (Kaunas)",
+      "year": "2023",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Randomized Controlled Trial",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38138300/"
+    }
+  ],
+  "alpha-lipoic": [
+    {
+      "pmid": "40134249",
+      "title": "Alpha Lipoic Acid Supplementation and Iron Homeostasis: A Comprehensive Systematic Review and Meta-Analysis of Randomized Controlled Clinical Trials",
+      "journal": "Int J Vitam Nutr Res",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40134249/"
+    },
+    {
+      "pmid": "33827267",
+      "title": "An updated systematic review and dose-response meta-analysis of the randomized controlled trials on the effects of alpha-lipoic acid supplementation on inflammatory biomarkers",
+      "journal": "Int J Vitam Nutr Res",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Systematic Review",
+        "Meta-Analysis",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33827267/"
+    },
+    {
+      "pmid": "28629898",
+      "title": "Alpha-lipoic acid supplement in obesity treatment: A systematic review and meta-analysis of clinical trials",
+      "journal": "Clin Nutr",
+      "year": "2018",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28629898/"
+    },
+    {
+      "pmid": "30471524",
+      "title": "Effect of alpha-lipoic acid supplementation on lipid profile: A systematic review and meta-analysis of controlled clinical trials",
+      "journal": "Nutrition",
+      "year": "2019",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30471524/"
+    },
+    {
+      "pmid": "39413860",
+      "title": "Effects of Alpha-Lipoic Acid Supplementation on Weight Loss, Inflammatory, Lipid, and Hematological Levels in Patients With Chronic Kidney Disease: A Systematic Review and Meta-Analysis of Randomized Controlled Trials",
+      "journal": "J Ren Nutr",
+      "year": "2025",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39413860/"
+    }
+  ],
+  "magnesium-sleep": [
+    {
+      "pmid": "33865376",
+      "title": "Oral magnesium supplementation for insomnia in older adults: a Systematic Review & Meta-Analysis",
+      "journal": "BMC Complement Med Ther",
+      "year": "2021",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33865376/"
+    },
+    {
+      "pmid": "34247796",
+      "title": "Effect of oral magnesium supplementation for relieving leg cramps during pregnancy: A meta-analysis of randomized controlled trials",
+      "journal": "Taiwan J Obstet Gynecol",
+      "year": "2021",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34247796/"
+    },
+    {
+      "pmid": "35184264",
+      "title": "The Role of Magnesium in Sleep Health: a Systematic Review of Available Literature",
+      "journal": "Biol Trace Elem Res",
+      "year": "2023",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35184264/"
+    },
+    {
+      "pmid": "38892595",
+      "title": "Does Magnesium Provide a Protective Effect in Crohn's Disease Remission? A Systematic Review of the Literature",
+      "journal": "Nutrients",
+      "year": "2024",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38892595/"
+    },
+    {
+      "pmid": "31678660",
+      "title": "Magnesium supplementation for the treatment of restless legs syndrome and periodic limb movement disorder: A systematic review",
+      "journal": "Sleep Med Rev",
+      "year": "2019",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31678660/"
+    }
+  ],
+  "alpha-gpc": [
+    {
+      "pmid": "39683633",
+      "title": "Acute Alpha-Glycerylphosphorylcholine Supplementation Enhances Cognitive Performance in Healthy Men",
+      "journal": "Nutrients",
+      "year": "2024",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39683633/"
+    },
+    {
+      "pmid": "38875437",
+      "title": "Comparative study of choline alfoscerate as a combination therapy with donepezil: A mixed double-blind randomized controlled and open-label observation trial",
+      "journal": "Medicine (Baltimore)",
+      "year": "2024",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Comparative Study",
+        "Observational Study"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38875437/"
+    },
+    {
+      "pmid": "31040642",
+      "title": "Formulation and bioequivalence studies of choline alfoscerate tablet comparing with soft gelatin capsule in healthy male volunteers",
+      "journal": "Drug Des Devel Ther",
+      "year": "2019",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Comparative Study",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31040642/"
+    },
+    {
+      "pmid": "39703111",
+      "title": "Effects of choline alfoscerate on cognitive function and quality of life in type 2 diabetes: A double-blind, randomized, placebo-controlled trial",
+      "journal": "Diabetes Obes Metab",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39703111/"
+    },
+    {
+      "pmid": "38490741",
+      "title": "Pharmacokinetics of soy-derived lysophosphatidylcholine compared with that of glycerophosphocholine: a randomized controlled trial",
+      "journal": "Biosci Biotechnol Biochem",
+      "year": "2024",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Comparative Study"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38490741/"
+    }
+  ],
+  "citicoline": [
+    {
+      "pmid": "36678257",
+      "title": "Is Citicoline Effective in Preventing and Slowing Down Dementia?-A Systematic Review and a Meta-Analysis",
+      "journal": "Nutrients",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Systematic Review",
+        "Meta-Analysis",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36678257/"
+    },
+    {
+      "pmid": "28458415",
+      "title": "Is aura around citicoline fading? A systemic review",
+      "journal": "Indian J Pharmacol",
+      "year": "2017",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28458415/"
+    },
+    {
+      "pmid": "15846601",
+      "title": "Cytidinediphosphocholine (CDP-choline) for cognitive and behavioural disturbances associated with chronic cerebral disorders in the elderly",
+      "journal": "Cochrane Database Syst Rev",
+      "year": "2005",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15846601/"
+    },
+    {
+      "pmid": "15106147",
+      "title": "Cytidinediphosphocholine (CDP choline) for cognitive and behavioural disturbances associated with chronic cerebral disorders in the elderly",
+      "journal": "Cochrane Database Syst Rev",
+      "year": "2004",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15106147/"
+    },
+    {
+      "pmid": "33053828",
+      "title": "Application of Citicoline in Neurological Disorders: A Systematic Review",
+      "journal": "Nutrients",
+      "year": "2020",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33053828/"
+    }
+  ],
+  "phosphatidylserine": [
+    {
+      "pmid": "42538853",
+      "title": "The Impact of Citicoline/Phosphatidylserine Supplementation on Cognitive Performance and Executive Functions in Mental Disorders: A Systematic Review of Controlled Trials",
+      "journal": "Hum Psychopharmacol",
+      "year": "2026",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42538853/"
+    },
+    {
+      "pmid": "23495677",
+      "title": "The effect of phosphatidylserine administration on memory and symptoms of attention-deficit hyperactivity disorder: a randomised, double-blind, placebo-controlled clinical trial",
+      "journal": "J Hum Nutr Diet",
+      "year": "2014",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23495677/"
+    },
+    {
+      "pmid": "42312814",
+      "title": "Beneficial vascular effects of oral phosphatidylserine supplementation in type 2 diabetes",
+      "journal": "J Appl Physiol (1985)",
+      "year": "2026",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, N.I.H., Extramural",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42312814/"
+    },
+    {
+      "pmid": "16960523",
+      "title": "Phosphatidylserine supplementation and recovery following downhill running",
+      "journal": "Med Sci Sports Exerc",
+      "year": "2006",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16960523/"
+    },
+    {
+      "pmid": "42280328",
+      "title": "Effects of Taurine-, Caffeine-, and Phosphatidylserine-Containing Supplementation Protocols on Physical and Cognitive Performance in Professional Male Football Players",
+      "journal": "Nutrients",
+      "year": "2026",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42280328/"
+    }
+  ],
+  "lecithin": [
+    {
+      "pmid": "33440385",
+      "title": "Delayed-Release Phosphatidylcholine Is Effective for Treatment of Ulcerative Colitis: A Meta-Analysis",
+      "journal": "Dig Dis",
+      "year": "2021",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33440385/"
+    },
+    {
+      "pmid": "10595648",
+      "title": "Differential effects of dietary supplementation with fish oil or soy lecithin on human platelet adhesion",
+      "journal": "Thromb Haemost",
+      "year": "1999",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Comparative Study",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/10595648/"
+    },
+    {
+      "pmid": "30289748",
+      "title": "Role of phosphatidylcholine-DHA in preventing APOE4-associated Alzheimer's disease",
+      "journal": "FASEB J",
+      "year": "2019",
+      "kind": "Review",
+      "pubtype": [
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30289748/"
+    },
+    {
+      "pmid": "32303030",
+      "title": "Phosphatidylcholine Containing Long Chain Omega-3 Fatty Acids: a Treatment Adjunct for Patients with Anorexia Nervosa?",
+      "journal": "Psychiatr Danub",
+      "year": "2020",
+      "kind": "Review",
+      "pubtype": [
+        "Journal Article",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32303030/"
+    },
+    {
+      "pmid": "39357562",
+      "title": "Unlocking choline's potential in Alzheimer's disease: A narrative review exploring the neuroprotective and neurotrophic role of phosphatidylcholine and assessing its impact on memory and learning",
+      "journal": "Clin Nutr ESPEN",
+      "year": "2024",
+      "kind": "Review",
+      "pubtype": [
+        "Journal Article",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39357562/"
+    }
+  ],
+  "huperzine-a": [
+    {
+      "pmid": "18425924",
+      "title": "Huperzine A for Alzheimer's disease",
+      "journal": "Cochrane Database Syst Rev",
+      "year": "2008",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/18425924/"
+    },
+    {
+      "pmid": "24086396",
+      "title": "Huperzine A for Alzheimer's disease: a systematic review and meta-analysis of randomized clinical trials",
+      "journal": "PLoS One",
+      "year": "2013",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24086396/"
+    },
+    {
+      "pmid": "27302211",
+      "title": "Adjunctive huperzine A for cognitive deficits in schizophrenia: a systematic review and meta-analysis",
+      "journal": "Hum Psychopharmacol",
+      "year": "2016",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/27302211/"
+    },
+    {
+      "pmid": "19221692",
+      "title": "Efficacy and safety of natural acetylcholinesterase inhibitor huperzine A in the treatment of Alzheimer's disease: an updated meta-analysis",
+      "journal": "J Neural Transm (Vienna)",
+      "year": "2009",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19221692/"
+    },
+    {
+      "pmid": "19370686",
+      "title": "Huperzine A for vascular dementia",
+      "journal": "Cochrane Database Syst Rev",
+      "year": "2009",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19370686/"
+    }
+  ],
+  "bacopa": [
+    {
+      "pmid": "24252493",
+      "title": "Meta-analysis of randomized controlled trials on cognitive effects of Bacopa monnieri extract",
+      "journal": "J Ethnopharmacol",
+      "year": "2014",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24252493/"
+    },
+    {
+      "pmid": "27912958",
+      "title": "A systematic review of the Ayurvedic medicinal herb Bacopa monnieri in child and adolescent populations",
+      "journal": "Complement Ther Med",
+      "year": "2016",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/27912958/"
+    },
+    {
+      "pmid": "39498770",
+      "title": "Effectiveness of Bacopa Monnieri (Brahmi) in the management of schizophrenia: a systematic review",
+      "journal": "Nutr Neurosci",
+      "year": "2025",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39498770/"
+    },
+    {
+      "pmid": "22747190",
+      "title": "The cognitive-enhancing effects of Bacopa monnieri: a systematic review of randomized, controlled human clinical trials",
+      "journal": "J Altern Complement Med",
+      "year": "2012",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/22747190/"
+    },
+    {
+      "pmid": "41678913",
+      "title": "Comparative effects of Bacopa monnieri and Ginkgo biloba on cognitive functions: A systematic review and network meta-analysis",
+      "journal": "Phytomedicine",
+      "year": "2026",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Network Meta-Analysis",
+        "Comparative Study"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41678913/"
+    }
+  ],
+  "ginkgo": [
+    {
+      "pmid": "25114079",
+      "title": "Efficacy and adverse effects of ginkgo biloba for cognitive impairment and dementia: a systematic review and meta-analysis",
+      "journal": "J Alzheimers Dis",
+      "year": "2015",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25114079/"
+    },
+    {
+      "pmid": "39895346",
+      "title": "Ginkgo biloba extract EGb 761 is safe and effective in the treatment of mild dementia - a meta-analysis of patient subgroups in randomised controlled trials",
+      "journal": "World J Biol Psychiatry",
+      "year": "2025",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39895346/"
+    },
+    {
+      "pmid": "32658034",
+      "title": "Meta-analysis of Ginkgo biloba Preparation for the Treatment of Alzheimer's Disease",
+      "journal": "Clin Neuropharmacol",
+      "year": "2020",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32658034/"
+    },
+    {
+      "pmid": "19160216",
+      "title": "Ginkgo biloba for cognitive impairment and dementia",
+      "journal": "Cochrane Database Syst Rev",
+      "year": "2009",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19160216/"
+    },
+    {
+      "pmid": "17443523",
+      "title": "Ginkgo biloba for cognitive impairment and dementia",
+      "journal": "Cochrane Database Syst Rev",
+      "year": "2007",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/17443523/"
+    }
+  ],
+  "l-tyrosine": [
+    {
+      "pmid": "38290812",
+      "title": "The effect of tyrosine supplementation on whole-body endurance performance in physically active population: A systematic review and meta-analysis including GRADE qualification",
+      "journal": "J Sports Sci",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38290812/"
+    },
+    {
+      "pmid": "8523192",
+      "title": "Effect of high-dose tyrosine supplementation on brain function in adults with phenylketonuria",
+      "journal": "J Pediatr",
+      "year": "1995",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Comparative Study",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/8523192/"
+    },
+    {
+      "pmid": "36548401",
+      "title": "The catecholamine precursor Tyrosine reduces autonomic arousal and decreases decision thresholds in reinforcement learning and temporal discounting",
+      "journal": "PLoS Comput Biol",
+      "year": "2022",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Randomized Controlled Trial",
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36548401/"
+    },
+    {
+      "pmid": "39820592",
+      "title": "Tyrosine supplementation is ineffective in facilitating soccer players' physical and cognitive performance during high-intensity intermittent exercise in hot conditions",
+      "journal": "PLoS One",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39820592/"
+    },
+    {
+      "pmid": "28477375",
+      "title": "Oral l-tyrosine supplementation augments the vasoconstriction response to whole-body cooling in older adults",
+      "journal": "Exp Physiol",
+      "year": "2017",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28477375/"
+    }
+  ],
+  "iodine": [
+    {
+      "pmid": "37562272",
+      "title": "Effects of iodine supplementation on thyroid function parameter: Systematic review and meta-analysis",
+      "journal": "J Trace Elem Med Biol",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37562272/"
+    },
+    {
+      "pmid": "28224254",
+      "title": "Iodine deficiency status in the WHO Eastern Mediterranean Region: a systematic review",
+      "journal": "Environ Geochem Health",
+      "year": "2018",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28224254/"
+    },
+    {
+      "pmid": "29596650",
+      "title": "Micronutrients, iodine status and concentrations of thyroid hormones: a systematic review",
+      "journal": "Nutr Rev",
+      "year": "2018",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29596650/"
+    },
+    {
+      "pmid": "12227127",
+      "title": "Iodized salt for iodine deficiency disorders. A systematic review",
+      "journal": "Endocrinol Metab Clin North Am",
+      "year": "2002",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12227127/"
+    },
+    {
+      "pmid": "35535480",
+      "title": "Iodine status during child development and hearing ability: a systematic review",
+      "journal": "Br J Nutr",
+      "year": "2023",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Systematic Review",
+        "Case Reports",
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35535480/"
+    }
+  ],
+  "phenylethylamine": [
+    {
+      "pmid": "7711493",
+      "title": "Phenylethylamine modulation of affect: therapeutic and diagnostic implications",
+      "journal": "J Neuropsychiatry Clin Neurosci",
+      "year": "1995",
+      "kind": "Review",
+      "pubtype": [
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/7711493/"
+    },
+    {
+      "pmid": "6597458",
+      "title": "Phenylethylamine excretion in depression",
+      "journal": "Psychiatry Res",
+      "year": "1984",
+      "kind": "Study",
+      "pubtype": [
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/6597458/"
+    },
+    {
+      "pmid": "1753451",
+      "title": "Plasma beta-phenylethylamine levels in mood disorders",
+      "journal": "Jpn J Psychiatry Neurol",
+      "year": "1991",
+      "kind": "Study",
+      "pubtype": [
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/1753451/"
+    },
+    {
+      "pmid": "8044048",
+      "title": "Phenylethylamine relieves depression after selective MAO-B inhibition",
+      "journal": "J Neuropsychiatry Clin Neurosci",
+      "year": "1994",
+      "kind": "Study",
+      "pubtype": [
+        "Letter"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/8044048/"
+    },
+    {
+      "pmid": "1557506",
+      "title": "Beta-phenylethylamine and noradrenergic function in depression",
+      "journal": "Prog Neuropsychopharmacol Biol Psychiatry",
+      "year": "1992",
+      "kind": "Study",
+      "pubtype": [
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/1557506/"
+    }
+  ],
+  "lithium-low-dose": [
+    {
+      "pmid": "38657568",
+      "title": "Lithium Therapy's Potential to Lower Dementia Risk and the Prevalence of Alzheimer's Disease: A Meta-Analysis",
+      "journal": "Eur Neurol",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38657568/"
+    },
+    {
+      "pmid": "32716281",
+      "title": "Association between naturally occurring lithium in drinking water and suicide rates: systematic review and meta-analysis of ecological studies",
+      "journal": "Br J Psychiatry",
+      "year": "2020",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32716281/"
+    },
+    {
+      "pmid": "36436738",
+      "title": "Identifying the neuropsychiatric health effects of low-dose lithium interventions: A systematic review",
+      "journal": "Neurosci Biobehav Rev",
+      "year": "2023",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Systematic Review",
+        "Journal Article",
+        "Research Support, U.S. Gov't, Non-P.H.S."
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36436738/"
+    },
+    {
+      "pmid": "24919696",
+      "title": "Standard and trace-dose lithium: a systematic review of dementia prevention and other behavioral benefits",
+      "journal": "Aust N Z J Psychiatry",
+      "year": "2014",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24919696/"
+    },
+    {
+      "pmid": "41260370",
+      "title": "The effects of Lithium on Beta-amyloid deposition and tau phosphorylation: A systematic review",
+      "journal": "J Affect Disord",
+      "year": "2026",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41260370/"
+    }
+  ],
+  "blueberry": [
+    {
+      "pmid": "35960187",
+      "title": "Effects of anthocyanin-rich supplementation on cognition of the cognitively healthy middle-aged and older adults: a systematic review and meta-analysis of randomized controlled trials",
+      "journal": "Nutr Rev",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35960187/"
+    },
+    {
+      "pmid": "37320946",
+      "title": "Anthocyanin supplementation improves obesity-related inflammatory characteristics: A systematic review and meta-analysis of randomized controlled trials",
+      "journal": "Nutr Res",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Systematic Review",
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37320946/"
+    },
+    {
+      "pmid": "28825651",
+      "title": "The Effect of Anthocyanin-Rich Foods or Extracts on Vascular Function in Adults: A Systematic Review and Meta-Analysis of Randomised Controlled Trials",
+      "journal": "Nutrients",
+      "year": "2017",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28825651/"
+    },
+    {
+      "pmid": "35676847",
+      "title": "The Potential Effect of Blueberry on Cognitive Health and Mood State based on Human Intervention Studies: Systematic Review and Mini Meta-Analysis",
+      "journal": "CNS Neurol Disord Drug Targets",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Systematic Review",
+        "Meta-Analysis",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35676847/"
+    },
+    {
+      "pmid": "34204250",
+      "title": "Effects of Berry Anthocyanins on Cognitive Performance, Vascular Function and Cardiometabolic Risk Markers: A Systematic Review of Randomized Placebo-Controlled Intervention Studies in Humans",
+      "journal": "Int J Mol Sci",
+      "year": "2021",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34204250/"
+    }
+  ],
+  "phellodendron": [
+    {
+      "pmid": "18426577",
+      "title": "Effect of a proprietary Magnolia and Phellodendron extract on stress levels in healthy women: a pilot, double-blind, placebo-controlled clinical trial",
+      "journal": "Nutr J",
+      "year": "2008",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/18426577/"
+    },
+    {
+      "pmid": "16454147",
+      "title": "Effect of a proprietary Magnolia and Phellodendron extract on weight management: a pilot, double-blind, placebo-controlled clinical trial",
+      "journal": "Altern Ther Health Med",
+      "year": "2006",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16454147/"
+    },
+    {
+      "pmid": "23924268",
+      "title": "Effect of Magnolia officinalis and Phellodendron amurense (Relora®) on cortisol and psychological mood state in moderately stressed subjects",
+      "journal": "J Int Soc Sports Nutr",
+      "year": "2013",
+      "kind": "Study",
+      "pubtype": [
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23924268/"
+    }
+  ],
+  "mucuna": [
+    {
+      "pmid": "40137945",
+      "title": "Comparative efficacy of Mucuna pruriens and conventional levodopa in Parkinson's disease: a randomized controlled trial on pharmacokinetics and clinical perspectives from Asia",
+      "journal": "J Neural Transm (Vienna)",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Comparative Study",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40137945/"
+    },
+    {
+      "pmid": "41269916",
+      "title": "Mucuna pruriens in untreated Parkinson's disease in sub-Saharan Africa: A 12-month, multicenter, randomized, controlled trial",
+      "journal": "J Parkinsons Dis",
+      "year": "2026",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Multicenter Study",
+        "Randomized Controlled Trial",
+        "Clinical Trial, Phase II"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41269916/"
+    },
+    {
+      "pmid": "28679598",
+      "title": "Mucuna pruriens in Parkinson disease: A double-blind, randomized, controlled, crossover study",
+      "journal": "Neurology",
+      "year": "2017",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial, Phase II",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28679598/"
+    },
+    {
+      "pmid": "15548480",
+      "title": "Mucuna pruriens in Parkinson's disease: a double blind clinical and pharmacological study",
+      "journal": "J Neurol Neurosurg Psychiatry",
+      "year": "2004",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15548480/"
+    },
+    {
+      "pmid": "29352722",
+      "title": "Daily intake of Mucuna pruriens in advanced Parkinson's disease: A 16-week, noninferiority, randomized, crossover, pilot study",
+      "journal": "Parkinsonism Relat Disord",
+      "year": "2018",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't",
+        "Equivalence Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29352722/"
+    }
+  ],
+  "omega-3": [
+    {
+      "pmid": "31383846",
+      "title": "Efficacy of omega-3 PUFAs in depression: A meta-analysis",
+      "journal": "Transl Psychiatry",
+      "year": "2019",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31383846/"
+    },
+    {
+      "pmid": "32114706",
+      "title": "Omega-3 fatty acids for the primary and secondary prevention of cardiovascular disease",
+      "journal": "Cochrane Database Syst Rev",
+      "year": "2020",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32114706/"
+    },
+    {
+      "pmid": "37028557",
+      "title": "The Relationship of Omega-3 Fatty Acids with Dementia and Cognitive Decline: Evidence from Prospective Cohort Studies of Supplementation, Dietary Intake, and Blood Markers",
+      "journal": "Am J Clin Nutr",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't",
+        "Research Support, N.I.H., Extramural",
+        "Research Support, U.S. Gov't, Non-P.H.S."
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37028557/"
+    },
+    {
+      "pmid": "28741625",
+      "title": "Omega-3 Polyunsaturated Fatty Acids in Youths with Attention Deficit Hyperactivity Disorder: a Systematic Review and Meta-Analysis of Clinical Trials and Biological Studies",
+      "journal": "Neuropsychopharmacology",
+      "year": "2018",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28741625/"
+    },
+    {
+      "pmid": "30019766",
+      "title": "Omega-3 fatty acids for the primary and secondary prevention of cardiovascular disease",
+      "journal": "Cochrane Database Syst Rev",
+      "year": "2018",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30019766/"
+    }
+  ],
+  "algal-omega-3": [
+    {
+      "pmid": "22113870",
+      "title": "A meta-analysis shows that docosahexaenoic acid from algal oil reduces serum triglycerides and increases HDL-cholesterol and LDL-cholesterol in persons without coronary heart disease",
+      "journal": "J Nutr",
+      "year": "2012",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/22113870/"
+    },
+    {
+      "pmid": "23266209",
+      "title": "A randomized placebo-controlled study on high-dose oral algal docosahexaenoic acid supplementation in children with cystic fibrosis",
+      "journal": "Prostaglandins Leukot Essent Fatty Acids",
+      "year": "2013",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23266209/"
+    },
+    {
+      "pmid": "16226012",
+      "title": "Bioavailability and safety of a high dose of docosahexaenoic acid triacylglycerol of algal origin in cystic fibrosis patients: a randomized, controlled study",
+      "journal": "Nutrition",
+      "year": "2006",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16226012/"
+    },
+    {
+      "pmid": "42087933",
+      "title": "Scientific Opinion on the extension of use for DHA and EPA-rich algal oil from Schizochytrium sp. as a Novel Food ingredient",
+      "journal": "EFSA J",
+      "year": "2014",
+      "kind": "Study",
+      "pubtype": [
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42087933/"
+    }
+  ],
+  "magnesium-threonate": [
+    {
+      "pmid": "36558392",
+      "title": "A Magtein(®), Magnesium L-Threonate, -Based Formula Improves Brain Cognitive Functions in Healthy Chinese Adults",
+      "journal": "Nutrients",
+      "year": "2022",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Randomized Controlled Trial",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36558392/"
+    },
+    {
+      "pmid": "41601871",
+      "title": "The effects of magnesium L-threonate (Magtein(®)) on cognitive performance and sleep quality in adults: a randomised, double-blind, placebo-controlled trial",
+      "journal": "Front Nutr",
+      "year": "2025",
+      "kind": "Clinical trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41601871/"
+    },
+    {
+      "pmid": "39252819",
+      "title": "Magnesium-L-threonate improves sleep quality and daytime functioning in adults with self-reported sleep problems: A randomized controlled trial",
+      "journal": "Sleep Med X",
+      "year": "2024",
+      "kind": "Study",
+      "pubtype": [
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39252819/"
+    },
+    {
+      "pmid": "37520407",
+      "title": "A Randomized, Double-Blind, Placebo-Controlled Trial to Evaluate the Therapeutic Effect of Magnesium-L-Threonate Supplementation for Persistent Pain After Breast Cancer Surgery",
+      "journal": "Breast Cancer (Dove Med Press)",
+      "year": "2023",
+      "kind": "Study",
+      "pubtype": [
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37520407/"
+    }
+  ],
+  "fisetin": [
+    {
+      "pmid": "42218768",
+      "title": "12‑weeks fisetin supplementation and interval resistance with aerobic training: changes in Maresin‑1 and inflammatory markers in men with obesity: a randomized controlled trial",
+      "journal": "J Int Soc Sports Nutr",
+      "year": "2026",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42218768/"
+    },
+    {
+      "pmid": "41683255",
+      "title": "The Effects of Interval Resistance-Aerobic Training and Fisetin Supplementation on Asprosin and Selected Adipokines in Obese Men: A Double-Blind Randomized Control Trial",
+      "journal": "Nutrients",
+      "year": "2026",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41683255/"
+    },
+    {
+      "pmid": "29541713",
+      "title": "Effect of fisetin supplementation on inflammatory factors and matrix metalloproteinase enzymes in colorectal cancer patients",
+      "journal": "Food Funct",
+      "year": "2018",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29541713/"
+    },
+    {
+      "pmid": "36304817",
+      "title": "Enhanced bioavailability and pharmacokinetics of a novel hybrid-hydrogel formulation of fisetin orally administered in healthy individuals: a randomised double-blinded comparative crossover study",
+      "journal": "J Nutr Sci",
+      "year": "2022",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Comparative Study",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36304817/"
+    },
+    {
+      "pmid": "41835341",
+      "title": "A phase II randomized placebo-controlled study of fisetin to improve physical function in breast cancer survivors: the TROFFi study rationale and trial design",
+      "journal": "Ther Adv Med Oncol",
+      "year": "2026",
+      "kind": "Study",
+      "pubtype": [
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41835341/"
+    }
+  ],
+  "quercetin": [
+    {
+      "pmid": "35948195",
+      "title": "The Effects of Quercetin Supplementation on Blood Pressure - Meta-Analysis",
+      "journal": "Curr Probl Cardiol",
+      "year": "2022",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35948195/"
+    },
+    {
+      "pmid": "25897620",
+      "title": "Effects of quercetin supplementation on lipid profile: A systematic review and meta-analysis of randomized controlled trials",
+      "journal": "Crit Rev Food Sci Nutr",
+      "year": "2017",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25897620/"
+    },
+    {
+      "pmid": "21606866",
+      "title": "Quercetin and endurance exercise capacity: a systematic review and meta-analysis",
+      "journal": "Med Sci Sports Exerc",
+      "year": "2011",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/21606866/"
+    },
+    {
+      "pmid": "31017459",
+      "title": "The effects of quercetin supplementation on lipid profiles and inflammatory markers among patients with metabolic syndrome and related disorders: A systematic review and meta-analysis of randomized controlled trials",
+      "journal": "Crit Rev Food Sci Nutr",
+      "year": "2020",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31017459/"
+    },
+    {
+      "pmid": "31092175",
+      "title": "The Effects of Quercetin Supplementation on Blood Pressures and Endothelial Function Among Patients with Metabolic Syndrome and Related Disorders: A Systematic Review and Meta-analysis of Randomized Controlled Trials",
+      "journal": "Curr Pharm Des",
+      "year": "2019",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31092175/"
+    }
+  ],
+  "spermidine": [
+    {
+      "pmid": "35616942",
+      "title": "Effects of Spermidine Supplementation on Cognition and Biomarkers in Older Adults With Subjective Cognitive Decline: A Randomized Clinical Trial",
+      "journal": "JAMA Netw Open",
+      "year": "2022",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35616942/"
+    },
+    {
+      "pmid": "42169618",
+      "title": "Spermidine Mitigates Immune Cell Senescence and Boosts Vaccine Responses in Healthy Older Adults-A Pilot Study",
+      "journal": "Aging Cell",
+      "year": "2026",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42169618/"
+    },
+    {
+      "pmid": "39405978",
+      "title": "Supplementation of spermidine at 40 mg/day has minimal effects on circulating polyamines: An exploratory double-blind randomized controlled trial in older men",
+      "journal": "Nutr Res",
+      "year": "2024",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39405978/"
+    },
+    {
+      "pmid": "37111071",
+      "title": "High-Dose Spermidine Supplementation Does Not Increase Spermidine Levels in Blood Plasma and Saliva of Healthy Adults: A Randomized Placebo-Controlled Pharmacokinetic and Metabolomic Study",
+      "journal": "Nutrients",
+      "year": "2023",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Randomized Controlled Trial",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37111071/"
+    },
+    {
+      "pmid": "30388439",
+      "title": "The effect of spermidine on memory performance in older adults at risk for dementia: A randomized controlled trial",
+      "journal": "Cortex",
+      "year": "2018",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30388439/"
+    }
+  ],
+  "urolithin-a": [
+    {
+      "pmid": "39002645",
+      "title": "Targeting aging with urolithin A in humans: A systematic review",
+      "journal": "Ageing Res Rev",
+      "year": "2024",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39002645/"
+    },
+    {
+      "pmid": "35584623",
+      "title": "Urolithin A improves muscle strength, exercise performance, and biomarkers of mitochondrial health in a randomized trial in middle-aged adults",
+      "journal": "Cell Rep Med",
+      "year": "2022",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35584623/"
+    },
+    {
+      "pmid": "35050355",
+      "title": "Effect of Urolithin A Supplementation on Muscle Endurance and Mitochondrial Health in Older Adults: A Randomized Clinical Trial",
+      "journal": "JAMA Netw Open",
+      "year": "2022",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35050355/"
+    },
+    {
+      "pmid": "41174221",
+      "title": "Effect of the mitophagy inducer urolithin A on age-related immune decline: a randomized, placebo-controlled trial",
+      "journal": "Nat Aging",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41174221/"
+    },
+    {
+      "pmid": "40839339",
+      "title": "Evaluating the Impact of Urolithin A Supplementation on Running Performance, Recovery, and Mitochondrial Biomarkers in Highly Trained Male Distance Runners",
+      "journal": "Sports Med",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40839339/"
+    }
+  ],
+  "yerba-mate": [
+    {
+      "pmid": "41244043",
+      "title": "Yerba Maté and its impact on glycemic control and metabolic health: a systematic review and meta-analysis",
+      "journal": "Front Endocrinol (Lausanne)",
+      "year": "2025",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41244043/"
+    },
+    {
+      "pmid": "36647770",
+      "title": "Physiological effects of yerba maté (Ilex paraguariensis): a systematic review",
+      "journal": "Nutr Rev",
+      "year": "2023",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36647770/"
+    },
+    {
+      "pmid": "40263915",
+      "title": "Yerba Mate (Ilex paraguariensis St. Hill.) Tea May Have Cardiometabolic Beneficial Effects in Healthy and At-Risk Subjects: A Randomized, Controlled, Blind, Crossover Trial in Nonhabitual Consumers",
+      "journal": "Mol Nutr Food Res",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40263915/"
+    },
+    {
+      "pmid": "31994278",
+      "title": "Ilex paraguariensis, white mulberry and chromium picolinate in patients with pre-diabetes",
+      "journal": "Phytother Res",
+      "year": "2020",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31994278/"
+    },
+    {
+      "pmid": "29117073",
+      "title": "Metabolic and Performance Effects of Yerba Mate on Well-trained Cyclists",
+      "journal": "Med Sci Sports Exerc",
+      "year": "2018",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29117073/"
+    }
+  ],
+  "eleuthero": [
+    {
+      "pmid": "14971626",
+      "title": "Randomized controlled trial of Siberian ginseng for chronic fatigue",
+      "journal": "Psychol Med",
+      "year": "2004",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Comparative Study",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't",
+        "Research Support, U.S. Gov't, P.H.S."
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/14971626/"
+    },
+    {
+      "pmid": "8778554",
+      "title": "Effect of Eleutherococcus senticosus on submaximal and maximal exercise performance",
+      "journal": "Med Sci Sports Exerc",
+      "year": "1996",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/8778554/"
+    },
+    {
+      "pmid": "11099371",
+      "title": "The effect of siberian ginseng (Eleutherococcus senticosus) on substrate utilization and performance",
+      "journal": "Int J Sport Nutr Exerc Metab",
+      "year": "2000",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11099371/"
+    },
+    {
+      "pmid": "15207399",
+      "title": "Effects of Siberian ginseng (Eleutherococcus senticosus maxim.) on elderly quality of life: a randomized clinical trial",
+      "journal": "Arch Gerontol Geriatr Suppl",
+      "year": "2004",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15207399/"
+    },
+    {
+      "pmid": "31979283",
+      "title": "Combined Treatment with Two Water Extracts of Eleutherococcus senticosus Leaf and Rhizome of Drynaria fortunei Enhances Cognitive Function: A Placebo-Controlled, Randomized, Double-Blind Study in Healthy Adults",
+      "journal": "Nutrients",
+      "year": "2020",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31979283/"
+    }
+  ],
+  "creatine": [
+    {
+      "pmid": "35984306",
+      "title": "Effects of creatine supplementation on memory in healthy individuals: a systematic review and meta-analysis of randomized controlled trials",
+      "journal": "Nutr Rev",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35984306/"
+    },
+    {
+      "pmid": "36877404",
+      "title": "Effects of Creatine Monohydrate on Endurance Performance in a Trained Population: A Systematic Review and Meta-analysis",
+      "journal": "Sports Med",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36877404/"
+    },
+    {
+      "pmid": "41199218",
+      "title": "Effect of creatine supplementation on kidney function: a systematic review and meta-analysis",
+      "journal": "BMC Nephrol",
+      "year": "2025",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41199218/"
+    },
+    {
+      "pmid": "32549301",
+      "title": "Risk of Adverse Outcomes in Females Taking Oral Creatine Monohydrate: A Systematic Review and Meta-Analysis",
+      "journal": "Nutrients",
+      "year": "2020",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32549301/"
+    },
+    {
+      "pmid": "42141930",
+      "title": "Creatine monohydrate for lean mass, strength, and bone density in postmenopausal women: a systematic review and meta-analysis",
+      "journal": "J Int Soc Sports Nutr",
+      "year": "2026",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42141930/"
+    }
+  ],
+  "hmb": [
+    {
+      "pmid": "39999663",
+      "title": "The effects of β-hydroxy-β-methylbutyrate supplementation in patients with sarcopenia: A systematic review and meta-analysis",
+      "journal": "Maturitas",
+      "year": "2025",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39999663/"
+    },
+    {
+      "pmid": "39797501",
+      "title": "Ergogenic Benefits of β-Hydroxy-β-Methyl Butyrate (HMB) Supplementation on Body Composition and Muscle Strength: An Umbrella Review of Meta-Analyses",
+      "journal": "J Cachexia Sarcopenia Muscle",
+      "year": "2025",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39797501/"
+    },
+    {
+      "pmid": "26169182",
+      "title": "Effect of beta-hydroxy-beta-methylbutyrate supplementation on muscle loss in older adults: a systematic review and meta-analysis",
+      "journal": "Arch Gerontol Geriatr",
+      "year": "2015",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26169182/"
+    },
+    {
+      "pmid": "32456217",
+      "title": "Supplementation with the Leucine Metabolite β-hydroxy-β-methylbutyrate (HMB) does not Improve Resistance Exercise-Induced Changes in Body Composition or Strength in Young Subjects: A Systematic Review and Meta-Analysis",
+      "journal": "Nutrients",
+      "year": "2020",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32456217/"
+    },
+    {
+      "pmid": "29676656",
+      "title": "The Effects of Beta-Hydroxy-Beta-Methylbutyrate Supplementation on Recovery Following Exercise-Induced Muscle Damage: A Systematic Review and Meta-Analysis",
+      "journal": "J Am Coll Nutr",
+      "year": "2018",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29676656/"
+    }
+  ],
+  "leucine": [
+    {
+      "pmid": "36771225",
+      "title": "Effects of Whey Protein, Leucine, and Vitamin D Supplementation in Patients with Sarcopenia: A Systematic Review and Meta-Analysis",
+      "journal": "Nutrients",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36771225/"
+    },
+    {
+      "pmid": "25234223",
+      "title": "The effectiveness of leucine on muscle protein synthesis, lean body mass and leg lean mass accretion in older people: a systematic review and meta-analysis",
+      "journal": "Br J Nutr",
+      "year": "2015",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25234223/"
+    },
+    {
+      "pmid": "40805998",
+      "title": "Effects of Leucine Supplementation in Older Adults with Sarcopenia: A Meta-Analysis",
+      "journal": "Nutrients",
+      "year": "2025",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40805998/"
+    },
+    {
+      "pmid": "40937507",
+      "title": "Enhancing Muscle Quality: Exploring Leucine and Whey Protein in Sarcopenic Individuals",
+      "journal": "J Cachexia Sarcopenia Muscle",
+      "year": "2025",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40937507/"
+    },
+    {
+      "pmid": "31627427",
+      "title": "Beneficial Effects of Leucine Supplementation on Criteria for Sarcopenia: A Systematic Review",
+      "journal": "Nutrients",
+      "year": "2019",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31627427/"
+    }
+  ],
+  "bcaa": [
+    {
+      "pmid": "30938579",
+      "title": "Effect of branched-Chain Amino Acid Supplementation on Muscle Soreness following Exercise: A Meta-Analysis",
+      "journal": "Int J Vitam Nutr Res",
+      "year": "2019",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30938579/"
+    },
+    {
+      "pmid": "28870476",
+      "title": "Branched-chain amino acid supplementation and exercise-induced muscle damage in exercise recovery: A meta-analysis of randomized clinical trials",
+      "journal": "Nutrition",
+      "year": "2017",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28870476/"
+    },
+    {
+      "pmid": "34072718",
+      "title": "Does Branched-Chain Amino Acids (BCAAs) Supplementation Attenuate Muscle Damage Markers and Soreness after Resistance Exercise in Trained Males? A Meta-Analysis of Randomized Controlled Trials",
+      "journal": "Nutrients",
+      "year": "2021",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34072718/"
+    },
+    {
+      "pmid": "35500317",
+      "title": "Efficacy of branched chain amino acids supplementation in liver cirrhosis: A systematic review and meta-analysis",
+      "journal": "Clin Nutr",
+      "year": "2022",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35500317/"
+    },
+    {
+      "pmid": "36235655",
+      "title": "Oral Branched-Chain Amino Acids Supplementation in Athletes: A Systematic Review",
+      "journal": "Nutrients",
+      "year": "2022",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36235655/"
+    }
+  ],
+  "atp-supplement": [
+    {
+      "pmid": "38193939",
+      "title": "Acute Effect of Oral Adenosine Triphosphate (ATP) Supplementation on Muscular Performance in Trained Adults",
+      "journal": "J Am Nutr Assoc",
+      "year": "2024",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38193939/"
+    },
+    {
+      "pmid": "28080323",
+      "title": "Oral Adenosine-5'-triphosphate (ATP) Administration Increases Postexercise ATP Levels, Muscle Excitability, and Athletic Performance Following a Repeated Sprint Bout",
+      "journal": "J Am Coll Nutr",
+      "year": "2017",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28080323/"
+    },
+    {
+      "pmid": "15179168",
+      "title": "Effects of oral ATP supplementation on anaerobic power and muscular strength",
+      "journal": "Med Sci Sports Exerc",
+      "year": "2004",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15179168/"
+    },
+    {
+      "pmid": "29045315",
+      "title": "A Single Dose of Oral ATP Supplementation Improves Performance and Physiological Response During Lower Body Resistance Exercise in Recreational Resistance-Trained Males",
+      "journal": "J Strength Cond Res",
+      "year": "2019",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29045315/"
+    },
+    {
+      "pmid": "27146299",
+      "title": "Treatment with Oral ATP decreases alternating hemiplegia of childhood with de novo ATP1A3 Mutation",
+      "journal": "Orphanet J Rare Dis",
+      "year": "2016",
+      "kind": "Study",
+      "pubtype": [
+        "Case Reports",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/27146299/"
+    }
+  ],
+  "whey-protein": [
+    {
+      "pmid": "38350303",
+      "title": "Improving sarcopenia in older adults: a systematic review and meta-analysis of randomized controlled trials of whey protein supplementation with or without resistance training",
+      "journal": "J Nutr Health Aging",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38350303/"
+    },
+    {
+      "pmid": "37571361",
+      "title": "Effectiveness of Whey Protein Supplementation during Resistance Exercise Training on Skeletal Muscle Mass and Strength in Older People with Sarcopenia: A Systematic Review and Meta-Analysis",
+      "journal": "Nutrients",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37571361/"
+    },
+    {
+      "pmid": "37196876",
+      "title": "Whey Protein Supplementation with or without Vitamin D on Sarcopenia-Related Measures: A Systematic Review and Meta-Analysis",
+      "journal": "Adv Nutr",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Systematic Review",
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37196876/"
+    },
+    {
+      "pmid": "29462923",
+      "title": "The Effect of Whey Protein Supplementation on the Temporal Recovery of Muscle Function Following Resistance Training: A Systematic Review and Meta-Analysis",
+      "journal": "Nutrients",
+      "year": "2018",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29462923/"
+    },
+    {
+      "pmid": "36235862",
+      "title": "Effect of Whey Protein Supplementation in Postmenopausal Women: A Systematic Review and Meta-Analysis",
+      "journal": "Nutrients",
+      "year": "2022",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36235862/"
+    }
+  ],
+  "casein-protein": [
+    {
+      "pmid": "34070862",
+      "title": "Pre-Sleep Casein Supplementation, Metabolism, and Appetite: A Systematic Review",
+      "journal": "Nutrients",
+      "year": "2021",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34070862/"
+    },
+    {
+      "pmid": "41470882",
+      "title": "Casein Supplementation Timing and Exercise Performance in Soccer Players: Pre-Sleep vs. Post-Exercise Intake-A Randomized Controlled Trial",
+      "journal": "Nutrients",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41470882/"
+    },
+    {
+      "pmid": "31504693",
+      "title": "Lipolysis and Fat Oxidation Are Not Altered with Presleep Compared with Daytime Casein Protein Intake in Resistance-Trained Women",
+      "journal": "J Nutr",
+      "year": "2020",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31504693/"
+    },
+    {
+      "pmid": "40944141",
+      "title": "Presleep vs. Daytime Consumption of Casein-Enriched Milk: Effects on Muscle Function and Metabolic Health After Sleeve Gastrectomy",
+      "journal": "Nutrients",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40944141/"
+    },
+    {
+      "pmid": "30063168",
+      "title": "Aminoacidemia following ingestion of native whey protein, micellar casein, and a whey-casein blend in young men",
+      "journal": "Appl Physiol Nutr Metab",
+      "year": "2019",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Comparative Study",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30063168/"
+    }
+  ],
+  "plant-protein": [
+    {
+      "pmid": "29722584",
+      "title": "No Difference Between the Effects of Supplementing With Soy Protein Versus Animal Protein on Gains in Muscle Mass and Strength in Response to Resistance Exercise",
+      "journal": "Int J Sport Nutr Exerc Metab",
+      "year": "2018",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29722584/"
+    },
+    {
+      "pmid": "41454445",
+      "title": "The Impact of Whey and Soy Protein Supplementation on Resistance Training in Young Adults: A Systematic Review and Meta-Analysis",
+      "journal": "J Diet Suppl",
+      "year": "2026",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41454445/"
+    },
+    {
+      "pmid": "35706399",
+      "title": "Effects of whey and soy protein supplementation on inflammatory cytokines in older adults: a systematic review and meta-analysis",
+      "journal": "Br J Nutr",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Systematic Review",
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35706399/"
+    },
+    {
+      "pmid": "37603200",
+      "title": "Effect of Soy Protein Supplementation on Muscle Adaptations, Metabolic and Antioxidant Status, Hormonal Response, and Exercise Performance of Active Individuals and Athletes: A Systematic Review of Randomised Controlled Trials",
+      "journal": "Sports Med",
+      "year": "2023",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37603200/"
+    },
+    {
+      "pmid": "40806155",
+      "title": "Effect of Plant-Based Proteins on Recovery from Resistance Exercise-Induced Muscle Damage in Healthy Young Adults-A Systematic Review",
+      "journal": "Nutrients",
+      "year": "2025",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40806155/"
+    }
+  ],
+  "rice-protein": [
+    {
+      "pmid": "23782948",
+      "title": "The effects of 8 weeks of whey or rice protein supplementation on body composition and exercise performance",
+      "journal": "Nutr J",
+      "year": "2013",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23782948/"
+    }
+  ],
+  "glutamine": [
+    {
+      "pmid": "39397201",
+      "title": "A systematic review and meta-analysis of clinical trials on the effects of glutamine supplementation on gut permeability in adults",
+      "journal": "Amino Acids",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39397201/"
+    },
+    {
+      "pmid": "29784526",
+      "title": "The effect of glutamine supplementation on athletic performance, body composition, and immune function: A systematic review and a meta-analysis of clinical trials",
+      "journal": "Clin Nutr",
+      "year": "2019",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29784526/"
+    },
+    {
+      "pmid": "16923308",
+      "title": "Glutamine in critical care: current evidence from systematic reviews",
+      "journal": "Proc Nutr Soc",
+      "year": "2006",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16923308/"
+    },
+    {
+      "pmid": "19936817",
+      "title": "Glutamine as indispensable nutrient in oncology: experimental and clinical evidence",
+      "journal": "Eur J Nutr",
+      "year": "2010",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19936817/"
+    },
+    {
+      "pmid": "33745622",
+      "title": "Effects of glutamine supplementation on inflammatory bowel disease: A systematic review of clinical trials",
+      "journal": "Clin Nutr ESPEN",
+      "year": "2021",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33745622/"
+    }
+  ],
+  "beta-alanine": [
+    {
+      "pmid": "27797728",
+      "title": "β-alanine supplementation to improve exercise capacity and performance: a systematic review and meta-analysis",
+      "journal": "Br J Sports Med",
+      "year": "2017",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/27797728/"
+    },
+    {
+      "pmid": "39032921",
+      "title": "Effect of Beta-Alanine Supplementation on Maximal Intensity Exercise in Trained Young Male Individuals: A Systematic Review and Meta-Analysis",
+      "journal": "Int J Sport Nutr Exerc Metab",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39032921/"
+    },
+    {
+      "pmid": "22270875",
+      "title": "Effects of β-alanine supplementation on exercise performance: a meta-analysis",
+      "journal": "Amino Acids",
+      "year": "2012",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/22270875/"
+    },
+    {
+      "pmid": "40999397",
+      "title": "Effect of carnosine or beta-alanine supplementation therapy for prediabetes or type 2 diabetes mellitus: a systematic review and meta-analysis of randomized controlled trials",
+      "journal": "BMC Endocr Disord",
+      "year": "2025",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40999397/"
+    },
+    {
+      "pmid": "34024507",
+      "title": "Effects of beta-alanine supplementation on Yo-Yo test performance: A meta-analysis",
+      "journal": "Clin Nutr ESPEN",
+      "year": "2021",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34024507/"
+    }
+  ],
+  "citrulline": [
+    {
+      "pmid": "34965876",
+      "title": "Effect of food sources of nitrate, polyphenols, L-arginine and L-citrulline on endurance exercise performance: a systematic review and meta-analysis of randomised controlled trials",
+      "journal": "J Int Soc Sports Nutr",
+      "year": "2021",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34965876/"
+    },
+    {
+      "pmid": "30284051",
+      "title": "Effect of L-Citrulline Supplementation on Blood Pressure: a Systematic Review and Meta-Analysis of Clinical Trials",
+      "journal": "Curr Hypertens Rep",
+      "year": "2018",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30284051/"
+    },
+    {
+      "pmid": "41097202",
+      "title": "Effects of Citrulline or Watermelon Supplementation on Body Composition: A Systematic Review and Dose-Response Meta-Analysis",
+      "journal": "Nutrients",
+      "year": "2025",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41097202/"
+    },
+    {
+      "pmid": "34176406",
+      "title": "Effects of Citrulline Malate Supplementation on Muscle Strength in Resistance-Trained Adults: A Systematic Review and Meta-Analysis of Randomized Controlled Trials",
+      "journal": "J Diet Suppl",
+      "year": "2022",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34176406/"
+    },
+    {
+      "pmid": "31977835",
+      "title": "Effects of Citrulline Supplementation on Exercise Performance in Humans: A Review of the Current Literature",
+      "journal": "J Strength Cond Res",
+      "year": "2020",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31977835/"
+    }
+  ],
+  "arginine": [
+    {
+      "pmid": "34444657",
+      "title": "The Effect of Amino Acids on Wound Healing: A Systematic Review and Meta-Analysis on Arginine and Glutamine",
+      "journal": "Nutrients",
+      "year": "2021",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34444657/"
+    },
+    {
+      "pmid": "34965876",
+      "title": "Effect of food sources of nitrate, polyphenols, L-arginine and L-citrulline on endurance exercise performance: a systematic review and meta-analysis of randomised controlled trials",
+      "journal": "J Int Soc Sports Nutr",
+      "year": "2021",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34965876/"
+    },
+    {
+      "pmid": "37202084",
+      "title": "The influence of arginine supplementation on IGF-1: A systematic review and meta-analysis",
+      "journal": "Clin Nutr ESPEN",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Systematic Review",
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37202084/"
+    },
+    {
+      "pmid": "25164444",
+      "title": "Effect of L-arginine on immune function: a meta-analysis",
+      "journal": "Asia Pac J Clin Nutr",
+      "year": "2014",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25164444/"
+    },
+    {
+      "pmid": "34967840",
+      "title": "Effect of l-Arginine Supplementation on Blood Pressure in Adults: A Systematic Review and Dose-Response Meta-analysis of Randomized Clinical Trials",
+      "journal": "Adv Nutr",
+      "year": "2022",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34967840/"
+    }
+  ],
+  "uc-ii-collagen": [
+    {
+      "pmid": "26822714",
+      "title": "Efficacy and tolerability of an undenatured type II collagen supplement in modulating knee osteoarthritis symptoms: a multicenter randomized, double-blind, placebo-controlled study",
+      "journal": "Nutr J",
+      "year": "2016",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Multicenter Study",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26822714/"
+    },
+    {
+      "pmid": "35377244",
+      "title": "UC-II Undenatured Type II Collagen for Knee Joint Flexibility: A Multicenter, Randomized, Double-Blind, Placebo-Controlled Clinical Study",
+      "journal": "J Integr Complement Med",
+      "year": "2022",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Multicenter Study",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35377244/"
+    },
+    {
+      "pmid": "19847319",
+      "title": "Safety and efficacy of undenatured type II collagen in the treatment of osteoarthritis of the knee: a clinical trial",
+      "journal": "Int J Med Sci",
+      "year": "2009",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19847319/"
+    },
+    {
+      "pmid": "40897777",
+      "title": "Efficacy of combined undenatured type II collagen and hydrolysed collagen supplementation in knee osteoarthritis: a randomised controlled trial",
+      "journal": "Sci Rep",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40897777/"
+    },
+    {
+      "pmid": "35512781",
+      "title": "Efficacy and Safety of Dietary Undenatured Type II Collagen on Joint and Motor Function in Healthy Volunteers: A Randomized, Double-Blind, Placebo-Controlled, Parallel-Group Study",
+      "journal": "J Am Nutr Assoc",
+      "year": "2023",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Randomized Controlled Trial",
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35512781/"
+    }
+  ],
+  "collagen-joint": [
+    {
+      "pmid": "39060741",
+      "title": "Impact of Collagen Peptide Supplementation in Combination with Long-Term Physical Training on Strength, Musculotendinous Remodeling, Functional Recovery, and Body Composition in Healthy Adults: A Systematic Review with Meta-analysis",
+      "journal": "Sports Med",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Systematic Review",
+        "Journal Article",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39060741/"
+    },
+    {
+      "pmid": "34491424",
+      "title": "The effects of collagen peptide supplementation on body composition, collagen synthesis, and recovery from joint injury and exercise: a systematic review",
+      "journal": "Amino Acids",
+      "year": "2021",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34491424/"
+    },
+    {
+      "pmid": "27852613",
+      "title": "Vitamin C-enriched gelatin supplementation before intermittent activity augments collagen synthesis",
+      "journal": "Am J Clin Nutr",
+      "year": "2017",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, N.I.H., Extramural",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/27852613/"
+    },
+    {
+      "pmid": "26822714",
+      "title": "Efficacy and tolerability of an undenatured type II collagen supplement in modulating knee osteoarthritis symptoms: a multicenter randomized, double-blind, placebo-controlled study",
+      "journal": "Nutr J",
+      "year": "2016",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Multicenter Study",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26822714/"
+    },
+    {
+      "pmid": "37551682",
+      "title": "Collagen peptides supplementation improves function, pain, and physical and mental outcomes in active adults",
+      "journal": "J Int Soc Sports Nutr",
+      "year": "2023",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Randomized Controlled Trial",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37551682/"
+    }
+  ],
+  "glucosamine": [
+    {
+      "pmid": "35024906",
+      "title": "Efficacy and safety of the combination of glucosamine and chondroitin for knee osteoarthritis: a systematic review and meta-analysis",
+      "journal": "Arch Orthop Trauma Surg",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35024906/"
+    },
+    {
+      "pmid": "29980200",
+      "title": "Effectiveness and safety of glucosamine and chondroitin for the treatment of osteoarthritis: a meta-analysis of randomized controlled trials",
+      "journal": "J Orthop Surg Res",
+      "year": "2018",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29980200/"
+    },
+    {
+      "pmid": "38581640",
+      "title": "Evaluation of efficacy and safety of glucosamine sulfate, chondroitin sulfate, and their combination regimen in the management of knee osteoarthritis: a systematic review and meta-analysis",
+      "journal": "Inflammopharmacology",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38581640/"
+    },
+    {
+      "pmid": "11228027",
+      "title": "Do glucosamine and chondroitin treat the symptoms of osteoarthritis?",
+      "journal": "Can Fam Physician",
+      "year": "2001",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11228027/"
+    },
+    {
+      "pmid": "12860572",
+      "title": "Structural and symptomatic efficacy of glucosamine and chondroitin in knee osteoarthritis: a comprehensive meta-analysis",
+      "journal": "Arch Intern Med",
+      "year": "2003",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/12860572/"
+    }
+  ],
+  "msm": [
+    {
+      "pmid": "40507030",
+      "title": "Using the Rise and Fall of Oxidative Stress and Inflammation Post-Exercise to Evaluate the Effect of Methylsulfonylmethane Supplementation on Immune Response mRNA",
+      "journal": "Nutrients",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40507030/"
+    },
+    {
+      "pmid": "22525653",
+      "title": "Effect of methylsulfonylmethane supplementation on exercise - Induced muscle damage and total antioxidant capacity",
+      "journal": "J Sports Med Phys Fitness",
+      "year": "2012",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/22525653/"
+    },
+    {
+      "pmid": "21708034",
+      "title": "Efficacy of methylsulfonylmethane supplementation on osteoarthritis of the knee: a randomized controlled study",
+      "journal": "BMC Complement Altern Med",
+      "year": "2011",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/21708034/"
+    },
+    {
+      "pmid": "34684621",
+      "title": "The Effect of Daily Methylsulfonylmethane (MSM) Consumption on High-Density Lipoprotein Cholesterol in Healthy Overweight and Obese Adults: A Randomized Controlled Trial",
+      "journal": "Nutrients",
+      "year": "2021",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34684621/"
+    },
+    {
+      "pmid": "21899544",
+      "title": "Effect of chronic supplementation with methylsulfonylmethane on oxidative stress following acute exercise in untrained healthy men",
+      "journal": "J Pharm Pharmacol",
+      "year": "2011",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/21899544/"
+    }
+  ],
+  "boswellia": [
+    {
+      "pmid": "32680575",
+      "title": "Effectiveness of Boswellia and Boswellia extract for osteoarthritis patients: a systematic review and meta-analysis",
+      "journal": "BMC Complement Med Ther",
+      "year": "2020",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32680575/"
+    },
+    {
+      "pmid": "39314013",
+      "title": "Efficacy of Extracts of Oleogum Resin of Boswellia in the Treatment of Knee Osteoarthritis: A Systematic Review and Meta-Analysis",
+      "journal": "Phytother Res",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39314013/"
+    },
+    {
+      "pmid": "29622343",
+      "title": "Efficacy of curcumin and Boswellia for knee osteoarthritis: Systematic review and meta-analysis",
+      "journal": "Semin Arthritis Rheum",
+      "year": "2018",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, N.I.H., Extramural",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29622343/"
+    },
+    {
+      "pmid": "38365549",
+      "title": "Efficacy evaluation of standardized Boswellia serrata extract (Aflapin(Ⓡ)) in osteoarthritis: A systematic review and sub-group meta-analysis study",
+      "journal": "Explore (NY)",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38365549/"
+    },
+    {
+      "pmid": "19091760",
+      "title": "Frankincense: systematic review",
+      "journal": "BMJ",
+      "year": "2008",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Technical Report"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19091760/"
+    }
+  ],
+  "tribulus": [
+    {
+      "pmid": "40360723",
+      "title": "Tribulus terrestris for management of patients with erectile dysfunction: a systematic review and meta-analysis of randomized trials",
+      "journal": "Int J Impot Res",
+      "year": "2026",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40360723/"
+    },
+    {
+      "pmid": "40219032",
+      "title": "Effects of Tribulus (Tribulus terrestris L.) Supplementation on Erectile Dysfunction and Testosterone Levels in Men-A Systematic Review of Clinical Trials",
+      "journal": "Nutrients",
+      "year": "2025",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40219032/"
+    },
+    {
+      "pmid": "24559105",
+      "title": "A systematic review on the herbal extract Tribulus terrestris and the roots of its putative aphrodisiac and performance enhancing effect",
+      "journal": "J Diet Suppl",
+      "year": "2014",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24559105/"
+    },
+    {
+      "pmid": "35954909",
+      "title": "Effects of Tribulus terrestris L. on Sport and Health Biomarkers in Physically Active Adult Males: A Systematic Review",
+      "journal": "Int J Environ Res Public Health",
+      "year": "2022",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35954909/"
+    },
+    {
+      "pmid": "36073362",
+      "title": "Effect of Tribulus terrestris L. supplementation on Exercise-Induced Oxidative Stress and Delayed Onset Muscle Soreness Markers: A Pilot Study",
+      "journal": "J Diet Suppl",
+      "year": "2023",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Randomized Controlled Trial",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36073362/"
+    }
+  ],
+  "multivitamin": [
+    {
+      "pmid": "38244989",
+      "title": "Effect of multivitamin-mineral supplementation versus placebo on cognitive function: results from the clinic subcohort of the COcoa Supplement and Multivitamin Outcomes Study (COSMOS) randomized clinical trial and meta-analysis of 3 cognitive studies within COSMOS",
+      "journal": "Am J Clin Nutr",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Journal Article",
+        "Research Support, N.I.H., Extramural",
+        "Research Support, Non-U.S. Gov't",
+        "Research Support, U.S. Gov't, Non-P.H.S."
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38244989/"
+    },
+    {
+      "pmid": "23255568",
+      "title": "Multivitamin-multimineral supplementation and mortality: a meta-analysis of randomized controlled trials",
+      "journal": "Am J Clin Nutr",
+      "year": "2013",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23255568/"
+    },
+    {
+      "pmid": "38732592",
+      "title": "The Efficacy of Multivitamin, Vitamin A, Vitamin B, Vitamin C, and Vitamin D Supplements in the Prevention and Management of COVID-19 and Long-COVID: An Updated Systematic Review and Meta-Analysis of Randomized Clinical Trials",
+      "journal": "Nutrients",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38732592/"
+    },
+    {
+      "pmid": "16756533",
+      "title": "A systematic review of multivitamin and multimineral supplementation for infection",
+      "journal": "J Hum Nutr Diet",
+      "year": "2006",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16756533/"
+    },
+    {
+      "pmid": "22330823",
+      "title": "The effects of multivitamins on cognitive performance: a systematic review and meta-analysis",
+      "journal": "J Alzheimers Dis",
+      "year": "2012",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/22330823/"
+    }
+  ],
+  "colostrum": [
+    {
+      "pmid": "38361147",
+      "title": "Bovine Colostrum in Increased Intestinal Permeability in Healthy Athletes and Patients: A Meta-Analysis of Randomized Clinical Trials",
+      "journal": "Dig Dis Sci",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38361147/"
+    },
+    {
+      "pmid": "32276466",
+      "title": "Immunological Outcomes of Bovine Colostrum Supplementation in Trained and Physically Active People: A Systematic Review and Meta-Analysis",
+      "journal": "Nutrients",
+      "year": "2020",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32276466/"
+    },
+    {
+      "pmid": "34202206",
+      "title": "Bovine Colostrum Applications in Sick and Healthy People: A Systematic Review",
+      "journal": "Nutrients",
+      "year": "2021",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34202206/"
+    },
+    {
+      "pmid": "38409162",
+      "title": "Therapeutics effects of bovine colostrum applications on gastrointestinal diseases: a systematic review",
+      "journal": "Syst Rev",
+      "year": "2024",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38409162/"
+    },
+    {
+      "pmid": "40150801",
+      "title": "Effect of bovine colostrum supplementation on gut health of children: A systematic review",
+      "journal": "J Pediatr Gastroenterol Nutr",
+      "year": "2025",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40150801/"
+    }
+  ],
+  "lactoferrin": [
+    {
+      "pmid": "35481594",
+      "title": "Effect of Lactoferrin Supplementation on Inflammation, Immune Function, and Prevention of Respiratory Tract Infections in Humans: A Systematic Review and Meta-analysis",
+      "journal": "Adv Nutr",
+      "year": "2022",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35481594/"
+    },
+    {
+      "pmid": "39841980",
+      "title": "Efficacy of lactoferrin supplementation in pediatric infections: a systematic review and meta-analysis",
+      "journal": "Biochem Cell Biol",
+      "year": "2025",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39841980/"
+    },
+    {
+      "pmid": "35276902",
+      "title": "Comparative Effects between Oral Lactoferrin and Ferrous Sulfate Supplementation on Iron-Deficiency Anemia: A Comprehensive Review and Meta-Analysis of Clinical Trials",
+      "journal": "Nutrients",
+      "year": "2022",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35276902/"
+    },
+    {
+      "pmid": "37661669",
+      "title": "Lactoferrin as treatment for iron-deficiency anemia in children: a systematic review",
+      "journal": "Turk J Pediatr",
+      "year": "2023",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37661669/"
+    },
+    {
+      "pmid": "38732615",
+      "title": "A Patented Dietary Supplement (Hydroxy-Methyl-Butyrate, Carnosine, Magnesium, Butyrate, Lactoferrin) Is a Promising Therapeutic Target for Age-Related Sarcopenia through the Regulation of Gut Permeability: A Randomized Controlled Trial",
+      "journal": "Nutrients",
+      "year": "2024",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38732615/"
+    }
+  ],
+  "beta-glucan": [
+    {
+      "pmid": "33876798",
+      "title": "Effects of fungal beta-glucans on health - a systematic review of randomized controlled trials",
+      "journal": "Food Funct",
+      "year": "2021",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33876798/"
+    },
+    {
+      "pmid": "40746014",
+      "title": "Yeast Beta-Glucan Enhances Antibody Response Following Influenza Vaccination - A Double-Blind, Randomized, Placebo-Controlled Pilot Trial",
+      "journal": "J Diet Suppl",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40746014/"
+    },
+    {
+      "pmid": "32325856",
+      "title": "Yeast Beta-Glucan Supplementation Downregulates Markers of Systemic Inflammation after Heated Treadmill Exercise",
+      "journal": "Nutrients",
+      "year": "2020",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32325856/"
+    },
+    {
+      "pmid": "27715351",
+      "title": "Yeast β-Glucan Modulates Inflammation and Waist Circumference in Overweight and Obese Subjects",
+      "journal": "J Diet Suppl",
+      "year": "2017",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/27715351/"
+    },
+    {
+      "pmid": "18614945",
+      "title": "Beta-glucan, immune function, and upper respiratory tract infections in athletes",
+      "journal": "Med Sci Sports Exerc",
+      "year": "2008",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/18614945/"
+    }
+  ],
+  "echinacea": [
+    {
+      "pmid": "24554461",
+      "title": "Echinacea for preventing and treating the common cold",
+      "journal": "Cochrane Database Syst Rev",
+      "year": "2014",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, N.I.H., Intramural",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24554461/"
+    },
+    {
+      "pmid": "16437427",
+      "title": "Echinacea for preventing and treating the common cold",
+      "journal": "Cochrane Database Syst Rev",
+      "year": "2006",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16437427/"
+    },
+    {
+      "pmid": "16678640",
+      "title": "Echinacea in the prevention of induced rhinovirus colds: a meta-analysis",
+      "journal": "Clin Ther",
+      "year": "2006",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16678640/"
+    },
+    {
+      "pmid": "17597571",
+      "title": "Evaluation of echinacea for the prevention and treatment of the common cold: a meta-analysis",
+      "journal": "Lancet Infect Dis",
+      "year": "2007",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/17597571/"
+    },
+    {
+      "pmid": "40311928",
+      "title": "Efficacy and safety of Echinacea purpurea in treating upper respiratory infections and complications of otitis media in children: Systematic review and meta-analysis",
+      "journal": "Clin Nutr ESPEN",
+      "year": "2025",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40311928/"
+    }
+  ],
+  "olive-leaf": [
+    {
+      "pmid": "38287654",
+      "title": "Olive leaf extract effect on cardiometabolic risk factors: a systematic review and meta-analysis of randomized clinical trials",
+      "journal": "Nutr Rev",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38287654/"
+    },
+    {
+      "pmid": "41848522",
+      "title": "Metabolic and inflammatory effects of oleuropein and olive leaf extract: a systematic review and meta-analysis",
+      "journal": "Food Funct",
+      "year": "2026",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41848522/"
+    },
+    {
+      "pmid": "39828996",
+      "title": "The impact of oleuropein, hydroxytyrosol, and tyrosol on cardiometabolic risk factors: a meta-analysis of randomized controlled trials",
+      "journal": "Crit Rev Food Sci Nutr",
+      "year": "2025",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39828996/"
+    },
+    {
+      "pmid": "39599665",
+      "title": "Olive Leaf Extract Supplementation Improves Postmenopausal Symptoms: A Randomized, Double-Blind, Placebo-Controlled Parallel Study on Postmenopausal Women",
+      "journal": "Nutrients",
+      "year": "2024",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39599665/"
+    },
+    {
+      "pmid": "40943119",
+      "title": "Beneficial Effect of Olive Leaf Extract as an Adjunct to Standard Antifungal Therapy in Treating Candida-Related Oral Diseases",
+      "journal": "Int J Mol Sci",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40943119/"
+    }
+  ],
+  "oregano-oil": [
+    {
+      "pmid": "30486682",
+      "title": "Safety and tolerability of carvacrol in healthy subjects: a phase I clinical study",
+      "journal": "Drug Chem Toxicol",
+      "year": "2021",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial, Phase I",
+        "Comparative Study",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30486682/"
+    },
+    {
+      "pmid": "34496170",
+      "title": "Effect of Origanum dubium, Origanum vulgare subsp. hirtum, and Lavandula angustifolia essential oils on lipid profiles and liver biomarkers in athletes",
+      "journal": "Z Naturforsch C J Biosci",
+      "year": "2022",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34496170/"
+    },
+    {
+      "pmid": "29193478",
+      "title": "Possible therapeutic effect of carvacrol on asthmatic patients: A randomized, double blind, placebo-controlled, Phase II clinical trial",
+      "journal": "Phytother Res",
+      "year": "2018",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial, Phase II",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29193478/"
+    },
+    {
+      "pmid": "33773189",
+      "title": "Carvacrol improves pulmonary function tests, oxidant/antioxidant parameters and cytokine levels in asthmatic patients: A randomized, double-blind, clinical trial",
+      "journal": "Phytomedicine",
+      "year": "2021",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33773189/"
+    },
+    {
+      "pmid": "30961947",
+      "title": "The effect of carvacrol on inflammatory mediators and respiratory symptoms in veterans exposed to sulfur mustard, a randomized, placebo-controlled trial",
+      "journal": "Respir Med",
+      "year": "2019",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial, Phase I",
+        "Comparative Study",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30961947/"
+    }
+  ],
+  "turkey-tail": [
+    {
+      "pmid": "22185453",
+      "title": "Efficacy of Yun Zhi (Coriolus versicolor) on survival in cancer patients: systematic review and meta-analysis",
+      "journal": "Recent Pat Inflamm Allergy Drug Discov",
+      "year": "2012",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/22185453/"
+    },
+    {
+      "pmid": "16133112",
+      "title": "Efficacy of adjuvant immunochemotherapy with polysaccharide K for patients with curatively resected colorectal cancer: a meta-analysis of centrally randomized controlled clinical trials",
+      "journal": "Cancer Immunol Immunother",
+      "year": "2006",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16133112/"
+    },
+    {
+      "pmid": "17106715",
+      "title": "Efficacy of adjuvant immunochemotherapy with polysaccharide K for patients with curative resections of gastric cancer",
+      "journal": "Cancer Immunol Immunother",
+      "year": "2007",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/17106715/"
+    },
+    {
+      "pmid": "25784670",
+      "title": "Polysaccharide K and Coriolus versicolor extracts for lung cancer: a systematic review",
+      "journal": "Integr Cancer Ther",
+      "year": "2015",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25784670/"
+    },
+    {
+      "pmid": "36445793",
+      "title": "Coriolus (Trametes) versicolor mushroom to reduce adverse effects from chemotherapy or radiotherapy in people with colorectal cancer",
+      "journal": "Cochrane Database Syst Rev",
+      "year": "2022",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Research Support, N.I.H., Extramural",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36445793/"
+    }
+  ],
+  "maitake": [
+    {
+      "pmid": "19476741",
+      "title": "Maitake mushroom (Grifola frondosa): systematic review by the natural standard research collaboration",
+      "journal": "J Soc Integr Oncol",
+      "year": "2009",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19476741/"
+    },
+    {
+      "pmid": "42055721",
+      "title": "Maitake Mushroom (Grifola frondosa) Enhances Cognitive Function in Healthy Older Japanese: A Randomized, Double-Blind, Placebo-Controlled Trial",
+      "journal": "J Nutr Sci Vitaminol (Tokyo)",
+      "year": "2026",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/42055721/"
+    },
+    {
+      "pmid": "36070433",
+      "title": "Effect of Maitake D-fraction in advanced laryngeal and pharyngeal cancers during concurrent chemoradiotherapy: A randomized clinical trial",
+      "journal": "Acta Biochim Pol",
+      "year": "2022",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36070433/"
+    },
+    {
+      "pmid": "21034160",
+      "title": "Maitake mushroom (Grifola frondosa) extract induces ovulation in patients with polycystic ovary syndrome: a possible monotherapy and a combination therapy after failure with first-line clomiphene citrate",
+      "journal": "J Altern Complement Med",
+      "year": "2010",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/21034160/"
+    },
+    {
+      "pmid": "19253021",
+      "title": "A phase I/II trial of a polysaccharide extract from Grifola frondosa (Maitake mushroom) in breast cancer patients: immunological effects",
+      "journal": "J Cancer Res Clin Oncol",
+      "year": "2009",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial, Phase I",
+        "Clinical Trial, Phase II",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, N.I.H., Extramural",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19253021/"
+    }
+  ],
+  "shiitake": [
+    {
+      "pmid": "25866155",
+      "title": "Consuming Lentinula edodes (Shiitake) Mushrooms Daily Improves Human Immunity: A Randomized Dietary Intervention in Healthy Young Adults",
+      "journal": "J Am Coll Nutr",
+      "year": "2015",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25866155/"
+    },
+    {
+      "pmid": "33580297",
+      "title": "Modulation of human intestinal microbiota in a clinical trial by consumption of a β-D-glucan-enriched extract obtained from Lentinula edodes",
+      "journal": "Eur J Nutr",
+      "year": "2021",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33580297/"
+    },
+    {
+      "pmid": "10503166",
+      "title": "A placebo-controlled trial of the immune modulator, lentinan, in HIV-positive patients: a phase I/II trial",
+      "journal": "J Med",
+      "year": "1998",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Clinical Trial, Phase I",
+        "Clinical Trial, Phase II",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/10503166/"
+    },
+    {
+      "pmid": "22164761",
+      "title": "Supplementation with a soluble β-glucan exported from Shiitake medicinal mushroom, Lentinus edodes (Berk.) singer mycelium: a crossover, placebo-controlled study in healthy elderly",
+      "journal": "Int J Med Mushrooms",
+      "year": "2011",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/22164761/"
+    },
+    {
+      "pmid": "32749096",
+      "title": "A Quality-of-Life Study in Healthy Adults Supplemented with Lentinex® Beta-Glucan of Shiitake Culinary-Medicinal Mushroom, Lentinus edodes (Agaricomycetes)",
+      "journal": "Int J Med Mushrooms",
+      "year": "2020",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32749096/"
+    }
+  ],
+  "zinc": [
+    {
+      "pmid": "39641338",
+      "title": "Zinc supplementation for acute and persistent watery diarrhoea in children: A systematic review and meta-analysis",
+      "journal": "J Glob Health",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Systematic Review",
+        "Journal Article",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39641338/"
+    },
+    {
+      "pmid": "35599332",
+      "title": "Zinc supplementation and COVID-19 mortality: a meta-analysis",
+      "journal": "Eur J Med Res",
+      "year": "2022",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35599332/"
+    },
+    {
+      "pmid": "23775705",
+      "title": "Zinc for the common cold",
+      "journal": "Cochrane Database Syst Rev",
+      "year": "2013",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23775705/"
+    },
+    {
+      "pmid": "23806573",
+      "title": "Zinc in depression: a meta-analysis",
+      "journal": "Biol Psychiatry",
+      "year": "2013",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/23806573/"
+    },
+    {
+      "pmid": "30801794",
+      "title": "Zinc and atopic dermatitis: a systematic review and meta-analysis",
+      "journal": "J Eur Acad Dermatol Venereol",
+      "year": "2019",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30801794/"
+    }
+  ],
+  "propolis": [
+    {
+      "pmid": "39490733",
+      "title": "The impact of propolis supplementation on inflammatory biomarkers: A meta-analysis and systematic review of randomized controlled clinical trials",
+      "journal": "Prostaglandins Other Lipid Mediat",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39490733/"
+    },
+    {
+      "pmid": "39127756",
+      "title": "Propolis supplementation can reduce serum level of interleukin-6, C-reactive protein, and tumor necrosis factor-α: an updated systematic review and dose-response meta-analysis on randomized clinical trials",
+      "journal": "J Health Popul Nutr",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39127756/"
+    },
+    {
+      "pmid": "39846965",
+      "title": "The effect of propolis supplementation on blood pressure: a systematic review and meta-analysis of controlled trials",
+      "journal": "Minerva Cardiol Angiol",
+      "year": "2025",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39846965/"
+    },
+    {
+      "pmid": "39097520",
+      "title": "Effects of Propolis Consumption on Glycemic Indices and Liver Enzymes in Adults: A Grading of Recommendations Assessment, Development, and Valuation-assessed Systematic Review and Dose-Response Meta-analysis",
+      "journal": "Clin Ther",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Systematic Review",
+        "Journal Article",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39097520/"
+    },
+    {
+      "pmid": "30950136",
+      "title": "The efficacy of propolis on markers of glycemic control in adults with type 2 diabetes mellitus: A systematic review and meta-analysis",
+      "journal": "Phytother Res",
+      "year": "2019",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30950136/"
+    }
+  ],
+  "cats-claw": [
+    {
+      "pmid": "11515717",
+      "title": "DNA repair enhancement of aqueous extracts of Uncaria tomentosa in a human volunteer study",
+      "journal": "Phytomedicine",
+      "year": "2001",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11515717/"
+    },
+    {
+      "pmid": "11950006",
+      "title": "Randomized double blind trial of an extract from the pentacyclic alkaloid-chemotype of uncaria tomentosa for the treatment of rheumatoid arthritis",
+      "journal": "J Rheumatol",
+      "year": "2002",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11950006/"
+    },
+    {
+      "pmid": "11603848",
+      "title": "Efficacy and safety of freeze-dried cat's claw in osteoarthritis of the knee: mechanisms of action of the species Uncaria guianensis",
+      "journal": "Inflamm Res",
+      "year": "2001",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Multicenter Study",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't",
+        "Research Support, U.S. Gov't, P.H.S."
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11603848/"
+    },
+    {
+      "pmid": "11515716",
+      "title": "Persistent response to pneumococcal vaccine in individuals supplemented with a novel water soluble extract of Uncaria tomentosa, C-Med-100",
+      "journal": "Phytomedicine",
+      "year": "2001",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/11515716/"
+    },
+    {
+      "pmid": "29050447",
+      "title": "Uncaria tomentosa",
+      "journal": "G Ital Dermatol Venereol",
+      "year": "2017",
+      "kind": "Review",
+      "pubtype": [
+        "Journal Article",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/29050447/"
+    }
+  ],
+  "chinese-skullcap": [
+    {
+      "pmid": "41194549",
+      "title": "Effects of a Scutellaria baicalensis/Crataegus laevigata, magnesium and chromium supplement on stressed individuals: A randomised, double-blind, placebo-controlled, crossover trial",
+      "journal": "J Psychopharmacol",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41194549/"
+    },
+    {
+      "pmid": "40077679",
+      "title": "The Effects of Combined Scutellaria and Saffron Supplementation on Mood Regulation in Participants with Mild-to-Moderate Depressive Symptoms: A Randomized, Double-Blind, Placebo-Controlled Study",
+      "journal": "Nutrients",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40077679/"
+    },
+    {
+      "pmid": "31770016",
+      "title": "Combined effects of Scutellaria baicalensis with metformin on glucose tolerance of patients with type 2 diabetes via gut microbiota modulation",
+      "journal": "Am J Physiol Endocrinol Metab",
+      "year": "2020",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31770016/"
+    },
+    {
+      "pmid": "24611484",
+      "title": "A combination of Scutellaria baicalensis and Acacia catechu extracts for short-term symptomatic relief of joint discomfort associated with osteoarthritis of the knee",
+      "journal": "J Med Food",
+      "year": "2014",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24611484/"
+    },
+    {
+      "pmid": "33753147",
+      "title": "Safety, tolerability, pharmacokinetics, and food effect of baicalein tablets in healthy Chinese subjects: A single-center, randomized, double-blind, placebo-controlled, single-dose phase I study",
+      "journal": "J Ethnopharmacol",
+      "year": "2021",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial, Phase I",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33753147/"
+    }
+  ],
+  "s-boulardii": [
+    {
+      "pmid": "24958586",
+      "title": "Efficacy and safety of Saccharomyces boulardii for acute diarrhea",
+      "journal": "Pediatrics",
+      "year": "2014",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/24958586/"
+    },
+    {
+      "pmid": "25898944",
+      "title": "Systematic review with meta-analysis: Saccharomyces boulardii supplementation and eradication of Helicobacter pylori infection",
+      "journal": "Aliment Pharmacol Ther",
+      "year": "2015",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25898944/"
+    },
+    {
+      "pmid": "17269987",
+      "title": "Meta-analysis: Saccharomyces boulardii for treating acute diarrhoea in children",
+      "journal": "Aliment Pharmacol Ther",
+      "year": "2007",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/17269987/"
+    },
+    {
+      "pmid": "16128673",
+      "title": "Meta-analysis: non-pathogenic yeast Saccharomyces boulardii in the prevention of antibiotic-associated diarrhoea",
+      "journal": "Aliment Pharmacol Ther",
+      "year": "2005",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16128673/"
+    },
+    {
+      "pmid": "26216624",
+      "title": "Systematic review with meta-analysis: Saccharomyces boulardii in the prevention of antibiotic-associated diarrhoea",
+      "journal": "Aliment Pharmacol Ther",
+      "year": "2015",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26216624/"
+    }
+  ],
+  "l-rhamnosus": [
+    {
+      "pmid": "31025399",
+      "title": "Systematic review with meta-analysis: Lactobacillus rhamnosus GG for treating acute gastroenteritis in children - a 2019 update",
+      "journal": "Aliment Pharmacol Ther",
+      "year": "2019",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31025399/"
+    },
+    {
+      "pmid": "26365389",
+      "title": "Systematic review with meta-analysis: Lactobacillus rhamnosus GG in the prevention of antibiotic-associated diarrhoea in children and adults",
+      "journal": "Aliment Pharmacol Ther",
+      "year": "2015",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26365389/"
+    },
+    {
+      "pmid": "40702885",
+      "title": "The effects of Lacticaseibacillus rhamnosus GG supplementation on gastrointestinal and respiratory outcomes: a systematic review and meta-analysis of randomized controlled trials",
+      "journal": "Food Funct",
+      "year": "2025",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review",
+        "Meta-Analysis"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40702885/"
+    },
+    {
+      "pmid": "21899584",
+      "title": "Meta-analysis: the effects of Lactobacillus rhamnosus GG supplementation for the prevention of healthcare-associated diarrhoea in children",
+      "journal": "Aliment Pharmacol Ther",
+      "year": "2011",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/21899584/"
+    },
+    {
+      "pmid": "36004717",
+      "title": "Rotavirus immunisation status affects the efficacy of Lacticaseibacillus rhamnosus GG for the treatment of children with acute diarrhoea: a meta-analysis",
+      "journal": "Benef Microbes",
+      "year": "2022",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36004717/"
+    }
+  ],
+  "probiotic-multi": [
+    {
+      "pmid": "32610476",
+      "title": "Probiotic Strains and Intervention Total Doses for Modulating Obesity-Related Microbiota Dysbiosis: A Systematic Review and Meta-analysis",
+      "journal": "Nutrients",
+      "year": "2020",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32610476/"
+    },
+    {
+      "pmid": "37078654",
+      "title": "Effects of dietary fibers or probiotics on functional constipation symptoms and roles of gut microbiota: a double-blinded randomized placebo trial",
+      "journal": "Gut Microbes",
+      "year": "2023",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Randomized Controlled Trial",
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37078654/"
+    },
+    {
+      "pmid": "38967929",
+      "title": "Probiotics and Antibiotic-Induced Microbial Aberrations in Children: A Secondary Analysis of a Randomized Clinical Trial",
+      "journal": "JAMA Netw Open",
+      "year": "2024",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38967929/"
+    },
+    {
+      "pmid": "41844737",
+      "title": "Efficacy of probiotic supplementation in reducing primary dysmenorrhea: a double-blinded randomized controlled trial",
+      "journal": "Sci Rep",
+      "year": "2026",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41844737/"
+    },
+    {
+      "pmid": "40729791",
+      "title": "Exploring neurotransmitter regulation following probiotic supplementation in adults with subthreshold depression: A secondary analysis of a randomized controlled trial",
+      "journal": "Nutrition",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40729791/"
+    }
+  ],
+  "bacillus-subtilis": [
+    {
+      "pmid": "36269141",
+      "title": "The probiotic Bacillus subtilis BS50 decreases gastrointestinal symptoms in healthy adults: a randomized, double-blind, placebo-controlled trial",
+      "journal": "Gut Microbes",
+      "year": "2022",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Randomized Controlled Trial",
+        "Journal Article",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36269141/"
+    },
+    {
+      "pmid": "33161737",
+      "title": "Bacillus subtilis DE111 intake may improve blood lipids and endothelial function in healthy adults",
+      "journal": "Benef Microbes",
+      "year": "2020",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33161737/"
+    },
+    {
+      "pmid": "33105368",
+      "title": "Effects of Probiotic (Bacillus subtilis) Supplementation During Offseason Resistance Training in Female Division I Athletes",
+      "journal": "J Strength Cond Res",
+      "year": "2020",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33105368/"
+    },
+    {
+      "pmid": "31719214",
+      "title": "A Randomized, Double-blind, Placebo-controlled, Parallel Study Evaluating the Efficacy of Bacillus subtilis MB40 to Reduce Abdominal Discomfort, Gas, and Bloating",
+      "journal": "Altern Ther Health Med",
+      "year": "2021",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Multicenter Study",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31719214/"
+    },
+    {
+      "pmid": "25062611",
+      "title": "Evaluation of Bacillus subtilis R0179 on gastrointestinal viability and general wellness: a randomised, double-blind, placebo-controlled trial in healthy adults",
+      "journal": "Benef Microbes",
+      "year": "2015",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25062611/"
+    }
+  ],
+  "inulin": [
+    {
+      "pmid": "39313030",
+      "title": "The effects of chicory inulin-type fructans supplementation on weight management outcomes: systematic review, meta-analysis, and meta-regression of randomized controlled trials",
+      "journal": "Am J Clin Nutr",
+      "year": "2024",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39313030/"
+    },
+    {
+      "pmid": "35833477",
+      "title": "Effect of chicory-derived inulin-type fructans on abundance of Bifidobacterium and on bowel function: a systematic review with meta-analyses",
+      "journal": "Crit Rev Food Sci Nutr",
+      "year": "2023",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Meta-Analysis",
+        "Systematic Review",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35833477/"
+    },
+    {
+      "pmid": "31707507",
+      "title": "The effects of inulin on gut microbial composition: a systematic review of evidence from human studies",
+      "journal": "Eur J Clin Microbiol Infect Dis",
+      "year": "2020",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/31707507/"
+    },
+    {
+      "pmid": "39033197",
+      "title": "Enhancing gut microbiota and microbial function with inulin supplementation in children with obesity",
+      "journal": "Int J Obes (Lond)",
+      "year": "2024",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39033197/"
+    },
+    {
+      "pmid": "30971437",
+      "title": "Dietary supplementation with inulin-propionate ester or inulin improves insulin sensitivity in adults with overweight and obesity with distinct effects on the gut microbiota, plasma metabolome and systemic inflammatory responses: a randomised cross-over trial",
+      "journal": "Gut",
+      "year": "2019",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30971437/"
+    }
+  ],
+  "fos": [
+    {
+      "pmid": "36014803",
+      "title": "Effect of Fructooligosaccharides Supplementation on the Gut Microbiota in Human: A Systematic Review and Meta-Analysis",
+      "journal": "Nutrients",
+      "year": "2022",
+      "kind": "Meta-analysis",
+      "pubtype": [
+        "Journal Article",
+        "Meta-Analysis",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36014803/"
+    },
+    {
+      "pmid": "34966938",
+      "title": "Fructooligosaccharides on inflammation, immunomodulation, oxidative stress, and gut immune response: a systematic review",
+      "journal": "Nutr Rev",
+      "year": "2022",
+      "kind": "Systematic review",
+      "pubtype": [
+        "Journal Article",
+        "Systematic Review"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34966938/"
+    },
+    {
+      "pmid": "40499217",
+      "title": "Effects and Persistence of Bifidobacterium animalis subsp. lactis BL-99 and Fructooligosaccharides on Older Adults with Functional Constipation: A Randomized, Double-Blind, Placebo-Controlled Trial",
+      "journal": "J Nutr Health Aging",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40499217/"
+    },
+    {
+      "pmid": "35421233",
+      "title": "Red Raspberry and Fructo-Oligosaccharide Supplementation, Metabolic Biomarkers, and the Gut Microbiota in Adults with Prediabetes: A Randomized Crossover Clinical Trial",
+      "journal": "J Nutr",
+      "year": "2022",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/35421233/"
+    },
+    {
+      "pmid": "25292404",
+      "title": "Effects of Fructo-Oligosaccharide Supplementation on Constipation in Elderly Continuous Ambulatory Peritoneal Dialysis Patients",
+      "journal": "Perit Dial Int",
+      "year": "2016",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/25292404/"
+    }
+  ],
+  "dgl-licorice": [
+    {
+      "pmid": "4584640",
+      "title": "Double-blind trial of deglycyrrhizinated liquorice in gastric ulcer",
+      "journal": "Gut",
+      "year": "1973",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Controlled Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/4584640/"
+    },
+    {
+      "pmid": "5640926",
+      "title": "Some experience with deglycyrrhizinated liquorice in the treatment of gastric and duodenal ulcers with special reference to its spasmolytic effect",
+      "journal": "Gut",
+      "year": "1968",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Controlled Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/5640926/"
+    },
+    {
+      "pmid": "4933135",
+      "title": "A trial of deglycyrrhizinated liquorice in the treatment of duodenal ulcer",
+      "journal": "Gut",
+      "year": "1971",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/4933135/"
+    },
+    {
+      "pmid": "373361",
+      "title": "Double-blind trial in duodenal and gastric ulcers. Cimetidine and deglycyrrhizinized liquorice",
+      "journal": "Acta Gastroenterol Belg",
+      "year": "1978",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Comparative Study",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/373361/"
+    },
+    {
+      "pmid": "36870516",
+      "title": "Impact of licorice root on the burn healing process: A double-blinded randomized controlled clinical trial",
+      "journal": "Complement Ther Med",
+      "year": "2023",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Randomized Controlled Trial",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36870516/"
+    }
+  ],
+  "aloe": [
+    {
+      "pmid": "15043514",
+      "title": "Randomized, double-blind, placebo-controlled trial of oral aloe vera gel for active ulcerative colitis",
+      "journal": "Aliment Pharmacol Ther",
+      "year": "2004",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15043514/"
+    },
+    {
+      "pmid": "16749917",
+      "title": "Randomised double-blind placebo-controlled trial of aloe vera for irritable bowel syndrome",
+      "journal": "Int J Clin Pract",
+      "year": "2006",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Multicenter Study",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/16749917/"
+    },
+    {
+      "pmid": "32314514",
+      "title": "Randomized clinical trial: Effects of Aloe barbadensis Mill. extract on symptoms, fecal microbiota and fecal metabolite profiles in patients with irritable bowel syndrome",
+      "journal": "Neurogastroenterol Motil",
+      "year": "2020",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32314514/"
+    },
+    {
+      "pmid": "32515040",
+      "title": "Effects of low-dose Aloe sterol supplementation on skin moisture, collagen score and objective or subjective symptoms: 12-week, double-blind, randomized controlled trial",
+      "journal": "J Dermatol",
+      "year": "2020",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/32515040/"
+    },
+    {
+      "pmid": "26405698",
+      "title": "A Pilot Study of the Effect of Aloe barbadensis Mill. Extract (AVH200®) in Patients with Irritable Bowel Syndrome: a Randomized, Double-Blind, Placebo-Controlled Study",
+      "journal": "J Gastrointestin Liver Dis",
+      "year": "2015",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26405698/"
+    }
+  ],
+  "mastic-gum": [
+    {
+      "pmid": "19879118",
+      "title": "The effect of mastic gum on Helicobacter pylori: a randomized pilot study",
+      "journal": "Phytomedicine",
+      "year": "2010",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19879118/"
+    },
+    {
+      "pmid": "38454582",
+      "title": "Real-world safety and effectiveness of Pistacia lentiscus (mastic gum) in patients with diabetic gastroparesis: 24-week interim analysis postintervention",
+      "journal": "Indian J Pharmacol",
+      "year": "2024",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Comparative Study",
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38454582/"
+    },
+    {
+      "pmid": "41197785",
+      "title": "A randomized, three-way crossover clinical trial on the efficacy of Mastiha based therapies (Pistacia lentiscus var. Chia) in functional dyspepsia",
+      "journal": "Pharmacol Res",
+      "year": "2025",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Journal Article",
+        "Randomized Controlled Trial"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41197785/"
+    },
+    {
+      "pmid": "19961914",
+      "title": "Is Chios mastic gum effective in the treatment of functional dyspepsia? A prospective randomised double-blind placebo controlled trial",
+      "journal": "J Ethnopharmacol",
+      "year": "2010",
+      "kind": "Randomised controlled trial",
+      "pubtype": [
+        "Comparative Study",
+        "Journal Article",
+        "Randomized Controlled Trial",
+        "Research Support, Non-U.S. Gov't"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19961914/"
+    },
+    {
+      "pmid": "19212203",
+      "title": "Effects of mastic gum Pistacia lentiscus var. Chia on innate cellular immune effectors",
+      "journal": "Eur J Gastroenterol Hepatol",
+      "year": "2009",
+      "kind": "Clinical trial",
+      "pubtype": [
+        "Clinical Trial",
+        "Journal Article"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19212203/"
+    }
+  ]
+}

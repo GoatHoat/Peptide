@@ -1,3 +1,5 @@
+import { SKIP_PAYWALL } from '../lib/billing';
+
 /**
  * The order of the flow, in one place.
  *
@@ -8,22 +10,36 @@
  */
 export const FLOW = [
   'welcome',
-  'auth-choice',
-  'auth-form',
+  // one screen, not two: the chooser's only working control was "continue with
+  // email", which led straight to the form now under it
+  'auth',
   'profile',
-  'info-library',
-  'info-recs',
-  'q1',
+  // diet is profile information, and it wants to sit next to age and sex
+  'diet',
+  // one explainer, not two consecutive ones
+  'info',
+  /* q1 — "how many are you taking right now" — is gone. `current-stack` asks
+     the same thing four screens later and gets a list the scorer actually
+     reads, where q1's count was written down and never read again. The two
+     that remain keep their ids: they are persisted under `survey` in
+     localStorage, and renumbering them would drop the answers of anyone
+     part-way through the flow when the build updates under them. */
   'q2',
   'q3',
-  'sleep',
-  'meals',
+  // the sleep window and the meals were "your day, part one" and "part two"
+  'day',
   'current-stack',
+  // both read as follow-ups to "what are you already taking", which is where
+  // someone is already thinking about what they have tried
+  'reactions',
+  'forms',
   'goals',
   'notifications',
-  'paywall',
   'building-recs',
   'recommendations',
+  // after the recommendations, never before: asking for money ahead of the
+  // first suggestion is asking someone to buy a promise
+  'paywall',
   'building-schedule',
   'schedule',
   'done',
@@ -31,8 +47,18 @@ export const FLOW = [
 
 export type Step = (typeof FLOW)[number];
 
-/** Skip is offered on the three survey questions and nowhere else. */
-export const SKIPPABLE: ReadonlySet<Step> = new Set<Step>(['q1', 'q2', 'q3']);
+/**
+ * Skip is offered on the questions and nowhere else. Every one of these has to
+ * be answerable with nothing selected: a skip means the same thing as "no
+ * preference", never an empty recommendation list.
+ */
+export const SKIPPABLE: ReadonlySet<Step> = new Set<Step>([
+  'q2',
+  'q3',
+  'diet',
+  'reactions',
+  'forms',
+]);
 
 /** Welcome carries no chrome at all — no wordmark, no progress, no back. */
 export const NO_CHROME: ReadonlySet<Step> = new Set<Step>(['welcome']);
@@ -62,6 +88,10 @@ export function isSkipped(step: Step, answers: { q2: string | null }): boolean {
   // "What usually goes wrong?" has no answer for someone who has never
   // started a routine in the first place.
   if (step === 'q3' && answers.q2 === 'never') return true;
+  // Dev builds walk past the purchase so the screens after it stay reachable
+  // without stubbing a transaction every run. Here rather than in a screen, so
+  // going back lands on the same screen going forward came from.
+  if (step === 'paywall' && SKIP_PAYWALL) return true;
   return false;
 }
 

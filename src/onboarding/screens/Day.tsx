@@ -33,16 +33,19 @@ const timeOf = (deg: number) => {
   return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 };
 
-export function Sleep({
+/**
+ * The waking window. Was a screen of its own titled "Your day, part one" —
+ * a title that named the seam it was on the wrong side of. It is the top half
+ * of `Day` now; the meal list below it is what was part two.
+ */
+function SleepDial({
   wake,
   sleep,
   onChange,
-  onNext,
 }: {
   wake: string;
   sleep: string;
   onChange: (p: { wake: string; sleep: string }) => void;
-  onNext: () => void;
 }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const dragging = useRef<'wake' | 'sleep' | null>(null);
@@ -89,10 +92,7 @@ export function Sleep({
   };
 
   return (
-    <Screen scroll footer={<Cta onClick={onNext}>Continue</Cta>}>
-      <Title>Your day, part one</Title>
-      <Sub>Drag either end of the ring. We schedule around the window, not the minute.</Sub>
-
+    <>
       <div className="ob-dial-wrap">
         <svg
           ref={svgRef}
@@ -170,7 +170,7 @@ export function Sleep({
           />
         </div>
       </div>
-    </Screen>
+    </>
   );
 }
 
@@ -215,15 +215,8 @@ function Handle({
 
 /* ── meals ───────────────────────────────────────────────────────────── */
 
-export function Meals({
-  meals,
-  onChange,
-  onNext,
-}: {
-  meals: Meal[];
-  onChange: (m: Meal[]) => void;
-  onNext: () => void;
-}) {
+/** What was "Your day, part two". The bottom half of `Day`. */
+function MealList({ meals, onChange }: { meals: Meal[]; onChange: (m: Meal[]) => void }) {
   const [leaving, setLeaving] = useState<string | null>(null);
 
   const remove = (id: string) => {
@@ -252,10 +245,7 @@ export function Meals({
     onChange(meals.map((m) => (m.id === id ? { ...m, ...p } : m)));
 
   return (
-    <Screen scroll footer={<Cta onClick={onNext}>Continue</Cta>}>
-      <Title>Your day, part two</Title>
-      <Sub>Anything that needs food gets scheduled near one of these.</Sub>
-
+    <>
       <div className="ob-meals">
         {[...meals]
           .sort((a, b) => toMin(a.time) - toMin(b.time))
@@ -297,6 +287,45 @@ export function Meals({
         </svg>
         Add meal
       </button>
+    </>
+  );
+}
+
+/* ── the day, in one screen ──────────────────────────────────────────── */
+
+/**
+ * The waking window and the meals inside it.
+ *
+ * These were two screens called "Your day, part one" and "Your day, part two",
+ * which is a split admitting in its own titles that it had nothing to divide.
+ * One question — what does your day look like — asked once.
+ */
+export function Day({
+  wake,
+  sleep,
+  meals,
+  onChange,
+  onMeals,
+  onNext,
+}: {
+  wake: string;
+  sleep: string;
+  meals: Meal[];
+  onChange: (p: { wake: string; sleep: string }) => void;
+  onMeals: (m: Meal[]) => void;
+  onNext: () => void;
+}) {
+  return (
+    <Screen scroll footer={<Cta onClick={onNext}>Continue</Cta>}>
+      <Title>Your day</Title>
+      <Sub>Drag either end of the ring. We schedule around the window, not the minute.</Sub>
+
+      <SleepDial wake={wake} sleep={sleep} onChange={onChange} />
+
+      <h2 className="ob-section">Meals</h2>
+      <p className="ob-caption">Anything that needs food gets scheduled near one of these.</p>
+
+      <MealList meals={meals} onChange={onMeals} />
     </Screen>
   );
 }

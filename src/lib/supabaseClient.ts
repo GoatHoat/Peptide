@@ -20,4 +20,24 @@ export const isSupabaseConfigured = Boolean(url && anonKey);
  * isSupabaseConfigured is false the app renders <SetupNeeded /> and no screen
  * that talks to Supabase is mounted.
  */
-export const supabase = createClient(url || 'http://localhost', anonKey || 'not-configured');
+const baseUrl = url || 'http://localhost';
+
+/**
+ * The anon key, which every Supabase request carries in a header of its own.
+ * It is VITE_-prefixed and therefore already in the bundle and public by
+ * design; the repo holds no value for it. See the Secrets section of CLAUDE.md.
+ */
+export const anonApiKey = anonKey || 'not-configured';
+
+export const supabase = createClient(baseUrl, anonApiKey);
+
+/**
+ * Where an edge function lives on this project.
+ *
+ * `ask` is called with a plain fetch rather than `supabase.functions.invoke`,
+ * because the screen renders the function's own error codes and `invoke` hands
+ * back a Response to unwrap instead of a body.
+ */
+export function functionUrl(name: string): string {
+  return `${baseUrl}/functions/v1/${name}`;
+}

@@ -40,7 +40,7 @@ const TABS = [
 
 export function Discover() {
   const { user } = useAuth();
-  const { profile } = usePrefs();
+  const { profile, save } = usePrefs();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<GlossaryEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -201,6 +201,7 @@ export function Discover() {
                     refs={refs[r.id]}
                     age={profile?.age}
                     sex={profile?.sex}
+                    menstruates={profile?.menstruates}
                     inStack={inStackIds.has(r.id)}
                     adding={addingIds.has(r.id)}
                     expanded={expandedId === r.id}
@@ -211,6 +212,14 @@ export function Discover() {
                       setGoAsk((n) => n + 1);
                     }}
                     onAllArticles={() => setDetailEntry(r)}
+                    /* `save` updates the profile in memory before it writes,
+                       so the figure changes on the tap. The catch is for the
+                       window before migration 0019 is applied, where the
+                       column does not exist yet: the answer holds for the
+                       session and the failed write takes nothing with it. */
+                    onMenstruates={(value) => {
+                      save({ menstruates: value }).catch(() => {});
+                    }}
                   />
                 ))}
               </div>

@@ -1,0 +1,158 @@
+
+> halfpast@0.1.0 build
+> tsc -b && vite build
+
+[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+transforming...
+[32m✓[39m 875 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                          [39m[1m[2m    0.85 kB[22m[1m[22m[2m │ gzip:   0.41 kB[22m
+[2mdist/[22m[35massets/index-80velV63.css           [39m[1m[2m   42.47 kB[22m[1m[22m[2m │ gzip:   8.26 kB[22m
+[2mdist/[22m[36massets/web-BLmcV8dO.js              [39m[1m[2m    0.36 kB[22m[1m[22m[2m │ gzip:   0.25 kB[22m
+[2mdist/[22m[36massets/web-BUesqKp4.js              [39m[1m[2m    4.59 kB[22m[1m[22m[2m │ gzip:   1.37 kB[22m
+[2mdist/[22m[36massets/web-Bs3EyYi6.js              [39m[1m[2m    8.73 kB[22m[1m[22m[2m │ gzip:   2.97 kB[22m
+[2mdist/[22m[36massets/purify.es-DP5U8-sc.js        [39m[1m[2m   29.17 kB[22m[1m[22m[2m │ gzip:  10.99 kB[22m
+[2mdist/[22m[36massets/index.es-9B2XQ-Ac.js         [39m[1m[2m  151.01 kB[22m[1m[22m[2m │ gzip:  51.65 kB[22m
+[2mdist/[22m[36massets/html2canvas.esm-CBrSDip1.js  [39m[1m[2m  201.42 kB[22m[1m[22m[2m │ gzip:  48.03 kB[22m
+[2mdist/[22m[36massets/index-XKK3hYDk.js            [39m[1m[33m1,025.37 kB[39m[22m[2m │ gzip: 319.31 kB[22m
+[33m
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 9.09s[39m
+
+> halfpast@0.1.0 test
+> playwright test
+
+
+Running 85 tests using 2 workers
+
+  ✓   1 [rules] › tests\unit\arc.spec.ts:19:1 › the stroke, caps included, fills the viewBox and does not leave it (29ms)
+  ✓   2 [rules] › tests\unit\arc.spec.ts:28:1 › the box is tall enough for the ends (29ms)
+  ✓   3 [rules] › tests\unit\arc.spec.ts:37:1 › with no doses the arc is the waking day (9ms)
+  ✓   5 [rules] › tests\unit\arc.spec.ts:45:1 › a dose before waking widens the start rather than stacking on it (7ms)
+  ✓   4 [rules] › tests\unit\arc.spec.ts:41:1 › doses inside the waking day leave it alone (14ms)
+  ✓   6 [rules] › tests\unit\arc.spec.ts:49:1 › a dose after bedtime widens the end (6ms)
+  ✓   7 [rules] › tests\unit\arc.spec.ts:53:1 › the widest dose wins at each end (8ms)
+  ✓   9 [rules] › tests\unit\arc.spec.ts:66:1 › a bedtime of exactly midnight is the end of the day, not the start (6ms)
+  ✓   8 [rules] › tests\unit\arc.spec.ts:60:1 › a bedtime past midnight ends the day at midnight, not before breakfast (6ms)
+  ✓  10 [rules] › tests\unit\arc.spec.ts:70:1 › a dose after a midnight bedtime is the start of the day, as the list has it (5ms)
+  ✓  11 [rules] › tests\unit\arc.spec.ts:76:1 › the end is always past the start, whatever the profile says (12ms)
+  ✓  12 [rules] › tests\unit\arc.spec.ts:83:1 › an unparseable time cannot take the window with it (3ms)
+  ✓  13 [rules] › tests\unit\intake.spec.ts:76:1 › picks the sex-specific row, then the any row, then the adult band (12ms)
+  ✓  14 [rules] › tests\unit\intake.spec.ts:85:1 › leaves every nutrient that is not iron alone (17ms)
+  ✓  16 [rules] › tests\unit\intake.spec.ts:101:1 › renders both figures at 46, which is where the age proxy was wrong (3ms)
+  ✓  15 [rules] › tests\unit\intake.spec.ts:94:1 › renders both iron figures for a woman under 51 rather than picking one (7ms)
+  ✓  17 [rules] › tests\unit\intake.spec.ts:107:1 › an unstated age still gets both figures (7ms)
+  ✓  18 [rules] › tests\unit\intake.spec.ts:113:1 › prefer-not-to-say on sex gets both figures rather than no figure at all (8ms)
+  ✓  19 [rules] › tests\unit\intake.spec.ts:124:1 › an answer of yes gives the single 18 mg figure (5ms)
+  ✓  20 [rules] › tests\unit\intake.spec.ts:130:1 › an answer of no gives the single 8 mg figure (5ms)
+  ✓  21 [rules] › tests\unit\intake.spec.ts:136:1 › the answer beats the age proxy at 51 and over (5ms)
+  ✓  23 [rules] › tests\unit\intake.spec.ts:148:1 › never defaults to 18 for anyone the question was not put to (4ms)
+  ✓  22 [rules] › tests\unit\intake.spec.ts:142:1 › unanswered at 51 and over leaves the published figure alone (7ms)
+  ✓  24 [rules] › tests\unit\intake.spec.ts:155:1 › offers the question to women and to unstated sex, at any adult age (9ms)
+  ✓  25 [rules] › tests\unit\intake.spec.ts:163:1 › does not put the question to 13-18 year olds (7ms)
+  ✓  26 [rules] › tests\unit\intake.spec.ts:172:1 › recognises iron by any of its forms, not just the bisglycinate (2ms)
+  ✓  27 [rules] › tests\unit\intake.spec.ts:176:1 › invents no pair when the catalogue has only one of the two rows (10ms)
+  ✓  28 [rules] › tests\unit\intake.spec.ts:185:1 › says it depends, in the sentence the spec asks for (5ms)
+  ✓  29 [rules] › tests\unit\intake.spec.ts:193:1 › drops back to one figure once it has been told (5ms)
+  ✓  30 [rules] › tests\unit\intake.spec.ts:199:1 › says nothing where nothing is established (5ms)
+  ✓  31 [rules] › tests\unit\intake.spec.ts:205:1 › leaves the upper limit off when there is not one (3ms)
+  ✓  32 [rules] › tests\unit\recommend.spec.ts:75:1 › ranks on goal overlap and carries the goal reason when no rule fires (9ms)
+  ✓  33 [rules] › tests\unit\recommend.spec.ts:82:1 › never recommends a peptide, whatever the tags say (7ms)
+  ✓  34 [rules] › tests\unit\recommend.spec.ts:87:1 › drops what they already take and says so (7ms)
+  ✓  35 [rules] › tests\unit\recommend.spec.ts:93:1 › an empty answer is the same as no preference (32ms)
+  ✓  36 [rules] › tests\unit\recommend.spec.ts:102:1 › no meat puts B12 first even with no goal match at all (10ms)
+  ✓  37 [rules] › tests\unit\recommend.spec.ts:120:1 › no meat raises zinc (5ms)
+  ✓  38 [rules] › tests\unit\recommend.spec.ts:112:1 › no meat raises iron to 1.8× and says why on the card (8ms)
+  ✓  40 [rules] › tests\unit\recommend.spec.ts:132:1 › no eggs raises choline (4ms)
+  ✓  39 [rules] › tests\unit\recommend.spec.ts:126:1 › no dairy raises calcium and vitamin D (31ms)
+  ✓  41 [rules] › tests\unit\recommend.spec.ts:138:1 › no fish swaps the fish oil for the algal one rather than warning about it (6ms)
+  ✓  42 [rules] › tests\unit\recommend.spec.ts:147:1 › no fish with nothing but fish oil leaves it out and reports it (5ms)
+  ✓  44 [rules] › tests\unit\recommend.spec.ts:166:1 › iron that upset them routes to the bisglycinate (9ms)
+  ✓  43 [rules] › tests\unit\recommend.spec.ts:153:1 › vegan fires every diet rule at once without duplicating a product (18ms)
+  ✓  46 [rules] › tests\unit\recommend.spec.ts:184:1 › magnesium that loosened them routes to the glycinate and leaves the threonate alone (9ms)
+  ✓  45 [rules] › tests\unit\recommend.spec.ts:176:1 › a reaction with no alternative keeps the nutrient and says so (10ms)
+  ✓  48 [rules] › tests\unit\recommend.spec.ts:205:1 › a louder rule never buries the sentence that explains the figure (6ms)
+  ✓  47 [rules] › tests\unit\recommend.spec.ts:196:1 › fish oil that repeats routes to the algal one, with food (5ms)
+  ✓  50 [rules] › tests\unit\recommend.spec.ts:225:1 › a card never says the same thing twice (3ms)
+  ✓  49 [rules] › tests\unit\recommend.spec.ts:217:1 › a louder rule never buries the sentence that explains the with-food chip (8ms)
+  ✓  51 [rules] › tests\unit\recommend.spec.ts:231:1 › niacin flush routes to niacinamide, and the two forms stay distinguishable (6ms)
+  ✓  52 [rules] › tests\unit\recommend.spec.ts:238:1 › zinc nausea moves the timing and never removes the zinc (7ms)
+  ✓  53 [rules] › tests\unit\recommend.spec.ts:245:1 › capsules being hard to swallow ranks powders and liquids above them (7ms)
+  ✓  54 [rules] › tests\unit\recommend.spec.ts:253:1 › the swallowing problem beats a stated preference for capsules (5ms)
+  ✓  55 [rules] › tests\unit\recommend.spec.ts:263:1 › a form preference re-ranks but never drops anything (7ms)
+  ✓  56 [rules] › tests\unit\recommend.spec.ts:270:1 › a form preference is worth less than a goal match (5ms)
+  ✓  57 [rules] › tests\unit\recommend.spec.ts:278:1 › a softgel is a softgel and not a capsule (6ms)
+  ✓  58 [iphone-width] › tests\e2e\boot.spec.ts:7:1 › boots to the welcome screen (1.3s)
+  ✓  59 [iphone-width] › tests\e2e\discover.spec.ts:9:1 › renders Discover with the catalogue (2.0s)
+  ✓  60 [iphone-width] › tests\e2e\discover.spec.ts:36:1 › says the iron figure depends, and takes the answer (2.4s)
+  ✓  61 [iphone-width] › tests\e2e\onboarding.spec.ts:9:1 › completes onboarding and lands on the app (15.2s)
+1. Vegan, all six goals · 20.2s · 19 screens · 6 recs: Test Brand Vitamin B12 Methylcobalamin, Test Brand Iron Bisglycinate, Test Brand Vitamin D3 2000 IU, Test Brand Magnesium Glycinate 200 mg, Test Brand Vitamin E 400 IU, Test Brand Collagen Peptides Powder
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  62 [iphone-width] › tests\e2e\personas.spec.ts:89:1 › 1. vegan, all six goals (21.1s)
+2. Vegetarian and dairy-free, two goals · 15.0s · 19 screens · 5 recs: Test Brand Vitamin B12 Methylcobalamin, Test Brand Vitamin D3 2000 IU, Test Brand Iron Bisglycinate, Test Brand Vitamin E 400 IU, Test Brand Collagen Peptides Powder
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  63 [iphone-width] › tests\e2e\personas.spec.ts:109:1 › 2. vegetarian and dairy-free, two goals (15.9s)
+3. Omnivore, every question skipped · 14.9s · 19 screens · 1 recs: Test Brand Vitamin B12 Methylcobalamin
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  64 [iphone-width] › tests\e2e\personas.spec.ts:131:1 › 3. omnivore, every survey question skipped (15.8s)
+4. "Never tried" — q3 must not be shown · 14.5s · 18 screens · 1 recs: Test Brand Magnesium Glycinate 200 mg
+   welcome → auth → profile → diet → info → q2 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  65 [iphone-width] › tests\e2e\personas.spec.ts:155:1 › 4. "never tried" retires the follow-up question (15.4s)
+5. "Never tried", back, then "I always stop" · 15.9s · 20 screens · 1 recs: Test Brand Magnesium Glycinate 200 mg
+   welcome → auth → profile → diet → info → q2 → day → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  66 [iphone-width] › tests\e2e\personas.spec.ts:182:1 › 5. going back and changing that answer brings the question back (16.7s)
+6. No goals selected · 14.5s · 19 screens · 3 recs: Test Brand Iron Bisglycinate, Test Brand Vitamin B12 Methylcobalamin, Test Brand Vitamin D3 2000 IU
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  67 [iphone-width] › tests\e2e\personas.spec.ts:224:1 › 6. no goals at all falls back to the defaults (15.4s)
+7. All six goals, no diet answer · 19.7s · 19 screens · 6 recs: Test Brand Iron Bisglycinate, Test Brand Magnesium Glycinate 200 mg, Test Brand Vitamin B12 Methylcobalamin, Test Brand Vitamin D3 2000 IU, Test Brand Vitamin E 400 IU, Test Brand Collagen Peptides Powder
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  68 [iphone-width] › tests\e2e\personas.spec.ts:254:1 › 7. all six goals (20.6s)
+8. Exactly one goal · 14.8s · 19 screens · 1 recs: Test Brand Magnesium Glycinate 200 mg
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  69 [iphone-width] › tests\e2e\personas.spec.ts:267:1 › 8. exactly one goal (15.7s)
+9. Age 14, male · 15.2s · 19 screens · 2 recs: Test Brand Iron Bisglycinate, Test Brand Vitamin B12 Methylcobalamin
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  70 [iphone-width] › tests\e2e\personas.spec.ts:284:1 › 9. age 14 (15.9s)
+10. Age 90, female · 16.4s · 19 screens · 2 recs: Test Brand Iron Bisglycinate, Test Brand Vitamin B12 Methylcobalamin
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  71 [iphone-width] › tests\e2e\personas.spec.ts:305:1 › 10. age 90 (17.2s)
+11. Gender "prefer not to say" · 15.1s · 19 screens · 2 recs: Test Brand Iron Bisglycinate, Test Brand Vitamin B12 Methylcobalamin
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  72 [iphone-width] › tests\e2e\personas.spec.ts:324:1 › 11. prefer not to say (15.9s)
+12. Female, 48 · 15.5s · 19 screens · 2 recs: Test Brand Iron Bisglycinate, Test Brand Vitamin B12 Methylcobalamin
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  73 [iphone-width] › tests\e2e\personas.spec.ts:341:1 › 12. female, 48 (16.4s)
+13. Awake 23:00 to 07:00 · 16.2s · 19 screens · 3 recs: Test Brand Magnesium Glycinate 200 mg, Test Brand Iron Bisglycinate, Test Brand Vitamin B12 Methylcobalamin
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  74 [iphone-width] › tests\e2e\personas.spec.ts:360:1 › 13. an overnight waking window (17.1s)
+14. No meals at all · 15.7s · 19 screens · 1 recs: Test Brand Magnesium Glycinate 200 mg
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  75 [iphone-width] › tests\e2e\personas.spec.ts:384:1 › 14. every meal deleted (16.6s)
+15. Fifteen items in the current stack · 17.7s · 19 screens · 1 recs: Test Brand Magnesium Glycinate 200 mg
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  76 [iphone-width] › tests\e2e\personas.spec.ts:406:1 › 15. fifteen things already in the stack (18.5s)
+16. Empty current stack · 14.9s · 19 screens · 1 recs: Test Brand Magnesium Glycinate 200 mg
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  77 [iphone-width] › tests\e2e\personas.spec.ts:442:1 › 16. nothing in the stack (15.8s)
+18. The clear-all answer on every optional question · 15.7s · 19 screens · 1 recs: Test Brand Vitamin D3 2000 IU
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  79 [iphone-width] › tests\e2e\personas.spec.ts:486:1 › 18. "none of these" and "no preference" everywhere (16.5s)
+17. Every reaction ticked · 16.7s · 19 screens · 3 recs: Test Brand Magnesium Glycinate 200 mg, Test Brand Iron Bisglycinate, Test Brand Vitamin B12 Methylcobalamin
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  78 [iphone-width] › tests\e2e\personas.spec.ts:459:1 › 17. every reaction at once (17.5s)
+19. Notifications declined · 15.0s · 19 screens · 1 recs: Test Brand Magnesium Glycinate 200 mg
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  80 [iphone-width] › tests\e2e\personas.spec.ts:507:1 › 19. notifications declined (15.8s)
+  ✓  82 [iphone-width] › tests\e2e\personas.spec.ts:557:1 › a step index outside the flow clamps instead of blanking (908ms)
+  ✓  83 [iphone-width] › tests\e2e\personas.spec.ts:578:1 › a negative step index clamps to the first screen (867ms)
+20. Killed at goals, reopened · 16.7s · 19 screens · 1 recs: Test Brand Magnesium Glycinate 200 mg
+   welcome → auth → profile → diet → info → q2 → q3 → day → current-stack → reactions → forms → goals → notifications → building-recs → recommendations → paywall → building-schedule → schedule → done
+  ✓  81 [iphone-width] › tests\e2e\personas.spec.ts:522:1 › 20. killed at the goals screen and reopened (17.5s)
+  ✓  84 [iphone-width] › tests\e2e\today.spec.ts:9:1 › renders Today with the day materialised (1.2s)
+  ✓  85 [iphone-width] › tests\e2e\today.spec.ts:42:3 › the arc on the narrowest phone › fits the screen and spans the doses it was given (1.3s)
+
+  85 passed (3.2m)

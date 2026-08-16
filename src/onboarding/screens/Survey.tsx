@@ -128,29 +128,28 @@ export function Profile({
   );
 }
 
-/* ── the two read-only explainers ────────────────────────────────────── */
+/* ── the one read-only explainer ─────────────────────────────────────── */
 
-export const INFO_COPY = {
-  'info-library': {
-    illustration: 'library',
-    title: 'Where this comes from',
-    body: 'Every entry is tied to published research rather than to anything we decided ourselves. You can open the papers behind any of it from Discover, at any point, without asking us.',
-  },
-  'info-recs': {
-    illustration: 'recs',
-    title: 'How a suggestion is made',
-    body: 'Suggestions are drawn from the goals you pick, your age and your sex — nothing else. You set every amount yourself; the app stores your numbers and never invents them.',
-  },
-} as const;
-
-export function Info({ which, onNext }: { which: keyof typeof INFO_COPY; onNext: () => void }) {
-  const c = INFO_COPY[which];
+/**
+ * Was two consecutive screens — "Where this comes from" and "How a suggestion
+ * is made" — neither of which asked for anything. One screen makes both
+ * points, and the second of them is now true: since the diet, reaction and
+ * form questions arrived, goals, age and sex are not "nothing else".
+ */
+export function Info({ onNext }: { onNext: () => void }) {
   return (
     <Screen center footer={<Cta onClick={onNext}>Continue</Cta>}>
-      <OnboardIllustration name={c.illustration} />
+      <OnboardIllustration name="library" />
       <div style={{ marginTop: 30 }}>
-        <Title>{c.title}</Title>
-        <Sub>{c.body}</Sub>
+        <Title>Where this comes from</Title>
+        <Sub>
+          Every entry is tied to published research rather than to anything we decided ourselves.
+          You can open the papers behind any of it from Discover, at any point.
+        </Sub>
+        <Sub>
+          What we suggest comes from the goals you pick and the answers you give us, and nothing
+          else. You set every amount yourself; the app stores your numbers and never invents them.
+        </Sub>
       </div>
     </Screen>
   );
@@ -159,29 +158,22 @@ export function Info({ which, onNext }: { which: keyof typeof INFO_COPY; onNext:
 /* ── the three survey questions ──────────────────────────────────────── */
 
 export interface Question {
-  id: 'q1' | 'q2' | 'q3';
+  id: 'q2' | 'q3';
   title: string;
   sub: string;
   options: { id: string; label: string }[];
 }
 
 /**
- * Every one of these changes something downstream. None of them exists to make
- * the user feel bad about themselves — that shape of question produces refunds
- * a week later, not engagement.
+ * None of these exists to make the user feel bad about themselves — that shape
+ * of question produces refunds a week later, not engagement.
+ *
+ * There were three. The first asked how many supplements they were taking; the
+ * `current-stack` screen asks the same thing four screens on and gets back a
+ * list the scorer reads, so the count was collected and never looked at again.
+ * The ids of the two left are unchanged on purpose — see FLOW.
  */
-export const QUESTIONS: Record<'q1' | 'q2' | 'q3', Question> = {
-  q1: {
-    id: 'q1',
-    title: 'How many peptides or supplements are you taking right now?',
-    sub: 'Count each one separately, including anything over the counter.',
-    options: [
-      { id: 'none', label: 'None yet' },
-      { id: '1-2', label: '1–2' },
-      { id: '3-5', label: '3–5' },
-      { id: '6+', label: '6 or more' },
-    ],
-  },
+export const QUESTIONS: Record<'q2' | 'q3', Question> = {
   q2: {
     id: 'q2',
     title: 'Have you started a routine and stopped before?',
@@ -205,6 +197,178 @@ export const QUESTIONS: Record<'q1' | 'q2' | 'q3', Question> = {
     ],
   },
 };
+
+/* ── the three multi-select questions ────────────────────────────────── */
+
+export interface MultiQuestion {
+  id: 'diet' | 'reactions' | 'forms';
+  title: string;
+  sub: string;
+  options: { id: string; label: string }[];
+  /** the "none of this applies" option: it clears the rest, and the rest clear it */
+  clears: string;
+  /** picking the key means the values are true as well */
+  implies?: Record<string, string[]>;
+  /** free text, stored on its own and never read by a rule */
+  note?: { link: string; label: string; placeholder: string };
+}
+
+/**
+ * These three pick *which* product, not whether. None of them can remove a
+ * nutrient from the list, and every one of them is answerable with nothing
+ * selected — a skip has to mean the same thing as "no preference".
+ */
+export const MULTI_QUESTIONS: Record<'diet' | 'reactions' | 'forms', MultiQuestion> = {
+  diet: {
+    id: 'diet',
+    title: 'Anything you don’t eat?',
+    sub: 'This changes what we suggest more than anything else you’ll tell us.',
+    options: [
+      { id: 'no-red-meat', label: 'No red meat' },
+      { id: 'no-meat', label: 'No meat at all' },
+      { id: 'no-fish', label: 'No fish or seafood' },
+      { id: 'no-dairy', label: 'No dairy' },
+      { id: 'no-eggs', label: 'No eggs' },
+      { id: 'omnivore', label: 'I eat everything' },
+    ],
+    clears: 'omnivore',
+    // nobody should end up saying they eat no meat but do eat red meat
+    implies: { 'no-meat': ['no-red-meat'] },
+  },
+  reactions: {
+    id: 'reactions',
+    // The sub-line is the point of the screen: the answer gets them a
+    // different form rather than taking something away, which is what gets
+    // people to answer it honestly.
+    title: 'Has anything you’ve taken not agreed with you?',
+    sub: 'We’ll pick a different form rather than skipping it.',
+    options: [
+      { id: 'iron-gi', label: 'Iron upset my stomach' },
+      { id: 'mag-gi', label: 'Magnesium gave me loose stools' },
+      { id: 'fishoil-burp', label: 'Fish oil repeats on me' },
+      { id: 'niacin-flush', label: 'Niacin made me flush' },
+      { id: 'large-caps', label: 'Capsules are too big to swallow' },
+      { id: 'zinc-nausea', label: 'Zinc on an empty stomach made me nauseous' },
+      { id: 'none', label: 'None of these' },
+    ],
+    clears: 'none',
+    note: {
+      link: 'Something else',
+      label: 'Anything else that did not agree with you',
+      placeholder: 'What happened',
+    },
+  },
+  forms: {
+    id: 'forms',
+    title: 'How do you prefer to take things?',
+    sub: 'We’ll rank these first where there’s a choice.',
+    // Every id maps onto a product_form already on the glossary rows. There is
+    // no injection option here and there is not going to be one: peptides are
+    // reference only, and asking someone which route they prefer to inject by
+    // is the app tailoring its output to injection use.
+    options: [
+      { id: 'capsule', label: 'Capsules' },
+      { id: 'tablet', label: 'Tablets' },
+      { id: 'softgel', label: 'Softgels' },
+      { id: 'powder', label: 'Powders' },
+      { id: 'liquid', label: 'Liquids' },
+      { id: 'gummy', label: 'Gummies' },
+      { id: 'no-preference', label: 'No preference' },
+    ],
+    clears: 'no-preference',
+  },
+};
+
+/** Toggling one option, with the clear-all and the implications applied. */
+export function toggleMulti(q: MultiQuestion, value: string[], id: string): string[] {
+  const order = (v: string[]) =>
+    q.options.map((o) => o.id).filter((o) => v.includes(o));
+
+  if (id === q.clears) return value.includes(id) ? [] : [id];
+
+  // picking anything real retires the clear-all option
+  const rest = value.filter((v) => v !== q.clears);
+
+  if (rest.includes(id)) {
+    // turning one off also turns off whatever implied it, rather than leaving
+    // behind a pair of answers that contradict each other
+    const implied = Object.entries(q.implies ?? {})
+      .filter(([, ids]) => ids.includes(id))
+      .map(([key]) => key);
+    return order(rest.filter((v) => v !== id && !implied.includes(v)));
+  }
+
+  return order([...rest, id, ...(q.implies?.[id] ?? [])]);
+}
+
+export function MultiSelectScreen({
+  question,
+  value,
+  onChange,
+  note,
+  onNote,
+  onNext,
+}: {
+  question: MultiQuestion;
+  value: string[];
+  onChange: (v: string[]) => void;
+  note?: string;
+  onNote?: (v: string) => void;
+  onNext: () => void;
+}) {
+  const [noteOpen, setNoteOpen] = useState(Boolean(note));
+
+  return (
+    <Screen scroll footer={<Cta onClick={onNext}>Continue</Cta>}>
+      <Title>{question.title}</Title>
+      <Sub>{question.sub}</Sub>
+
+      <div className="ob-options" role="group" aria-label={question.title}>
+        {question.options.map((o) => {
+          const on = value.includes(o.id);
+          return (
+            <button
+              key={o.id}
+              role="checkbox"
+              aria-checked={on}
+              className={`ob-option${on ? ' on' : ''}`}
+              onClick={() => onChange(toggleMulti(question, value, o.id))}
+            >
+              {o.label}
+              <span className={`ob-tick${on ? ' on' : ''}`}>
+                {on && (
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="var(--bg)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <path d="M2.5 6.2 4.8 8.5 9.5 3.5" />
+                  </svg>
+                )}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {question.note && onNote && (
+        <div style={{ marginTop: 14 }}>
+          {noteOpen ? (
+            <input
+              className="ob-input"
+              value={note ?? ''}
+              maxLength={200}
+              autoFocus
+              onChange={(e) => onNote(e.target.value)}
+              placeholder={question.note.placeholder}
+              aria-label={question.note.label}
+            />
+          ) : (
+            <button className="ob-textlink left" onClick={() => setNoteOpen(true)}>
+              {question.note.link}
+            </button>
+          )}
+        </div>
+      )}
+    </Screen>
+  );
+}
 
 export function SurveyScreen({
   question,

@@ -4,11 +4,12 @@ import { GOAL_BY_ID, DEFAULT_GOAL_IDS } from '../goals';
 import {
   getNutrientReference,
   listGlossary,
-  pickReference,
   type GlossaryEntry,
   type NutrientReference,
 } from '../../lib/api';
 import { checkPlacement, fromMinutes, toMinutes, type ScheduledItem } from '../../lib/conflicts';
+import { resolveIntake } from '../../lib/intake';
+import { recommend } from '../../lib/recommend';
 import type { Meal } from '../store';
 
 /* ── the two loading screens ─────────────────────────────────────────── */
@@ -92,101 +93,136 @@ export interface Recommendation {
   why: string;
   route: string;
   selected: boolean;
-  /** the intake that applies to this person, where one is established */
+  /** the intake that applies to this person, where a single figure does */
   amount: string;
+  /**
+   * Iron, for someone we have not been told about: both figures rather than a
+   * guess between them. Display only — `amount` stays empty, so the schedule
+   * stores no number, the same as anything else with no single established
+   * figure. See lib/intake.ts.
+   */
+  amountRange: { yes: string; no: string } | null;
+  /** a reaction they told us about put this one on a full stomach */
+  withFood: boolean;
 }
+
+/**
+ * The reference figure with whatever adjustment a rule made to it. Rounded to
+ * a whole number once it is big enough for a decimal to be noise — the
+ * vegetarian iron figure lands on 32 mg and 14 mg, which is how ODS quotes it,
+ * rather than 32.4 and 14.4.
+ */
+const scaled = (rda: number, factor: number) => {
+  const v = rda * factor;
+  return v >= 10 ? Math.round(v) : Math.round(v * 10) / 10;
+};
+
+const doseLine = (r: Recommendation) =>
+  [
+    r.amountRange
+      ? `${r.amountRange.yes} a day if you menstruate · ${r.amountRange.no} if you don’t · ${r.route}`
+      : r.amount
+        ? `${r.amount} a day · ${r.route}`
+        : `${r.route} · you set the amount`,
+    r.withFood ? 'with food' : null,
+  ]
+    .filter(Boolean)
+    .join(' · ');
 
 export function useRecommendations(
   goalIds: string[],
   currentStack: string[],
+  diet: string[],
+  reactions: string[],
+  forms: string[],
   age?: number | null,
   sex?: 'm' | 'f' | 'na' | null,
 ) {
   const [entries, setEntries] = useState<GlossaryEntry[] | null>(null);
   const [refs, setRefs] = useState<Record<string, NutrientReference[]>>({});
   useEffect(() => {
+    /* Both in one update, deliberately. `Recommendations` below snapshots the
+       cards the first render this returns anything, so entries arriving a
+       round trip ahead of the reference intakes meant every card was built
+       with no figure and read "you set the amount" — the amounts were only
+       ever going to lose that race against a real server. */
     listGlossary(200)
-      .then((rows) => {
+      .then(async (rows) => {
+        const refs = await getNutrientReference(rows.map((r) => r.id));
+        setRefs(refs);
         setEntries(rows);
-        return getNutrientReference(rows.map((r) => r.id));
       })
-      .then((m) => m && setRefs(m))
       .catch(() => setEntries([]));
   }, []);
 
   return useMemo(() => {
     if (!entries) return null;
     const ids = goalIds.length ? goalIds : DEFAULT_GOAL_IDS;
-    const wanted = new Set(ids.flatMap((g) => GOAL_BY_ID[g]?.tags ?? []));
-    const already = new Set(currentStack.map((s) => s.toLowerCase()));
-
-    /* Supplements only. Ranking peptides for a specific person is a
-       recommendation whether or not an amount is attached, and it is the same
-       rule the assistant is held to — enforced here in code rather than left
-       to whatever the tag overlap happens to return. Every goal was returning
-       two to four peptides in its top six before this. */
-    const EVIDENCE_RANK = { strong: 0, mixed: 1, thin: 2 } as const;
-    const rank = (e: GlossaryEntry) => EVIDENCE_RANK[e.evidence ?? 'thin'] ?? 2;
-
-    const scored = entries
-      .filter((e) => (e.kind ?? 'peptide') === 'supplement')
-      // no point suggesting what they told us they already take
-      .filter((e) => !already.has(e.name.toLowerCase()))
-      .map((e) => {
-        const hits = (e.goal_tags ?? []).filter((t) => wanted.has(t));
-        return { e, hits };
-      })
-      .filter((x) => x.hits.length > 0)
-      /* Goal overlap first, then how good the evidence is. The tie-break used
-         to be the product name, which sorted alphabetically and quietly put
-         every brand beginning with A at the top of a list that looks like a
-         ranking. */
-      .sort(
-        (a, b) =>
-          b.hits.length - a.hits.length ||
-          rank(a.e) - rank(b.e) ||
-          a.e.name.localeCompare(b.e.name),
-      );
-
     const goalNames = ids.map((g) => GOAL_BY_ID[g]?.name ?? g);
 
+    /* Everything the ordering knows is in lib/recommend.ts, including the
+       sentence on each card. This screen picks how many to show and turns a
+       reference intake into a string; it does not decide anything. */
+    const result = recommend(entries, {
+      goalTags: ids.flatMap((g) => GOAL_BY_ID[g]?.tags ?? []),
+      goalLabel: goalNames.length > 1 ? 'your goals' : (goalNames[0]?.toLowerCase() ?? 'your goals'),
+      currentStack,
+      diet,
+      reactions,
+      forms,
+    });
+
     return {
-      picks: scored.slice(0, 6).map(({ e, hits }, i) => {
-        const r = pickReference(refs[e.id], age, sex);
+      picks: result.ranked.slice(0, 6).map((s, i) => {
+        /* Onboarding never passes a menstrual status: it is not asked here,
+           deliberately, so iron arrives as two figures and the question waits
+           until the iron entry itself. */
+        const intake = resolveIntake(s.entry, refs[s.entry.id], age, sex, null);
+        const figure = (rda: number) => `${scaled(rda, s.amountFactor)} ${intake.unit}`;
         return {
-          id: e.id,
-          name: e.name,
-          route: e.route,
-          amount: r?.rda != null ? `${r.rda} ${r.unit}` : '',
-          why: `Tagged ${hits.join(' and ')} — matches ${goalNames.length > 1 ? 'your goals' : goalNames[0]?.toLowerCase()}.`,
+          id: s.entry.id,
+          name: s.entry.name,
+          route: s.entry.route,
+          amount: intake.rda != null && intake.rdaIfNot == null ? figure(intake.rda) : '',
+          amountRange:
+            intake.rda != null && intake.rdaIfNot != null
+              ? { yes: figure(intake.rda), no: figure(intake.rdaIfNot) }
+              : null,
+          why: s.reason,
+          withFood: s.timing === 'with_food',
           selected: i < 3,
-        };
+        } satisfies Recommendation;
       }),
       leftOut: {
-        alreadyTaking: entries
-          .filter((e) => already.has(e.name.toLowerCase()))
-          .map((e) => e.name),
-        noMatch: scored.length > 6 ? scored.slice(6).map((x) => x.e.name) : [],
+        alreadyTaking: result.alreadyTaking,
+        swapped: result.swappedOut,
+        noMatch: result.ranked.slice(6).map((s) => s.entry.name),
         goalNames,
       },
     };
-  }, [entries, refs, goalIds, currentStack, age, sex]);
+  }, [entries, refs, goalIds, currentStack, diet, reactions, forms, age, sex]);
 }
 
 export function Recommendations({
   goalIds,
   currentStack,
+  diet,
+  reactions,
+  forms,
   age,
   sex,
   onDone,
 }: {
   goalIds: string[];
   currentStack: string[];
+  diet: string[];
+  reactions: string[];
+  forms: string[];
   age?: number | null;
   sex?: 'm' | 'f' | 'na' | null;
   onDone: (picks: Recommendation[]) => void;
 }) {
-  const data = useRecommendations(goalIds, currentStack, age, sex);
+  const data = useRecommendations(goalIds, currentStack, diet, reactions, forms, age, sex);
   const [picks, setPicks] = useState<Recommendation[] | null>(null);
 
   useEffect(() => {
@@ -214,9 +250,9 @@ export function Recommendations({
     >
       <Title>What we found</Title>
       <Sub>
-        Matched to {data.leftOut.goalNames.join(' and ').toLowerCase()}, ranked by how many of your
-        goals each one covers and then by the strength of the evidence. Untick anything you
-        don’t want.
+        Matched to {data.leftOut.goalNames.join(' and ').toLowerCase()}, then ranked by what you
+        told us — what you don’t eat, what hasn’t agreed with you, and the strength of the
+        evidence. Untick anything you don’t want.
       </Sub>
 
       <div className="ob-recs">
@@ -234,10 +270,10 @@ export function Recommendations({
               {/* The app holds no dose for anything and will not invent one --
                   the glossary carries category, mechanism, storage and route,
                   never an amount. See legal.md. The slot stays, labelled. */}
-              <span className="ob-rec-dose">
-                {r.amount ? `${r.amount} a day · ${r.route}` : `${r.route} · you set the amount`}
-              </span>
-              <span className="ob-rec-why">{r.why}</span>
+              <span className="ob-rec-dose">{doseLine(r)}</span>
+              {/* No rule fired and no goal tag matched — a card with no
+                  explanation beats a card with an invented one. */}
+              {r.why && <span className="ob-rec-why">{r.why}</span>}
               <span className="ob-rec-link">Read the research →</span>
             </span>
             <span className={`ob-tick${r.selected ? ' on' : ''}`}>
@@ -260,15 +296,28 @@ export function Recommendations({
             what you are taking.
           </p>
         )}
+        {/* A product swapped for another form of the same nutrient. Left
+            silent this reads as the app ignoring an answer. */}
+        {data.leftOut.swapped.length > 0 && (
+          <p>
+            <b>Swapped for another form:</b>{' '}
+            {data.leftOut.swapped
+              .slice(0, 4)
+              .map((s) => `${s.name} — ${s.why}`)
+              .join('. ')}
+            .
+          </p>
+        )}
         {data.leftOut.noMatch.length > 0 && (
           <p>
             <b>Matched but ranked lower:</b> {data.leftOut.noMatch.slice(0, 6).join(', ')}. Fewer of
-            your goals matched their tags.
+            your goals matched, or something you told us moved another one above them.
           </p>
         )}
         <p>
           Everything else in the library is tagged for goals you did not pick. Nothing was excluded
-          for being unpopular or unprofitable — the ranking is goal-tag overlap and nothing else.
+          for being unpopular or unprofitable — the ranking is your goals, your answers and the
+          strength of the evidence, and nothing else.
         </p>
       </div>
     </Screen>
