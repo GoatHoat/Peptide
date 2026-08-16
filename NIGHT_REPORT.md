@@ -352,3 +352,105 @@ the loop.
   catalogue, not the real one, and renaming them would prove nothing.
 - Bundle unchanged at 1,026 kB minified (319.5 kB gzipped). No client code was
   touched.
+
+---
+
+## Night 6 — 0.6, load the 176 products
+
+**Changed.** One file: `supabase/migrations/0021_catalogue_176.sql`, inserting
+the 176 branded products from `CATALOG_BRANDED_176.md`. Not applied.
+
+**Verification, which was the actual job.** Every one of the 176 DSLD label ids
+was fetched from `https://api.ods.od.nih.gov/dsld/v9/label/<id>` before a line
+of SQL was written. All 176 returned HTTP 200 with a record, all 176 carry
+`offMarket: 0`, and the 176 ids are distinct. Nothing was dropped, so there is
+no list of casualties, and nothing was substituted.
+
+Then I fetched the ingredient panel for all 176 as well, because writing a
+mechanism sentence off a product name is guessing. It caught three that say the
+opposite of what they contain:
+
+- **Klean Focus** reads like an omega-3 and contains none — it is
+  acetyl-L-carnitine, alpha-GPC, alpha-lipoic acid and a fruit polyphenol blend.
+- **Klean Omega** does not say "omega-3", "EPA", "DHA" or "fish" anywhere in its
+  name, and is a marine EPA/DHA concentrate. Without keywords it would have sat
+  invisible to the no-fish rule — a fish oil recommended to someone who had just
+  said they do not eat fish. It now carries them and is correctly swapped out.
+- **Pure Encapsulations Amino-NR** declares a full amino acid profile, not
+  nicotinamide riboside.
+
+**42 rows where the file and the filing differ.** All 42 are the same filing,
+none is a different product. 19 are sub-brand versus parent (`SR Sports
+Research`, `Host Defense Mushrooms`, three Swanson sub-lines, `NOW Sports`), 17
+are flavour or pack descriptors the file drops, 3 are house prefixes (`Best
+L-Tyrosine`), 3 are one-offs including a typo in DSLD's own record (`Vitamon
+B12`). The spec says brand, name and form come from the file, so the file's
+wording went in; every divergence is written into the migration header so it is
+auditable rather than invisible.
+
+**I checked what the rules engine will do with these rows** rather than assume,
+by running the `NUTRIENT` matchers from `recommend.ts` over all 176. Landing:
+3 B12, 1 iron, 2 zinc, 5 magnesium, 4 omega-3, 2 choline, 1 niacin, 0 calcium,
+0 vitamin D. Swaps resolve correctly — the algal omega-3 is preferred and the
+three fish ones swap out, the bisglycinate is the preferred magnesium, the
+niacinamide is the preferred B3.
+
+**Found and did not change.**
+
+- **`listGlossary(200)` will hide 86 of the 286 entries the moment this is
+  applied.** This is the loudest thing in the file. The catalogue becomes 250
+  supplements plus 36 peptides; `api.ts:443` orders by name and caps at 200, and
+  all three callers — Discover, the onboarding recommendations and Day — pass
+  200. Everything alphabetically past roughly "P" stops existing: every Solgar,
+  Sports Research, SuperSmart, Swanson, Thorne and Vital Proteins product, which
+  is a third of what this migration adds and includes most of the tier-1 brands
+  the catalogue file argues for leading with. Nothing is broken today because
+  the migration is not applied. Queue item B owns the fix ("Scroll performance
+  on Discover with 250 entries") and it is now a correctness item, not a
+  performance one. **Do not apply 0021 before that item is done.**
+- **A vegan gets four B12 products in six slots.** `no-meat` marks B12
+  `required`, worth 1000, and there are now four B12 products in the catalogue
+  against six cards on the results screen. The rule is right that B12 is the one
+  thing with no plant source; it is wrong that this should be said four times.
+  Wants a one-per-nutrient cap in `recommend.ts`, which is a change to the rules
+  engine and so not this item.
+- **Two products now match the choline rule that `recommend.ts` says should
+  not.** The comment at its `NUTRIENT.choline` entry reasons that citicoline and
+  alpha-GPC raise choline but "spell neither", so they are left out
+  deliberately. Both new citicolines are filed by DSLD as `Citicoline
+  (CDP-Choline)` and `Citicoline CDP Choline 250 mg`, so they spell it, and the
+  no-eggs rule will now promote them. Defensible pharmacologically — CDP-choline
+  is a choline donor — but it is the comment's stated intent being overridden by
+  a product name, so someone should decide it rather than discover it. I did not
+  add choline keywords to the alpha-GPC or the lecithin, which would have made
+  it worse.
+- **`Sublingual` and `Lozenge` classify as `other`.** Two new forms
+  `classifyForm` has no branch for (the Solgar B12 and the Solgar zinc lozenge).
+  They get no form-preference bonus and no penalty, which is harmless but wrong
+  in one direction: someone who said capsules are too big to swallow should be
+  offered a lozenge above a capsule, and currently is not.
+- **The vegan contradiction the E proposal describes is now 16 products, not
+  two.** This migration adds 7 dairy-derived (two Klean proteins, the Sports
+  Research whey, Jarrow colostrum, two lactoferrins, and the casein decapeptide
+  hiding inside Life Extension Enhanced Sleep), 3 bovine collagen and 4
+  fish-derived. With the existing whey and collagen that is 16 products a diet
+  answer should exclude and cannot. I have not touched the proposal; it just
+  costs eight times what it did when it was written.
+- **The four unfindable products still have no `search_keywords`.** Last night's
+  report nominated this item as the right time to give `coq10`, `probiotics`,
+  `iodine` and `nac` the ingredient words their slugs used to carry. I did not,
+  because the queue item is "load the 176" and those are four existing rows;
+  0021 only inserts, which keeps it revertable in one command. It is four lines
+  whenever you want it, and the 176 new rows all carry keywords already.
+- **`AOR Advanced Orthomolecular Research Premium` is still stored as a brand.**
+  Flagged last night as wanting doing before 0.6. It did not block 0.6 — no new
+  product shares that brand — so it is still open and still cheap.
+- **`supabase/PENDING.sql` is now four migrations stale.** 0018, 0019, 0020 and
+  0021 are all absent from it. Fourth night running.
+- **0.7 and 0.8 just got four times bigger.** Five papers each for 176 products
+  is roughly 900 PubMed lookups against a 3-per-second unauthenticated cap. The
+  spec says get an NCBI API key first; it is worth doing before starting rather
+  than halfway through.
+
+Build green, `tsc --noEmit` green, 50 tests green. Bundle unchanged at 1,026 kB
+minified (319.5 kB gzipped) — no client code was touched.

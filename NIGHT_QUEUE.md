@@ -78,9 +78,18 @@ single run. Do them in order; several depend on the one before.
   new slug is exactly `slugify(name)` and no product changes rule group.
   `conflicts.ts`'s 'zinc'/'omega-3'/'glycine' look like slugs and are not —
   they match the item name. Nothing else in the commit._
-- [ ] **0.6 — Load the 176 products.** Section 3.1. `CATALOG_BRANDED_176.md` is
+- [x] **0.6 — Load the 176 products.** Section 3.1. `CATALOG_BRANDED_176.md` is
   at the repo root. Verify every DSLD label ID resolves before inserting; drop
   any that do not and list them. Do not substitute a different product silently.
+  _Done: migration `0021` inserts all 176 (not applied). Every label id was
+  fetched from the DSLD API first — all 176 returned a record, all carry
+  `offMarket: 0`, all ids are distinct, so nothing was dropped or substituted.
+  Slugs follow 0020's convention and collide with neither each other nor the 74.
+  Mechanism summaries were written against each label's declared ingredient
+  panel, which caught three products whose names say the opposite of their
+  contents. 42 rows have a shorter brand or name in the file than in the filing;
+  all 42 are the same filing and are listed in the migration header. Flagged and
+  not fixed: `listGlossary(200)` hides 86 of the resulting 286 entries._
 - [ ] **0.7 — Papers, part one: the first three goal sections.** Section 3.2.
   Skin & hair, Sleep, Energy. Real PubMed records only, searched on the active
   ingredient not the brand name, every URL confirmed to resolve. Store fewer than
