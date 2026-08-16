@@ -8,6 +8,11 @@
   --card-hi: #1e1e22;
   /* the Discover result card sits one step above --card in the export */
   --card-2: #252529;
+  /* Today's cell. Lighter than --card-2, which sat at 1.18:1 against the missed
+     grey and was indistinguishable at low brightness on OLED — which is exactly
+     where this strip is read. 1.68:1 separates them without becoming a second
+     fill colour competing with the accent. */
+  --week-today: #3d3d45;
   --purple: #7b5cfa;
   --purple-dim: rgba(123, 92, 250, 0.35);
 
@@ -348,27 +353,44 @@ button {
   gap: 3px;
   position: relative;
 }
-.week-cell.today {
+/* Completed is the accent. It is the only earned state, and it is the one the
+   eye should find first when the strip is glanced at. */
+.week-cell.completed {
   background: var(--purple);
 }
+.week-cell.completed .week-num { color: #fff; }
+.week-cell.completed .week-dow { color: var(--t2); }
+
+/* Today is a light grey, deliberately lighter than missed so the two are
+   separable at low brightness on OLED — see the ratio in the commit. It is not
+   the accent any more: being today is not an achievement. */
+.week-cell.today {
+  background: var(--week-today);
+}
+.week-cell.today .week-num { color: #fff; }
+.week-cell.today .week-dow { color: var(--t2); }
 .week-dow {
   font-size: calc(11px * var(--text-scale));
   font-weight: 500;
   color: var(--t3);
-}
-.week-cell.today .week-dow {
-  color: var(--t2);
 }
 .week-num {
   font-size: calc(17px * var(--text-scale));
   font-weight: 600;
   letter-spacing: -0.45px;
 }
-.week-cell.today .week-num {
-  color: #fff;
-}
 .week-cell.missed .week-num {
   color: var(--t3);
+}
+/* A past day with nothing scheduled. Not purple — a day you did nothing is not
+   a streak you earned — and not missed either, because there was nothing to
+   miss. Same grey card as missed with a dimmer numeral: present, unremarkable. */
+.week-cell.empty {
+  background: var(--card);
+}
+.week-cell.empty .week-num,
+.week-cell.empty .week-dow {
+  color: var(--t4);
 }
 /* days that have not happened yet are glass, not a filled card */
 .week-cell.future {
@@ -380,15 +402,6 @@ button {
 .week-cell.future .week-num,
 .week-cell.future .week-dow {
   color: var(--t4);
-}
-/* one property means one thing: the dot means completed, nothing else */
-.week-dot {
-  position: absolute;
-  bottom: 8px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--purple);
 }
 
 .arc-wrap {

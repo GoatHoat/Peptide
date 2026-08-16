@@ -14,13 +14,19 @@ import { IconPlus } from '../components/Icons';
 import { DoseRow } from '../components/DoseRow';
 import { syncScheduleNotifications } from '../lib/notifications';
 
-type DayState = 'completed' | 'missed' | 'today' | 'future';
+type DayState = 'completed' | 'missed' | 'today' | 'future' | 'empty';
 
 function dayState(dateISO: string, todayISO: string, compliance: Record<string, { total: number; taken: number }>): DayState {
   if (dateISO === todayISO) return 'today';
   if (dateISO > todayISO) return 'future';
   const c = compliance[dateISO];
-  return c && c.total > 0 && c.taken === c.total ? 'completed' : 'missed';
+  /* A day with nothing scheduled is its own state. It used to fall through to
+     'missed', and before that a `taken === total` test would have called an
+     empty day complete — vacuously true, and a purple cell for a day the user
+     did nothing is the kind of small lie that makes people stop believing the
+     rest of the numbers. */
+  if (!c || c.total === 0) return 'empty';
+  return c.taken === c.total ? 'completed' : 'missed';
 }
 
 type SheetState =
@@ -103,7 +109,9 @@ export function Today() {
         <div className="screen-sub t-body">{formatDisplayDate(today)}</div>
       </div>
 
-      {/* One property means one thing: fill = today, dot = completed. */}
+      {/* Colour carries the state, one property, no dot: accent = completed,
+          light grey = today, grey = missed, glass = still to come, and a dimmer
+          grey for a past day that had nothing scheduled. */}
       <div className="week">
         {weekDays.map((d) => {
           const iso = toISODate(d);
@@ -116,7 +124,6 @@ export function Today() {
             >
               <span className="week-dow">{d.toLocaleDateString(undefined, { weekday: 'narrow' })}</span>
               <span className="week-num">{d.getDate()}</span>
-              {state === 'completed' && <span className="week-dot" />}
             </div>
           );
         })}
