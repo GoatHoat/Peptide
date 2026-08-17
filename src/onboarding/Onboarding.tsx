@@ -7,6 +7,14 @@ import { Info, MULTI_QUESTIONS, MultiSelectScreen, Profile, QUESTIONS, SurveyScr
 import { CurrentStack, Day } from './screens/Day';
 import { Goals } from './screens/Goals';
 import { FreePick } from './screens/FreePick';
+import {
+  Commitment,
+  GoalPriority,
+  PlanPreview,
+  Sex,
+  StackCount,
+  StackInsight,
+} from './screens/Extra';
 import { Notifications, Paywall } from './screens/Commit';
 import { Building, Done, Recommendations, ScheduleBuilder, type Recommendation } from './screens/Results';
 import { useAuth } from '../lib/auth';
@@ -183,6 +191,72 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           />
         );
 
+      case 'sex':
+        return (
+          <Sex
+            value={state.profile.gender}
+            onDone={(gender) => {
+              patch({ profile: { age: state.profile.age, gender } });
+              next();
+            }}
+          />
+        );
+
+      case 'stack-count':
+        return (
+          <StackCount
+            value={state.stackCount}
+            onDone={(stackCount) => {
+              patch({ stackCount });
+              next();
+            }}
+          />
+        );
+
+      case 'stack-insight':
+        return (
+          <StackInsight
+            currentStack={state.currentStack}
+            mealTimes={state.meals.map((m) => m.time)}
+            sleepTime={state.sleep}
+            onDone={next}
+          />
+        );
+
+      case 'goal-priority':
+        return (
+          <GoalPriority
+            goals={state.goals}
+            value={state.goalPriority}
+            onDone={(goalPriority) => {
+              patch({ goalPriority });
+              next();
+            }}
+          />
+        );
+
+      case 'commitment':
+        return (
+          <Commitment
+            value={state.commitmentDays}
+            onDone={(commitmentDays) => {
+              patch({ commitmentDays });
+              next();
+            }}
+          />
+        );
+
+      case 'plan-preview':
+        return (
+          <PlanPreview
+            goals={state.goalPriority.length ? state.goalPriority : state.goals}
+            productCount={picks.length}
+            blockCount={new Set(picks.map((p) => (p.withFood ? 'meal' : 'any'))).size || 1}
+            commitmentDays={state.commitmentDays}
+            onDone={next}
+          />
+        );
+
       case 'diet':
       case 'reactions':
       case 'forms':
@@ -221,9 +295,26 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           />
         );
 
+      /* One screen, twice. `Day` already renders the waking window and the
+         meals as two blocks; `only` picks which. Splitting the component would
+         have duplicated the time-picker plumbing for no gain. */
       case 'day':
         return (
           <Day
+            only="window"
+            wake={state.wake}
+            sleep={state.sleep}
+            meals={state.meals}
+            onChange={patch}
+            onMeals={(meals) => patch({ meals })}
+            onNext={next}
+          />
+        );
+
+      case 'meals':
+        return (
+          <Day
+            only="meals"
             wake={state.wake}
             sleep={state.sleep}
             meals={state.meals}

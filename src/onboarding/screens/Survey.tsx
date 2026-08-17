@@ -52,8 +52,11 @@ export function Profile({
 
   return (
     <Screen scroll footer={<Cta onClick={onNext}>Continue</Cta>}>
-      <Title>About you</Title>
-      <Sub>Dose ranges differ by age and sex. This stays on your device.</Sub>
+      <Title>How old are you?</Title>
+      <Sub>
+        Reference intakes differ by age. Sex is the next screen — one question at a time reads
+        lighter than two, and this one is a drag rather than a form.
+      </Sub>
 
       <div className="ob-age">
         <div className="ob-age-num">
@@ -112,18 +115,7 @@ export function Profile({
         </div>
       </div>
 
-      <div className="ob-pill-row" style={{ marginTop: 30 }}>
-        {([['m', 'Male'], ['f', 'Female'], ['na', 'Prefer not to say']] as const).map(([id, label]) => (
-          <button
-            key={id}
-            className={`ob-pill${gender === id ? ' on' : ''}`}
-            aria-pressed={gender === id}
-            onClick={() => onChange({ age: value, gender: id })}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+
     </Screen>
   );
 }

@@ -180,7 +180,10 @@ test('4. "never tried" retires the follow-up question', async ({ page }, info) =
      is retired by subscribing — this persona buys, so the screen that asks a
      free user which product to keep is not shown. Both are steps skipped for a
      reason the person gave, which is exactly what a jump of two means. */
-  expect(jumps, 'the bar moves one segment per screen except over a retired one').toEqual([2, 2]);
+  /* Retired steps for this persona: q3 (answered "never tried"), goal-priority
+     (one goal picked) and free-pick (subscribed). Each is skipped because of
+     something the person said, which is exactly what a jump of two means. */
+  expect(jumps, 'the bar moves one segment per screen except over a retired one').toEqual([2, 2, 2]);
 });
 
 test('5. going back and changing that answer brings the question back', async ({ page }, info) => {
@@ -566,12 +569,14 @@ test('a step index outside the flow clamps instead of blanking', async ({ page }
   await page.goto('/');
 
   const last = (await readStore(page)).step;
-  /* 19 is the last index of a 20-screen FLOW, and this line is where the
-     length of the flow is pinned. It was 18. `free-pick` was added after the
-     paywall — the screen that asks a free user which of their selections to
-     track — which is a step that gathers an answer rather than padding, so the
-     count is allowed to move and this line says why. */
-  expect(last, 'clamped to the last step rather than off the end').toBe(19);
+  /* 26 is the last index of a 27-screen FLOW, and this line is where the length
+     of the flow is pinned. It has moved twice: free-pick after the paywall, and
+     then six additions and two splits taking it from 20 to 27 — sex, meals,
+     stack-count, stack-insight, goal-priority, commitment and plan-preview.
+     Every one of them collects an answer that changes the result or shows
+     something built from answers already given; the reasons are one line each
+     in FINISH_REPORT.md. */
+  expect(last, 'clamped to the last step rather than off the end').toBe(26);
 
   // and the screen it clamped onto is a screen, not a blank
   await expect(page.getByRole('heading', { name: /You.re set/ })).toBeVisible();

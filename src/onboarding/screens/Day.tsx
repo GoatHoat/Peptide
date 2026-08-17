@@ -300,7 +300,17 @@ function MealList({ meals, onChange }: { meals: Meal[]; onChange: (m: Meal[]) =>
  * which is a split admitting in its own titles that it had nothing to divide.
  * One question — what does your day look like — asked once.
  */
+/**
+ * The waking window and the meals — one component, two screens.
+ *
+ * Four time pickers on one screen was the densest moment in the flow, so
+ * `only` splits it: the window is one decision, the meals are three more and
+ * they are the ones the schedule actually anchors to. One component rather than
+ * two because the time-picker plumbing is the bulk of it and duplicating that
+ * would buy nothing.
+ */
 export function Day({
+  only = 'both',
   wake,
   sleep,
   meals,
@@ -308,6 +318,7 @@ export function Day({
   onMeals,
   onNext,
 }: {
+  only?: 'both' | 'window' | 'meals';
   wake: string;
   sleep: string;
   meals: Meal[];
@@ -317,15 +328,26 @@ export function Day({
 }) {
   return (
     <Screen scroll footer={<Cta onClick={onNext}>Continue</Cta>}>
-      <Title>Your day</Title>
-      <Sub>Drag either end of the ring. We schedule around the window, not the minute.</Sub>
-
-      <SleepDial wake={wake} sleep={sleep} onChange={onChange} />
-
-      <h2 className="ob-section">Meals</h2>
-      <p className="ob-caption">Anything that needs food gets scheduled near one of these.</p>
-
-      <MealList meals={meals} onChange={onMeals} />
+      {only === 'meals' ? (
+        <>
+          <Title>When do you eat?</Title>
+          <Sub>Anything that needs food gets scheduled near one of these.</Sub>
+          <MealList meals={meals} onChange={onMeals} />
+        </>
+      ) : (
+        <>
+          <Title>Your day</Title>
+          <Sub>Drag either end of the ring. We schedule around the window, not the minute.</Sub>
+          <SleepDial wake={wake} sleep={sleep} onChange={onChange} />
+          {only === 'both' && (
+            <>
+              <h2 className="ob-section">Meals</h2>
+              <p className="ob-caption">Anything that needs food gets scheduled near one of these.</p>
+              <MealList meals={meals} onChange={onMeals} />
+            </>
+          )}
+        </>
+      )}
     </Screen>
   );
 }

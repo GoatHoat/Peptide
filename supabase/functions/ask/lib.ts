@@ -20,7 +20,7 @@
  * database, upper limits checked after the response) are enforced in code here,
  * not by the model's judgement. So a smaller model costs answer quality, not
  * compliance. */
-export const MODEL = 'claude-haiku-4-5';
+export const MODEL = 'claude-haiku-4-5-20251001';
 
 /**
  * A hard cap on what one response can cost, not a target.

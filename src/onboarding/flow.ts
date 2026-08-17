@@ -14,7 +14,11 @@ export const FLOW = [
   // providers that were never switched on had a single live control meaning
   // "next". See screens/Intro.tsx.
   'auth',
+  /* Age on its own. The ruler is the first thing in the flow that feels like an
+     interaction rather than a form, and pairing it with a sensitive question
+     made both heavier than either needs to be. */
   'profile',
+  'sex',
   // diet is profile information, and it wants to sit next to age and sex
   'diet',
   // one explainer, not two consecutive ones
@@ -27,17 +31,36 @@ export const FLOW = [
      part-way through the flow when the build updates under them. */
   'q2',
   'q3',
-  // the sleep window and the meals were "your day, part one" and "part two"
+  /* Four time pickers on one screen was the densest moment in the flow. The
+     waking window is one decision; the meals are three more and they are the
+     ones the schedule actually anchors to. */
   'day',
+  'meals',
+  /* A number before a list. Easy question first, so the hard one reads as a
+     continuation rather than a wall — and the count sizes the input that
+     follows. */
+  'stack-count',
   'current-stack',
+  /* The first moment the app knows something they do not. Built from what they
+     just typed, never generic. */
+  'stack-insight',
   // both read as follow-ups to "what are you already taking", which is where
   // someone is already thinking about what they have tried
   'reactions',
   'forms',
   'goals',
+  /* Only when more than one goal was picked — a question with one answer is not
+     a question. Feeds the ordering in recommend.ts. */
+  'goal-priority',
+  /* A number they chose themselves, which is the one people keep. Stored as the
+     target the adherence view measures against. */
+  'commitment',
   'notifications',
   'building-recs',
   'recommendations',
+  /* Their own answers reflected back before money is mentioned. Nothing here is
+     new information — that is the point. */
+  'plan-preview',
   // after the recommendations, never before: asking for money ahead of the
   // first suggestion is asking someone to buy a promise
   'paywall',
@@ -64,6 +87,14 @@ export const SKIPPABLE: ReadonlySet<Step> = new Set<Step>([
   'diet',
   'reactions',
   'forms',
+  /* Every one of these has a neutral answer that produces the same result as
+     skipping: no sex given, no count given, no priority, the default target.
+     Skipping must never be a worse outcome than answering — see the store's
+     defaults. */
+  'sex',
+  'stack-count',
+  'goal-priority',
+  'commitment',
 ]);
 
 /** Welcome carries no chrome at all — no wordmark, no progress, no back. */
@@ -92,7 +123,12 @@ export const indexOfStep = (s: Step): number => FLOW.indexOf(s);
  */
 export function isSkipped(
   step: Step,
-  answers: { q2: string | null; subscribed?: boolean; pickedCount?: number },
+  answers: {
+    q2: string | null;
+    subscribed?: boolean;
+    pickedCount?: number;
+    goalCount?: number;
+  },
 ): boolean {
   // "What usually goes wrong?" has no answer for someone who has never
   // started a routine in the first place.
@@ -109,6 +145,9 @@ export function isSkipped(
     if (answers.subscribed) return true;
     if ((answers.pickedCount ?? 0) <= 1) return true;
   }
+  /* One goal has no priority to set. Showing a ranking screen with a single row
+     is a question with one answer. */
+  if (step === 'goal-priority' && (answers.goalCount ?? 0) <= 1) return true;
   return false;
 }
 

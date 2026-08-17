@@ -133,7 +133,11 @@ export async function completeOnboarding(page: Page): Promise<void> {
   await page.getByPlaceholder('Confirm password').fill(FORM_PASSWORD);
   await cta(page, 'Create account').click();
 
-  await onScreen(page, 'About you');
+  // age and sex are two screens now — see FLOW
+  await onScreen(page, 'How old are you?');
+  await cta(page, 'Continue').click();
+
+  await onScreen(page, 'And your sex');
   await cta(page, 'Female').click();
   await cta(page, 'Continue').click();
 
@@ -163,11 +167,26 @@ export async function completeOnboarding(page: Page): Promise<void> {
   await option(page, 'I forget').click();
   await cta(page, 'Continue').click();
 
-  // the waking window and the meals, one screen since 0.12
+  // the waking window and the meals are two screens again: four time pickers
+  // on one was the densest moment in the flow
   await onScreen(page, 'Your day');
   await cta(page, 'Continue').click();
 
+  await onScreen(page, 'When do you eat?');
+  await cta(page, 'Continue').click();
+
+  // an easy number before the hard list
+  await onScreen(page, /How many things are you taking/);
+  await cta(page, 'One or two').click();
+  await cta(page, 'Continue').click();
+
   await onScreen(page, 'What are you already taking?');
+  await cta(page, 'Continue').click();
+
+  /* The first screen that tells them something. With an empty stack there is
+     nothing to conflict, and it must still say what it checked rather than
+     render blank — which is what this assertion is for. */
+  await expect(page.locator('.ob-body')).toContainText(/fights anything else|worth knowing/);
   await cta(page, 'Continue').click();
 
   await onScreen(page, /Has anything you.ve taken not agreed with you/);
@@ -185,6 +204,11 @@ export async function completeOnboarding(page: Page): Promise<void> {
   // by class rather than by role.
   await page.locator('button.ob-goal-icon').first().click();
   await cta(page, /Continue \(1 selected\)/).click();
+
+  /* goal-priority is skipped with one goal — a question with one answer is not
+     a question. The next screen is the commitment. */
+  await onScreen(page, /How many days a week/);
+  await cta(page, 'Continue').click();
 
   await onScreen(page, 'Reminders at the right times');
   await cta(page, 'Not now').click();
@@ -216,6 +240,10 @@ export async function completeOnboarding(page: Page): Promise<void> {
     page.locator('.ob-rec', { hasText: IRON_PRODUCT }).locator('.ob-rec-diet'),
   ).toContainText('applies to your whole diet, not to this product');
   await cta(page, 'Create schedule').click();
+
+  /* Their own answers, before money is mentioned. Nothing on it is new. */
+  await onScreen(page, 'Here is your plan');
+  await cta(page, 'See what it costs').click();
 
   // The purchase is asked for here, after the list and before the schedule.
   await onScreen(page, 'Everything, in one place');

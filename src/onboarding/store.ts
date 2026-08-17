@@ -26,8 +26,14 @@ export interface OnboardingState {
   wake: string;
   sleep: string;
   meals: Meal[];
+  /** how many they say they take, before the list. Sizes the input that follows. */
+  stackCount: number | null;
   currentStack: string[];
   goals: string[];
+  /** goals in the order that matters to them, most first. Empty means no ranking given. */
+  goalPriority: string[];
+  /** days a week they chose to aim for. The target the adherence view measures against. */
+  commitmentDays: number;
   notificationsGranted: boolean;
   subscribed: boolean;
   recommendations: { id: string; selected: boolean }[];
@@ -52,8 +58,14 @@ export const initialState = (): OnboardingState => ({
   wake: '07:00',
   sleep: '23:00',
   meals: DEFAULT_MEALS.map((m) => ({ ...m })),
+  stackCount: null,
   currentStack: [],
   goals: [],
+  goalPriority: [],
+  /* Five, not seven. A default nobody chose should be the one somebody is most
+     likely to keep, and a target you miss twice in week one is a target you
+     stop looking at. */
+  commitmentDays: 5,
   notificationsGranted: false,
   subscribed: false,
   recommendations: [],
@@ -104,6 +116,9 @@ function load(userId: string | null): OnboardingState {
       currentStack: Array.isArray(parsed.currentStack) ? parsed.currentStack : [],
       goals: Array.isArray(parsed.goals) ? parsed.goals : [],
       recommendations: Array.isArray(parsed.recommendations) ? parsed.recommendations : [],
+      stackCount: typeof parsed.stackCount === 'number' ? parsed.stackCount : null,
+      goalPriority: Array.isArray(parsed.goalPriority) ? parsed.goalPriority : [],
+      commitmentDays: typeof parsed.commitmentDays === 'number' ? parsed.commitmentDays : 5,
       schedule: Array.isArray(parsed.schedule) ? parsed.schedule : [],
     };
     // a step index from a longer or reordered FLOW must not land out of bounds
@@ -171,6 +186,7 @@ export function useOnboardingStore() {
         ...s.survey,
         subscribed: s.subscribed,
         pickedCount: s.recommendations.filter((r) => r.selected).length,
+        goalCount: s.goals.length,
       })
     )
       i += dir;

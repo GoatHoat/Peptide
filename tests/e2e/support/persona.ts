@@ -222,7 +222,7 @@ const HANDLERS: Record<string, Handler> = {
   },
 
   profile: {
-    ready: async (page) => void (await expect(heading(page, 'About you')).toBeVisible()),
+    ready: async (page) => void (await expect(heading(page, 'How old are you?')).toBeVisible()),
     act: async (page, p) => {
       if (p.age !== undefined) {
         const rail = page.getByRole('slider', { name: 'Age' });
@@ -232,8 +232,7 @@ const HANDLERS: Record<string, Handler> = {
         for (let i = 0; i < Math.abs(p.age - from); i++) await page.keyboard.press(key);
         await expect(rail).toHaveAttribute('aria-valuenow', String(p.age));
       }
-      // exact, or "Male" also matches "Female"
-      if (p.gender) await page.getByRole('button', { name: p.gender, exact: true }).click();
+      // the gender question moved to its own screen; see `sex` below
       await cta(page, 'Continue').click();
     },
   },
@@ -335,6 +334,94 @@ const HANDLERS: Record<string, Handler> = {
     act: async () => {
       /* holds itself for 2.2s and advances on its own */
     },
+  },
+
+  sex: {
+    ready: async (page) => void (await expect(heading(page, 'And your sex')).toBeVisible()),
+    act: async (page, p) => {
+      // exact, or "Male" also matches "Female"
+      if (p.gender) await page.getByRole('button', { name: p.gender, exact: true }).click();
+      await cta(page, 'Continue').click();
+    },
+  },
+
+  meals: {
+    ready: async (page) => void (await expect(heading(page, 'When do you eat?')).toBeVisible()),
+    act: async (page, p) => {
+      if (p.meals === 'none') {
+        /* One at a time, re-querying each round. The list re-renders after
+           every removal, so a batch of locators collected up front goes stale
+           on the second click. */
+        /* By name, and the list settles between each. The rows animate out, so
+           clicking `.first()` back to back catches a button mid-transition —
+           "element is not stable", then detached. */
+        for (const meal of ['Breakfast', 'Lunch', 'Dinner']) {
+          const btn = page.getByRole('button', { name: `Remove ${meal}` });
+          if ((await btn.count()) === 0) continue;
+          await btn.click();
+          await expect(btn).toHaveCount(0);
+        }
+      }
+      await cta(page, 'Continue').click();
+    },
+  },
+
+  'stack-count': {
+    ready: async (page) =>
+      void (await expect(heading(page, /How many things are you taking/)).toBeVisible()),
+    act: async (page, p) => {
+      // the count is optional; a persona with a stack answers it, others skip
+      const n = (p.stack ?? []).length;
+      const label = n === 0 ? 'Nothing yet' : n <= 2 ? 'One or two' : n <= 5 ? 'Three to five' : 'Six or more';
+      await cta(page, label).click();
+      await cta(page, 'Continue').click();
+    },
+  },
+
+  'stack-insight': {
+    ready: async (page, ) => {
+      /* Either heading is correct — which one depends on whether anything they
+         listed conflicts. What must never happen is a blank body. */
+      await expect(
+        page.getByRole('heading', { name: /worth knowing|fights anything else/ }),
+      ).toBeVisible();
+    },
+    act: async (page) => void (await cta(page, 'Continue').click()),
+  },
+
+  'goal-priority': {
+    ready: async (page) =>
+      void (await expect(heading(page, 'Which of those matters most?')).toBeVisible()),
+    act: async (page) => {
+      /* Whatever is on the screen, not what the persona asked for: persona 6
+         empties the goals in the store and reopens, so the options here are
+         whatever survived that. Clicking a named goal would be asserting the
+         fixture rather than driving the screen. */
+      const options = page.locator('.ob-option');
+      if ((await options.count()) > 0) await options.first().click();
+      await cta(page, 'Continue').click();
+    },
+  },
+
+  commitment: {
+    ready: async (page) =>
+      void (await expect(heading(page, /How many days a week/)).toBeVisible()),
+    act: async (page) => void (await cta(page, 'Continue').click()),
+  },
+
+  'plan-preview': {
+    ready: async (page) => {
+      await expect(heading(page, 'Here is your plan')).toBeVisible();
+      // every row is built from an answer; an empty value would be a lie
+      await expect(page.locator('.ob-preview-row')).toHaveCount(4);
+    },
+    act: async (page) => void (await cta(page, 'See what it costs').click()),
+  },
+
+  'free-pick': {
+    ready: async (page) =>
+      void (await expect(heading(page, 'Free covers one product')).toBeVisible()),
+    act: async (page) => void (await cta(page, 'Build my schedule').click()),
   },
 
   recommendations: {

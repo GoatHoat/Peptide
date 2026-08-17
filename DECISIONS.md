@@ -77,3 +77,27 @@ broken or non-compliant.
 - **The rail is not drawn on an empty day.** It is a 2px line marking the
   passage of the day beside the rows; with no rows it ran 200px down the side of
   an illustration and read as a rendering fault.
+
+## The longer onboarding (17 August)
+
+- **27 steps, not 28.** The prompt's arithmetic was 20 + six additions + two
+  splits = 28. Splitting `profile` into age and sex adds one step, not two, and
+  splitting `day` into window and meals adds one — so eight changes add eight
+  screens to 20 minus one, because `free-pick` was already counted in the 20.
+  27 is inside the 24–28 band and no step was padded to reach a number.
+- **`day` splits by prop, not by component.** `Day` renders the sleep dial and
+  the meal list already; `only="window" | "meals"` picks which. Duplicating the
+  time-picker plumbing into a second component would have been the larger change
+  for no behavioural difference.
+- **`commitment` defaults to five days, not seven.** A default nobody chose
+  should be the one most people keep, and a target missed twice in week one is
+  a target people stop looking at.
+- **`stack-insight` uses `checkPlacement` from `lib/conflicts.ts`** rather than
+  its own rules, so the screen cannot promise a separation the schedule solver
+  then fails to make.
+- **`goal-priority` stores an order, not a weight.** The chosen goal moves to
+  the front of the list; nothing is scored. A weight would need `recommend.ts`
+  to grow a ranking model, which is a larger change than this screen earns.
+- **Four new steps are in `SKIPPABLE`** — sex, stack-count, goal-priority,
+  commitment — and each has a neutral default that produces the same result as
+  answering: no sex, no count, no ranking, five days.

@@ -725,6 +725,60 @@
 /* Not a lock and not a warning: a statement about which plan tracks it. */
 /* The way past the paywall. Same width as the buy button and the same height
    as any other control — visible is the whole requirement. */
+/* The days-a-week picker. Seven small targets in a row, so each one is padded
+   out to 44 rather than drawn at 44 — the row has to fit on a 375px screen. */
+.ob-days {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+}
+.ob-day {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--t2);
+  font-size: calc(17px * var(--text-scale));
+  font-weight: 600;
+}
+.ob-day.on {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Their own answers, reflected back. Rows rather than prose, because the point
+   is that each line is a thing they said. */
+.ob-preview {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ob-preview-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 15px 16px;
+  border-radius: 16px;
+  background: var(--card);
+}
+.ob-preview-label {
+  flex: none;
+  color: var(--t3);
+  font-size: calc(14px * var(--text-scale));
+}
+.ob-preview-value {
+  min-width: 0;
+  text-align: right;
+  color: var(--t1);
+  font-size: calc(15px * var(--text-scale));
+  font-weight: 600;
+  line-height: 1.35;
+}
+
 .ob-free-out {
   width: 100%;
   min-height: 48px;
@@ -760,24 +814,47 @@
   background: var(--accent-dim);
   box-shadow: inset 0 0 0 1.5px var(--accent);
 }
+/* A column, not a block of inline spans.
+   Every child here is a <span>, and vertical margin does nothing on an inline
+   box — so the `margin-top` on the dose, the reason and the diet note were all
+   being dropped and the four lines ran together with no gap at all. Making the
+   container a flex column both restores the spacing and puts it in one place
+   instead of four. */
 .ob-rec-main {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ob-rec-main > * {
+  display: block;
+}
+.ob-rec-main .ob-card-title {
+  line-height: 1.3;
 }
 .ob-rec-dose {
-  margin-top: 3px;
   font-size: 13px;
+  line-height: 1.45;
   color: var(--t3);
   font-variant-numeric: tabular-nums;
 }
 .ob-rec-why {
-  margin-top: 7px;
   font-size: 14px;
   color: var(--t2);
   line-height: 1.45;
 }
+/* The vegetarian note, which had no rule at all — it inherited the card's
+   17px and sat flush against the reason above it. Tertiary and separated,
+   because it is a statement about the whole diet and must not read as part of
+   the figure. */
+.ob-rec-diet {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--t3);
+}
 .ob-rec-link {
-  margin-top: 9px;
+  margin-top: 3px;
   font-size: 14px;
   font-weight: 500;
   color: var(--accent-light);
