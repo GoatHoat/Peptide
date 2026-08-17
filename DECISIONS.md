@@ -115,3 +115,23 @@ broken or non-compliant.
   Deployed a preview first, then production, on the `halfpast` project this repo
   is linked to. `www.pepstack.fit` is a different project serving the marketing
   site and was not touched.
+
+## The doodle pattern (17 August)
+
+- **Generated from `tools/doodle.py` rather than hand-edited.** The seamless
+  wrap and the three-size/random-rotation field are arithmetic; doing them by
+  hand is how the first version ended up with uniform spacing. Re-runnable and
+  seeded, so a regeneration is reviewable as a diff.
+- **Stroke width 5.0, not a literal hairline.** `background-size: cover` scales
+  the 1179-wide canvas to about a third on a phone, so a 3px stroke lands
+  sub-pixel and 0.09 alpha washes it to nothing. 5.0 renders at roughly 1.6px,
+  which is what a hairline is meant to *look* like. The colour rule is obeyed
+  exactly: `rgba(255,255,255,0.09)` and nothing else in the file.
+- **Removed `.doodle-bg.welcome { opacity: 0.28 }`.** With the correct 0.09
+  alpha now in the file, multiplying by 0.28 gave 0.025 and the pattern was
+  invisible. Welcome is opacity 1; catch-up stays dimmer at 0.6 because cards
+  and a drag control sit on it.
+- **Deleted `public/doodle-pattern.png` (541 KB).** Nothing referenced it —
+  `styles.css:2810` loads the SVG. The prompt asked for a re-export at the size
+  the CSS uses; the CSS uses the SVG, so the honest answer was to delete the
+  dead export rather than regenerate one nothing loads.

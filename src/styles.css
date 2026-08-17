@@ -2811,8 +2811,12 @@ button {
   pointer-events: none;
   z-index: 0;
 }
-.doodle-bg.welcome { opacity: 0.28; }
-.doodle-bg.catchup-doodle { opacity: 0.18; }
+/* No extra opacity on welcome: the file now carries rgba(255,255,255,0.09) on
+   every stroke, and multiplying that by 0.28 as this used to is what made the
+   pattern invisible rather than subtle. Catch-up stays dimmer — cards and a
+   drag control sit on top of it and legibility wins. */
+.doodle-bg.welcome { opacity: 1; }
+.doodle-bg.catchup-doodle { opacity: 0.6; }
 @media (prefers-reduced-transparency: reduce) {
   .doodle-bg { opacity: 0.1 !important; }
 }
