@@ -21,9 +21,29 @@ reference, but the SQL editor struggles with a paste that size — use these.
 | 12 | 0029_ingredient_rows | 652 ingredient rows, 548 synonyms |
 | 13 | 0030_growth_goal_tag | tags the 19 growth-category products so the Growth goal matches |
 | 14 | 0031_peptides_have_no_dose | triggers that stop a peptide carrying timing or being scheduled |
+| 15 | 0032_ingredient_search | search across the ingredient panel, not just names |
+| 16 | 0033_serving_sizes | the label's own serving, so no amount is computed |
+| 17 | 0034_dose_skips | the reason and note captured on the catch-up screen |
+| 18 | 0035_onboarded_at | **the onboarding gate reads this** — without it onboarding re-runs on a new device |
+| 19 | 0036_drop_injection_site | removes the last injection-related column |
+| 20 | 0037_tiers | **the whole free/pro split** — `free_rank`, the stack-limit trigger, `my_entitlement()` |
+| 21 | 0038_user_facts | `user_facts`, key validation, the tag trigger — the assistant's memory |
 
-Order matters. 03 must run before 04, and 11 before 12. Every file is
-idempotent, so a re-run changes nothing and a partial run can be resumed.
+Order matters. 03 must run before 04, and 11 before 12.
+
+**20 must run after 08, and 08 must not be re-run after 20.** `0025` bulk-inserts
+into `stack_items`; once `0037` has installed the free-tier trigger that insert
+raises `free_tier_stack_limit` for any free account with two or more scheduled
+products, and the migration aborts. A clean in-order run is fine. Re-running 08
+afterwards is not, which is the one exception to the line below.
+
+Every other file is idempotent, so a re-run changes nothing and a partial run can
+be resumed.
 
 If one fails, stop and read the error rather than continuing — a later file
 will usually depend on it.
+
+> Rows 15–21 were added by the independent audit pass; the table had stopped at
+> 14 while the directory held files through 21. See `AUDIT_INDEPENDENT.md`.
+> Check what is already applied before running anything — `FINISH_REPORT.md` §2
+> and this table disagree about how much of the list is behind you.
