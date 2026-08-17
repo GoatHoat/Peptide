@@ -203,3 +203,44 @@ in its title. That fixture does not exist.
 Time in the run, not a blocker. The harness works; the two tests need a longer
 budget than the session had left, and one of them was blocked by a dev server
 left holding port 5174 from the previous attempt.
+
+
+---
+
+# Part A, third attempt — 17 August, later
+
+Still **PARTIAL**, and this is the third time. Exactly what happened:
+
+**Run A got into the app.** The failure snapshot shows Today with its week
+strip, Discover, "Meet PepStack AI", and "You: Smoke" — all four panels
+rendered, so onboarding completed with seven goals, a schedule was built, and
+the app phase was under way. It then hit the 900-second limit before the
+recorder printed, so **no screen-by-screen list exists**.
+
+**Run B was still executing** when the session ended. No result either way.
+
+**No `SCREENS`/`FINDINGS` block was ever printed by either run.** The recorder
+only prints at the end of a passing test, which is the design flaw: a run that
+times out throws away everything it observed on the way.
+
+## The two things to change before a fourth attempt
+
+1. **Print incrementally, not at the end.** `visit()` should `console.log` each
+   screen as it is reached. Then a timeout still yields the list up to the point
+   it stopped, which is the whole value of a walk.
+2. **The walk is too slow.** Roughly 15 minutes for Run A, against ~22 seconds
+   for `onboarding.spec.ts` over the same flow. The cost is fixed
+   `waitForTimeout` calls — 350ms per goal, 450ms per stack entry, 1800ms per
+   assistant question, 600-900ms between panels — which add up to minutes of
+   pure sleeping. They should be replaced with waits on actual conditions.
+
+Neither is a product defect and neither is large. They are the reason the run
+has not produced its report three times.
+
+## Unchanged from the second attempt
+
+The goals-reel finding stands: seven `.ob-goal-icon` buttons exist but only the
+centred one accepts a tap.
+
+The zinc-inside-a-multivitamin question is **still unanswered** — the stub
+catalogue holds no multivitamin, so `stack-insight` was never asked it.
