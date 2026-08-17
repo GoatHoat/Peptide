@@ -22,7 +22,7 @@ Most of what follows was acted on while it was being written. Current state as o
 | 2 | Offline tick silently dead, banner promised a sync that did not exist | **Fixed** in `6181e6f` — and it found two more unguarded call sites than this audit did |
 | 3 | Migration checklist seven short | **Fixed** in `ffe8cc4` |
 | 4 | `0025` re-run after `0037` aborts | **Documented** in the README itself |
-| 5 | `dismissFact().catch(() => {})` | **Still live** — `You.tsx:365`. See below |
+| 5 | `dismissFact().catch(() => {})` | **Still live** — `You.tsx:365`, unchanged as of `6bf4c02`. See below |
 | 6 | `ProSheet` falls back to "All 304 products" | **Still live** — `ProSheet.tsx:55` |
 | 7 | Width sweep never run | **Fixed** — now `tests/e2e/widths.spec.ts` |
 | 8 | Nine tap targets under 44 | **Five fixed**, `.tabs-tab` earlier; `.bodymap-chip` 36, `.setup-var` 40, `.recon-unit-btn` 36 remain on unswept screens |
@@ -47,6 +47,33 @@ On a *memory* feature that is the erasure path, so a user who forgets something
 and sees it gone may find it still there — and still being sent to Anthropic —
 next session. It is the last live instance of the pattern this audit kept
 finding, and it is three lines to fix.
+
+### §6b silently regressed two sections that were already signed off
+
+Worth more than either individual bug, because it is a property of how this run
+was structured rather than a coding mistake.
+
+Sections were completed, verified and ticked in order. §6b landed last — and
+broke two of the ones already closed:
+
+| Section | Closed at | How §6b regressed it |
+|---|---|---|
+| LEGAL 2 | 00:08 | Added `user_facts`, then fed those notes to Anthropic. The Privacy Policy's "what is sent" list became **wrong**, not merely incomplete. Fixed in `61698d8` |
+| §6 | 00:26 | Added `'What Pepstack remembers'` to `You.tsx` twice and once in the sheet sweep — three hardcoded names, which is precisely the find-and-replace §6 exists to prevent. Fixed in `6bf4c02` |
+
+This audit verified §6 at roughly 00:30 and reported "zero hardcoded name strings
+left in `src/`". That was **true when measured** and false forty minutes later.
+The §6b memory UI reintroduced them, and a point-in-time check has no way to know
+that.
+
+The lesson is not "check harder". It is that **a section-ordered run needs a
+re-verification pass at the end**, because the last section can invalidate the
+first, and nothing in the process re-reads what was already ticked. Both
+regressions here were introduced by the same commit, and neither was visible to
+the build, the type checker, or the suite.
+
+If these prompts are run again, the cheapest fix is to re-run §7's checks against
+the final tree rather than against the tree as each section closes.
 
 ### What this audit got wrong
 
