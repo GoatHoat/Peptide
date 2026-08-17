@@ -1,4 +1,5 @@
 import { anonApiKey, functionUrl, supabase } from './supabaseClient';
+import { readScoped, writeScoped } from './storage';
 import type {
   AskAnswer,
   AskCard,
@@ -89,6 +90,10 @@ function readCard(raw: unknown): AskCard | null {
   return {
     slug,
     name,
+    kind: str(row.kind),
+    /* Absent on an older deployment of the function, which reads as "do not
+       number these" rather than as position 0. */
+    rank: typeof row.rank === 'number' ? row.rank : null,
     brand: str(row.brand),
     form: str(row.form),
     reason: str(row.reason) ?? '',
@@ -205,7 +210,13 @@ export type AskEntry =
   | { id: string; role: 'assistant'; text: string; cards: AskCard[]; stub: boolean }
   | { id: string; role: 'error'; text: string; code: AskFailureCode; retryAfter: number | null; question: string };
 
-const THREAD_KEY = 'pepstack.ask.v1';
+/**
+ * The conversation is stored per account, never per browser.
+ *
+ * It used to be a fixed key, so on a shared device a second person signing in
+ * saw the first person's whole conversation. See lib/storage.ts.
+ */
+const THREAD_BASE = 'pepstack.ask.v1';
 
 /**
  * Enough to scroll back through, capped so a long-running thread cannot fill
@@ -238,11 +249,10 @@ export function turnsFrom(entries: AskEntry[]): AskTurn[] {
  * JSON any script on the origin could have written, and it renders as product
  * recommendations.
  */
-export function loadThread(): AskEntry[] {
+export function loadThread(userId: string | null): AskEntry[] {
   try {
-    const raw = localStorage.getItem(THREAD_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as unknown;
+    const parsed = readScoped<unknown>(THREAD_BASE, userId, null);
+    if (parsed === null) return [];
     if (!Array.isArray(parsed)) return [];
     const out: AskEntry[] = [];
     for (const item of parsed) {
@@ -280,12 +290,8 @@ export function loadThread(): AskEntry[] {
   }
 }
 
-export function saveThread(entries: AskEntry[]): void {
-  try {
-    localStorage.setItem(THREAD_KEY, JSON.stringify(entries.slice(-MAX_PERSISTED)));
-  } catch {
-    /* private mode, quota — losing the thread is survivable, crashing is not */
-  }
+export function saveThread(userId: string | null, entries: AskEntry[]): void {
+  writeScoped(THREAD_BASE, userId, entries.slice(-MAX_PERSISTED));
 }
 
 /**

@@ -74,6 +74,18 @@ export interface AskCitation {
 export interface AskCard {
   slug: string;
   name: string;
+  /**
+   * 'supplement' or 'peptide'. Peptide cards are never numbered and never
+   * offered to the schedule — the ranking is the part that turns a reference
+   * list into a personalised recommendation, and that is the line this product
+   * does not cross for unapproved compounds. See PROMPT_V2.md section 3.
+   */
+  kind: string | null;
+  /**
+   * 1-based position, best first, or null where ranking does not apply.
+   * The model is told the order it passes items in is the order shown.
+   */
+  rank: number | null;
   brand: string | null;
   form: string | null;
   /** one line, the model's reason for this product for this person */
@@ -324,9 +336,28 @@ export const INSTRUCTIONS = [
   '',
   'What you do:',
   '- Answer from the catalogue below. It is the only set of products that exists here.',
-  '- Suggest at most three products, by calling show_products, when the question asks',
-  '  what to take. Questions about timing, interactions or what something does usually',
-  '  need no cards at all.',
+  '',
+  'ASK BEFORE YOU RECOMMEND. When someone asks what to take for something — skin, sleep,',
+  'energy, anything — do not answer with products on the first turn. Ask one or two short',
+  'questions first, then recommend on the next turn. "What should I take for my skin"',
+  'covers acne, dryness, ageing and hair, and those are different products; answering',
+  'immediately means guessing which one they meant and being wrong most of the time.',
+  '',
+  '- Ask at most two questions, in one message, as plain sentences. Not a numbered list,',
+  '  not a form.',
+  '- Only ask what you do not already know. The profile below carries their age, sex,',
+  '  diet, what has disagreed with them and which forms they prefer — asking again for',
+  '  any of it reads as not having looked.',
+  '- Good questions narrow the product: what specifically they want to change, how long',
+  '  it has been going on, what they have already tried.',
+  '- If they have already told you enough, or they push back and ask for the answer,',
+  '  recommend straight away. Asking twice is worse than guessing once.',
+  '',
+  '- Suggest at most three products, by calling show_products, once you know enough.',
+  '  Questions about timing, interactions or what something does usually need no cards',
+  '  at all.',
+  '- The order you pass them in is the order they are shown, numbered 1 to 3, best first.',
+  '  Put the one you would actually pick at the top and mean it.',
   '- Call get_product_detail before answering about a specific product. The index below',
   '  carries names and goals only.',
   '- Say when the evidence is thin. The catalogue records that, and hiding it is the one',
@@ -541,12 +572,21 @@ export function buildCards(
   fallback?: Map<string, CatalogueEntry>,
 ): AskCard[] {
   const cards: AskCard[] = [];
-  for (const item of requested.slice(0, MAX_CARDS)) {
-    const entry = catalogue.get(item.slug) ?? fallback?.get(item.slug);
-    if (!entry) continue;
+  /* Ranking is decided once for the whole answer rather than per card: a set
+     that contains a peptide is a reading list, and numbering three items where
+     one of them is unranked would be worse than numbering none. */
+  const picked = requested
+    .slice(0, MAX_CARDS)
+    .map((item) => ({ item, entry: catalogue.get(item.slug) ?? fallback?.get(item.slug) }))
+    .filter((x): x is { item: RequestedCard; entry: CatalogueEntry } => !!x.entry);
+  const rankable = picked.every((x) => (x.entry.kind ?? 'peptide') === 'supplement');
+
+  for (const [i, { item, entry }] of picked.entries()) {
     cards.push({
       slug: entry.slug,
       name: entry.name,
+      kind: entry.kind ?? null,
+      rank: rankable ? i + 1 : null,
       brand: entry.brand,
       form: entry.product_form,
       reason: item.reason,

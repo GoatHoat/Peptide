@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../lib/auth';
 import { LogoMark } from '../onboarding/chrome';
 import { Sheet } from '../components/Sheet';
+import { AddSchedule } from './AddSchedule';
+import { findGlossaryBySlug, type GlossaryEntry } from '../lib/api';
 import { EVIDENCE, Pill, TIMING_LABEL } from '../components/Pills';
 import { IconChevron, IconDoc } from '../components/Icons';
 import {
@@ -48,23 +50,42 @@ export function AskAI({
   seed?: string | null;
   onSeedUsed?: () => void;
 }) {
-  const [entries, setEntries] = useState<AskEntry[]>(loadThread);
+  const { user } = useAuth();
+  /* Keyed to the account. Reading before the session has settled would load the
+     `:anon` record and then write it back under that key, which is the same
+     bug in a slower form — so the thread is loaded in an effect once `user` is
+     known rather than in the initial state. */
+  const [entries, setEntries] = useState<AskEntry[]>([]);
+  const [threadLoaded, setThreadLoaded] = useState(false);
+
+  useEffect(() => {
+    setEntries(loadThread(user?.id ?? null));
+    setThreadLoaded(true);
+  }, [user?.id]);
   const [draft, setDraft] = useState('');
   const [pending, setPending] = useState(false);
   const [openCard, setOpenCard] = useState<AskCard | null>(null);
+  /* The card whose Add to schedule was tapped, resolved to its catalogue row.
+     The model only ever sees slugs, so anything acting on a card has to look
+     the row up before it can do anything with it. */
+  const [scheduling, setScheduling] = useState<GlossaryEntry | null>(null);
+  const [resolving, setResolving] = useState<string | null>(null);
   /* Guideline 1.2: a chat surface has to offer a way to report what it says.
      Keyed by entry id so the control reports the answer it sits under. */
   const [reporting, setReporting] = useState<string | null>(null);
   const [reported, setReported] = useState<Set<string>>(new Set());
   const [reportReason, setReportReason] = useState('');
-  const { user } = useAuth();
+  
   const taRef = useRef<HTMLTextAreaElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const mounted = useRef(false);
 
   useEffect(() => {
-    saveThread(entries);
-  }, [entries]);
+    // never write back before the first read, or an empty thread overwrites
+    // the saved one on mount
+    if (!threadLoaded) return;
+    saveThread(user?.id ?? null, entries);
+  }, [entries, threadLoaded, user?.id]);
 
   useEffect(() => {
     if (!seed) return;
@@ -199,7 +220,20 @@ export function AskAI({
               {entry.cards.length > 0 && (
                 <div className="ask-cards">
                   {entry.cards.map((card) => (
-                    <AnswerCard key={card.slug} card={card} onPapers={() => setOpenCard(card)} />
+                    <AnswerCard
+                      key={card.slug}
+                      card={card}
+                      onPapers={() => setOpenCard(card)}
+                      onSchedule={async () => {
+                        setResolving(card.slug);
+                        try {
+                          setScheduling(await findGlossaryBySlug(card.slug));
+                        } finally {
+                          setResolving(null);
+                        }
+                      }}
+                      busy={resolving === card.slug}
+                    />
                   ))}
                 </div>
               )}
@@ -316,6 +350,18 @@ export function AskAI({
         </button>
       </Sheet>
 
+      <Sheet open={!!scheduling} onClose={() => setScheduling(null)} title="Add to Schedule">
+        {scheduling && user && (
+          <AddSchedule
+            userId={user.id}
+            glossaryId={scheduling.id}
+            defaultName={scheduling.name}
+            onAdded={() => setScheduling(null)}
+            onClose={() => setScheduling(null)}
+          />
+        )}
+      </Sheet>
+
       <Sheet open={!!openCard} onClose={() => setOpenCard(null)} title={openCard?.name ?? ''}>
         {openCard && <Citations card={openCard} />}
       </Sheet>
@@ -327,13 +373,30 @@ export function AskAI({
  * One product under an answer. Every field is the catalogue's, materialised by
  * the server — the only thing the model wrote is the reason line.
  */
-function AnswerCard({ card, onPapers }: { card: AskCard; onPapers: () => void }) {
+function AnswerCard({
+  card,
+  onPapers,
+  onSchedule,
+  busy,
+}: {
+  card: AskCard;
+  onPapers: () => void;
+  onSchedule: () => void;
+  busy: boolean;
+}) {
   const evidence = card.evidence && card.evidence in EVIDENCE ? (card.evidence as keyof typeof EVIDENCE) : null;
   const sub = [card.brand, card.form].filter(Boolean).join(' · ');
+  /* Peptides are never numbered and never offered to the schedule. The server
+     decides this — `rank` is null for the whole set when any of them is a
+     peptide — and the client does not second-guess it. */
+  const isPeptide = (card.kind ?? 'supplement') === 'peptide';
 
   return (
     <div className="ask-card">
-      <span className="ask-card-name t-body-m">{card.name}</span>
+      <span className="ask-card-name t-body-m">
+        {card.rank !== null && <span className="ask-card-rank">{card.rank}</span>}
+        {card.name}
+      </span>
       {sub && <span className="ask-card-sub t-caption">{sub}</span>}
       {card.reason && <p className="ask-card-reason t-secondary">{card.reason}</p>}
 
@@ -348,15 +411,22 @@ function AnswerCard({ card, onPapers }: { card: AskCard; onPapers: () => void })
         </span>
       )}
 
-      {card.citations.length > 0 ? (
-        <button className="ask-card-papers pressable" onClick={onPapers}>
-          <IconDoc size={13} color="var(--t3)" />
-          {card.citations.length === 1 ? '1 paper' : `${card.citations.length} papers`}
-          <IconChevron size={12} color="var(--t3)" />
-        </button>
-      ) : (
-        <span className="ask-card-papers-none t-caption">No paper on file for this one yet.</span>
-      )}
+      <div className="ask-card-actions">
+        {card.citations.length > 0 ? (
+          <button className="ask-card-papers pressable" onClick={onPapers}>
+            <IconDoc size={13} color="var(--t3)" />
+            {card.citations.length === 1 ? '1 paper' : `${card.citations.length} papers`}
+            <IconChevron size={12} color="var(--t3)" />
+          </button>
+        ) : (
+          <span className="ask-card-papers-none t-caption">No paper on file for this one yet.</span>
+        )}
+        {!isPeptide && (
+          <button className="ask-card-add pressable" onClick={onSchedule} disabled={busy}>
+            {busy ? 'Opening…' : 'Add to schedule'}
+          </button>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { supabase } from './supabaseClient';
 import { toISODate } from './date';
+import { clearLocalState } from './storage';
 
 // ============================================================================
 // Types — mirror supabase/migrations/0001_init.sql
@@ -742,9 +743,13 @@ export async function getProgressPhotoUrl(path: string): Promise<string> {
  * cryptographically valid until it expires, so signing out is what actually
  * ends the session on the device.
  */
-export async function deleteAccount(): Promise<void> {
+export async function deleteAccount(userId: string | null): Promise<void> {
   const { error } = await supabase.rpc('delete_account');
   if (error) throw error;
+  /* Deleting the server-side account and leaving the person's onboarding
+     answers and whole assistant conversation sitting in local storage rather
+     defeats the point of deleting it. */
+  clearLocalState(userId);
   await supabase.auth.signOut();
 }
 
@@ -891,4 +896,16 @@ export async function deleteProgressNote(note: {
   }
   const { error } = await supabase.from('progress_notes').delete().eq('id', note.id);
   if (error) throw error;
+}
+
+/**
+ * The catalogue row behind a slug.
+ *
+ * The assistant's cards carry a slug rather than an id — the model only ever
+ * sees slugs — so anything that acts on a card has to resolve it first.
+ */
+export async function findGlossaryBySlug(slug: string): Promise<GlossaryEntry | null> {
+  const { data, error } = await supabase.from('glossary').select('*').eq('slug', slug).maybeSingle();
+  if (error) throw error;
+  return (data as GlossaryEntry | null) ?? null;
 }

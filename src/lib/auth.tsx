@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from './supabaseClient';
+import { clearLocalState, migrateAnonState } from './storage';
 
 interface AuthState {
   session: Session | null;
@@ -24,6 +25,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
+      /* The one place the anonymous hand-off happens. Onboarding's first
+         screens run before an account exists, so those answers start under
+         `:anon`; doing this per screen is how one screen ends up missing it. */
+      if (s?.user?.id) migrateAnonState(s.user.id);
       setSession(s);
       setLoading(false);
     });
@@ -47,6 +52,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
+    /* Before the call, while we still know who is leaving. Everything this app
+       persists locally is scoped to an account and none of it survives that
+       account signing out — otherwise the next person to use the device
+       inherits a conversation and a set of onboarding answers. Other accounts'
+       keys are untouched. */
+    clearLocalState(session?.user?.id ?? null);
     await supabase.auth.signOut();
   };
 

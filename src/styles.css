@@ -45,7 +45,7 @@
   --cell-empty: #0e0e11;
 
   --margin: 20px;
-  --tab-h: 48px;
+  --tab-h: 58px;
 
   /* Larger Text multiplies this rather than zooming the layout — zoom
      scales the whole box model (including the fixed 402x874 desktop
@@ -259,10 +259,14 @@ button {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  width: 232px;
-  bottom: max(34px, calc(12px + env(safe-area-inset-bottom)));
+  width: 272px;
+  /* Lower and larger. It sat 34px off the bottom at 232x48, which read as
+     floating high on a tall phone; 20px and 272x58 puts it where the thumb
+     already is. The 34px in every `calc(var(--tab-h) + 34px + ...)` below is
+     the same reserve, and still clears it. */
+  bottom: max(20px, calc(8px + env(safe-area-inset-bottom)));
   height: var(--tab-h);
-  border-radius: 24px;
+  border-radius: 29px;
   background: var(--card);
   padding: 7px;
   z-index: 20;
@@ -279,7 +283,7 @@ button {
   top: 0;
   left: 0;
   height: 100%;
-  border-radius: 17px;
+  border-radius: 22px;
   /* glass, lit from the top-left, exactly as the export renders it */
   background: linear-gradient(160deg, var(--pill-1), var(--pill-2));
   will-change: transform, width;
@@ -481,8 +485,12 @@ button {
   gap: 12px;
   background: var(--card);
   border-radius: 18px;
-  height: 64px;
-  padding: 0 16px;
+  /* 64px is the drawn height and stays the height of an ordinary row. It was a
+     fixed `height`, so a long product name — "BulkSupplements.com Vitamin B12
+     1% Methylcobalamin" wraps to three lines — ran straight out of the box.
+     min-height keeps the design and lets the row grow when the name needs it. */
+  min-height: 64px;
+  padding: 12px 16px;
   margin-bottom: 8px;
 }
 .dose:last-child {
@@ -521,8 +529,13 @@ button {
 .dose-time {
   width: 61px;
   flex: none;
+  /* stays with the first line of the name rather than centring against a row
+     that has grown to three lines */
+  align-self: flex-start;
+  padding-top: 1px;
   color: var(--t3);
   font-size: calc(13px * var(--text-scale));
+  font-variant-numeric: tabular-nums;
 }
 .dose-body {
   flex: 1;
@@ -533,6 +546,8 @@ button {
   line-height: calc(18px * var(--text-scale));
   font-weight: 600;
   letter-spacing: -0.1px;
+  /* long brand names have no spaces to break on in places */
+  overflow-wrap: anywhere;
 }
 .dose.taken .dose-name {
   color: var(--t2);
@@ -549,6 +564,7 @@ button {
   height: 24px;
   border-radius: 50%;
   flex: none;
+  align-self: center;
   transition: transform 120ms ease-out;
 }
 /* 24px is the drawn size; the tap target is the full 44 */
@@ -2349,4 +2365,64 @@ button {
 .progress-row.holding {
   background: var(--card-hi);
   border-radius: 14px;
+}
+
+/* The rank on an assistant recommendation. Numbered 1-3, best first, so the
+   order means something rather than being a list the eye has to guess at.
+   Never rendered on a peptide card — the server sends a null rank for the whole
+   set when one of them is a peptide, and ranking is the part that would turn a
+   reference list into a personalised recommendation. */
+.ask-card-rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  border-radius: 9px;
+  background: var(--purple);
+  color: #fff;
+  font-size: calc(11px * var(--text-scale));
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  vertical-align: 1px;
+}
+
+.ask-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.ask-card-add {
+  margin-left: auto;
+  padding: 7px 12px;
+  border: 1px solid rgba(123, 92, 250, 0.4);
+  border-radius: 999px;
+  background: none;
+  color: var(--purple);
+  font: inherit;
+  font-size: calc(13px * var(--text-scale));
+}
+.ask-card-add:disabled { opacity: 0.5; }
+
+/* All three Discover panels sit side by side in one flex track, so the page
+   height is the height of the TALLEST of them — the product list. On the Ask
+   tab that meant scrolling a screen and a half of nothing past the composer,
+   because the list next door was still setting the page height.
+
+   An inactive panel is clamped to a screen and clipped. It stays mounted, keeps
+   its state and its scroll position, and simply stops deciding how far the page
+   goes. The active one is unrestricted, so the list still scrolls fully when it
+   is the one being read. */
+.tabs-panel:not(.on) {
+  /* The same reserve `.ask` uses for itself: everything above the panel plus
+     the strip kept for the tab bar. Clamping to a full 100dvh left the Ask tab
+     with 231px of scroll past the composer, because the clamped neighbours were
+     still taller than the panel being read. */
+  max-height: calc(
+    100dvh - 150px - env(safe-area-inset-top) - var(--tab-h) - 34px - env(safe-area-inset-bottom)
+  );
+  overflow: hidden;
 }

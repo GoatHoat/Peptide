@@ -108,7 +108,7 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
          which is the worst kind of wrong. */
       await refreshProfile().catch(() => {});
     }
-    markOnboarded();
+    markOnboarded(session?.user?.id ?? null);
     onFinished();
   };
 

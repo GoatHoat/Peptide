@@ -300,7 +300,7 @@ export function You() {
             setDeleting(true);
             setDeleteError(null);
             try {
-              await deleteAccount();
+              await deleteAccount(user?.id ?? null);
               /* No navigation and no success message on purpose: the auth
                  listener sees the session end and swaps the whole app back to
                  the sign-in screen, which is the only honest confirmation. */

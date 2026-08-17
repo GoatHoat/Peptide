@@ -1,3 +1,5 @@
+import { useAuth } from '../lib/auth';
+import { readScoped, writeScoped, removeScoped } from '../lib/storage';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FLOW, isSkipped, type Step } from './flow';
 
@@ -66,6 +68,13 @@ export interface PersistedAnswers {
   forms?: string[] | null;
 }
 
+/**
+ * Scoped to the account. This held age, sex, diet, reactions, goals, wake and
+ * sleep times, meal times and the current stack under one fixed key, so a
+ * second person signing in on the same device inherited all of it. The first
+ * screens legitimately run before a user exists and start under `:anon`, and
+ * lib/storage.ts migrates that onto the account at sign-in.
+ */
 const KEY = 'pepstack.onboarding.v1';
 
 /**
@@ -73,11 +82,10 @@ const KEY = 'pepstack.onboarding.v1';
  * can be discarded without warning, and losing eleven screens of answers is the
  * kind of thing people do not come back from.
  */
-function load(): OnboardingState {
+function load(userId: string | null): OnboardingState {
   try {
-    const raw = localStorage.getItem(KEY);
-    if (!raw) return initialState();
-    const parsed = JSON.parse(raw) as Partial<OnboardingState>;
+    const parsed = readScoped<Partial<OnboardingState> | null>(KEY, userId, null);
+    if (!parsed) return initialState();
     // merge over defaults so a store written by an older build still opens
     const base = initialState();
     const merged: OnboardingState = {
@@ -107,15 +115,27 @@ function load(): OnboardingState {
 }
 
 export function useOnboardingStore() {
-  const [state, setState] = useState<OnboardingState>(load);
+  /* The account these answers belong to. Null through the first screens, which
+     run before anyone has signed in — those legitimately save under `:anon` and
+     are migrated onto the account at sign-in by lib/storage. */
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
+
+  const [state, setState] = useState<OnboardingState>(() => load(null));
+  const [loadedFor, setLoadedFor] = useState<string | null>(null);
+
+  /* Re-read when the account resolves or changes. Reading once on mount would
+     load the anonymous record and then write it back under whichever key
+     appeared later, which is the leak in a slower form. */
+  useEffect(() => {
+    setState(load(userId));
+    setLoadedFor(userId ?? 'anon');
+  }, [userId]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem(KEY, JSON.stringify(state));
-    } catch {
-      /* private mode, quota — losing persistence is survivable, crashing is not */
-    }
-  }, [state]);
+    if (loadedFor === null) return;
+    writeScoped(KEY, userId, state);
+  }, [state, userId, loadedFor]);
 
   const patch = useCallback((p: Partial<OnboardingState>) => {
     setState((s) => ({ ...s, ...p }));
@@ -158,13 +178,9 @@ export function useOnboardingStore() {
   );
 
   const reset = useCallback(() => {
-    try {
-      localStorage.removeItem(KEY);
-    } catch {
-      /* ignore */
-    }
+    removeScoped(KEY, userId);
     setState(initialState());
-  }, []);
+  }, [userId]);
 
   const step: Step = FLOW[state.step];
 
@@ -178,17 +194,18 @@ export type OnboardingApi = ReturnType<typeof useOnboardingStore>;
 
 /** Has the user finished onboarding at least once on this device? */
 export const DONE_KEY = 'pepstack.onboarded.v1';
-export const markOnboarded = () => {
-  try {
-    localStorage.setItem(DONE_KEY, '1');
-  } catch {
-    /* ignore */
-  }
-};
-export const hasOnboarded = () => {
-  try {
-    return localStorage.getItem(DONE_KEY) === '1';
-  } catch {
-    return false;
-  }
-};
+
+/**
+ * Whether this ACCOUNT has finished onboarding — not this browser.
+ *
+ * It was one unscoped key, so completing onboarding once meant every account
+ * that ever signed in on the device skipped it and landed on a Today screen
+ * built from the first person's answers.
+ *
+ * This is the local cache. `profiles.onboarded_at` is the source of truth, so
+ * signing in on a new phone does not re-run a flow the account has finished;
+ * see migration 0035 and App.tsx.
+ */
+export const markOnboarded = (userId: string | null) => writeScoped(DONE_KEY, userId, true);
+export const hasOnboarded = (userId: string | null) =>
+  readScoped<boolean>(DONE_KEY, userId, false) === true;

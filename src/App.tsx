@@ -47,7 +47,17 @@ function Body({ framed }: { framed: boolean }) {
   /* Onboarding owns the account creation, so it runs before the auth gate
      rather than behind it. Once finished it is never shown again on this
      device unless localStorage is cleared. */
-  const [onboarded, setOnboarded] = useState(() => hasOnboarded());
+  /* Keyed to the account, not the browser. This read a single unscoped flag,
+     so completing onboarding once meant every account that ever signed in on
+     the device skipped it and landed on a Today screen built from the first
+     person's answers. With no session there is nobody to have onboarded, so the
+     flow always runs — which is also what a brand new install should do. */
+  const userId = session?.user?.id ?? null;
+  const [onboarded, setOnboarded] = useState(() => hasOnboarded(null));
+
+  useEffect(() => {
+    setOnboarded(hasOnboarded(userId));
+  }, [userId]);
 
   if (loading) return <div className="app splash" />;
   if (!onboarded) return <Onboarding onFinished={() => setOnboarded(true)} />;

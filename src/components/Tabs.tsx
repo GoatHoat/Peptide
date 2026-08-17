@@ -185,7 +185,12 @@ export function Tabs({
         onPointerCancel={onPointerUp}
       >
         {tabs.map((t, i) => (
-          <div className="tabs-panel" key={t.id} style={{ width: `${100 / tabs.length}%` }} hidden={false}>
+          <div
+            className={`tabs-panel${i === index ? ' on' : ''}`}
+            key={t.id}
+            style={{ width: `${100 / tabs.length}%` }}
+            hidden={false}
+          >
             {children(t, i)}
           </div>
         ))}
