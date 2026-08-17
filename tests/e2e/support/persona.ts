@@ -339,7 +339,7 @@ const HANDLERS: Record<string, Handler> = {
 
   recommendations: {
     ready: async (page) => {
-      await expect(heading(page, 'What we found')).toBeVisible();
+      await expect(heading(page, 'Vitamins and minerals for you')).toBeVisible();
       await expect(page.locator('.ob-rec').first()).toBeVisible();
     },
     act: async (page, _p, run) => {
@@ -464,19 +464,96 @@ export async function runPersona(page: Page, p: Persona): Promise<RunRecord> {
   return run;
 }
 
+/**
+ * Where the onboarding store actually lives now.
+ *
+ * It used to be the bare key. `src/lib/storage.ts` scoped it per account and
+ * wrapped the payload — `pepstack.onboarding.v1:anon` before anyone has signed
+ * in, `pepstack.onboarding.v1:<uuid>` afterwards, each holding
+ * `{ userId, savedAt, data }`.
+ *
+ * These two helpers kept reading and writing the bare key. Nothing threw: they
+ * read `{}` and wrote somewhere the app does not look, so every test that
+ * rewrote the store and relaunched was asserting against a store it had not
+ * changed. Persona 6 is the one that noticed — it emptied the goals, got the
+ * goals it started with, and reported the fallback broken.
+ *
+ * Newest `savedAt` wins, because the anonymous record survives until the
+ * migration runs and both can exist for a moment.
+ */
+const STORE_PROBE = (base: string) => {
+  let best: { key: string; savedAt: number; data: Record<string, unknown> } | null = null;
+  for (let i = 0; i < localStorage.length; i += 1) {
+    const key = localStorage.key(i);
+    if (!key || !key.startsWith(`${base}:`)) continue;
+    try {
+      const parsed = JSON.parse(localStorage.getItem(key) ?? 'null');
+      if (!parsed || typeof parsed !== 'object' || !('data' in parsed)) continue;
+      const savedAt = typeof parsed.savedAt === 'number' ? parsed.savedAt : 0;
+      if (!best || savedAt >= best.savedAt) {
+        best = { key, savedAt, data: (parsed.data ?? {}) as Record<string, unknown> };
+      }
+    } catch {
+      /* a record that cannot be parsed is not the store */
+    }
+  }
+  return best;
+};
+
+/**
+ * Put a store on the device before the app boots.
+ *
+ * Written to the anonymous slot in the wrapped shape, because that is what a
+ * device that started onboarding and never signed in actually holds. Tests
+ * that seeded the bare key were seeding somewhere the app stopped reading, so
+ * the app booted from nothing and the assertion afterwards passed or failed on
+ * a store the test never wrote.
+ */
+export async function seedStore(page: Page, data: Record<string, unknown>): Promise<void> {
+  await page.addInitScript(
+    ({ base, data }) => {
+      localStorage.setItem(
+        `${base}:anon`,
+        JSON.stringify({ userId: null, savedAt: Date.now(), data }),
+      );
+    },
+    { base: STORE_KEY, data },
+  );
+}
+
 /** The persisted store, as the app would read it back on a cold open. */
 export async function readStore(page: Page): Promise<Record<string, unknown>> {
-  return page.evaluate((key) => JSON.parse(localStorage.getItem(key) ?? '{}'), STORE_KEY);
+  return page.evaluate(
+    ({ base, probeSrc }) => {
+      const probe = new Function(`return (${probeSrc})`)() as (b: string) => { data: Record<string, unknown> } | null;
+      return probe(base)?.data ?? {};
+    },
+    { base: STORE_KEY, probeSrc: STORE_PROBE.toString() },
+  );
 }
 
 /** Rewrite the store and reopen the app on it — a kill and a relaunch. */
 export async function relaunch(page: Page, patch: Record<string, unknown> = {}): Promise<void> {
   await page.evaluate(
-    ({ key, patch }) => {
-      const cur = JSON.parse(localStorage.getItem(key) ?? '{}');
-      localStorage.setItem(key, JSON.stringify({ ...cur, ...patch }));
+    ({ base, patch, probeSrc }) => {
+      const probe = new Function(`return (${probeSrc})`)() as (
+        b: string,
+      ) => { key: string; data: Record<string, unknown> } | null;
+      const found = probe(base);
+      /* Nothing saved yet means nobody has signed in either, so the anonymous
+         slot is the one the app will read on the next open. */
+      const key = found?.key ?? `${base}:anon`;
+      const userId = key.slice(base.length + 1);
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          userId: userId === 'anon' ? null : userId,
+          savedAt: Date.now(),
+          data: { ...(found?.data ?? {}), ...patch },
+        }),
+      );
     },
-    { key: STORE_KEY, patch },
+    { base: STORE_KEY, patch, probeSrc: STORE_PROBE.toString() },
   );
   await page.reload();
 }

@@ -187,7 +187,7 @@ export async function completeOnboarding(page: Page): Promise<void> {
      screen, and the next assertion is what fails if the paywall moves back in
      front of it. */
   // building-recs holds itself for 2.2s before the list appears.
-  await onScreen(page, 'What we found');
+  await onScreen(page, 'Vitamins and minerals for you');
   /* The answers reached the scorer. B12 is tagged for goals this run did not
      pick and is first anyway, because "no meat at all" makes it required —
      if the three questions ever stop being passed down to the rules, the list
@@ -195,12 +195,20 @@ export async function completeOnboarding(page: Page): Promise<void> {
   await expect(page.locator('.ob-rec').first()).toContainText(B12_PRODUCT);
   await expect(page.locator('.ob-rec-why').first()).toContainText('no reliable plant source');
   /* Iron is the one figure the app cannot pick without being told, and this
-     flow deliberately never asks — so both figures appear here too, each with
-     the vegetarian 1.8× already applied. Quietly showing 32 mg would be the
-     same defect wearing a different screen. */
+     flow deliberately never asks — so both published figures appear, exactly as
+     stored. This asserted 32 mg and 14 mg, which was 18 and 8 with the ODS
+     vegetarian 1.8x multiplied in. That figure is about iron from the whole
+     diet, not about a supplement, so printing it as a personal target stated
+     something ODS does not say. If anything ever multiplies a stored intake
+     again, this line is what fails. */
   await expect(
     page.locator('.ob-rec', { hasText: IRON_PRODUCT }).locator('.ob-rec-dose'),
-  ).toContainText('32 mg a day if you menstruate · 14 mg if you don’t');
+  ).toContainText('18 mg a day if you menstruate · 8 mg if you don’t');
+  /* And the multiplier itself still reaches the screen — as a sentence, under
+     the figure, saying what it actually applies to. */
+  await expect(
+    page.locator('.ob-rec', { hasText: IRON_PRODUCT }).locator('.ob-rec-diet'),
+  ).toContainText('applies to your whole diet, not to this product');
   await cta(page, 'Create schedule').click();
 
   // The purchase is asked for here, after the list and before the schedule.

@@ -1,7 +1,7 @@
 import type { Page, TestInfo } from '@playwright/test';
 import { expect, test } from './support/app';
 import { IRON_PRODUCT, B12_PRODUCT } from './support/catalogue';
-import { readStore, relaunch, runPersona, timeline, type Persona, type RunRecord } from './support/persona';
+import { readStore, relaunch, runPersona, seedStore, timeline, type Persona, type RunRecord } from './support/persona';
 
 /**
  * Twenty runs through onboarding — section 5 of PROMPT_PERSONALISATION.md.
@@ -558,14 +558,10 @@ test('a step index outside the flow clamps instead of blanking', async ({ page }
   /* Same store, a step index that no longer exists — what a build that
      shortened FLOW leaves behind on a device that had already started. The
      clamp in store.ts is the only thing between that and FLOW[undefined]. */
-  await page.addInitScript(() => {
-    localStorage.setItem('pepstack.onboarding.v1', JSON.stringify({ step: 999 }));
-  });
+  await seedStore(page, { step: 999 });
   await page.goto('/');
 
-  const last = await page.evaluate(
-    () => JSON.parse(localStorage.getItem('pepstack.onboarding.v1') ?? '{}').step,
-  );
+  const last = (await readStore(page)).step;
   /* 18 is the last index of a 19-screen FLOW, so this is also where the length
      of the flow is pinned: 0.12 asked for under 20 and this is what holds it
      there. A screen added back has to change this line and say why. */
@@ -576,10 +572,10 @@ test('a step index outside the flow clamps instead of blanking', async ({ page }
 });
 
 test('a negative step index clamps to the first screen', async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem('pepstack.onboarding.v1', JSON.stringify({ step: -4 }));
-  });
+  await seedStore(page, { step: -4 });
   await page.goto('/');
 
   await expect(page.locator('.ob-root')).toHaveAttribute('data-step', 'welcome');
+  // and the store was corrected on the way, not just rendered around
+  expect((await readStore(page)).step).toBe(0);
 });
