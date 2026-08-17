@@ -17,6 +17,7 @@ import {
   historyFrom,
   loadThread,
   MAX_QUESTION_CHARS,
+  QUESTION_COUNTER_FROM,
   reportAnswer,
   saveThread,
   turnsFrom,
@@ -156,6 +157,11 @@ export function AskAI({
       await refreshEntitlement();
       return;
     }
+    /* Anything that failed puts the question back in the box. It was only done
+       for the 402; a rate limit or a dropped connection cleared the input and
+       left the person to retype what they had just written. The error still
+       goes in the thread, so the reason is visible above the text. */
+    if (!result.ok) setDraft((current) => current || question);
     setEntries((prev) => [
       ...prev,
       result.ok
@@ -312,7 +318,7 @@ export function AskAI({
             rows={1}
             value={draft}
             maxLength={MAX_QUESTION_CHARS}
-            placeholder="Ask a question"
+            placeholder="Ask in a sentence or two"
             onChange={(e) => {
               setDraft(e.target.value);
               grow(e.target);
@@ -324,6 +330,14 @@ export function AskAI({
               }
             }}
           />
+          {/* Only near the end, and never a colour change. A counter that turns
+              red the moment you start typing is a meter you are being held to;
+              one that appears with 40 left is a fact you can act on. */}
+          {draft.length >= QUESTION_COUNTER_FROM && (
+            <span className="ask-chars t-caption" aria-live="polite">
+              {MAX_QUESTION_CHARS - draft.length} left
+            </span>
+          )}
           <button
             className={`ask-send${draft.trim() && !pending ? ' on' : ''}`}
             onClick={() => send(draft)}

@@ -2250,6 +2250,15 @@ button {
   0%, 60%, 100% { opacity: 0.3; }
   30% { opacity: 1; }
 }
+/* Sits in the input row, right of the text and left of Send. Secondary colour,
+   no bar, no colour change as it depletes. */
+.ask-chars {
+  flex: none;
+  align-self: flex-end;
+  padding-bottom: 14px;
+  color: var(--t3);
+  font-variant-numeric: tabular-nums;
+}
 .ask-composer {
   position: sticky;
   bottom: 0;

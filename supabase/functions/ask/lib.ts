@@ -14,14 +14,32 @@
 // Limits and constants
 // ============================================================================
 
-/** Claude Opus 5. Thinking is on by default on this model; we leave it on. */
-export const MODEL = 'claude-opus-5';
+/** Claude Haiku 4.5 — $1/$5 per MTok against Opus 5's $5/$25. The assistant
+ * retrieves from a supplied catalogue and summarises; the guardrails that matter
+ * (peptides filtered out of the candidate set, citations validated against the
+ * database, upper limits checked after the response) are enforced in code here,
+ * not by the model's judgement. So a smaller model costs answer quality, not
+ * compliance. */
+export const MODEL = 'claude-haiku-4-5';
 
 /** Room for adaptive thinking plus the answer, well under any HTTP timeout. */
 export const MAX_TOKENS = 8192;
 
-/** Long enough for a real question, short enough that nobody pastes a book. */
-export const MAX_QUESTION_CHARS = 600;
+/**
+ * The user's own message. Never the assistant's reply — that answers at
+ * whatever length the question needs.
+ *
+ * 240 is about 60 tokens, so this is not really a cost control; the input side
+ * of the bill is the catalogue, not the question. It is here because short
+ * questions get short answers, and output bills at five times input. The
+ * assistant already loads age, sex, diet, reactions, goals, stack and schedule
+ * server-side, so the question can be short without the answer getting worse —
+ * if answers start degrading, raise this rather than keep it.
+ *
+ * Enforced here as well as on the textarea, because a client limit is a
+ * suggestion.
+ */
+export const MAX_QUESTION_CHARS = 240;
 
 /** Turns of prior conversation carried into the request, newest kept. */
 export const MAX_HISTORY_TURNS = 12;

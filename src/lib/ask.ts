@@ -25,7 +25,10 @@ import type {
 export type { AskAnswer, AskCard, AskCitation, AskTurn };
 
 /** Mirrors MAX_QUESTION_CHARS in the function; the textarea stops at it. */
-export const MAX_QUESTION_CHARS = 600;
+export const MAX_QUESTION_CHARS = 240;
+
+/** The counter appears only near the end, so it is information and not a meter. */
+export const QUESTION_COUNTER_FROM = 200;
 
 /** Mirrors MAX_HISTORY_TURNS. The server trims again regardless. */
 export const MAX_HISTORY_TURNS = 12;
