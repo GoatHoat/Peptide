@@ -25,6 +25,8 @@ import {
 } from '../lib/api';
 import { computeMatchReason } from '../lib/matchReason';
 import { IconMenu, IconSearch } from '../components/Icons';
+import { Skeleton } from '../components/Skeleton';
+import { ErrorState } from '../components/ErrorState';
 
 const CATEGORY_LABEL: Record<string, string> = {
   healing: 'Healing',
@@ -49,6 +51,9 @@ export function Discover() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<GlossaryEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
+  /** bumped by the retry; the search effect is the only thing that fetches */
+  const [attempt, setAttempt] = useState(0);
   const [inStackIds, setInStackIds] = useState<Set<string>>(new Set());
   const [addingIds, setAddingIds] = useState<Set<string>>(new Set());
   const [detailEntry, setDetailEntry] = useState<GlossaryEntry | null>(null);
@@ -79,31 +84,43 @@ export function Discover() {
 
   useEffect(() => {
     setLoading(true);
+    setFailed(false);
+    /* Neither branch caught. A failed search left `loading` true and the
+       screen on its placeholder with nothing to press. */
+    const onError = (err: unknown) => {
+      console.error('discover load failed', err);
+      setFailed(true);
+      setLoading(false);
+    };
     const handle = setTimeout(() => {
       const q = query.trim();
       if (!q) {
         // 200 rather than the default 8 — the list is the whole library now
-        listGlossary(200).then((r) => {
-          setResults(r);
-          setIngredientHits([]);
-          setLoading(false);
-        });
+        listGlossary(200)
+          .then((r) => {
+            setResults(r);
+            setIngredientHits([]);
+            setLoading(false);
+          })
+          .catch(onError);
         return;
       }
       /* Both searches, always. Ingredient data can be incomplete and a name
          match is still a real match, so the two are unioned rather than one
          replacing the other — see PROMPT_V3.md section 2. An empty ingredient
          result means "not an ingredient", not "nothing found". */
-      Promise.all([matchGoal(q), searchByIngredient(q)]).then(([byName, byIngredient]) => {
-        setIngredientHits(byIngredient);
-        const seen = new Set(byIngredient.map((h) => h.glossary_id));
-        setResults([...byName.filter((r) => !seen.has(r.id)), ...byName.filter((r) => seen.has(r.id))]);
-        setLoading(false);
-      });
+      Promise.all([matchGoal(q), searchByIngredient(q)])
+        .then(([byName, byIngredient]) => {
+          setIngredientHits(byIngredient);
+          const seen = new Set(byIngredient.map((h) => h.glossary_id));
+          setResults([...byName.filter((r) => !seen.has(r.id)), ...byName.filter((r) => seen.has(r.id))]);
+          setLoading(false);
+        })
+        .catch(onError);
     }, 350);
     setShown({ peptide: PAGE, supplement: PAGE });
     return () => clearTimeout(handle);
-  }, [query]);
+  }, [query, attempt]);
 
   useEffect(() => {
     if (results.length === 0) return;
@@ -231,15 +248,29 @@ export function Discover() {
                 </div>
               )}
 
-              {loading && (
-                <div className="empty-state t-body" style={{ marginTop: 24 }}>
-                  Loading…
-                </div>
+              {failed && (
+                <ErrorState
+                  message="The library did not load. It is usually the connection."
+                  onRetry={() => setAttempt((n) => n + 1)}
+                />
               )}
 
-              {!loading && all.length === 0 && (
-                <div className="empty-state t-body" style={{ marginTop: 24 }}>
-                  {query.trim() ? `Nothing here matches "${query.trim()}" yet.` : 'Nothing here yet.'}
+              {!failed && loading && (
+                <Skeleton rows={5} height={62} gap={8} radius={12} label="Loading the library" />
+              )}
+
+              {!failed && !loading && all.length === 0 && (
+                <div className="empty-block empty-state t-body" style={{ marginTop: 24 }}>
+                  {query.trim()
+                    ? `Nothing here matches “${query.trim()}” yet. Try an ingredient — “magnesium”, “omega-3” — or a goal.`
+                    : 'Nothing here yet. The library loads from the catalogue; pull down or reopen the tab to try again.'}
+                  {/* Clearing it is the way back to a screen with something on
+                      it, and it is one tap away from where they are looking. */}
+                  {query.trim() && (
+                    <button className="empty-action pressable" onClick={() => setQuery('')}>
+                      Clear search
+                    </button>
+                  )}
                 </div>
               )}
 

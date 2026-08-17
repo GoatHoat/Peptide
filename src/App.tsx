@@ -19,7 +19,7 @@ import { hasOnboarded, markOnboarded } from './onboarding/store';
 import { useAuth } from './lib/auth';
 import { usePrefs } from './lib/prefs';
 import { SheetPortalProvider } from './lib/sheetPortal';
-import { ActiveTabProvider } from './lib/activeTab';
+import { ActiveTabProvider, GoToTabProvider } from './lib/activeTab';
 import { EntitlementProvider } from './lib/entitlements';
 
 /** Commit to an axis inside the first 10px and never revisit it. */
@@ -273,6 +273,7 @@ function Shell({ framed, largerText }: { framed: boolean; largerText: boolean })
     <div className={`app${framed ? ' framed' : ''}${largerText ? ' larger-text' : ''}`} ref={hostRef}>
       <SheetPortalProvider hostRef={hostRef}>
         <ActiveTabProvider value={index}>
+          <GoToTabProvider value={goTo}>
           {framed && (
             <div className="status">
               <span>9:41</span>
@@ -300,6 +301,7 @@ function Shell({ framed, largerText }: { framed: boolean; largerText: boolean })
 
           <TabBar progress={progress} onSelect={goTo} />
           <span hidden data-active-tab={index} />
+          </GoToTabProvider>
         </ActiveTabProvider>
       </SheetPortalProvider>
     </div>

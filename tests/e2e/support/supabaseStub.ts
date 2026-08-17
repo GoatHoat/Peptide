@@ -28,13 +28,19 @@ const DAY_SECONDS = 86_400;
 const ACCESS_TOKEN = 'stub-access-token';
 const REFRESH_TOKEN = 'stub-refresh-token';
 
-export function stubUser(): Row {
+/** Who the stub is currently signing in. Swapped by the three-accounts walk. */
+export interface Identity {
+  id: string;
+  email: string;
+}
+
+export function stubUser(who: Identity = { id: STUB_USER_ID, email: STUB_EMAIL }): Row {
   const now = new Date().toISOString();
   return {
-    id: STUB_USER_ID,
+    id: who.id,
     aud: 'authenticated',
     role: 'authenticated',
-    email: STUB_EMAIL,
+    email: who.email,
     email_confirmed_at: now,
     phone: '',
     confirmed_at: now,
@@ -48,14 +54,14 @@ export function stubUser(): Row {
 }
 
 /** Far enough from expiry that the client never tries to refresh mid-test. */
-export function stubSession(): Row {
+export function stubSession(who: Identity = { id: STUB_USER_ID, email: STUB_EMAIL }): Row {
   return {
     access_token: ACCESS_TOKEN,
     token_type: 'bearer',
     expires_in: DAY_SECONDS,
     expires_at: Math.floor(Date.now() / 1000) + DAY_SECONDS,
     refresh_token: REFRESH_TOKEN,
-    user: stubUser(),
+    user: stubUser(who),
   };
 }
 
@@ -70,10 +76,36 @@ export interface Stub {
   lastOpened: string | null;
   /** what my_entitlement reports; 'free' unless a test says otherwise */
   tier: 'free' | 'pro';
+  /**
+   * Substrings of the request path that should fail with a 503 instead of
+   * being answered. The states audit is the only caller: an error state with a
+   * retry cannot be tested without something to fail.
+   */
+  failing: Set<string>;
+  /**
+   * Milliseconds to hold every response. Used to hold a screen on its loading
+   * state long enough to measure it against the loaded one.
+   */
+  delayMs: number;
+  /**
+   * Who signup and token hand back. Changing it is how one browser signs in as
+   * a second person — the tables are keyed by user_id, so a new id sees a new
+   * account without any of the data being cleared.
+   */
+  identity: Identity;
 }
 
 export async function installSupabaseStub(page: Page): Promise<Stub> {
-  const stub: Stub = { db: makeTables(), unhandled: [], deleted: false, lastOpened: null, tier: 'free' };
+  const stub: Stub = {
+    db: makeTables(),
+    unhandled: [],
+    deleted: false,
+    lastOpened: null,
+    tier: 'free',
+    failing: new Set(),
+    delayMs: 0,
+    identity: { id: STUB_USER_ID, email: STUB_EMAIL },
+  };
   let generated = 0;
 
   await page.route(`${SUPABASE_URL}/**`, async (route) => {
@@ -81,6 +113,16 @@ export async function installSupabaseStub(page: Page): Promise<Stub> {
     const url = new URL(request.url());
     const path = url.pathname.slice(PREFIX.length);
     const method = request.method();
+
+    /* Injected faults, before anything is modelled. A 503 with no body is what
+       an unreachable PostgREST actually looks like from the browser, and it is
+       not an unhandled route — the stub meant to do this. */
+    for (const pattern of stub.failing) {
+      if (path.includes(pattern)) {
+        return route.fulfill({ status: 503, contentType: 'application/json', body: '{}' });
+      }
+    }
+    if (stub.delayMs > 0) await new Promise((r) => setTimeout(r, stub.delayMs));
 
     const miss = (status = 404) => {
       stub.unhandled.push(`${method} ${path}`);
@@ -97,8 +139,25 @@ export async function installSupabaseStub(page: Page): Promise<Stub> {
 
     if (path.startsWith('/auth/v1/')) {
       const endpoint = path.slice('/auth/v1/'.length);
-      if (endpoint === 'signup' || endpoint === 'token') return json(stubSession());
-      if (endpoint === 'user') return json(stubUser());
+      if (endpoint === 'signup' || endpoint === 'token') {
+        /* The real project has a trigger on auth.users that makes the profile
+           row. Without it here, every account created in a test had no
+           profile, getProfile threw, and the failure looked like an app bug
+           rather than a stub that models signup and not what signup does. */
+        if (!stub.db.profiles.some((row) => row.id === stub.identity.id)) {
+          stub.db.profiles.push({
+            id: stub.identity.id,
+            display_name: null,
+            notifications_per_day: 3,
+            reduce_motion: false,
+            larger_text: false,
+            subscription_tier: 'free',
+            blood_test_reminder: false,
+          });
+        }
+        return json(stubSession(stub.identity));
+      }
+      if (endpoint === 'user') return json(stubUser(stub.identity));
       if (endpoint === 'logout') return route.fulfill({ status: 204, body: '' });
       return miss();
     }

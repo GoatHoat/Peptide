@@ -15,6 +15,35 @@ interface AuthState {
 
 const AuthContext = createContext<AuthState | null>(null);
 
+/**
+ * A Supabase auth error, in words somebody can act on.
+ *
+ * Some of what comes back is already a sentence — "Invalid login credentials".
+ * Plenty is not: "AuthRetryableFetchError", "Database error saving new user",
+ * "Failed to fetch". Those were rendered straight into the form, which tells
+ * the person nothing they can do and rather a lot about the inside of the app.
+ *
+ * Matched on substrings rather than on codes because supabase-js does not
+ * carry a stable code on every one of these. Anything unmatched falls through
+ * to a plain sentence, and the original goes to the console.
+ */
+function authMessage(raw: string | undefined, fallback: string): string {
+  if (!raw) return fallback;
+  console.error('auth error', raw);
+  const t = raw.toLowerCase();
+  if (t.includes('invalid login credentials')) return 'That email and password do not match.';
+  if (t.includes('email not confirmed')) return 'Confirm your email address first — check your inbox.';
+  if (t.includes('already registered') || t.includes('already been registered'))
+    return 'There is already an account with that email. Sign in instead.';
+  if (t.includes('password should be')) return 'Passwords need at least six characters.';
+  if (t.includes('unable to validate email') || t.includes('invalid email'))
+    return 'That does not look like an email address.';
+  if (t.includes('rate limit') || t.includes('too many')) return 'Too many attempts. Wait a minute and try again.';
+  if (t.includes('failed to fetch') || t.includes('networkerror') || t.includes('retryable'))
+    return 'Could not reach the server. Check your connection and try again.';
+  return fallback;
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
@@ -37,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn: AuthState['signIn'] = async (email, password) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error: error?.message ?? null };
+    return { error: error ? authMessage(error.message, 'Could not sign you in. Try again.') : null };
   };
 
   const signUp: AuthState['signUp'] = async (email, password, displayName) => {
@@ -46,7 +75,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
       options: { data: { display_name: displayName } },
     });
-    if (error) return { error: error.message, needsConfirmation: false };
+    if (error)
+      return { error: authMessage(error.message, 'Could not create the account. Try again.'), needsConfirmation: false };
     // Supabase returns no session when email confirmation is required.
     return { error: null, needsConfirmation: !data.session };
   };
@@ -70,7 +100,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/`,
     });
-    return { error: error?.message ?? null };
+    return { error: error ? authMessage(error.message, 'Could not send the reset email. Try again.') : null };
   };
 
   return (

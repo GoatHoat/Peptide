@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { getDosesForDate, getScheduleItems, setDoseTaken, type Dose, type ScheduleItem } from '../lib/api';
 import { toISODate } from '../lib/date';
+import { Skeleton } from '../components/Skeleton';
+import { ErrorState } from '../components/ErrorState';
 
 interface Props {
   userId: string;
@@ -11,19 +13,29 @@ interface Props {
 export function DayDoses({ userId, date, onChanged }: Props) {
   const [doses, setDoses] = useState<Dose[] | null>(null);
   const [upcoming, setUpcoming] = useState<ScheduleItem[] | null>(null);
+  const [failed, setFailed] = useState(false);
+  /** bumped by the retry; the effect below is the only thing that fetches */
+  const [attempt, setAttempt] = useState(0);
 
   const isFuture = toISODate(date) > toISODate(new Date());
 
   useEffect(() => {
+    setFailed(false);
+    const onError = (err: unknown) => {
+      console.error('day load failed', err);
+      setFailed(true);
+    };
     if (isFuture) {
       // Nothing's materialized for a future day yet — preview what's
       // currently scheduled instead of just showing empty.
-      getScheduleItems(userId).then(setUpcoming);
+      getScheduleItems(userId).then(setUpcoming).catch(onError);
     } else {
-      getDosesForDate(userId, date).then(setDoses);
+      getDosesForDate(userId, date).then(setDoses).catch(onError);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId, date, isFuture]);
+  }, [userId, date, isFuture, attempt]);
+
+  const retry = () => setAttempt((n) => n + 1);
 
   const toggle = async (dose: Dose) => {
     const updated = await setDoseTaken(dose.id, !dose.taken);
@@ -31,9 +43,16 @@ export function DayDoses({ userId, date, onChanged }: Props) {
     onChanged();
   };
 
+  if (failed) return <ErrorState message="This day did not load. It is usually the connection." onRetry={retry} />;
+
   if (isFuture) {
-    if (upcoming === null) return <div className="sheet-empty t-body">Loading…</div>;
-    if (upcoming.length === 0) return <div className="sheet-empty t-body">Nothing scheduled.</div>;
+    if (upcoming === null) return <Skeleton rows={3} height={64} radius={18} label="Loading the day" />;
+    if (upcoming.length === 0)
+      return (
+        <div className="sheet-empty t-body">
+          Nothing scheduled for this day. Anything you add to your schedule will show up here.
+        </div>
+      );
     return (
       <div className="timeline" style={{ marginTop: 0, paddingLeft: 0, paddingRight: 0 }}>
         <div className="t-caption" style={{ color: 'var(--t3)', marginBottom: 10 }}>
@@ -57,8 +76,13 @@ export function DayDoses({ userId, date, onChanged }: Props) {
     );
   }
 
-  if (doses === null) return <div className="sheet-empty t-body">Loading…</div>;
-  if (doses.length === 0) return <div className="sheet-empty t-body">Nothing logged this day.</div>;
+  if (doses === null) return <Skeleton rows={3} height={64} radius={18} label="Loading the day" />;
+  if (doses.length === 0)
+    return (
+      <div className="sheet-empty t-body">
+        Nothing logged this day. Days before you added something to your schedule stay empty.
+      </div>
+    );
 
   return (
     <div className="timeline" style={{ marginTop: 0, paddingLeft: 0, paddingRight: 0 }}>

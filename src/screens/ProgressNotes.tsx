@@ -11,6 +11,8 @@ import {
 import { Sheet } from '../components/Sheet';
 import { formatShortDate, toISODate } from '../lib/date';
 import { IconDoc, IconPlus } from '../components/Icons';
+import { Skeleton } from '../components/Skeleton';
+import { ErrorState } from '../components/ErrorState';
 
 function NoteThumb({ path }: { path: string }) {
   const [url, setUrl] = useState<string | null>(null);
@@ -31,6 +33,7 @@ export function ProgressNotes() {
      by accident. */
   const [confirming, setConfirming] = useState<ProgressNote | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [failed, setFailed] = useState(false);
   const [held, setHeld] = useState<string | null>(null);
   const timer = useRef<number | null>(null);
   const origin = useRef({ x: 0, y: 0 });
@@ -45,7 +48,14 @@ export function ProgressNotes() {
   useEffect(() => cancelHold, []);
 
   const load = () => {
-    if (user) getProgressNotes(user.id).then(setNotes);
+    if (!user) return;
+    setFailed(false);
+    getProgressNotes(user.id)
+      .then(setNotes)
+      .catch((err) => {
+        console.error('progress notes load failed', err);
+        setFailed(true);
+      });
   };
   useEffect(load, [user?.id]);
 
@@ -59,8 +69,13 @@ export function ProgressNotes() {
         <span className="divider-line" />
       </div>
 
-      {notes === null && <div className="sheet-empty t-body">Loading…</div>}
-      {notes !== null && notes.length === 0 && <div className="empty-state t-body">No notes yet.</div>}
+      {failed && <ErrorState message="Your notes did not load. It is usually the connection." onRetry={load} />}
+      {!failed && notes === null && <Skeleton rows={2} height={64} label="Loading your notes" />}
+      {!failed && notes !== null && notes.length === 0 && (
+        <div className="empty-state t-body">
+          No notes yet. Write down how something is going and it will be here to look back on.
+        </div>
+      )}
 
       <div className="progress-list">
         {notes?.map((n) => (

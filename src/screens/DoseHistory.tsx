@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { getDoseHistory, removeScheduleItem, type Dose } from '../lib/api';
 import { formatShortDate, formatTime } from '../lib/date';
+import { Skeleton } from '../components/Skeleton';
+import { ErrorState } from '../components/ErrorState';
 
 interface Props {
   userId: string;
@@ -12,16 +14,25 @@ interface Props {
 export function DoseHistory({ userId, name, scheduleItemId, onScheduleRemoved }: Props) {
   const [rows, setRows] = useState<Dose[] | null>(null);
   const [removing, setRemoving] = useState(false);
+  const [failed, setFailed] = useState(false);
+  /** bumped by the retry; the effect below is the only thing that fetches */
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
-    getDoseHistory(userId, name).then((r) => {
-      if (!cancelled) setRows(r);
-    });
+    setFailed(false);
+    getDoseHistory(userId, name)
+      .then((r) => {
+        if (!cancelled) setRows(r);
+      })
+      .catch((err) => {
+        console.error('dose history load failed', err);
+        if (!cancelled) setFailed(true);
+      });
     return () => {
       cancelled = true;
     };
-  }, [userId, name]);
+  }, [userId, name, attempt]);
 
   const removeFromSchedule = async () => {
     if (!scheduleItemId) return;
@@ -34,7 +45,14 @@ export function DoseHistory({ userId, name, scheduleItemId, onScheduleRemoved }:
     }
   };
 
-  if (!rows) return <div className="sheet-empty t-body">Loading…</div>;
+  if (failed)
+    return (
+      <ErrorState
+        message="This history did not load. It is usually the connection."
+        onRetry={() => setAttempt((n) => n + 1)}
+      />
+    );
+  if (!rows) return <Skeleton rows={3} height={62} radius={15} label="Loading the history" />;
 
   return (
     <div>
@@ -45,7 +63,9 @@ export function DoseHistory({ userId, name, scheduleItemId, onScheduleRemoved }:
       )}
 
       {rows.length === 0 ? (
-        <div className="sheet-empty t-body">No entries yet.</div>
+        <div className="sheet-empty t-body">
+          No entries yet. Every day you tick this off is recorded here.
+        </div>
       ) : (
         <>
           <div className="history-summary t-body">

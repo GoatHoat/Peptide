@@ -43,7 +43,14 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
   const [prefilling, setPrefilling] = useState(false);
 
   useEffect(() => {
-    getStack(userId).then(setStack);
+    getStack(userId)
+      .then(setStack)
+      /* Uncaught, this took the whole app down rather than showing an empty
+         picker. An empty picker is wrong; a white screen is worse. */
+      .catch((err) => {
+        console.error('stack load failed', err);
+        setStack([]);
+      });
   }, [userId]);
 
   /** Pull the user's own last numbers for this item into the empty fields. */

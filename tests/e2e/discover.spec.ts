@@ -19,7 +19,10 @@ test('renders Discover with the catalogue', async ({ page, app }) => {
   await expect(page.locator('[data-active-tab]')).toHaveAttribute('data-active-tab', '1');
 
   const supplements = page.locator('.tabs-panel').nth(2);
-  await expect(supplements.getByText('Loading…')).toHaveCount(0);
+  /* The placeholder, not the word: 'Loading…' was replaced by row-shaped
+     blocks, and an assertion against text that no longer exists passes for the
+     wrong reason. */
+  await expect(supplements.locator('.skel')).toHaveCount(0);
   await expect(supplements.getByText(SCHEDULED_PRODUCT)).toBeVisible();
 
   // Six supplements in the fixture and one peptide; the tabs split on `kind`,

@@ -55,6 +55,16 @@
      content outside the clip and broke hit-testing on real buttons. */
   --text-scale: 1;
 
+  /* One easing curve and one duration set, used everywhere.
+     `var(--ease)` was already being referenced by the catch-up fill and was
+     never defined, so that declaration was invalid and dropped — the bar
+     snapped to its new width instead of filling. Defined here rather than
+     removed, because the reference was right and the token was missing. */
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur-1: 180ms; /* a press, a colour change */
+  --dur-2: 260ms; /* something moving across the screen */
+  --dur-3: 380ms; /* a sheet arriving */
+
   color-scheme: dark;
 }
 .app.larger-text {
@@ -779,11 +789,16 @@ button {
   margin: 19px -6px 0;
 }
 .widget {
-  width: 181px;
+  /* 181 is the width in the export and it holds at every size Apple ships
+     except the smallest: at 375 the pair ran 13px past the right edge of the
+     screen, because `flex: none` means "do not shrink, ever". Basis 181, no
+     grow, shrink allowed — identical wherever there is room, and inside the
+     screen where there is not. */
+  flex: 0 1 181px;
+  min-width: 0;
   height: 176px;
   border-radius: 22px;
   background: var(--card);
-  flex: none;
   padding: 12px;
   overflow: hidden;
   /* the calendar below takes whatever height is left, rather than assuming
@@ -862,13 +877,21 @@ button {
   flex-direction: column;
   gap: 8px;
 }
+/* Every settings row is a <button> or an <a>, so the resets belong here
+   rather than on each one. 48 tall, above the 44 minimum. */
 .row {
   display: flex;
   align-items: center;
+  width: 100%;
   height: 48px;
   padding: 0 16px;
+  border: 0;
   border-radius: 16px;
   background: var(--card);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
 }
 .row-label {
   flex: 1;
@@ -1050,11 +1073,73 @@ button {
 }
 
 /* ============================================================
+   Loading, at the size the content will be
+   ============================================================ */
+.skel {
+  display: flex;
+  flex-direction: column;
+  margin-top: 13px;
+}
+/* Both containers already carry the 13px their loaded list sits at. */
+.timeline .skel,
+.prod-list .skel {
+  margin-top: 0;
+}
+.skel-row {
+  background: var(--card);
+  animation: skel 1.6s var(--ease) infinite;
+}
+/* The pulse is the only thing separating "still loading" from "loaded, and
+   there is nothing here". Small on purpose — it is a state, not an event. */
+@keyframes skel {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skel-row {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
+/* ============================================================
    Today — add dose / history / empty state
    ============================================================ */
 .empty-state {
   color: var(--t3);
   padding: 18px 4px;
+}
+/* An empty screen is a screen with one thing to do on it. The action is the
+   only control there, so it does not need to be loud — but it does have to be
+   reachable, which is the 44 rather than a smaller pill. */
+.empty-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.empty-action {
+  align-self: center;
+  margin-top: 2px;
+  margin-bottom: 6px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: calc(15px * var(--text-scale));
+  font-weight: 600;
+  letter-spacing: -0.1px;
+  color: var(--purple);
+  box-shadow: inset 0 0 0 1.5px var(--purple);
 }
 .add-dose {
   flex: none;
@@ -1551,6 +1636,7 @@ button {
   padding-bottom: 11px;
 }
 .tabs-tab {
+  position: relative;
   flex: none;
   font-size: 15px;
   font-weight: 600;
@@ -1558,6 +1644,14 @@ button {
   color: var(--t2);
   min-height: 34px;
   transition: color 180ms ease-out;
+}
+/* 34 is the drawn height — the underline sits on the bar's baseline and moving
+   the label down to make room would move that with it. The target is the full
+   44, taken out of the 22px gap between labels rather than off the bar. */
+.tabs-tab::after {
+  content: '';
+  position: absolute;
+  inset: -5px -9px;
 }
 .tabs-tab.on {
   color: var(--t1);
@@ -2541,7 +2635,9 @@ button {
   display: block;
   width: 100%;
   margin: 14px 0 6px;
-  padding: 12px 0;
+  /* 14 rather than 12: at 12 the row measured 41 tall and this is a control,
+     not a caption. */
+  padding: 14px 0;
   border: 0;
   border-top: 1px solid var(--hair);
   background: none;
@@ -2654,6 +2750,16 @@ button {
   border-radius: 14px;
   color: var(--t2);
   line-height: 1.5;
+}
+/* Inline rather than a second block: the sentence and the way out of it are
+   one thing. 44 tall including the padding it sits in. */
+.offline-retry {
+  display: block;
+  margin-top: 6px;
+  min-height: 32px;
+  padding: 6px 0;
+  color: var(--purple);
+  font-weight: 600;
 }
 
 /* What the app remembers. Every row shows the user's own words, not only the

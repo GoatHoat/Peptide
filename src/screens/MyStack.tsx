@@ -13,7 +13,9 @@ import { Sheet } from '../components/Sheet';
 import { GlossaryDetail } from './GlossaryDetail';
 import { IconClose } from '../components/Icons';
 import { toISODate } from '../lib/date';
-import { useActiveTab } from '../lib/activeTab';
+import { TAB, useActiveTab, useGoToTab } from '../lib/activeTab';
+import { Skeleton } from '../components/Skeleton';
+import { ErrorState } from '../components/ErrorState';
 
 const YOU_TAB = 2;
 
@@ -41,17 +43,27 @@ function expiryStatus(expiresOn: string | null): { label: string; className: str
 export function MyStack() {
   const { user } = useAuth();
   const activeTab = useActiveTab();
+  const goToTab = useGoToTab();
   const [items, setItems] = useState<StackItem[] | null>(null);
   const [schedule, setSchedule] = useState<ScheduleItem[]>([]);
   const [detail, setDetail] = useState<StackItem | null>(null);
   const [editingExpiry, setEditingExpiry] = useState<StackItem | null>(null);
   const [expiryInput, setExpiryInput] = useState('');
+  const [failed, setFailed] = useState(false);
 
   const load = async () => {
     if (!user) return;
-    const [stack, sched] = await Promise.all([getStack(user.id), getScheduleItems(user.id)]);
-    setItems(stack);
-    setSchedule(sched);
+    setFailed(false);
+    try {
+      const [stack, sched] = await Promise.all([getStack(user.id), getScheduleItems(user.id)]);
+      setItems(stack);
+      setSchedule(sched);
+    } catch (err) {
+      /* This was uncaught, so a failed fetch left the screen on its loading
+         state with nothing to press. */
+      console.error('stack load failed', err);
+      setFailed(true);
+    }
   };
   // Refetch on mount AND every time You becomes the active tab — Discover
   // (a permanently-mounted sibling, not a separate route) can add to the
@@ -88,13 +100,19 @@ export function MyStack() {
         <span className="divider-line" />
       </div>
 
-      {items === null && <div className="sheet-empty t-body">Loading…</div>}
-      {items !== null && items.length === 0 && (
+      {failed && <ErrorState message="Your stack did not load. It is usually the connection." onRetry={load} />}
+      {!failed && items === null && <Skeleton rows={3} height={56} label="Loading your stack" />}
+      {!failed && items !== null && items.length === 0 && (
         <div className="stack-empty">
           <img className="stack-empty-art" src="/art/empty-stack.png" alt="" />
           <p className="empty-state t-body">
             Nothing in your stack yet. Add something from Discover and it will show up here.
           </p>
+          {/* The action, not just the instruction. Naming Discover and then
+              leaving somebody to find it is half an empty state. */}
+          <button className="empty-action pressable" onClick={() => goToTab(TAB.discover)}>
+            Browse Discover
+          </button>
         </div>
       )}
 

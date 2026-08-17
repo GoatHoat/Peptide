@@ -23,6 +23,7 @@ import { useEntitlement } from '../lib/entitlements';
 import { ProSheet } from '../components/ProSheet';
 import { DoseRow } from '../components/DoseRow';
 import { NowMarker } from '../components/NowMarker';
+import { Skeleton } from '../components/Skeleton';
 import { syncScheduleNotifications } from '../lib/notifications';
 
 type DayState = 'completed' | 'missed' | 'today' | 'future' | 'empty';
@@ -169,6 +170,12 @@ export function Today() {
       {offline && (
         <div className="offline-line t-caption">
           Offline — showing your last saved day. Anything you tick will sync when you reconnect.
+          {/* The line said what had happened and offered nothing to do about
+              it. Reconnecting is not something the app can detect reliably
+              inside a WebView, so the button is the honest answer. */}
+          <button className="offline-retry pressable" onClick={() => load()}>
+            Try again
+          </button>
         </div>
       )}
 
@@ -209,9 +216,11 @@ export function Today() {
 
       <div className="timeline">
         <span className="rail" />
-        {doses === null && <div className="sheet-empty t-body">Loading…</div>}
+        {doses === null && <Skeleton rows={3} height={64} gap={8} radius={18} label="Loading your schedule" />}
         {doses !== null && doses.length === 0 && (
-          <div className="empty-state t-body">Nothing on your schedule yet.</div>
+          <div className="empty-state t-body">
+            Nothing on your schedule yet. Add something and it will appear here at the time you set.
+          </div>
         )}
         {doses?.map((d, i) => {
           /* The marker goes in the gap before the first dose whose time has not

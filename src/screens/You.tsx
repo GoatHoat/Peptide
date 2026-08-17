@@ -19,6 +19,7 @@ import { addDays, computeMonthGrid, startOfMonth, toISODate } from '../lib/date'
 import { useNow } from '../lib/now';
 import { MyStack } from './MyStack';
 import { ProgressNotes } from './ProgressNotes';
+import { ErrorState } from '../components/ErrorState';
 
 const DOW = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
@@ -39,8 +40,12 @@ function computeStreak(compliance: Record<string, { total: number; taken: number
 
 export function You() {
   const { user, signOut } = useAuth();
-  const { profile, save } = usePrefs();
+  const { profile, save, error: profileError, refresh: refreshProfile } = usePrefs();
   const [compliance, setCompliance] = useState<Record<string, { total: number; taken: number }>>({});
+  /* An all-empty month claims you did nothing, which is a small lie when the
+     truth is that the request failed. */
+  const [complianceFailed, setComplianceFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   const [openSheet, setOpenSheet] = useState<'notifications' | 'subscription' | 'export' | 'delete' | 'memory' | null>(null);
   const [exporting, setExporting] = useState<'csv' | 'pdf' | null>(null);
   const [exportError, setExportError] = useState<string | null>(null);
@@ -67,13 +72,25 @@ export function You() {
     const monthStart = startOfMonth(today);
     const lookback = addDays(today, -90);
     const from = monthStart < lookback ? monthStart : lookback;
-    getComplianceMap(user.id, from, today).then(setCompliance);
-    getScheduleItems(user.id).then((items) => setReminderCount(items.filter((i) => i.scheduled_time).length));
-    checkNotificationPermission().then(setPermGranted);
+    /* All four were bare `.then` chains. A rejection from any of them was an
+       uncaught error rather than a state on the screen. */
+    setComplianceFailed(false);
+    getComplianceMap(user.id, from, today)
+      .then(setCompliance)
+      .catch((err) => {
+        console.error('compliance load failed', err);
+        setComplianceFailed(true);
+      });
+    getScheduleItems(user.id)
+      .then((items) => setReminderCount(items.filter((i) => i.scheduled_time).length))
+      .catch((err) => console.error('reminder count load failed', err));
+    checkNotificationPermission()
+      .then(setPermGranted)
+      .catch(() => setPermGranted(false));
     getUserFacts(user.id).then(setFacts).catch(() => setFacts([]));
     // keyed on the date, not the clock — this refetches once a day, not every tick
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id, todayISO]);
+  }, [user?.id, todayISO, attempt]);
 
   const enableNotifications = async () => {
     if (!user) return;
@@ -87,7 +104,21 @@ export function You() {
     }
   };
 
-  if (!user || !profile) return null;
+  if (!user) return null;
+  /* A blank screen was what this rendered when the profile could not be read.
+     Nothing to press, nothing to explain it. */
+  if (!profile)
+    return profileError ? (
+      <>
+        <div className="screen-head">
+          <h1 className="t-title">You</h1>
+        </div>
+        <ErrorState
+          message="Your profile did not load. It is usually the connection."
+          onRetry={() => void refreshProfile()}
+        />
+      </>
+    ) : null;
 
   const streak = computeStreak(compliance, today);
 
@@ -116,38 +147,47 @@ export function You() {
 
       <div className="widgets">
         <div className="widget">
-          <div className="widget-num">{streak}</div>
-          {/* One square per day of this month and no others — the row count
-              drives the grid, so February and a 31-day month both fit. */}
-          <div className="cal" style={{ ['--cal-rows' as string]: monthGrid.length }}>
-            <span className="cal-corner" />
-            {DOW.map((d, i) => (
-              <span key={`dow-${i}`} className="cal-dow">
-                {d}
-              </span>
-            ))}
-            {monthGrid.map((row, ri) => {
-              const firstOfRow = row.find((d): d is Date => d !== null);
-              return (
-                <Fragment key={ri}>
-                  <span className="cal-week-label">{firstOfRow ? firstOfRow.getDate() : ''}</span>
-                  {row.map((d, ci) => {
-                    if (!d) return <span key={ci} className="cal-blank" />;
-                    const iso = toISODate(d);
-                    const c = compliance[iso];
-                    const done = !!c && c.total > 0 && c.taken === c.total;
-                    return (
-                      <span
-                        key={ci}
-                        className={`cal-cell${done ? ' on' : ''}${iso === todayISO ? ' today' : ''}`}
-                        title={iso}
-                      />
-                    );
-                  })}
-                </Fragment>
-              );
-            })}
-          </div>
+          {complianceFailed ? (
+            <ErrorState
+              message="Your streak did not load. It is usually the connection."
+              onRetry={() => setAttempt((n) => n + 1)}
+            />
+          ) : (
+            <>
+              <div className="widget-num">{streak}</div>
+              {/* One square per day of this month and no others — the row count
+                  drives the grid, so February and a 31-day month both fit. */}
+              <div className="cal" style={{ ['--cal-rows' as string]: monthGrid.length }}>
+                <span className="cal-corner" />
+                {DOW.map((d, i) => (
+                  <span key={`dow-${i}`} className="cal-dow">
+                    {d}
+                  </span>
+                ))}
+                {monthGrid.map((row, ri) => {
+                  const firstOfRow = row.find((d): d is Date => d !== null);
+                  return (
+                    <Fragment key={ri}>
+                      <span className="cal-week-label">{firstOfRow ? firstOfRow.getDate() : ''}</span>
+                      {row.map((d, ci) => {
+                        if (!d) return <span key={ci} className="cal-blank" />;
+                        const iso = toISODate(d);
+                        const c = compliance[iso];
+                        const done = !!c && c.total > 0 && c.taken === c.total;
+                        return (
+                          <span
+                            key={ci}
+                            className={`cal-cell${done ? ' on' : ''}${iso === todayISO ? ' today' : ''}`}
+                            title={iso}
+                          />
+                        );
+                      })}
+                    </Fragment>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Intentionally empty. The label names what belongs here — the
@@ -161,51 +201,68 @@ export function You() {
 
       <ProgressNotes />
 
+      {/* Every one of these was a div with an onClick. They looked and felt
+          right and were unreachable by keyboard and announced as static text
+          by VoiceOver — Sign Out and Delete Account included. A control is a
+          button. */}
       <div className="rows">
-        <div className="row pressable" onClick={() => setOpenSheet('notifications')}>
+        <button type="button" className="row pressable" onClick={() => setOpenSheet('notifications')}>
           <span className="row-label">Notifications</span>
           <span className="row-value">
             {!permGranted ? 'Off' : reminderCount === 0 ? 'On · none set' : `${reminderCount} reminder${reminderCount === 1 ? '' : 's'}`}
           </span>
-        </div>
-        <div className="row pressable" onClick={() => save({ reduce_motion: !profile.reduce_motion })}>
+        </button>
+        <button
+          type="button"
+          className="row pressable"
+          aria-pressed={!!profile.reduce_motion}
+          onClick={() => save({ reduce_motion: !profile.reduce_motion })}
+        >
           <span className="row-label">Reduce motion</span>
           <span className="row-value">{profile.reduce_motion ? 'On' : 'Off'}</span>
-        </div>
-        <div className="row pressable" onClick={() => save({ larger_text: !profile.larger_text })}>
+        </button>
+        <button
+          type="button"
+          className="row pressable"
+          aria-pressed={!!profile.larger_text}
+          onClick={() => save({ larger_text: !profile.larger_text })}
+        >
           <span className="row-label">Larger text</span>
           <span className="row-value">{profile.larger_text ? 'On' : 'Off'}</span>
-        </div>
-        <div className="row pressable" onClick={() => setOpenSheet('subscription')}>
+        </button>
+        <button type="button" className="row pressable" onClick={() => setOpenSheet('subscription')}>
           <span className="row-label">Subscription</span>
           <span className="row-value" style={{ textTransform: 'capitalize' }}>
             {profile.subscription_tier}
           </span>
-        </div>
-        <div
+        </button>
+        <button
+          type="button"
           className="row pressable"
+          aria-pressed={!!profile.blood_test_reminder}
           onClick={() => save({ blood_test_reminder: !profile.blood_test_reminder })}
         >
           <span className="row-label">Blood test reminder</span>
           <span className="row-value">{profile.blood_test_reminder ? 'On' : 'Off'}</span>
-        </div>
-        <div className="row pressable" onClick={() => setOpenSheet('export')}>
+        </button>
+        <button type="button" className="row pressable" onClick={() => setOpenSheet('export')}>
           <span className="row-label">Export Data</span>
-        </div>
-        <div className="row pressable" onClick={() => setOpenSheet('memory')}>
+        </button>
+        <button type="button" className="row pressable" onClick={() => setOpenSheet('memory')}>
           <span className="row-label">What Pepstack remembers</span>
           <span className="row-value">{facts.length === 0 ? 'Nothing yet' : `${facts.length}`}</span>
-        </div>
+        </button>
         <a className="row pressable" href={PRIVACY_URL} {...externalLink}>
           <span className="row-label">Privacy Policy</span>
         </a>
         <a className="row pressable" href={TERMS_URL} {...externalLink}>
           <span className="row-label">Terms of Use</span>
         </a>
-        <div className="row pressable" onClick={() => signOut()}>
+        <button type="button" className="row pressable" onClick={() => signOut()}>
           <span className="row-label">Sign Out</span>
-        </div>
-        <div
+        </button>
+        <button
+          type="button"
           className="row pressable"
           onClick={() => {
             setDeleteConfirm('');
@@ -214,7 +271,7 @@ export function You() {
           }}
         >
           <span className="row-label danger">Delete Account</span>
-        </div>
+        </button>
       </div>
 
       <Sheet open={openSheet === 'notifications'} onClose={() => setOpenSheet(null)} title="Notifications">

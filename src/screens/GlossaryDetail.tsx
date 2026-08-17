@@ -27,7 +27,12 @@ export function GlossaryDetail({ entry, matchContext }: Props) {
   const [research, setResearch] = useState<GlossaryResearch[] | null>(null);
 
   useEffect(() => {
-    getGlossaryResearch(entry.id).then(setResearch);
+    getGlossaryResearch(entry.id)
+      .then(setResearch)
+      .catch((err) => {
+        console.error('research load failed', err);
+        setResearch(null);
+      });
   }, [entry.id]);
 
   return (
