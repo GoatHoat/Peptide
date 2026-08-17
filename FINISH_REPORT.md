@@ -12,7 +12,7 @@ which part.
 | § | What | State |
 |---|---|---|
 | 1 | The iron figure | **Done** |
-| 2 | Free/pro split | **Mostly done** — see below |
+| 2 | Free/pro split | **Done** |
 | 3 | Three device bugs | **Done** |
 | 3b | Doodle background | **Done** |
 | 3c | growth.png, empty-stack.png | **Done** |
@@ -24,18 +24,18 @@ which part.
 | LEGAL 1 | Point the app at hosted docs | **Done** |
 | LEGAL 2 | Write both documents | **Done** |
 
-### §2, what is missing
+### §2
 
-Built: `useEntitlement()` off `profiles.subscription_tier`; the stack trigger;
-the lifetime ask cap in the Edge Function; `ProSheet` from every gate;
+All of it. `useEntitlement()` off `profiles.subscription_tier`; the stack
+trigger; the lifetime ask cap in the Edge Function; `ProSheet` from every gate;
 `free_rank`; blurred locked rows with the divider; the upsell card; the counter
 card and the "Meet PepStack AI" empty state.
 
-**Not built:** the onboarding-gate half of §1 of `PROMPT_TIERS.md`. The flag is
-scoped per account and `profiles.onboarded_at` exists (0035), but `hasOnboarded`
-still reads only the local cache — it never reads the column. Signing in on a
-**new device** will therefore re-run onboarding once. Signing in as a different
-person on the same device correctly does run it, which was the actual bug.
+The onboarding gate now reads `profiles.onboarded_at` as the source of truth
+with the local flag as a cache, so signing in on a new device does not re-run a
+flow the account finished, and signing in as a different person on the same
+device does. `undefined` from that read — offline, or 0035 unapplied — leaves
+the cache standing rather than being treated as "not onboarded".
 
 ### §4, what is missing
 
@@ -162,7 +162,7 @@ injection UI in src/       0 occurrences
 peptide rank guard         present
 
 npm run build              green
-npm test                   118 passed
+npm test                   139 passed, 0 failed
 ```
 
 **Bundle:** `dist` 3.7 MB total, main JS **1028 KB**. It was ~980 KB before this

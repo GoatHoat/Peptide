@@ -232,6 +232,7 @@ export function makeTables(): Record<string, Row[]> {
     ask_usage: [],
     ask_reports: [],
     dose_skips: [],
+    user_facts: [],
   };
 }
 

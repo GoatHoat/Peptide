@@ -11,7 +11,7 @@ import { Building, Done, Recommendations, ScheduleBuilder, type Recommendation }
 import { useAuth } from '../lib/auth';
 import { usePrefs } from '../lib/prefs';
 import { supabase } from '../lib/supabaseClient';
-import { rememberFact, addScheduleItem, getProfile, updateProfile } from '../lib/api';
+import { markOnboardedRemote, rememberFact, addScheduleItem, getProfile, updateProfile } from '../lib/api';
 import { toISODate } from '../lib/date';
 
 /**
@@ -122,6 +122,9 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
       await refreshProfile().catch(() => {});
     }
     markOnboarded(session?.user?.id ?? null);
+    /* The column, not just the device cache — otherwise signing in on a second
+       phone re-runs a flow this account has already finished. */
+    markOnboardedRemote().catch(() => {});
     onFinished();
   };
 

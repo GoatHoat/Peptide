@@ -986,3 +986,31 @@ export async function dismissFact(id: string): Promise<void> {
     .eq('id', id);
   if (error) throw error;
 }
+
+/**
+ * Has this ACCOUNT finished onboarding?
+ *
+ * `profiles.onboarded_at` is the source of truth; the local flag is a cache.
+ * Reading the column is what makes signing in on a new phone not re-run a flow
+ * the account has already completed — the cache alone is per browser, so a
+ * second device would start from the beginning.
+ *
+ * Returns null when it cannot tell (offline, or migration 0035 not applied), so
+ * the caller can fall back to the cache rather than treating "unknown" as "no".
+ */
+export async function fetchOnboardedAt(userId: string): Promise<Date | null | undefined> {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('onboarded_at')
+    .eq('id', userId)
+    .maybeSingle();
+  if (error) return undefined;
+  const at = (data as { onboarded_at?: string | null } | null)?.onboarded_at;
+  return at ? new Date(at) : null;
+}
+
+/** Stamps the account as onboarded. Idempotent — it never moves the date. */
+export async function markOnboardedRemote(): Promise<void> {
+  const { error } = await supabase.rpc('mark_onboarded');
+  if (error && !/does not exist|schema cache|PGRST20[0-9]/i.test(error.message ?? '')) throw error;
+}

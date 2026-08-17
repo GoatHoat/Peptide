@@ -1,5 +1,6 @@
 import { test as base, expect, type Page } from '@playwright/test';
 import { AUTH_STORAGE_KEY, ONBOARDED_KEY } from './env';
+import { STUB_USER_ID } from './catalogue';
 import { B12_PRODUCT, IRON_PRODUCT, seededScheduleItem, STUB_EMAIL } from './catalogue';
 import { installSupabaseStub, stubSession, type Stub } from './supabaseStub';
 
@@ -77,11 +78,24 @@ export { expect };
 export async function seedSignedIn(page: Page, stub: Stub): Promise<void> {
   stub.db.schedule_items.push(seededScheduleItem());
   await page.addInitScript(
-    (seed: { authKey: string; session: string; onboardedKey: string }) => {
+    (seed: { authKey: string; session: string; onboardedKey: string; userId: string }) => {
       localStorage.setItem(seed.authKey, seed.session);
-      localStorage.setItem(seed.onboardedKey, '1');
+      /* Scoped to the account and wrapped in the same envelope lib/storage
+         writes. This wrote the bare key with a '1' in it, which stopped being
+         what the app reads when local state was scoped per user — and a fixture
+         that writes a shape the app no longer reads is a fixture testing
+         nothing. */
+      localStorage.setItem(
+        `${seed.onboardedKey}:${seed.userId}`,
+        JSON.stringify({ userId: seed.userId, savedAt: Date.now(), data: true }),
+      );
     },
-    { authKey: AUTH_STORAGE_KEY, session: JSON.stringify(stubSession()), onboardedKey: ONBOARDED_KEY },
+    {
+      authKey: AUTH_STORAGE_KEY,
+      session: JSON.stringify(stubSession()),
+      onboardedKey: ONBOARDED_KEY,
+      userId: STUB_USER_ID,
+    },
   );
 }
 

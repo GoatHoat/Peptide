@@ -139,6 +139,13 @@ export async function installSupabaseStub(page: Page): Promise<Stub> {
         stub.deleted = true;
         return json(null);
       }
+      /* Onboarding is a property of the account. The fixture's profile row
+         carries onboarded_at, so a test that wants the flow to run clears it. */
+      if (relation === 'rpc/mark_onboarded') {
+        const row = stub.db.profiles[0];
+        if (row && !row.onboarded_at) row.onboarded_at = new Date().toISOString();
+        return json(row?.onboarded_at ?? null);
+      }
       /* Entitlement. Free by default, which is what the gates should be tested
          against; a test that wants pro sets stub.tier. */
       if (relation === 'rpc/my_entitlement') {
@@ -342,6 +349,11 @@ function applyFilters(rows: Row[], params: URLSearchParams): Row[] {
        every row it gets back, so serving it a null column is an uncaught
        TypeError on a screen that is always mounted. Postgres would never
        return that row. */
+    /* The positive form, used by getUserFacts for dismissed_at. */
+    if (raw === 'is.null') {
+      out = out.filter((r) => r[column] === null || r[column] === undefined);
+      continue;
+    }
     if (raw === 'not.is.null') {
       out = out.filter((r) => r[column] !== null && r[column] !== undefined);
       continue;

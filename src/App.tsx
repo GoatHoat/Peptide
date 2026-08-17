@@ -7,6 +7,7 @@ import { You } from './screens/You';
 import { Auth } from './screens/Auth';
 import { CatchUp } from './screens/CatchUp';
 import {
+  fetchOnboardedAt,
   getMissedSince,
   setDoseTaken,
   skipDose,
@@ -14,7 +15,7 @@ import {
   type Dose,
 } from './lib/api';
 import { Onboarding } from './onboarding/Onboarding';
-import { hasOnboarded } from './onboarding/store';
+import { hasOnboarded, markOnboarded } from './onboarding/store';
 import { useAuth } from './lib/auth';
 import { usePrefs } from './lib/prefs';
 import { SheetPortalProvider } from './lib/sheetPortal';
@@ -57,7 +58,23 @@ function Body({ framed }: { framed: boolean }) {
   const [onboarded, setOnboarded] = useState(() => hasOnboarded(null));
 
   useEffect(() => {
+    /* The cache first, so a returning user does not see the flow flash before
+       the round trip lands. Then the column, which is the source of truth and
+       the only thing that knows about other devices. `undefined` means we could
+       not tell — offline, or 0035 not applied — and the cache stands. */
     setOnboarded(hasOnboarded(userId));
+    if (!userId) return;
+    let live = true;
+    fetchOnboardedAt(userId).then((at) => {
+      if (!live || at === undefined) return;
+      if (at) {
+        setOnboarded(true);
+        markOnboarded(userId);
+      }
+    });
+    return () => {
+      live = false;
+    };
   }, [userId]);
 
   if (loading) return <div className="app splash" />;
