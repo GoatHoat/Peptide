@@ -2426,3 +2426,12 @@ button {
   );
   overflow: hidden;
 }
+
+/* 1.4.2 provenance, on the one screen that shows a target intake per card and
+   had neither a source nor a disclaimer on it. Quiet, above the fold, stated
+   as fact rather than as a warning — no icon, no colour. */
+.ob-disclaimer {
+  margin: 14px 0 -4px;
+  color: var(--t3);
+  line-height: 1.5;
+}

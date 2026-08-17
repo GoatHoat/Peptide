@@ -99,7 +99,6 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
         amount: amount.trim(),
         scheduled_time: time || null,
         glossary_id: pickedGlossaryId,
-        injection_site: null,
         start_date: startDate || toISODate(new Date()),
       });
       onAdded(item);

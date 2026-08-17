@@ -46,10 +46,10 @@ export function buildCSV(data: ExportData): string {
   lines.push('');
 
   lines.push('DOSE HISTORY');
-  lines.push(csvRow(['Date', 'Time', 'Name', 'Amount', 'Taken', 'Injection Site', 'Notes']));
+  lines.push(csvRow(['Date', 'Time', 'Name', 'Amount', 'Taken', 'Notes']));
   for (const d of data.doses) {
     lines.push(
-      csvRow([d.log_date, d.scheduled_time, d.name, d.amount, d.taken ? 'Yes' : 'No', d.injection_site, d.notes]),
+      csvRow([d.log_date, d.scheduled_time, d.name, d.amount, d.taken ? 'Yes' : 'No', d.notes]),
     );
   }
   lines.push('');
@@ -114,8 +114,7 @@ export function buildPDF(data: ExportData): jsPDF {
   if (data.doses.length === 0) addLine('No doses logged.');
   for (const d of data.doses) {
     const time = d.scheduled_time ? ` ${d.scheduled_time.slice(0, 5)}` : '';
-    const site = d.injection_site ? ` · ${d.injection_site}` : '';
-    addLine(`${d.log_date}${time} — ${d.name}, ${d.amount}${site} — ${d.taken ? 'Taken' : 'Not taken'}`);
+    addLine(`${d.log_date}${time} — ${d.name}, ${d.amount} — ${d.taken ? 'Taken' : 'Not taken'}`);
   }
   y += 6;
 

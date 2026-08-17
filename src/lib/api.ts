@@ -103,7 +103,6 @@ export interface Dose {
   taken: boolean;
   taken_at: string | null;
   notes: string | null;
-  injection_site: string | null;
   schedule_item_id: string | null;
 }
 
@@ -114,7 +113,6 @@ export interface NewDose {
   scheduled_time: string | null;
   glossary_id?: string | null;
   notes?: string | null;
-  injection_site?: string | null;
 }
 
 export interface StackItem {
@@ -139,7 +137,6 @@ export interface ScheduleItem {
   name: string;
   amount: string;
   scheduled_time: string | null;
-  injection_site: string | null;
   active: boolean;
   created_at: string;
   /** the first day this repeats on; absent until migration 0013 has been run */
@@ -151,7 +148,6 @@ export interface NewScheduleItem {
   amount: string;
   scheduled_time: string | null;
   glossary_id?: string | null;
-  injection_site?: string | null;
   /** YYYY-MM-DD, the user's local date. Defaults to today. */
   start_date?: string | null;
 }
@@ -251,36 +247,6 @@ export async function setDoseTaken(doseId: string, taken: boolean): Promise<Dose
 }
 
 /** date (YYYY-MM-DD) -> { total, taken } across the given inclusive range. */
-export interface InjectionSiteStat {
-  lastUsed: string;
-  count30d: number;
-}
-
-/** Groups the user's own logged injection sites by name — no interpretation, just a count and a most-recent date per site. */
-export async function getInjectionSiteStats(userId: string): Promise<Record<string, InjectionSiteStat>> {
-  const since = toISODate(new Date(Date.now() - 30 * 86_400_000));
-  const { data, error } = await supabase
-    .from('doses')
-    .select('injection_site, log_date')
-    .eq('user_id', userId)
-    .not('injection_site', 'is', null)
-    .gte('log_date', since)
-    .order('log_date', { ascending: false });
-  if (error) throw error;
-
-  const stats: Record<string, InjectionSiteStat> = {};
-  for (const row of data as { injection_site: string; log_date: string }[]) {
-    const key = row.injection_site.trim().toLowerCase();
-    const existing = stats[key];
-    if (!existing) {
-      stats[key] = { lastUsed: row.log_date, count30d: 1 };
-    } else {
-      existing.count30d += 1;
-      if (row.log_date > existing.lastUsed) existing.lastUsed = row.log_date;
-    }
-  }
-  return stats;
-}
 
 export async function getComplianceMap(
   userId: string,
@@ -327,7 +293,6 @@ export async function getScheduleItems(userId: string): Promise<ScheduleItem[]> 
 export interface PriorEntry {
   amount: string;
   scheduled_time: string | null;
-  injection_site: string | null;
   /** where it came from, so the form can say so rather than appear to know */
   source: 'schedule' | 'log';
   lastUsed: string | null;
@@ -355,7 +320,7 @@ export async function getPriorEntry(
 
   let schedQ = supabase
     .from('schedule_items')
-    .select('amount, scheduled_time, injection_site')
+    .select('amount, scheduled_time')
     .eq('user_id', userId);
   schedQ = glossaryId ? schedQ.eq('glossary_id', glossaryId) : schedQ.eq('name', name!);
   const { data: sched } = await schedQ.order('created_at', { ascending: false }).limit(1);
@@ -367,7 +332,7 @@ export async function getPriorEntry(
 
   let logQ = supabase
     .from('doses')
-    .select('amount, scheduled_time, injection_site, log_date')
+    .select('amount, scheduled_time, log_date')
     .eq('user_id', userId);
   logQ = glossaryId ? logQ.eq('glossary_id', glossaryId) : logQ.eq('name', name!);
   const { data: logged } = await logQ.order('log_date', { ascending: false }).limit(1);
@@ -510,7 +475,6 @@ export async function ensureTodayDoses(userId: string): Promise<void> {
       amount: item.amount,
       log_date: today,
       scheduled_time: item.scheduled_time,
-      injection_site: item.injection_site,
     })),
   );
   if (insertErr) throw insertErr;

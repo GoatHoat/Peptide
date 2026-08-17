@@ -242,8 +242,8 @@ export function makeTables(): Record<string, Row[]> {
  * failing to save.
  */
 export const INSERT_DEFAULTS: Record<string, Row> = {
-  schedule_items: { active: true, injection_site: null, scheduled_time: null, glossary_id: null },
-  doses: { taken: false, taken_at: null, notes: null, injection_site: null, schedule_item_id: null, glossary_id: null },
+  schedule_items: { active: true, scheduled_time: null, glossary_id: null },
+  doses: { taken: false, taken_at: null, notes: null, schedule_item_id: null, glossary_id: null },
 };
 
 /** An active schedule item, so Today has something to materialise a dose from. */
@@ -255,7 +255,7 @@ export function seededScheduleItem(over: Row = {}): Row {
     name: SCHEDULED_PRODUCT,
     amount: '15 mcg',
     scheduled_time: '08:00:00',
-    injection_site: null,
+   
     active: true,
     created_at: `${todayISO()}T06:00:00.000Z`,
     start_date: todayISO(),

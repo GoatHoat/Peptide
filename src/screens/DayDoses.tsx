@@ -48,7 +48,6 @@ export function DayDoses({ userId, date, onChanged }: Props) {
               </span>
               <span className="dose-amt" style={{ display: 'block' }}>
                 {item.amount}
-                {item.injection_site ? ` · ${item.injection_site}` : ''}
               </span>
             </span>
             <span className="dose-mark off" />
@@ -72,7 +71,6 @@ export function DayDoses({ userId, date, onChanged }: Props) {
             </span>
             <span className="dose-amt" style={{ display: 'block' }}>
               {d.amount}
-              {d.injection_site ? ` · ${d.injection_site}` : ''}
             </span>
           </span>
           <span className={`dose-mark ${d.taken ? 'on' : 'off'}`} onClick={() => toggle(d)} />

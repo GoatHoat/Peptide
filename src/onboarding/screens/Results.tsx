@@ -249,12 +249,23 @@ export function Recommendations({
         </Cta>
       }
     >
-      <Title>What we found</Title>
+      <Title>Vitamins and minerals for you</Title>
       <Sub>
-        Matched to {data.leftOut.goalNames.join(' and ').toLowerCase()}, then ranked by what you
+        Matched to {data.leftOut.goalNames.join(' and ').toLowerCase()}, then ordered by what you
         told us — what you don’t eat, what hasn’t agreed with you, and the strength of the
         evidence. Untick anything you don’t want.
       </Sub>
+      {/* 1.4.2. Every card below carries a figure, and until now this screen
+          said nothing about where those figures come from or what they are
+          not. The defence for showing them at all is that they are published
+          NIH reference intakes rather than anything this app decided — which
+          only works if it is on the screen, next to the numbers, without
+          scrolling. */}
+      <p className="ob-disclaimer t-caption">
+        Daily targets are the published NIH Office of Dietary Supplements reference intakes for
+        your age and sex, not a dose set by this app. Pepstack is not medical advice — talk to a
+        healthcare professional before starting anything.
+      </p>
 
       <div className="ob-recs">
         {picks.map((r) => (
@@ -311,7 +322,7 @@ export function Recommendations({
         )}
         {data.leftOut.noMatch.length > 0 && (
           <p>
-            <b>Matched but ranked lower:</b> {data.leftOut.noMatch.slice(0, 6).join(', ')}. Fewer of
+            <b>Also matched, not selected:</b> {data.leftOut.noMatch.slice(0, 6).join(', ')}. Fewer of
             your goals matched, or something you told us moved another one above them.
           </p>
         )}
@@ -455,6 +466,12 @@ export function ScheduleBuilder({
     >
       <Title>Your schedule</Title>
       <Sub>Press and hold a card to move it. We’ll say if something can’t go there.</Sub>
+      {/* The amounts on these cards came from the previous screen, so the same
+          statement has to follow them here. */}
+      <p className="ob-disclaimer t-caption">
+        Amounts are the published NIH reference intakes, not a dose set by this app, and you can
+        change any of them. Not medical advice.
+      </p>
 
       <div className="ob-slots" onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}>
         {slots.map((s) => (

@@ -59,7 +59,6 @@ export function DoseHistory({ userId, name, scheduleItemId, onScheduleRemoved }:
                   <div className="history-meta t-caption">
                     {d.amount}
                     {d.scheduled_time ? ` · ${formatTime(d.scheduled_time)}` : ''}
-                    {d.injection_site ? ` · ${d.injection_site}` : ''}
                   </div>
                 </div>
                 <span className={`dose-mark ${d.taken ? 'on' : 'off'}`} />
