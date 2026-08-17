@@ -33,3 +33,4 @@ ios/App/App.xcodeproj/project.xcworkspace/xcuserdata/
 
 # DSLD API responses, re-fetchable with scripts/fetch_ingredients.py
 scripts/.dsld_cache/
+ios/App/App/public/config.js
