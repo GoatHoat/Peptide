@@ -17,26 +17,12 @@ import { externalLink, PRIVACY_URL, TERMS_URL } from '../lib/legal';
 import { checkNotificationPermission, requestNotificationPermission, syncScheduleNotifications } from '../lib/notifications';
 import { addDays, computeMonthGrid, startOfMonth, toISODate } from '../lib/date';
 import { useNow } from '../lib/now';
+import { computeStreak } from '../lib/streak';
 import { MyStack } from './MyStack';
 import { ProgressNotes } from './ProgressNotes';
 import { ErrorState } from '../components/ErrorState';
 
 const DOW = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-
-function computeStreak(compliance: Record<string, { total: number; taken: number }>, today: Date): number {
-  const isComplete = (iso: string) => {
-    const c = compliance[iso];
-    return !!c && c.total > 0 && c.taken === c.total;
-  };
-  let cursor = today;
-  if (!isComplete(toISODate(today))) cursor = addDays(today, -1);
-  let count = 0;
-  while (isComplete(toISODate(cursor))) {
-    count++;
-    cursor = addDays(cursor, -1);
-  }
-  return count;
-}
 
 export function You() {
   const { user, signOut } = useAuth();

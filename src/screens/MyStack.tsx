@@ -15,6 +15,7 @@ import { IconClose } from '../components/Icons';
 import { toISODate } from '../lib/date';
 import { TAB, useActiveTab, useGoToTab } from '../lib/activeTab';
 import { Skeleton } from '../components/Skeleton';
+import { syncScheduleNotifications } from '../lib/notifications';
 import { ErrorState } from '../components/ErrorState';
 
 const YOU_TAB = 2;
@@ -81,7 +82,10 @@ export function MyStack() {
     // Today — not left behind because Stack and Schedule are technically
     // separate tables the user never asked to think about separately.
     const linkedSchedule = schedule.find((s) => s.glossary_id === item.glossary_id);
-    if (linkedSchedule) await removeScheduleItem(linkedSchedule.id);
+    if (linkedSchedule) {
+      await removeScheduleItem(linkedSchedule.id);
+      await syncScheduleNotifications(user.id);
+    }
     load();
   };
 

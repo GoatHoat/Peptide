@@ -44,6 +44,11 @@ export const KEY_BASES = [
      showing a spinner that never resolves. Cleared with everything else on
      sign-out — it is a list of what somebody takes. */
   'pepstack.today.v1',
+  /* Doses marked from a notification that have not reached the server. It is a
+     record of what somebody took, so it clears with the rest on sign-out — a
+     queue surviving into the next account would post one person's dose against
+     another's. See lib/doseQueue.ts. */
+  'pepstack.dosequeue.v1',
 ] as const;
 
 /**

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getDosesForDate, getScheduleItems, setDoseTaken, type Dose, type ScheduleItem } from '../lib/api';
 import { toISODate } from '../lib/date';
 import { Skeleton } from '../components/Skeleton';
+import { syncScheduleNotifications } from '../lib/notifications';
 import { ErrorState } from '../components/ErrorState';
 
 interface Props {
@@ -49,6 +50,8 @@ export function DayDoses({ userId, date, onChanged }: Props) {
     }
     setDoses((prev) => (prev ? prev.map((d) => (d.id === dose.id ? updated : d)) : prev));
     onChanged();
+    // the streak moved, and the reminder copy is fixed at schedule time
+    syncScheduleNotifications(userId);
   };
 
   if (failed) return <ErrorState message="This day did not load. It is usually the connection." onRetry={retry} />;

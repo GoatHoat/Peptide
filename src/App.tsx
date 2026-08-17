@@ -8,6 +8,7 @@ import { Auth } from './screens/Auth';
 import { CatchUp } from './screens/CatchUp';
 import {
   fetchOnboardedAt,
+  getDosesForDate,
   getMissedSince,
   setDoseTaken,
   skipDose,
@@ -21,6 +22,9 @@ import { usePrefs } from './lib/prefs';
 import { SheetPortalProvider } from './lib/sheetPortal';
 import { ActiveTabProvider, GoToTabProvider } from './lib/activeTab';
 import { EntitlementProvider } from './lib/entitlements';
+import { onBlockRequested, registerNotificationRouter } from './lib/notificationRouter';
+import { registerNotificationActions, syncScheduleNotifications } from './lib/notifications';
+import { enqueueMark, flushQueue } from './lib/doseQueue';
 
 /** Commit to an axis inside the first 10px and never revisit it. */
 const AXIS_THRESHOLD = 10;
@@ -56,6 +60,43 @@ function Body({ framed }: { framed: boolean }) {
      flow always runs — which is also what a brand new install should do. */
   const userId = session?.user?.id ?? null;
   const [onboarded, setOnboarded] = useState(() => hasOnboarded(null));
+
+  /* ── notifications, wired once and outside every screen ─────────────────
+     The action types have to be declared before anything is scheduled, or the
+     banner carries no buttons. The router has to outlive every component,
+     because the tap that matters most arrives when nothing is mounted. Both
+     read the user through a getter rather than a captured value, so a tap
+     handled an hour from now sees whoever is signed in then. */
+  const userRef = useRef<string | null>(userId);
+  userRef.current = userId;
+  useEffect(() => {
+    registerNotificationActions();
+    registerNotificationRouter(() => userRef.current);
+  }, []);
+
+  /* Doses marked from the lock screen that never reached the server. Flushed
+     when a session appears rather than at module load, because the write needs
+     an authenticated client. */
+  useEffect(() => {
+    if (!userId) return;
+    flushQueue(userId).then((sent) => {
+      if (sent > 0) syncScheduleNotifications(userId);
+    });
+  }, [userId]);
+
+  /* `schedule: { on: { hour, minute }, repeats: true }` is device-local, which
+     is right — but iOS does not move an already-scheduled notification when the
+     phone crosses a timezone. Re-syncing on foreground is what corrects that.
+     `visibilitychange` rather than @capacitor/app's appStateChange: it fires in
+     the WebView on resume, and it costs no new dependency. */
+  useEffect(() => {
+    if (!userId) return;
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') syncScheduleNotifications(userId);
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, [userId]);
 
   useEffect(() => {
     /* The cache first, so a returning user does not see the flow flash before
@@ -122,6 +163,27 @@ function CatchUpGate({ framed }: { framed: boolean }) {
     };
   }, [user?.id]);
 
+  /* A tapped reminder lands here rather than on Today, because this is already
+     the screen for "these came due, did you take them?" and it confirms with a
+     drag. A tap must never mark anything — people tap notifications to dismiss
+     them — and reusing this is what guarantees that rather than remembering to. */
+  useEffect(() => {
+    if (!user) return;
+    return onBlockRequested((time) => {
+      getDosesForDate(user.id, new Date())
+        .then((doses) => {
+          const inBlock = doses.filter(
+            (d) => d.scheduled_time && d.scheduled_time.slice(0, 5) === time && !d.taken,
+          );
+          if (inBlock.length > 0) {
+            setMissed(inBlock);
+            setChecked(true);
+          }
+        })
+        .catch((err) => console.error('could not open the block a reminder asked for', err));
+    });
+  }, [user?.id]);
+
   /* The app renders while the check is in flight rather than behind a spinner.
      A blank screen on every launch to ask a question that usually has no answer
      is a worse trade than the screen appearing a moment later. */
@@ -131,15 +193,21 @@ function CatchUpGate({ framed }: { framed: boolean }) {
         doses={missed}
         onTaken={(dose) =>
           setDoseTaken(dose.id, true)
-            .then(() => undefined)
+            // the streak moved, so tomorrow's banner copy is now stale
+            .then(() => void syncScheduleNotifications(user.id))
             /* Unhandled, this rejected into nothing whenever the catch-up
-               screen was reached without a connection. */
+               screen was reached without a connection. Queued rather than
+               dropped: this screen is also where a tapped reminder lands, and
+               it is reached on a train as often as anywhere. */
             .catch((err) => {
               console.error('catch-up mark failed', err);
+              enqueueMark(user.id, { doseId: dose.id, taken: true, at: new Date().toISOString() });
             })
         }
         onSkipped={(dose, reason, note) =>
           skipDose({ userId: user.id, doseId: dose.id, reason, note })
+            .then(() => void syncScheduleNotifications(user.id))
+            .catch((err) => console.error('skip failed', err))
         }
         onDismiss={() => setMissed([])}
       />

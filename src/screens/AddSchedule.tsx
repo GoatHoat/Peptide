@@ -10,6 +10,7 @@ import {
 } from '../lib/api';
 import { AmountInput } from '../components/AmountInput';
 import { formatShortDate, toISODate } from '../lib/date';
+import { syncScheduleNotifications } from '../lib/notifications';
 
 interface Props {
   userId: string;
@@ -101,6 +102,9 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
     setBusy(true);
     setError(null);
     try {
+      /* A reminder exists for a block, so adding to one changes its copy and
+         adding a new time creates one. Synced here rather than only on Today,
+         because this sheet also opens from Discover. */
       const item = await addScheduleItem(userId, {
         name: name.trim(),
         amount: amount.trim(),
@@ -109,6 +113,7 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
         start_date: startDate || toISODate(new Date()),
       });
       onAdded(item);
+      await syncScheduleNotifications(userId);
       onClose();
     } catch {
       setError('Could not save. Try again.');

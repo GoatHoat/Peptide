@@ -1,15 +1,19 @@
 import { Capacitor } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
-import { getScheduleItems, type ScheduleItem } from './api';
+import { getComplianceMap, getScheduleItems } from './api';
+import { addDays } from './date';
+import { blockCopy, DOSE_BLOCK_ACTIONS, groupByTime, idForBlock } from './notificationCopy';
 
-/** Stable 32-bit int from a UUID, so re-syncing replaces the same notification instead of duplicating it. */
-function idFor(scheduleItemId: string): number {
-  let hash = 0;
-  for (let i = 0; i < scheduleItemId.length; i++) {
-    hash = (hash * 31 + scheduleItemId.charCodeAt(i)) | 0;
-  }
-  return Math.abs(hash) || 1;
-}
+export {
+  blockCopy,
+  blockTime,
+  DOSE_BLOCK_ACTIONS,
+  groupByTime,
+  idForBlock,
+  type DoseBlockPayload,
+} from './notificationCopy';
+import { computeStreak } from './streak';
+import type { DoseBlockPayload } from './notificationCopy';
 
 /**
  * Ask for permission to post local notifications.
@@ -45,11 +49,39 @@ export async function checkNotificationPermission(): Promise<boolean> {
 }
 
 /**
- * Reconciles scheduled local notifications with the user's current active
- * schedule — one daily reminder per item that has a time set. Cancels
- * anything stale, adds anything new. No-ops outside a native build (the web
- * platform has no real local-notification equivalent), and never throws —
- * a missing/denied permission just means no reminders, not a crash.
+ * Declare the buttons the banner carries.
+ *
+ * Called once at startup, before anything is scheduled. A dose logged from the
+ * lock screen is a dose logged — for a timing app that is the whole reason
+ * somebody leaves notifications switched on.
+ */
+export async function registerNotificationActions(): Promise<void> {
+  if (!Capacitor.isNativePlatform()) return;
+  try {
+    await LocalNotifications.registerActionTypes({
+      types: [
+        {
+          id: DOSE_BLOCK_ACTIONS,
+          actions: [
+            { id: 'taken', title: 'Taken' },
+            { id: 'later', title: 'Remind me in 30 min' },
+          ],
+        },
+      ],
+    });
+  } catch {
+    /* An older iOS or a plugin that will not register still gets plain
+       notifications; buttons are an improvement on a tap, not a requirement. */
+  }
+}
+
+/**
+ * Reconciles scheduled local notifications with the user's current schedule.
+ *
+ * One notification per **time**, not per product. Cancels everything pending
+ * first, so a removed item's reminder cannot outlive it. No-ops outside a
+ * native build and never throws — reminders are a convenience, and a
+ * scheduling failure must not break the screen that asked for the sync.
  */
 export async function syncScheduleNotifications(userId: string): Promise<void> {
   if (!Capacitor.isNativePlatform()) return;
@@ -58,28 +90,76 @@ export async function syncScheduleNotifications(userId: string): Promise<void> {
     if (!granted) return;
 
     const items = await getScheduleItems(userId);
-    const timed = items.filter((item): item is ScheduleItem & { scheduled_time: string } => !!item.scheduled_time);
+    const blocks = groupByTime(items);
 
     const pending = await LocalNotifications.getPending();
     if (pending.notifications.length > 0) {
-      await LocalNotifications.cancel({ notifications: pending.notifications.map((n) => ({ id: n.id })) });
+      await LocalNotifications.cancel({
+        notifications: pending.notifications.map((n) => ({ id: n.id })),
+      });
     }
 
-    if (timed.length === 0) return;
+    if (blocks.length === 0) return;
+
+    /* The streak is fixed into the text at schedule time, because a local
+       notification's copy cannot change after it is scheduled. That is why
+       every place that can move the streak calls this again — see the callers
+       of syncScheduleNotifications. */
+    const today = new Date();
+    let streak = 0;
+    try {
+      const compliance = await getComplianceMap(userId, addDays(today, -60), today);
+      streak = computeStreak(compliance, today);
+    } catch {
+      /* No network. "Kick off your streak" is the safe wording to be wrong
+         with; the opposite congratulates somebody for a streak they may have
+         broken. */
+    }
 
     await LocalNotifications.schedule({
-      notifications: timed.map((item) => {
-        const [hour, minute] = item.scheduled_time.split(':').map(Number);
+      notifications: blocks.map(({ time, names }) => {
+        const [hour, minute] = time.split(':').map(Number);
+        const payload: DoseBlockPayload = { kind: 'dose-block', time, date: null };
         return {
-          id: idFor(item.id),
-          title: `Time for ${item.name}`,
-          body: item.amount,
+          id: idForBlock(userId, time),
+          ...blockCopy(time, names, streak),
+          actionTypeId: DOSE_BLOCK_ACTIONS,
+          extra: payload,
           schedule: { on: { hour, minute }, repeats: true, allowWhileIdle: true },
         };
       }),
     });
   } catch {
-    // Local notifications are a convenience, not core functionality — never
-    // let a scheduling failure break the screen that called this.
+    // see the doc comment: never let this break its caller
+  }
+}
+
+/**
+ * "Remind me in 30 min" — one notification, once, and never a second daily
+ * repeat sitting behind the real one.
+ *
+ * A distinct id derived from the block plus a marker, so a snooze cannot
+ * collide with the daily reminder it came from and cancel it.
+ */
+export async function snoozeBlock(userId: string, time: string): Promise<void> {
+  if (!Capacitor.isNativePlatform()) return;
+  try {
+    const at = new Date(Date.now() + 30 * 60 * 1000);
+    const payload: DoseBlockPayload = { kind: 'dose-block', time, date: null };
+    await LocalNotifications.schedule({
+      notifications: [
+        {
+          id: idForBlock(userId, `snooze:${time}`),
+          title: `Time for your ${time}`,
+          body: 'Tap to log your dose for the day.',
+          actionTypeId: DOSE_BLOCK_ACTIONS,
+          extra: payload,
+          // `at` with no `repeats`, so it fires once and is gone
+          schedule: { at, allowWhileIdle: true },
+        },
+      ],
+    });
+  } catch {
+    /* see syncScheduleNotifications */
   }
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { getDoseHistory, removeScheduleItem, type Dose } from '../lib/api';
 import { formatShortDate, formatTime } from '../lib/date';
 import { Skeleton } from '../components/Skeleton';
+import { syncScheduleNotifications } from '../lib/notifications';
 import { ErrorState } from '../components/ErrorState';
 
 interface Props {
@@ -39,6 +40,8 @@ export function DoseHistory({ userId, name, scheduleItemId, onScheduleRemoved }:
     setRemoving(true);
     try {
       await removeScheduleItem(scheduleItemId);
+      // the block may now be empty, or down to one product, which changes its title
+      await syncScheduleNotifications(userId);
       onScheduleRemoved?.();
     } finally {
       setRemoving(false);
