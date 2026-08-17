@@ -7,7 +7,16 @@ session stayed read-only and audited what it committed.
 
 **Nothing in this file was written by the session that produced
 `FINISH_REPORT.md`.** Where the two disagree, this file is the dissent — read
-both and decide. No file in the repo was modified to produce this audit.
+both and decide.
+
+The audit began read-only and did not stay that way. Three files were changed,
+each listed with its reasoning below and each in its own commit: the Privacy
+Policy and `ABOUT_THE_APP.md` (`61698d8`, see "The one change this audit made"),
+and `supabase/pending/README.md` (`ffe8cc4`, finding 3). **Nothing in `src/` was
+touched by this session**, so no application behaviour here is its doing. The
+original claim that nothing was modified is left corrected rather than deleted,
+since it is the same kind of point-in-time statement this file criticises
+elsewhere.
 
 ---
 
