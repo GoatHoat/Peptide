@@ -19,7 +19,7 @@ which part.
 | 4 | States and offline | **Partial** — offline done, the audits are not |
 | 5 | iOS | **Done** |
 | 6 | Name as one constant | **Done** |
-| 6b | What the app remembers | **Partial** — storage and UI done, interpretation is not |
+| 6b | What the app remembers | **Done** |
 | 7 | Final pass | **Partial** — checks run, three-account walkthrough not |
 | LEGAL 1 | Point the app at hosted docs | **Done** |
 | LEGAL 2 | Write both documents | **Done** |
@@ -44,13 +44,35 @@ dimensions, every empty state, every error state with a retry, 44×44 tap
 targets — were **not** carried out as audits. Individual screens have them;
 nobody went screen by screen. I also did not check safe areas at 375/393/430/440.
 
-### §6b, what is missing
+### §6b
 
-The table, the validation trigger, the write from onboarding, and the
-`You → What Pepstack remembers` list with a Forget control all exist. **The lazy
-interpretation step does not** — no model call ever runs, so `summary`, `tags`,
-`ingredient_keys` and `confidence` stay null and empty. Facts are stored and
-shown verbatim; the assistant does not yet read them.
+Complete. The interpretation step is now `supabase/functions/ask/memory.ts`,
+called from the first assistant turn after a note is written — **lazily, never
+during onboarding**, where a model call would sit between two taps, cost money
+for every signup including the ones that never come back, and fail badly
+offline. At most three notes per turn, so six notes are read over two
+conversations rather than paid for six times in one.
+
+`interpret_note` is a forced tool call, and then nothing it returns is trusted:
+
+| The model proposes | What happens in code |
+|---|---|
+| a tag outside the enum | dropped by `readInterpretation` **and** by the trigger |
+| an ingredient name | resolved through `resolve_ingredient_key`; unresolvable names are discarded and logged |
+| confidence below 0.6 | tags and ingredient keys both blanked; the raw sentence is still kept |
+| a medical note | tagged `other`, no ingredient keys, whatever it named |
+| malformed JSON, or nothing | the row is stamped `interpreted_at` anyway, or it is retried on every turn forever |
+
+`raw_text` is never written to. Eight unit tests in `tests/unit/ask.spec.ts`
+cover each row of that table.
+
+The assistant now reads up to ten undismissed facts, introduced as context and
+explicitly *"not a rule and it does not change any amount or any timing"*.
+
+One change to `0038`: `'other'` was added to the trigger's `known_tags`. Without
+it a medical note came back with empty tags and was indistinguishable from an
+uninterpreted one. Nothing in `recommend.ts` reads `'other'`, so marking it
+changes no schedule.
 
 ### §7, what is missing
 
@@ -83,6 +105,9 @@ account reads as free with a catalogue total of 0, and the upsell copy says
   added; `upgrade_required` added to the error union.
 - `index.ts` — the lifetime cap, reading the tier from the database rather than
   from the request, returning **402**.
+- `memory.ts` (new) + `index.ts` — the lazy `interpret_note` step and the
+  memory block in the opening turn. Until it is deployed, notes are stored and
+  shown verbatim but never interpreted and never read by the assistant.
 
 Until it is deployed the free cap does not exist and the client's 402 handling
 is unreachable.

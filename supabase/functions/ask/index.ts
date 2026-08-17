@@ -64,6 +64,12 @@ import type {
   RequestedCard,
 } from './lib.ts';
 import { ANSWER_FIXTURES, ERROR_FIXTURES, pickFixture } from './fixtures.ts';
+import {
+  INTERPRET_TOOL,
+  MIN_CONFIDENCE,
+  readInterpretation,
+  resolveIngredientNames,
+} from './memory.ts';
 
 /** Opting into server-side refusal fallbacks; see callModel below. */
 const FALLBACK_BETA = 'server-side-fallback-2026-07-01';
@@ -339,6 +345,13 @@ async function liveAnswer(
 
   const client = new Anthropic({ apiKey: Deno.env.get('ANTHROPIC_API_KEY') });
 
+  /* Interpret anything the user typed that has not been read yet. Lazy on
+     purpose — never during onboarding, where a model call sits between two
+     taps. Failures are swallowed: memory is additive, and a bad interpretation
+     must not cost somebody their answer. */
+  await interpretPendingFacts(supabase, client, userId).catch(() => {});
+  const facts = await loadFacts(supabase, userId).catch(() => []);
+
   const system = [
     { type: 'text', text: INSTRUCTIONS },
     // The catalogue is identical for every person, so the breakpoint goes here
@@ -501,4 +514,102 @@ async function loadStackNames(
     .eq('active', true)
     .limit(25);
   return (data ?? []).map((row: { name: string }) => row.name);
+}
+
+
+/** Facts this user has recorded, newest first, dismissals excluded. */
+async function loadFacts(
+  supabase: ReturnType<typeof createClient>,
+  userId: string,
+): Promise<{ summary: string | null; raw_text: string }[]> {
+  const { data } = await supabase
+    .from('user_facts')
+    .select('summary, raw_text')
+    .eq('user_id', userId)
+    .is('dismissed_at', null)
+    .order('created_at', { ascending: false })
+    .limit(10);
+  return (data ?? []) as { summary: string | null; raw_text: string }[];
+}
+
+/**
+ * Read any note that has not been interpreted yet, and store the validated
+ * result beside it.
+ *
+ * Everything the model proposes is checked here rather than trusted: tags
+ * against the enum, ingredient names against the synonym table, and the whole
+ * lot discarded below MIN_CONFIDENCE. The raw text is never modified.
+ *
+ * At most three per turn. Somebody who typed six notes gets them read over two
+ * conversations rather than paying for six extra model calls in one.
+ */
+async function interpretPendingFacts(
+  supabase: ReturnType<typeof createClient>,
+  client: Anthropic,
+  userId: string,
+): Promise<void> {
+  const { data } = await supabase
+    .from('user_facts')
+    .select('id, raw_text')
+    .eq('user_id', userId)
+    .is('interpreted_at', null)
+    .limit(3);
+
+  const pending = (data ?? []) as { id: string; raw_text: string }[];
+  if (pending.length === 0) return;
+
+  for (const fact of pending) {
+    try {
+      const reply = await client.messages.create({
+        model: MODEL,
+        max_tokens: 300,
+        tools: [INTERPRET_TOOL as never],
+        tool_choice: { type: 'tool', name: INTERPRET_TOOL.name },
+        messages: [
+          {
+            role: 'user',
+            content: `Someone wrote this about a supplement that did not agree with them:
+
+"${fact.raw_text}"`,
+          },
+        ],
+      });
+
+      const call = (reply.content ?? []).find(
+        (block: { type?: string }) => block.type === 'tool_use',
+      ) as { input?: Record<string, unknown> } | undefined;
+
+      const parsed = call?.input ? readInterpretation(call.input) : null;
+      if (!parsed) {
+        // still stamped, or it is retried on every turn forever
+        await supabase
+          .from('user_facts')
+          .update({ interpreted_at: new Date().toISOString() })
+          .eq('id', fact.id);
+        continue;
+      }
+
+      const { keys, discarded } = await resolveIngredientNames(async (name) => {
+        const { data } = await supabase.rpc('resolve_ingredient_key', { query_text: name });
+        return typeof data === 'string' && data ? data : null;
+      }, parsed.ingredientNames);
+      if (discarded.length) {
+        console.log(`interpret_note: dropped unresolvable ingredients: ${discarded.join(', ')}`);
+      }
+
+      await supabase
+        .from('user_facts')
+        .update({
+          summary: parsed.summary,
+          tags: parsed.tags,
+          ingredient_keys: parsed.confidence < MIN_CONFIDENCE ? [] : keys,
+          confidence: parsed.confidence,
+          interpreted_at: new Date().toISOString(),
+        })
+        .eq('id', fact.id);
+    } catch {
+      /* One note failing must not cost the user their answer. It stays
+         uninterpreted and is tried again next turn. */
+    }
+  }
 }

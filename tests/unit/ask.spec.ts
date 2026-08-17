@@ -18,6 +18,12 @@ import {
 } from '../../supabase/functions/ask/lib';
 import type { AskCitation, CatalogueEntry } from '../../supabase/functions/ask/lib';
 import { ANSWER_FIXTURES, pickFixture, STUB_TRIGGERS } from '../../supabase/functions/ask/fixtures';
+import {
+  FACT_TAGS,
+  INTERPRET_TOOL,
+  readInterpretation,
+  resolveIngredientNames,
+} from '../../supabase/functions/ask/memory';
 
 /**
  * The half of the ask function that can be wrong quietly.
@@ -338,4 +344,90 @@ test('the refusal fixtures decline without hedging or advising', () => {
     expect(fixture.answer).not.toContain('!');
     expect(fixture.answer.length).toBeGreaterThan(80);
   }
+});
+
+/* ── What the model is allowed to have read into a note ─────────────────────
+   This is the boundary between "somebody typed a sentence" and "the rules act
+   on a key". Every test below is a way the boundary could be crossed. */
+
+test('an interpretation keeps only tags from the taxonomy', () => {
+  const out = readInterpretation({
+    summary: 'Iron upsets their stomach.',
+    tags: ['iron-gi', 'made-up-tag', 'zinc-nausea'],
+    ingredient_names: ['iron'],
+    confidence: 0.9,
+  });
+  expect(out?.tags).toEqual(['iron-gi', 'zinc-nausea']);
+});
+
+test('a low-confidence reading carries no tags and no ingredients', () => {
+  const out = readInterpretation({
+    summary: 'Something disagreed with them.',
+    tags: ['iron-gi'],
+    ingredient_names: ['iron'],
+    confidence: 0.4,
+  });
+  expect(out?.tags).toEqual([]);
+  expect(out?.ingredientNames).toEqual([]);
+  // the sentence is still worth keeping, only the reading of it is not
+  expect(out?.summary).toBe('Something disagreed with them.');
+});
+
+test('a medical note names no ingredients whatever the model proposed', () => {
+  const out = readInterpretation({
+    summary: 'They are on a prescription blood thinner.',
+    tags: ['other'],
+    ingredient_names: ['vitamin k', 'fish oil'],
+    confidence: 0.95,
+  });
+  expect(out?.ingredientNames).toEqual([]);
+  expect(out?.tags).toEqual(['other']);
+});
+
+test('malformed model output degrades to nothing learned, never to a throw', () => {
+  expect(readInterpretation({})).toBeNull();
+  expect(readInterpretation({ summary: '   ' })).toBeNull();
+  const junk = readInterpretation({
+    summary: 'ok',
+    tags: 'iron-gi',
+    ingredient_names: [null, 42, 'iron'],
+    confidence: 'high',
+  });
+  expect(junk?.tags).toEqual([]);
+  expect(junk?.confidence).toBe(0);
+  expect(junk?.ingredientNames).toEqual([]);
+});
+
+test('confidence is clamped rather than trusted', () => {
+  expect(readInterpretation({ summary: 'a', tags: [], ingredient_names: [], confidence: 7 })?.confidence).toBe(1);
+  expect(readInterpretation({ summary: 'a', tags: [], ingredient_names: [], confidence: -3 })?.confidence).toBe(0);
+});
+
+test('an ingredient the catalogue does not know is dropped, not stored', async () => {
+  const known: Record<string, string> = { magnesium: 'magnesium', 'fish oil': 'omega-3' };
+  const { keys, discarded } = await resolveIngredientNames(
+    async (n) => known[n] ?? null,
+    ['magnesium', 'sea moss complex', 'fish oil', 'magnesium'],
+  );
+  expect(keys).toEqual(['magnesium', 'omega-3']);
+  expect(discarded).toEqual(['sea moss complex']);
+});
+
+test('a lookup that throws discards the name instead of failing the turn', async () => {
+  const { keys, discarded } = await resolveIngredientNames(async () => {
+    throw new Error('network');
+  }, ['iron']);
+  expect(keys).toEqual([]);
+  expect(discarded).toEqual(['iron']);
+});
+
+test('the interpret tool forces the enum the trigger also enforces', () => {
+  const tagEnum = INTERPRET_TOOL.input_schema.properties.tags.items.enum;
+  expect(tagEnum).toEqual([...FACT_TAGS]);
+  expect(INTERPRET_TOOL.input_schema.required).toEqual([
+    'summary',
+    'tags',
+    'ingredient_names',
+    'confidence',
+  ]);
 });

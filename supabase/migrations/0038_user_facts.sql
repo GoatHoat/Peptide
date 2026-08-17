@@ -92,8 +92,14 @@ language plpgsql
 set search_path = public
 as $$
 declare
+  /* Kept in step with FACT_TAGS in supabase/functions/ask/memory.ts. 'other'
+     is in the list so a medical note stays marked as one — the assistant may
+     mention it, and nothing in recommend.ts reads 'other', so marking it costs
+     nothing and losing the marker would make a medical note indistinguishable
+     from an uninterpreted one. */
   known_tags text[] := array[
-    'iron-gi', 'mag-gi', 'fishoil-burp', 'niacin-flush', 'large-caps', 'zinc-nausea'
+    'iron-gi', 'mag-gi', 'fishoil-burp', 'niacin-flush', 'large-caps',
+    'zinc-nausea', 'other'
   ];
 begin
   new.ingredient_keys := public.validate_ingredient_keys(new.ingredient_keys);
