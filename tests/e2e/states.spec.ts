@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, seedSignedIn, test } from './support/app';
+import { NAME } from '../../src/lib/brand';
 
 /**
  * The four sweeps in section 4 of PROMPT_FINISH.md, as assertions rather than
@@ -144,7 +145,9 @@ const SHEETS = [
   { tab: 'You', index: 2, open: 'Notifications' },
   { tab: 'You', index: 2, open: 'Subscription' },
   { tab: 'You', index: 2, open: 'Export Data' },
-  { tab: 'You', index: 2, open: 'What Pepstack remembers' },
+  /* Named through the constant, so renaming the app does not silently drop
+     this sheet out of the sweep. */
+  { tab: 'You', index: 2, open: `What ${NAME} remembers` },
   { tab: 'You', index: 2, open: 'Delete Account' },
   { tab: 'You', index: 2, open: 'Add note' },
 ] as const;

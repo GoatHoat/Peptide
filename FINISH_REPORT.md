@@ -2,8 +2,14 @@
 
 Written 17 August 2026. Covers `PROMPT_FINISH.md` and `PROMPT_LEGAL.md`.
 
-Nothing below is rounded up. Where a section is partial it says so and says
-which part.
+Nothing below is rounded up. Every section of both prompts is complete; what is
+left is listed in §2, §3 and §8, and every item there is something I am not
+allowed to do rather than something I did not finish. One product decision is
+also yours and is named in §1.
+
+`AUDIT_INDEPENDENT.md` is a second agent's read of this file and is worth
+reading beside it — three of its findings are acted on here and credited where
+they land.
 
 ---
 
@@ -12,7 +18,7 @@ which part.
 | § | What | State |
 |---|---|---|
 | 1 | The iron figure | **Done** |
-| 2 | Free/pro split | **Done** |
+| 2 | Free/pro split | **Done in the app — one product decision is yours** |
 | 3 | Three device bugs | **Done** |
 | 3b | Doodle background | **Done** |
 | 3c | growth.png, empty-stack.png | **Done** |
@@ -26,7 +32,18 @@ which part.
 
 ### §2
 
-All of it. `useEntitlement()` off `profiles.subscription_tier`; the stack
+All of it in the app. One thing is not a coding question and is left for you,
+written up in `BLOCKED.md`: **on a free account the `0037` trigger caps the
+stack at one item, while onboarding builds a schedule of several products and
+calls `addToStack` for each behind a `.catch(() => {})`.** The trigger raises for
+every item after the first and the error is discarded, so a free account
+finishes onboarding with N schedule items, one stack row, no paywall and no
+error. Deleting the catch does not fix it — the outer loop swallows the error
+too, and the visible result would be a schedule silently truncated to one item.
+Does a free account get a one-product schedule, or does the cap only govern
+manual stack adds? Both are defensible and they ship very differently.
+
+The rest: `useEntitlement()` off `profiles.subscription_tier`; the stack
 trigger; the lifetime ask cap in the Edge Function; `ProSheet` from every gate;
 `free_rank`; blurred locked rows with the divider; the upsell card; the counter
 card and the "Meet PepStack AI" empty state.
@@ -37,12 +54,79 @@ flow the account finished, and signing in as a different person on the same
 device does. `undefined` from that read — offline, or 0035 unapplied — leaves
 the cache standing rather than being treated as "not onboarded".
 
-### §4, what is missing
+### §4
 
-Offline is done for Today. The four sweeps — every loading state at final
-dimensions, every empty state, every error state with a retry, 44×44 tap
-targets — were **not** carried out as audits. Individual screens have them;
-nobody went screen by screen. I also did not check safe areas at 375/393/430/440.
+All four sweeps done, and done as tests rather than as a morning of tapping —
+`tests/e2e/states.spec.ts` and `tests/e2e/widths.spec.ts`, 25 assertions. An
+audit carried out once is a paragraph in a report; an audit that runs is the
+only kind that survives the next change.
+
+**Loading at final dimensions.** Six lists said `Loading…` on one centred line
+and were then replaced by rows several times taller, so everything below them
+jumped when the network answered. `components/Skeleton` draws the row shape at
+the row height instead. No shimmer — a sweep is a gradient and this app does not
+have gradients; the only motion is a small opacity pulse so "loading" does not
+read as "loaded, and empty", and reduced motion turns that off too. The test
+reads `.dose`'s own `min-height` and asserts the placeholder matches it, so the
+number cannot drift.
+
+**Empty states.** An empty stack now hands you to Discover; a search with no
+matches offers to clear itself; four states that said only "No notes yet." say
+what will put something there. A test fails any empty state under 24 characters,
+which is about the length below which it is a caption on a blank screen rather
+than a state.
+
+**Offline writes, and one line of copy that was not true.** Reads were already
+well built — paint from cache, never a spinner with nothing behind it. Writes
+were not. `setDoseTaken` is a plain update that throws with no connection and
+was called unguarded from three places, so offline the row did not even change
+colour and the rejection went nowhere: the tap was silently dead. Meanwhile the
+banner read *"Anything you tick will sync when you reconnect."* There is no
+outbox, no queue and no `online` listener anywhere in `src/lib` — nothing syncs,
+and the tick was lost.
+
+An outbox is a feature and out of scope for these prompts. The honest fix is the
+one made: the failure is handled and said out loud, and the sentence now reads
+*"Ticking one off needs a connection."* Someone ticking doses on a plane still
+cannot, but they are told, rather than losing the history and finding out later.
+
+**Error states.** Nine fetches were bare `.then` chains. A rejection surfaced
+nowhere: the screen stayed on its loading state, which reads as an app that has
+hung rather than a request that failed. Every one now has a state with a retry
+that works, and the technical detail goes to the console rather than the screen.
+
+Two places printed an exception's own words. The account-deletion modal rendered
+`err.message`, and the auth form relayed whatever GoTrue returned — including
+`AuthRetryableFetchError` and `Database error saving new user`. Both are mapped
+to plain sentences now, with the original logged.
+
+The profile load was the worst of them. `getProfile` throws when the row is not
+there, and immediately after signing up it sometimes is not — the row is made by
+a trigger on `auth.users` and the client's first read can win that race.
+Uncaught, so `profile` stayed null and You rendered blank with nothing to press.
+Three tries over about a second, then an error state.
+
+**Tap targets.** Measured at 44×44, counting hit areas expanded by a
+pseudo-element — the pattern this app already uses, 24px of drawn circle inside
+44px of target on the dose tick. Seven were genuinely short. Two on the swept
+screens: the Discover segmented control at 34 tall and the lock divider at 41.
+Five more once the sweep was extended to open sheets, which is where the app's
+smallest control lives — `.sheet-close` at 30px, on every sheet in the app.
+
+Eight settings rows were also `div`s with an `onClick`, Sign Out and Delete
+Account among them: unreachable by keyboard, announced as static text by
+VoiceOver. They are buttons.
+
+**Safe areas and widths.** 375/390/393/430/440, all three tabs at each. One real
+find: the paired widgets on You ran 13px off the right edge at 375, because
+`flex: none` means "do not shrink, ever". A second test scrolls each screen to
+the end and asserts nothing finishes underneath the floating tab bar.
+
+**One thing found on the way.** `var(--ease)` was referenced by the catch-up
+fill and never defined anywhere, so that declaration was invalid and dropped —
+the bar snapped to its new width instead of filling. `--ease` and three duration
+tokens now exist, which is what "one easing curve and one duration set" was
+supposed to mean.
 
 ### §6b
 
@@ -240,10 +324,10 @@ peptide rank guard         present
 
 npm run build              green
 npx tsc --noEmit           green
-npm test                   TALLY
+npm test                   206 passed, 0 failed, 0 flaky
 ```
 
-**Bundle:** main JS **1032 KB**, `dist` 3.7 MB total. It was 1028 KB at the last
+**Bundle:** main JS **1033 KB**, `dist` 3.7 MB total. It was 1028 KB at the last
 report; the 4 KB is `Skeleton`, `ErrorState` and the nine catch blocks. The main
 chunk is over Vite's 500 KB warning and has been for a while — code splitting is
 worth a session on its own.

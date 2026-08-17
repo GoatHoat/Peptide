@@ -249,7 +249,7 @@ export function You() {
           <span className="row-label">Export Data</span>
         </button>
         <button type="button" className="row pressable" onClick={() => setOpenSheet('memory')}>
-          <span className="row-label">What Pepstack remembers</span>
+          <span className="row-label">{`What ${NAME} remembers`}</span>
           <span className="row-value">{facts.length === 0 ? 'Nothing yet' : `${facts.length}`}</span>
         </button>
         <a className="row pressable" href={PRIVACY_URL} {...externalLink}>
@@ -339,7 +339,7 @@ export function You() {
           </div>
         )}
       </Sheet>
-      <Sheet open={openSheet === 'memory'} onClose={() => setOpenSheet(null)} title="What Pepstack remembers">
+      <Sheet open={openSheet === 'memory'} onClose={() => setOpenSheet(null)} title={`What ${NAME} remembers`}>
         <div className="t-body" style={{ color: 'var(--t2)', marginBottom: 16 }}>
           Things you told us in your own words. The assistant reads these so you do not have to
           repeat yourself. Remove anything you would rather it forgot.
