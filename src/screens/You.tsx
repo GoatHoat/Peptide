@@ -58,6 +58,8 @@ export function You() {
   const [deleteConfirm, setDeleteConfirm] = useState('');
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  /** why a Forget did not take, kept next to the list rather than in a toast */
+  const [forgetError, setForgetError] = useState<string | null>(null);
   /* What the assistant is allowed to remember, and the control to remove any of
      it. Memory the user cannot see is memory they cannot correct. */
   const [facts, setFacts] = useState<UserFact[]>([]);
@@ -362,7 +364,21 @@ export function You() {
                 <button
                   className="memory-forget pressable"
                   onClick={async () => {
-                    await dismissFact(f.id).catch(() => {});
+                    /* Swallowing this was the same defect as the unguarded dose
+                       tick, on the one path where it matters most: this is
+                       erasure. A row that leaves the list whether or not the
+                       server accepted the delete tells somebody a note is
+                       forgotten while the assistant is still reading it and
+                       still sending it on. The row stays until the delete is
+                       known to have landed. */
+                    setForgetError(null);
+                    try {
+                      await dismissFact(f.id);
+                    } catch (err) {
+                      console.error('forgetting a note failed', err);
+                      setForgetError('That did not save — it is still remembered. Try again.');
+                      return;
+                    }
                     setFacts((prev) => prev.filter((x) => x.id !== f.id));
                   }}
                 >
@@ -371,6 +387,12 @@ export function You() {
               </li>
             ))}
           </ul>
+        )}
+
+        {forgetError && (
+          <div className="auth-error t-secondary" style={{ marginTop: 12 }}>
+            {forgetError}
+          </div>
         )}
       </Sheet>
 

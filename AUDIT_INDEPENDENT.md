@@ -9,14 +9,20 @@ session stayed read-only and audited what it committed.
 `FINISH_REPORT.md`.** Where the two disagree, this file is the dissent — read
 both and decide.
 
-The audit began read-only and did not stay that way. Three files were changed,
-each listed with its reasoning below and each in its own commit: the Privacy
-Policy and `ABOUT_THE_APP.md` (`61698d8`, see "The one change this audit made"),
-and `supabase/pending/README.md` (`ffe8cc4`, finding 3). **Nothing in `src/` was
-touched by this session**, so no application behaviour here is its doing. The
-original claim that nothing was modified is left corrected rather than deleted,
-since it is the same kind of point-in-time statement this file criticises
-elsewhere.
+The audit began read-only and did not stay that way. Everything it changed, each
+in its own commit:
+
+| Files | Commit | Why |
+|---|---|---|
+| `website/privacy.html`, `ABOUT_THE_APP.md` | `61698d8` | §6b made the policy wrong about a third-party disclosure. See "The one change this audit made" |
+| `supabase/pending/README.md` | `ffe8cc4` | The migration checklist was seven short — finding 3 |
+| `src/screens/You.tsx`, `src/components/ProSheet.tsx` | *this commit* | Findings 5 and 6, after the other session had finished and gone idle. 206 passed |
+
+This paragraph has now been corrected twice — it first claimed no file was
+modified, then claimed nothing in `src/` was. Both were true when written. They
+are corrected in place rather than deleted, because a document that quietly
+rewrites its own history is worth less than one that shows where it was wrong,
+and this file spends several sections making that exact argument about others.
 
 ---
 
@@ -31,8 +37,8 @@ Most of what follows was acted on while it was being written. Current state as o
 | 2 | Offline tick silently dead, banner promised a sync that did not exist | **Fixed** in `6181e6f` — and it found two more unguarded call sites than this audit did |
 | 3 | Migration checklist seven short | **Fixed** in `ffe8cc4` |
 | 4 | `0025` re-run after `0037` aborts | **Documented** in the README itself |
-| 5 | `dismissFact().catch(() => {})` | **Still live** — `You.tsx:365`, unchanged as of `6bf4c02`. See below |
-| 6 | `ProSheet` falls back to "All 304 products" | **Still live** — `ProSheet.tsx:55` |
+| 5 | `dismissFact().catch(() => {})` | **Fixed** — the row now stays until the delete lands |
+| 6 | `ProSheet` falls back to "All 304 products" | **Fixed** — says "All products" when the count is unknown |
 | 7 | Width sweep never run | **Fixed** — now `tests/e2e/widths.spec.ts` |
 | 8 | Nine tap targets under 44 | **Five fixed**, `.tabs-tab` earlier; `.bodymap-chip` 36, `.setup-var` 40, `.recon-unit-btn` 36 remain on unswept screens |
 | 9 | Dead vial/reconstitution plumbing | **Still there, deliberately** — reported not deleted, CLAUDE.md r7 |
@@ -40,7 +46,7 @@ Most of what follows was acted on while it was being written. Current state as o
 | — | `user_facts` undisclosed in the privacy policy | **Fixed** in `61698d8` |
 | — | RLS reviewed, not tested | **Recorded**, adopted into `BLOCKED.md` |
 
-### Finding 5 is the one to look at, because of what it is
+### Finding 5 — fixed, and it was the last of its kind
 
 `6181e6f` fixed the unguarded offline tick. `dismissFact(f.id).catch(() => {})`
 is the **same defect, one screen over**, and it survived the fix:
@@ -51,11 +57,30 @@ await dismissFact(f.id).catch(() => {});
 setFacts((prev) => prev.filter((x) => x.id !== f.id));   // row vanishes regardless
 ```
 
-The memory disappears from the UI whether or not the server accepted the delete.
-On a *memory* feature that is the erasure path, so a user who forgets something
-and sees it gone may find it still there — and still being sent to Anthropic —
-next session. It is the last live instance of the pattern this audit kept
-finding, and it is three lines to fix.
+The memory disappeared from the UI whether or not the server accepted the delete.
+On a *memory* feature that is the erasure path, so a user who forgot something
+and saw it go could find it still there — and still being sent to Anthropic —
+next session.
+
+Fixed in the same shape `6181e6f` used for the dose tick: the row stays until the
+delete is known to have landed, and the failure is shown rather than swallowed.
+
+```ts
+setForgetError(null);
+try {
+  await dismissFact(f.id);
+} catch (err) {
+  console.error('forgetting a note failed', err);
+  setForgetError('That did not save — it is still remembered. Try again.');
+  return;                                    // the row stays
+}
+setFacts((prev) => prev.filter((x) => x.id !== f.id));
+```
+
+That closes the last user-facing instance of the swallowed-error pattern this
+audit kept running into. `linkToStack` still carries a bare `.catch(() => {})`,
+but deliberately — see finding 1, where removing it makes things worse and the
+real answer is a product decision.
 
 ### §6b silently regressed two sections that were already signed off
 

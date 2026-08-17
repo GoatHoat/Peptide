@@ -52,7 +52,13 @@ export function ProSheet({
   const [busy, setBusy] = useState<PlanId | 'restore' | null>(null);
   const [note, setNote] = useState<string | null>(null);
 
-  const total = catalogueTotal || 304;
+  /* `my_entitlement()` is absent until 0037 is applied, and then catalogueTotal
+     is 0. This used to fall back to a hardcoded 304 — a number nobody had
+     checked against the catalogue, quoted on the one screen somebody is being
+     asked to pay from. PROMPT_TIERS said read the count from the database, so
+     when the database has not answered, say the thing that is true either way
+     rather than a figure that might not be. */
+  const total = catalogueTotal > 0 ? `${catalogueTotal} ` : '';
 
   return (
     <Sheet open={open} onClose={onClose} title={PRO_NAME}>
