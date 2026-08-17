@@ -176,7 +176,11 @@ test('4. "never tried" retires the follow-up question', async ({ page }, info) =
     .slice(1)
     .map((s, i) => (s.progress ?? 0) - (seen[i].progress ?? 0))
     .filter((d) => d > 1);
-  expect(jumps, 'the bar moves one segment per screen except over the retired question').toEqual([2]);
+  /* Two now, not one. q3 is retired by answering "never tried", and free-pick
+     is retired by subscribing — this persona buys, so the screen that asks a
+     free user which product to keep is not shown. Both are steps skipped for a
+     reason the person gave, which is exactly what a jump of two means. */
+  expect(jumps, 'the bar moves one segment per screen except over a retired one').toEqual([2, 2]);
 });
 
 test('5. going back and changing that answer brings the question back', async ({ page }, info) => {
@@ -562,10 +566,12 @@ test('a step index outside the flow clamps instead of blanking', async ({ page }
   await page.goto('/');
 
   const last = (await readStore(page)).step;
-  /* 18 is the last index of a 19-screen FLOW, so this is also where the length
-     of the flow is pinned: 0.12 asked for under 20 and this is what holds it
-     there. A screen added back has to change this line and say why. */
-  expect(last, 'clamped to the last step rather than off the end').toBe(18);
+  /* 19 is the last index of a 20-screen FLOW, and this line is where the
+     length of the flow is pinned. It was 18. `free-pick` was added after the
+     paywall — the screen that asks a free user which of their selections to
+     track — which is a step that gathers an answer rather than padding, so the
+     count is allowed to move and this line says why. */
+  expect(last, 'clamped to the last step rather than off the end').toBe(19);
 
   // and the screen it clamped onto is a screen, not a blank
   await expect(page.getByRole('heading', { name: /You.re set/ })).toBeVisible();

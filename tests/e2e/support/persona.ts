@@ -340,7 +340,11 @@ const HANDLERS: Record<string, Handler> = {
   recommendations: {
     ready: async (page) => {
       await expect(heading(page, 'Vitamins and minerals for you')).toBeVisible();
-      await expect(page.locator('.ob-rec').first()).toBeVisible();
+      /* The frame arrives before the list now — title, disclaimer and three
+         card-height placeholders — so the heading is no longer evidence the
+         data landed. This waits on the cards, and waits longer than the
+         default because it is a round trip behind a 2.2s hold. */
+      await expect(page.locator('.ob-rec').first()).toBeVisible({ timeout: 25_000 });
     },
     act: async (page, _p, run) => {
       for (const card of await page.locator('.ob-rec').all()) {
