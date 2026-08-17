@@ -40,6 +40,10 @@ export const KEY_BASES = [
   'pepstack.ask.v1',
   'pepstack.onboarding.v1',
   'pepstack.onboarded.v1',
+  /* Today's doses, so the screen renders on a plane or in a lift rather than
+     showing a spinner that never resolves. Cleared with everything else on
+     sign-out — it is a list of what somebody takes. */
+  'pepstack.today.v1',
 ] as const;
 
 /**

@@ -2644,3 +2644,43 @@ button {
   text-align: center;
   color: var(--t3);
 }
+
+/* Offline. A statement, not an alarm — no icon, no colour, no retry button,
+   because there is nothing to retry: it reconnects on its own. */
+.offline-line {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--hair);
+  border-radius: 14px;
+  color: var(--t2);
+  line-height: 1.5;
+}
+
+/* What the app remembers. Every row shows the user's own words, not only the
+   model's reading of them — a summary you cannot check against the original is
+   not something you can correct. */
+.memory-list { margin: 0; padding: 0; list-style: none; }
+.memory-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--hair);
+}
+.memory-text { flex: 1; min-width: 0; }
+.memory-summary {
+  display: block;
+  font-size: calc(15px * var(--text-scale));
+  color: var(--t1);
+}
+.memory-raw { display: block; margin-top: 3px; color: var(--t3); }
+.memory-forget {
+  flex: none;
+  min-height: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  color: var(--purple);
+  font: inherit;
+  font-size: calc(14px * var(--text-scale));
+}

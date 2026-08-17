@@ -11,7 +11,7 @@ import { Building, Done, Recommendations, ScheduleBuilder, type Recommendation }
 import { useAuth } from '../lib/auth';
 import { usePrefs } from '../lib/prefs';
 import { supabase } from '../lib/supabaseClient';
-import { addScheduleItem, getProfile, updateProfile } from '../lib/api';
+import { rememberFact, addScheduleItem, getProfile, updateProfile } from '../lib/api';
 import { toISODate } from '../lib/date';
 
 /**
@@ -86,6 +86,19 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
         reactions_note: state.reactionsNote.trim() || null,
         form_prefs: state.forms,
       }).catch(() => {});
+
+      /* The free-text reaction becomes memory the assistant can read. Stored
+         uninterpreted — interpretation is lazy and deliberately never happens
+         during onboarding, because a model call between two taps is a network
+         round trip the flow cannot afford. */
+      if (state.reactionsNote.trim()) {
+        await rememberFact({
+          userId,
+          source: 'onboarding_reaction',
+          rawText: state.reactionsNote,
+        }).catch(() => {});
+      }
+
       for (const item of state.schedule) {
         const rec = picks.find((p) => p.id === item.id);
         if (!rec) continue;

@@ -6,7 +6,15 @@ import { DoseHistory } from './DoseHistory';
 import { DayDoses } from './DayDoses';
 import { useAuth } from '../lib/auth';
 import { usePrefs } from '../lib/prefs';
-import { ensureTodayDoses, getComplianceMap, getDosesForDate, setDoseTaken, type Dose } from '../lib/api';
+import {
+  cacheToday,
+  ensureTodayDoses,
+  getComplianceMap,
+  getDosesForDate,
+  readTodayCache,
+  setDoseTaken,
+  type Dose,
+} from '../lib/api';
 import { addDays, formatDisplayDate, formatShortDate, parseHour, startOfWeekMonday, toISODate } from '../lib/date';
 import { useNow } from '../lib/now';
 import { useActiveTab } from '../lib/activeTab';
@@ -45,6 +53,7 @@ export function Today() {
   const [doses, setDoses] = useState<Dose[] | null>(null);
   const [compliance, setCompliance] = useState<Record<string, { total: number; taken: number }>>({});
   const [sheet, setSheet] = useState<SheetState>(null);
+  const [offline, setOffline] = useState(false);
   const { isPro, askLeft, lockedTotal, catalogueTotal } = useEntitlement();
   const [pro, setPro] = useState(false);
 
@@ -79,16 +88,33 @@ export function Today() {
 
   const load = useCallback(async () => {
     if (!user) return;
+    /* Paint from the cache first, so a cold start with no network shows the
+       day instead of a spinner that never resolves. The network result
+       replaces it a moment later when there is one. */
+    const cached = readTodayCache(user.id, todayISO);
+    if (cached) setDoses((prev) => prev ?? cached);
     // Materialize today's row for every active schedule item before reading —
     // that's the whole trick: the user set the amount up once, this just
     // stops asking them to retype it every morning.
-    await ensureTodayDoses(user.id);
-    const [d, c] = await Promise.all([
-      getDosesForDate(user.id, today),
-      getComplianceMap(user.id, weekStart, addDays(weekStart, 6)),
-    ]);
+    let d: Dose[];
+    let c: Record<string, { total: number; taken: number }>;
+    try {
+      await ensureTodayDoses(user.id);
+      [d, c] = await Promise.all([
+        getDosesForDate(user.id, today),
+        getComplianceMap(user.id, weekStart, addDays(weekStart, 6)),
+      ]);
+    } catch {
+      /* No network, or the backend is unreachable. Say so quietly and keep
+         whatever the cache gave us — never a spinner with nothing behind it. */
+      setOffline(true);
+      if (!cached) setDoses([]);
+      return;
+    }
     setDoses(d);
     setCompliance(c);
+    setOffline(false);
+    cacheToday(user.id, todayISO, d);
     syncScheduleNotifications(user.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, todayISO]);
@@ -139,6 +165,12 @@ export function Today() {
         <h1 className="t-title">Today</h1>
         <div className="screen-sub t-body">{formatDisplayDate(today)}</div>
       </div>
+
+      {offline && (
+        <div className="offline-line t-caption">
+          Offline — showing your last saved day. Anything you tick will sync when you reconnect.
+        </div>
+      )}
 
       {/* Colour carries the state, one property, no dot: accent = completed,
           light grey = today, grey = missed, glass = still to come, and a dimmer

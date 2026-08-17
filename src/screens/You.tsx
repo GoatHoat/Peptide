@@ -4,7 +4,14 @@ import { IconClock } from '../components/Icons';
 import { Sheet } from '../components/Sheet';
 import { useAuth } from '../lib/auth';
 import { usePrefs } from '../lib/prefs';
-import { deleteAccount, getComplianceMap, getScheduleItems } from '../lib/api';
+import {
+  deleteAccount,
+  dismissFact,
+  getComplianceMap,
+  getScheduleItems,
+  getUserFacts,
+  type UserFact,
+} from '../lib/api';
 import { exportCSV, exportPDF } from '../lib/export';
 import { externalLink, PRIVACY_URL, TERMS_URL } from '../lib/legal';
 import { checkNotificationPermission, requestNotificationPermission, syncScheduleNotifications } from '../lib/notifications';
@@ -34,7 +41,7 @@ export function You() {
   const { user, signOut } = useAuth();
   const { profile, save } = usePrefs();
   const [compliance, setCompliance] = useState<Record<string, { total: number; taken: number }>>({});
-  const [openSheet, setOpenSheet] = useState<'notifications' | 'subscription' | 'export' | 'delete' | null>(null);
+  const [openSheet, setOpenSheet] = useState<'notifications' | 'subscription' | 'export' | 'delete' | 'memory' | null>(null);
   const [exporting, setExporting] = useState<'csv' | 'pdf' | null>(null);
   const [exportError, setExportError] = useState<string | null>(null);
   const [reminderCount, setReminderCount] = useState(0);
@@ -46,6 +53,9 @@ export function You() {
   const [deleteConfirm, setDeleteConfirm] = useState('');
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  /* What the assistant is allowed to remember, and the control to remove any of
+     it. Memory the user cannot see is memory they cannot correct. */
+  const [facts, setFacts] = useState<UserFact[]>([]);
 
   // live: rolls over at midnight and after the app comes back from the background
   const today = useNow();
@@ -60,6 +70,7 @@ export function You() {
     getComplianceMap(user.id, from, today).then(setCompliance);
     getScheduleItems(user.id).then((items) => setReminderCount(items.filter((i) => i.scheduled_time).length));
     checkNotificationPermission().then(setPermGranted);
+    getUserFacts(user.id).then(setFacts).catch(() => setFacts([]));
     // keyed on the date, not the clock — this refetches once a day, not every tick
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, todayISO]);
@@ -181,6 +192,10 @@ export function You() {
         <div className="row pressable" onClick={() => setOpenSheet('export')}>
           <span className="row-label">Export Data</span>
         </div>
+        <div className="row pressable" onClick={() => setOpenSheet('memory')}>
+          <span className="row-label">What Pepstack remembers</span>
+          <span className="row-value">{facts.length === 0 ? 'Nothing yet' : `${facts.length}`}</span>
+        </div>
         <a className="row pressable" href={PRIVACY_URL} {...externalLink}>
           <span className="row-label">Privacy Policy</span>
         </a>
@@ -267,6 +282,41 @@ export function You() {
           </div>
         )}
       </Sheet>
+      <Sheet open={openSheet === 'memory'} onClose={() => setOpenSheet(null)} title="What Pepstack remembers">
+        <div className="t-body" style={{ color: 'var(--t2)', marginBottom: 16 }}>
+          Things you told us in your own words. The assistant reads these so you do not have to
+          repeat yourself. Remove anything you would rather it forgot.
+        </div>
+        {facts.length === 0 ? (
+          <div className="empty-state t-body">
+            Nothing yet. Anything you type into a &ldquo;something else&rdquo; box shows up here.
+          </div>
+        ) : (
+          <ul className="memory-list">
+            {facts.map((f) => (
+              <li key={f.id} className="memory-row">
+                <span className="memory-text">
+                  {/* The model's one-line reading where there is one, and always
+                      the user's own words underneath — a summary they cannot
+                      check against the original is not correctable. */}
+                  {f.summary && <span className="memory-summary">{f.summary}</span>}
+                  <span className="memory-raw t-caption">&ldquo;{f.raw_text}&rdquo;</span>
+                </span>
+                <button
+                  className="memory-forget pressable"
+                  onClick={async () => {
+                    await dismissFact(f.id).catch(() => {});
+                    setFacts((prev) => prev.filter((x) => x.id !== f.id));
+                  }}
+                >
+                  Forget
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Sheet>
+
       <Sheet open={openSheet === 'delete'} onClose={() => setOpenSheet(null)} title="Delete Account">
         <div className="t-body" style={{ color: 'var(--t2)', marginBottom: 14 }}>
           This removes your profile, your stack, your whole dose history and your progress

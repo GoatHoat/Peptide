@@ -1,6 +1,6 @@
 import { supabase } from './supabaseClient';
 import { toISODate } from './date';
-import { clearLocalState } from './storage';
+import { clearLocalState, readScoped, writeScoped } from './storage';
 
 // ============================================================================
 // Types — mirror supabase/migrations/0001_init.sql
@@ -878,4 +878,111 @@ export async function findGlossaryBySlug(slug: string): Promise<GlossaryEntry | 
   const { data, error } = await supabase.from('glossary').select('*').eq('slug', slug).maybeSingle();
   if (error) throw error;
   return (data as GlossaryEntry | null) ?? null;
+}
+
+// ============================================================================
+// Offline cache
+// ============================================================================
+
+/** What Today needs to draw itself with no network. */
+export interface TodayCache {
+  /** the day this was captured for; a stale day is not shown */
+  logDate: string;
+  doses: Dose[];
+  savedAt: number;
+}
+
+const TODAY_CACHE = 'pepstack.today.v1';
+
+/**
+ * Remember today's doses for the next cold start.
+ *
+ * Only ever today's: a cache holding yesterday's schedule would render a day
+ * the user has already finished, which is worse than rendering nothing.
+ */
+export function cacheToday(userId: string | null, logDate: string, doses: Dose[]): void {
+  writeScoped<TodayCache>(TODAY_CACHE, userId, { logDate, doses, savedAt: Date.now() });
+}
+
+/** The cached doses, or null when there are none for today. */
+export function readTodayCache(userId: string | null, logDate: string): Dose[] | null {
+  const cached = readScoped<TodayCache | null>(TODAY_CACHE, userId, null);
+  if (!cached || cached.logDate !== logDate) return null;
+  return cached.doses;
+}
+
+// ============================================================================
+// What the app remembers
+// ============================================================================
+
+/**
+ * A thing the user told us in their own words, plus the model's reading of it.
+ *
+ * `raw_text` is verbatim and never overwritten. `tags` and `ingredient_keys`
+ * are the validated halves — the database strips anything outside the reaction
+ * taxonomy or unknown to the catalogue, so a model's guess cannot reach the
+ * rules. See migration 0038.
+ */
+export interface UserFact {
+  id: string;
+  source: 'onboarding_reaction' | 'chat' | 'manual';
+  raw_text: string;
+  summary: string | null;
+  tags: string[];
+  ingredient_keys: string[];
+  confidence: number | null;
+  interpreted_at: string | null;
+  dismissed_at: string | null;
+  created_at: string;
+}
+
+/** Everything remembered about this user, newest first, dismissals excluded. */
+export async function getUserFacts(userId: string): Promise<UserFact[]> {
+  const { data, error } = await supabase
+    .from('user_facts')
+    .select('*')
+    .eq('user_id', userId)
+    .is('dismissed_at', null)
+    .order('created_at', { ascending: false });
+  if (error) {
+    // migration 0038 not applied yet — memory is additive, so absent is fine
+    if (/does not exist|schema cache|PGRST20[0-9]/i.test(error.message ?? '')) return [];
+    throw error;
+  }
+  return (data ?? []) as UserFact[];
+}
+
+/**
+ * Stores something the user typed, uninterpreted.
+ *
+ * Interpretation happens lazily and never during onboarding — a model call in
+ * the middle of the flow would put a network round trip between two taps.
+ */
+export async function rememberFact(input: {
+  userId: string;
+  source: UserFact['source'];
+  rawText: string;
+}): Promise<void> {
+  const text = input.rawText.trim();
+  if (!text) return;
+  const { error } = await supabase.from('user_facts').insert({
+    user_id: input.userId,
+    source: input.source,
+    raw_text: text.slice(0, 1000),
+  });
+  if (error && !/does not exist|schema cache|PGRST20[0-9]/i.test(error.message ?? '')) throw error;
+}
+
+/**
+ * Hides a fact from the assistant.
+ *
+ * Marked rather than deleted, so re-interpreting the same raw text later cannot
+ * quietly bring back something the user chose to remove.
+ */
+export async function dismissFact(id: string): Promise<void> {
+  const { error } = await supabase
+    .from('user_facts')
+    .update({ dismissed_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) throw error;
 }
