@@ -89,23 +89,43 @@ export function Header({
 }
 
 /**
- * Placeholder for the line-art per screen. Renders a stroked outline shape at
- * 120px so the composition is right; swap the paths for real artwork without
- * touching any screen.
+ * Real artwork where it exists, the stroked placeholder where it does not.
+ *
+ * The renders live in `public/art/` and follow the system in
+ * `ILLUSTRATIONS.md`: isometric solids, matte near-black, every edge a
+ * hairline, no fill and no glow. They carry alpha derived from luminance, the
+ * same treatment `empty-stack.png` already uses, so they composite on the app's
+ * pure black exactly as rendered rather than shipping a black square.
  */
+const ART: Record<string, { src: string; alt: string; size: number }> = {
+  /* "Where this comes from". Four stacks of slabs — the catalogue as a thing
+     with depth, which is the point that screen is making. Replaces three
+     stroked rectangles that read as books and said nothing about research. */
+  library: { src: '/art/stacks.png', alt: '', size: 168 },
+};
+
 export function OnboardIllustration({ name, size = 120 }: { name: string; size?: number }) {
+  const art = ART[name];
+  if (art) {
+    return (
+      <img
+        className="ob-illustration"
+        src={art.src}
+        alt={art.alt}
+        /* Both dimensions on the element, so the space is reserved before the
+           file arrives and the copy underneath never jumps. */
+        width={art.size}
+        height={art.size}
+        aria-hidden
+      />
+    );
+  }
+
   const shapes: Record<string, ReactNode> = {
     auth: (
       <>
         <circle cx="60" cy="45" r="19" />
         <path d="M22 100a38 32 0 0 1 76 0" />
-      </>
-    ),
-    library: (
-      <>
-        <rect x="18" y="26" width="26" height="70" rx="4" />
-        <rect x="50" y="26" width="26" height="70" rx="4" />
-        <path d="M82 32l18 6-16 62-18-6z" />
       </>
     ),
     recs: (

@@ -1,6 +1,7 @@
 import { NAME } from '../../lib/brand';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Cta, OnboardIllustration, Screen, Sub, Title } from '../chrome';
+import { Skeleton } from '../../components/Skeleton';
 import { GOAL_BY_ID, DEFAULT_GOAL_IDS } from '../goals';
 import {
   getNutrientReference,
@@ -238,10 +239,34 @@ export function Recommendations({
     if (data && !picks) setPicks(data.picks);
   }, [data, picks]);
 
+  /**
+   * The screen, with the list still on its way.
+   *
+   * This was one centred "Loading…" and then the whole screen at once — the
+   * heaviest pop in the flow, arriving at the moment somebody is waiting to see
+   * what they were matched to. The frame is the same either way: the title is
+   * true before the rows land, the disclaimer is required next to the figures
+   * and costs nothing to show early, and three card-height blocks hold the
+   * space the cards will take.
+   */
   if (!data || !picks) {
     return (
-      <Screen center>
-        <p className="ob-sub">Loading…</p>
+      <Screen
+        scroll
+        footer={
+          <Cta onClick={() => {}} disabled>
+            Create schedule
+          </Cta>
+        }
+      >
+        <Title>Vitamins and minerals for you</Title>
+        <Sub>Matching the library against your answers.</Sub>
+        <p className="ob-disclaimer t-caption">
+          Daily targets are the published NIH Office of Dietary Supplements reference intakes for
+          your age and sex, not a dose set by this app. {NAME} is not medical advice — talk to a
+          healthcare professional before starting anything.
+        </p>
+        <Skeleton rows={3} height={92} gap={10} radius={22} label="Matching your answers" />
       </Screen>
     );
   }

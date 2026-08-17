@@ -145,6 +145,12 @@ export async function completeOnboarding(page: Page): Promise<void> {
   await cta(page, 'Continue').click();
 
   await onScreen(page, 'Where this comes from');
+  /* The artwork, not just the element. A wrong path renders a 0x0 img and the
+     screen still looks fine in a DOM assertion — which is how the seventh goal
+     slab shipped as a broken image and nothing noticed. */
+  const art = page.locator('img.ob-illustration');
+  await expect(art).toBeVisible();
+  expect(await art.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);
   await cta(page, 'Continue').click();
 
   await onScreen(page, /Have you started a routine/);
