@@ -980,6 +980,19 @@ button {
   letter-spacing: -0.1px;
   white-space: nowrap;
 }
+/* The unit and quantity chips. 38 drawn, 44 to the finger, and vertical only —
+   the row is scrollable and horizontal expansion would make neighbours
+   overlap. */
+.stack-pick-chip {
+  position: relative;
+  min-width: 44px;
+  justify-content: center;
+}
+.stack-pick-chip::after {
+  content: '';
+  position: absolute;
+  inset: -3px 0;
+}
 .stack-pick-chip.active {
   background: var(--purple);
   color: var(--bg);
@@ -1060,6 +1073,16 @@ button {
   background: var(--card-hi);
   display: grid;
   place-items: center;
+}
+/* 30 is the drawn circle. The target is the full 44 — this is on every sheet in
+   the app and was the smallest control in it. */
+.sheet-close {
+  position: relative;
+}
+.sheet-close::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
 }
 .sheet-body {
   padding: 14px var(--margin) 4px;
@@ -1291,6 +1314,18 @@ button {
   font-weight: 600;
   font-size: calc(12px * var(--text-scale));
 }
+/* Both stack-row controls keep their drawn size and take their target out of
+   the row's own 10px gap, so neither grows and neither overlaps the other. */
+.stack-expiry-btn {
+  position: relative;
+  min-width: 44px;
+  justify-content: center;
+}
+.stack-expiry-btn::after {
+  content: '';
+  position: absolute;
+  inset: -6px -1px;
+}
 .stack-remove {
   flex: none;
   width: 34px;
@@ -1299,6 +1334,14 @@ button {
   background: var(--card-hi);
   display: grid;
   place-items: center;
+}
+.stack-remove {
+  position: relative;
+}
+.stack-remove::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
 }
 
 /* ============================================================
@@ -1615,6 +1658,14 @@ button {
   min-height: 32px;
   display: inline-flex;
   align-items: center;
+}
+.glossary-brand-link {
+  position: relative;
+}
+.glossary-brand-link::after {
+  content: '';
+  position: absolute;
+  inset: -6px 0;
 }
 
 /* ============================================================

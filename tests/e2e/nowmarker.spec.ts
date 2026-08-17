@@ -18,7 +18,19 @@ import { seededScheduleItem } from './support/catalogue';
  * because the dose it already produced outlives it.
  */
 
-const AT = (hhmm: string) => new Date(`2026-08-16T${hhmm}:00`);
+/**
+ * The clock is frozen to a time of day, not to a day.
+ *
+ * This was a hard-coded 2026-08-16, which worked for exactly as long as that
+ * was the date. `seededScheduleItem` starts the item now — in Node, at the real
+ * date — and `ensureTodayDoses` skips an item whose start is after the frozen
+ * day, so from the next midnight onwards the fixture seeded a schedule that had
+ * not begun yet, Today rendered "Nothing on your schedule", and four tests
+ * about where a marker sits failed for a reason that had nothing to do with the
+ * marker.
+ */
+const DAY = new Date().toISOString().slice(0, 10);
+const AT = (hhmm: string) => new Date(`${DAY}T${hhmm}:00`);
 
 async function todayAt(page: import('@playwright/test').Page, hhmm: string) {
   await page.clock.setFixedTime(AT(hhmm));

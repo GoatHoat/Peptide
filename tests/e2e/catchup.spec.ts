@@ -9,9 +9,12 @@ import { seededScheduleItem } from './support/catalogue';
  * 10:00 → does not. Everything else follows from those.
  */
 
-const TODAY = '2026-08-16';
+/* Derived rather than written down. Both were hard-coded dates, which is the
+   shape that cost nowmarker.spec four tests the morning after they were
+   written: a fixture pinned to a day, running on a different one. */
+const TODAY = new Date().toISOString().slice(0, 10);
 /** 21:00 the night before — the scenario the spec describes. */
-const LAST_NIGHT = '2026-08-15T21:00:00.000Z';
+const LAST_NIGHT = `${new Date(Date.now() - 86_400_000).toISOString().slice(0, 10)}T21:00:00.000Z`;
 const AT = (hhmm: string) => new Date(`${TODAY}T${hhmm}:00`);
 
 /** One dose due at `time`, already materialised and unmarked. */

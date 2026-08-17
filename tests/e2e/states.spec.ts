@@ -29,13 +29,11 @@ const MIN_TAP = 44;
  * in this list, not a smaller number in the assertion.
  */
 const INLINE_EXCEPTIONS = [
-  /* Terms and Privacy inside the consent sentence, and the citation links
-     inside an assistant answer. Enlarging a link inside running text moves the
-     text around it; these are read, and tapped second. */
+  /* The citation links inside an assistant answer. Enlarging a link that sits
+     inside running text moves the text around it, and these are read first and
+     tapped second. Onboarding's Terms and Privacy links are the same shape and
+     are not listed, because this audit walks the three tabs and not the flow. */
   'ask-cite',
-  'ob-legal-link',
-  'legal-inline',
-  'ask-source',
 ];
 
 interface Target {
@@ -133,6 +131,39 @@ for (const [name, index] of [
 
     const small = undersized(await tapTargets(page));
     expect(small, `undersized controls on ${name}:\n${describeAll(small)}`).toEqual([]);
+  });
+}
+
+/**
+ * The sweep above visits three screens and never opens a sheet, which is where
+ * the app's smallest control lives: `.sheet-close` is 30px and is on every one
+ * of them. A longer route, not a longer exception list.
+ */
+const SHEETS = [
+  { tab: 'Today', index: 0, open: 'Add to Schedule' },
+  { tab: 'You', index: 2, open: 'Notifications' },
+  { tab: 'You', index: 2, open: 'Subscription' },
+  { tab: 'You', index: 2, open: 'Export Data' },
+  { tab: 'You', index: 2, open: 'What Pepstack remembers' },
+  { tab: 'You', index: 2, open: 'Delete Account' },
+  { tab: 'You', index: 2, open: 'Add note' },
+] as const;
+
+for (const sheet of SHEETS) {
+  test(`every tap target in the ${sheet.open} sheet is at least 44x44`, async ({ page, app }) => {
+    await seedSignedIn(page, app.stub);
+    await page.goto('/');
+    await page.getByRole('heading', { name: 'Today' }).waitFor();
+    if (sheet.index > 0) await openTab(page, sheet.tab, sheet.index);
+
+    await page.getByRole('button', { name: sheet.open, exact: false }).first().click();
+    const panel = page.locator('.sheet').last();
+    await expect(panel).toBeVisible({ timeout: 10_000 });
+    // the sheet springs up; measure once it has stopped
+    await page.waitForTimeout(600);
+
+    const small = undersized(await tapTargets(page, '.sheet'));
+    expect(small, `undersized controls in ${sheet.open}:\n${describeAll(small)}`).toEqual([]);
   });
 }
 

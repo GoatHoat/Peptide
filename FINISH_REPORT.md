@@ -16,11 +16,11 @@ which part.
 | 3 | Three device bugs | **Done** |
 | 3b | Doodle background | **Done** |
 | 3c | growth.png, empty-stack.png | **Done** |
-| 4 | States and offline | **Partial** — offline done, the audits are not |
+| 4 | States and offline | **Done** |
 | 5 | iOS | **Done** |
 | 6 | Name as one constant | **Done** |
 | 6b | What the app remembers | **Done** |
-| 7 | Final pass | **Partial** — checks run, three-account walkthrough not |
+| 7 | Final pass | **Done** |
 | LEGAL 1 | Point the app at hosted docs | **Done** |
 | LEGAL 2 | Write both documents | **Done** |
 
@@ -74,11 +74,25 @@ it a medical note came back with empty tags and was indistinguishable from an
 uninterpreted one. Nothing in `recommend.ts` reads `'other'`, so marking it
 changes no schedule.
 
-### §7, what is missing
+### §7
 
-The scripted checks ran (below). The three-fresh-accounts-in-one-browser
-walkthrough did **not** — the automated login in my measurement harness broke
-when onboarding moved behind the account-scoped flag and I did not rebuild it.
+The walkthrough is `tests/e2e/accounts.spec.ts`, and it walks it rather than
+describing it: A signs in, uses the app, and signs out; B and C each sign up
+behind them; at every step it asks what is on the device and who it belongs to.
+
+It needed three things in the fixtures that did not exist — the stub can now
+swap identity, its signup creates the profile row the real trigger creates, and
+sign-in is written once rather than through `addInitScript`, which re-runs on
+every navigation and put the session straight back after a sign-out.
+
+What it holds:
+
+- every `pepstack.*` key carries the account, and the payload agrees with the key
+- nothing of A's survives A signing out
+- B and C each land on the first question of onboarding rather than on A's Today
+- an account that finished onboarding on another device does not repeat it
+- `pepstack.discover.tab` is the only unscoped key, and a second one fails the
+  test rather than passing quietly
 
 ---
 

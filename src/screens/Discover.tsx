@@ -203,8 +203,18 @@ export function Discover() {
              so nothing shifts if they upgrade, and so seeing that a product
              exists is possible. A free search must never return "no results"
              for something the catalogue holds. */
+          /* A missing free_rank means "we cannot tell", and the safe answer to
+             that is to show the product. It was `?? 9999`, which locked it —
+             so on a database where 0037 has not been applied the column does
+             not exist, `select('*')` returns no free_rank for any row, and a
+             free account saw the entire library greyed out behind a paywall.
+             An over-generous free tier is a pricing decision; a library that
+             appears to be nothing but locks is a broken app. */
           const locked = (e: GlossaryEntry) =>
-            !isPro && limits.catalogue !== null && (e.free_rank ?? 9999) > limits.catalogue;
+            !isPro &&
+            limits.catalogue !== null &&
+            typeof e.free_rank === 'number' &&
+            e.free_rank > limits.catalogue;
           const firstLocked = visible.findIndex(locked);
           const amountOf = new Map(ingredientHits.map((h) => [h.glossary_id, h]));
           const forThis = isSupplementTab
