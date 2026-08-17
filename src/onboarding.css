@@ -722,6 +722,40 @@
     background-color 180ms var(--ob-ease),
     box-shadow 180ms var(--ob-ease);
 }
+/* Not a lock and not a warning: a statement about which plan tracks it. */
+/* The way past the paywall. Same width as the buy button and the same height
+   as any other control — visible is the whole requirement. */
+.ob-free-out {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 10px;
+  border-radius: 14px;
+  color: var(--t2);
+  font-size: calc(15px * var(--text-scale));
+  font-weight: 600;
+}
+.ob-free-terms {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--hairline, rgba(255, 255, 255, 0.09));
+  color: var(--t2);
+  font-size: calc(13px * var(--text-scale));
+  line-height: 1.5;
+}
+.ob-free-terms-head {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--t1);
+  font-weight: 600;
+}
+.ob-rec-pro {
+  display: block;
+  margin-top: 6px;
+  color: var(--accent);
+  font-size: calc(12px * var(--text-scale));
+  font-weight: 600;
+}
 .ob-rec.on {
   background: var(--accent-dim);
   box-shadow: inset 0 0 0 1.5px var(--accent);

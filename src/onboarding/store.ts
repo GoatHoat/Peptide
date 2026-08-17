@@ -164,7 +164,16 @@ export function useOnboardingStore() {
   /** Walk over anything the answers so far have made irrelevant. */
   const step_ = useCallback((s: OnboardingState, dir: 1 | -1) => {
     let i = s.step + dir;
-    while (i > 0 && i < FLOW.length - 1 && isSkipped(FLOW[i], s.survey)) i += dir;
+    while (
+      i > 0 &&
+      i < FLOW.length - 1 &&
+      isSkipped(FLOW[i], {
+        ...s.survey,
+        subscribed: s.subscribed,
+        pickedCount: s.recommendations.filter((r) => r.selected).length,
+      })
+    )
+      i += dir;
     return Math.max(0, Math.min(FLOW.length - 1, i));
   }, []);
 

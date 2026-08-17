@@ -1,4 +1,5 @@
 import { NAME } from '../../lib/brand';
+import { LIMITS } from '../../lib/entitlements';
 import { requestNotificationPermission } from '../../lib/notifications';
 import { useState } from 'react';
 import { Cta, OnboardIllustration, Screen, Sub, Title } from '../chrome';
@@ -105,6 +106,14 @@ export function Paywall({ onDone }: { onDone: (subscribed: boolean) => void }) {
           <Cta onClick={buy} disabled={busy !== null}>
             {busy === 'buy' ? 'One moment…' : `Start with ${NAME}`}
           </Cta>
+          {/* Visible, full width, in the footer beside the buy button — not
+              hidden, not greyed, not six-point type in a corner. Somebody who
+              is not going to subscribe today should not have to hunt for the
+              way past, and a paywall you cannot see the exit from is the shape
+              guideline 3.1.2 and every one-star review are about. */}
+          <button className="ob-free-out" onClick={() => onDone(false)} disabled={busy !== null}>
+            Continue with Free
+          </button>
           <div className="ob-legal-row">
             {/* Not optional — a missing restore path is the most common
                 rejection reason for subscription apps. */}
@@ -128,6 +137,18 @@ export function Paywall({ onDone }: { onDone: (subscribed: boolean) => void }) {
             {v}
           </div>
         ))}
+      </div>
+
+      {/* The limits, before the choice rather than after it. The free-pick
+          screen says the same thing again once they have chosen, but by then it
+          would be news, and news at that point reads as a bait and switch. */}
+      <div className="ob-free-terms">
+        <span className="ob-free-terms-head">Free includes</span>
+        <span>
+          One product tracked in your schedule, {LIMITS.free.catalogue} of each kind in Discover,
+          and {LIMITS.free.askMessagesTotal} assistant messages. The research is free for
+          everything, always.
+        </span>
       </div>
 
       <div className="ob-plans" role="radiogroup" aria-label="Plan">

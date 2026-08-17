@@ -6,6 +6,7 @@ import { Auth, Welcome } from './screens/Intro';
 import { Info, MULTI_QUESTIONS, MultiSelectScreen, Profile, QUESTIONS, SurveyScreen } from './screens/Survey';
 import { CurrentStack, Day } from './screens/Day';
 import { Goals } from './screens/Goals';
+import { FreePick } from './screens/FreePick';
 import { Notifications, Paywall } from './screens/Commit';
 import { Building, Done, Recommendations, ScheduleBuilder, type Recommendation } from './screens/Results';
 import { useAuth } from '../lib/auth';
@@ -280,6 +281,27 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
             onDone={(chosen) => {
               setPicks(chosen);
               patch({ recommendations: chosen.map((c) => ({ id: c.id, selected: true })) });
+              next();
+            }}
+          />
+        );
+
+      case 'free-pick':
+        return (
+          <FreePick
+            picks={picks}
+            onDone={(chosenId) => {
+              /* The schedule is built from `picks`, so narrowing it here is
+                 what makes the free tier one product rather than six with five
+                 that silently fail to save. The full list stays in the store,
+                 so upgrading later has something to restore from. */
+              setPicks((all) => all.filter((p) => p.id === chosenId));
+              patch({
+                recommendations: state.recommendations.map((r) => ({
+                  ...r,
+                  selected: r.id === chosenId,
+                })),
+              });
               next();
             }}
           />

@@ -41,6 +41,11 @@ export const FLOW = [
   // after the recommendations, never before: asking for money ahead of the
   // first suggestion is asking someone to buy a promise
   'paywall',
+  /* Only reached by choosing Free. Free covers one product and the person has
+     just selected several, so this is where they say which one — with the
+     others still on screen and marked as Pro, never silently dropped. Skipped
+     entirely when they subscribe; see Onboarding's `next`. */
+  'free-pick',
   'building-schedule',
   'schedule',
   'done',
@@ -85,7 +90,10 @@ export const indexOfStep = (s: Step): number => FLOW.indexOf(s);
  * comes before or after it. Evaluated live on every move, so going back and
  * changing an answer re-opens whatever it closed.
  */
-export function isSkipped(step: Step, answers: { q2: string | null }): boolean {
+export function isSkipped(
+  step: Step,
+  answers: { q2: string | null; subscribed?: boolean; pickedCount?: number },
+): boolean {
   // "What usually goes wrong?" has no answer for someone who has never
   // started a routine in the first place.
   if (step === 'q3' && answers.q2 === 'never') return true;
@@ -93,6 +101,14 @@ export function isSkipped(step: Step, answers: { q2: string | null }): boolean {
   // without stubbing a transaction every run. Here rather than in a screen, so
   // going back lands on the same screen going forward came from.
   if (step === 'paywall' && SKIP_PAYWALL) return true;
+  /* Free covers one product, so the choice only exists for somebody on Free who
+     picked more than one. A subscriber keeps everything they chose and is never
+     shown it; somebody who picked a single product has nothing to choose
+     between. */
+  if (step === 'free-pick') {
+    if (answers.subscribed) return true;
+    if ((answers.pickedCount ?? 0) <= 1) return true;
+  }
   return false;
 }
 
