@@ -109,12 +109,23 @@ test('no meat puts B12 first even with no goal match at all', () => {
   expect(find(r, B12)?.goalHits).toEqual([]);
 });
 
-test('no meat raises iron to 1.8× and says why on the card', () => {
+test('no meat surfaces iron, and the 1.8x is a diet note rather than a multiplier', () => {
+  /* The ODS 1.8x figure is about iron from the whole diet, because non-haem
+     iron absorbs less well. It is not a supplement dose. This used to be
+     `amountFactor: 1.8` multiplied into the displayed figure, which printed
+     32 mg as somebody's personal target and stated something ODS does not
+     say. The rule now carries a sentence, and nothing can multiply by it. */
   const r = recommend([IRON_BISGLYCINATE, CREATINE], answers({ diet: ['no-meat'] }));
   const iron = find(r, IRON_BISGLYCINATE);
-  expect(iron?.amountFactor).toBeCloseTo(1.8);
-  expect(iron?.reason).toContain('1.8×');
   expect(names(r)[0]).toBe(IRON_BISGLYCINATE.name);
+  expect(iron?.dietaryIntakeNote, 'the note is missing').toBeTruthy();
+  expect(iron!.dietaryIntakeNote!).toContain('1.8');
+  // and it says what it applies to, which is the entire point of the change
+  expect(iron!.dietaryIntakeNote!.toLowerCase()).toContain('diet');
+  expect(
+    (iron as unknown as Record<string, unknown>).amountFactor,
+    'a multiplier survived and something could scale a dose with it',
+  ).toBeUndefined();
 });
 
 test('no meat raises zinc', () => {
@@ -208,10 +219,9 @@ test('a louder rule never buries the sentence that explains the figure', () => {
     answers({ diet: ['no-meat'], reactions: ['iron-gi'] }),
   );
   const iron = find(r, IRON_BISGLYCINATE);
-  expect(iron?.amountFactor).toBeCloseTo(1.8);
-  // the swap rule owns the line, and the adjusted figure still gets its why
+  // the swap rule owns the reason line, and the diet note survives beside it
   expect(iron?.reason).toContain('Bisglycinate rather than sulfate');
-  expect(iron?.reason).toContain('1.8×');
+  expect(iron?.dietaryIntakeNote, 'the louder rule buried the diet note').toBeTruthy();
 });
 
 test('a louder rule never buries the sentence that explains the with-food chip', () => {

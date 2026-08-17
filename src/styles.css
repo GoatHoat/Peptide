@@ -2435,3 +2435,14 @@ button {
   color: var(--t3);
   line-height: 1.5;
 }
+
+/* A whole-diet note under a recommendation. Tertiary on purpose: it is context
+   about food, not an amount, and it must never read as part of the figure
+   above it. */
+.ob-rec-diet {
+  display: block;
+  margin-top: 6px;
+  font-size: calc(12px * var(--text-scale));
+  line-height: 1.45;
+  color: var(--t4);
+}

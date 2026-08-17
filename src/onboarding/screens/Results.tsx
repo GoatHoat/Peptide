@@ -105,18 +105,24 @@ export interface Recommendation {
   amountRange: { yes: string; no: string } | null;
   /** a reaction they told us about put this one on a full stomach */
   withFood: boolean;
+  /**
+   * A statement about total dietary intake, shown under the card as tertiary
+   * text. Never folded into the figure above it — that is the whole point.
+   */
+  dietaryIntakeNote: string | null;
 }
 
 /**
- * The reference figure with whatever adjustment a rule made to it. Rounded to
- * a whole number once it is big enough for a decimal to be noise — the
- * vegetarian iron figure lands on 32 mg and 14 mg, which is how ODS quotes it,
- * rather than 32.4 and 14.4.
+ * The reference figure, as stored.
+ *
+ * This used to be `scaled(rda, factor)` — the ODS vegetarian multiplier applied
+ * to the RDA and rounded. That misread the source. The 1.8x is about iron from
+ * the whole diet, not about a supplement, so multiplying it out and printing
+ * "32 mg" as a personal target stated something ODS does not say. The figure
+ * shown is now the stored one and nothing is computed; the vegetarian note is
+ * rendered separately, in words, saying what it actually applies to.
  */
-const scaled = (rda: number, factor: number) => {
-  const v = rda * factor;
-  return v >= 10 ? Math.round(v) : Math.round(v * 10) / 10;
-};
+const figureFor = (value: number, unit: string) => `${value} ${unit}`;
 
 const doseLine = (r: Recommendation) =>
   [
@@ -179,7 +185,7 @@ export function useRecommendations(
            deliberately, so iron arrives as two figures and the question waits
            until the iron entry itself. */
         const intake = resolveIntake(s.entry, refs[s.entry.id], age, sex, null);
-        const figure = (rda: number) => `${scaled(rda, s.amountFactor)} ${intake.unit}`;
+        const figure = (rda: number) => figureFor(rda, intake.unit);
         return {
           id: s.entry.id,
           name: s.entry.name,
@@ -190,6 +196,7 @@ export function useRecommendations(
               ? { yes: figure(intake.rda), no: figure(intake.rdaIfNot) }
               : null,
           why: s.reason,
+          dietaryIntakeNote: s.dietaryIntakeNote,
           withFood: s.timing === 'with_food',
           selected: i < 3,
         } satisfies Recommendation;
@@ -286,6 +293,12 @@ export function Recommendations({
               {/* No rule fired and no goal tag matched — a card with no
                   explanation beats a card with an invented one. */}
               {r.why && <span className="ob-rec-why">{r.why}</span>}
+              {/* Tertiary, and deliberately separate from the figure above.
+                  The ODS vegetarian multiplier is about the whole diet; it is
+                  not a dose, and it must not read as one. */}
+              {r.dietaryIntakeNote && (
+                <span className="ob-rec-diet">{r.dietaryIntakeNote}</span>
+              )}
               <span className="ob-rec-link">Read the research →</span>
             </span>
             <span className={`ob-tick${r.selected ? ' on' : ''}`}>

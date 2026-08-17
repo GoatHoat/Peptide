@@ -40,7 +40,8 @@ export interface Suggestion {
   /** the one line the card shows. Empty when nothing fired — show nothing. */
   reason: string;
   /** multiplier on the reference intake where a rule adjusts it; 1 otherwise */
-  amountFactor: number;
+  /** the whole-diet note a rule attached, or null */
+  dietaryIntakeNote: string | null;
   /** a reaction can force this even where the product's own timing differs */
   timing: 'with_food' | null;
 }
@@ -192,8 +193,19 @@ interface PriorityRule {
    * entry even when it matched no goal at all. Only B12 earns this.
    */
   required?: boolean;
-  /** multiplier on the reference intake, where the published one differs */
-  amountFactor?: number;
+  /**
+   * A note about total dietary intake, NOT about this supplement.
+   *
+   * This was `amountFactor: number` and the results screen multiplied the
+   * reference intake by it. That misread the source: the ODS 1.8x figure for
+   * vegetarians is about iron from the whole diet, because non-haem iron
+   * absorbs less well — it is not a supplement dose, and rendering 18 mg x 1.8
+   * = 32 mg as somebody's personal target turned a statement about food into a
+   * number this app appeared to have set for them.
+   *
+   * It is a string now so that nothing downstream can do arithmetic with it.
+   */
+  dietaryIntakeNote?: string;
 }
 
 const DIET_RULES: PriorityRule[] = [
@@ -206,10 +218,9 @@ const DIET_RULES: PriorityRule[] = [
   {
     when: 'no-meat',
     group: NUTRIENT.iron,
-    // NIH ODS: the recommended intake for vegetarians is 1.8× the RDA, because
-    // non-haem iron absorbs far less well than the haem kind.
-    amountFactor: 1.8,
-    reason: 'Vegetarian iron targets are 1.8× the standard, because non-haem iron absorbs less well.',
+    dietaryIntakeNote:
+      'On a vegetarian diet the NIH suggests aiming for about 1.8× the iron target across everything you eat, since non-haem iron absorbs less well. That applies to your whole diet, not to this product.',
+    reason: 'You said no meat — non-haem iron absorbs less well than the kind in meat.',
   },
   {
     when: 'no-meat',
@@ -330,7 +341,8 @@ interface Draft {
   goalHits: string[];
   score: number;
   reasons: { priority: number; text: string }[];
-  amountFactor: number;
+  /** the whole-diet note a rule attached, or null */
+  dietaryIntakeNote: string | null;
   /** said alongside the top reason, because an adjusted figure with no
       explanation is worse than a longer card */
   amountNote: string | null;
@@ -384,7 +396,7 @@ export function recommend(entries: GlossaryEntry[], answers: Answers): Recommend
         goalHits,
         score: goalHits.length * W.goalHit + (EVIDENCE[e.evidence ?? 'thin'] ?? 0),
         reasons: [],
-        amountFactor: 1,
+        dietaryIntakeNote: null,
         amountNote: null,
         timing: null,
         timingNote: null,
@@ -401,8 +413,8 @@ export function recommend(entries: GlossaryEntry[], answers: Answers): Recommend
       if (!hits(d.text, rule.group)) continue;
       d.score += rule.required ? W.required : W.dietPriority;
       d.required ||= rule.required === true;
-      if (rule.amountFactor) {
-        d.amountFactor *= rule.amountFactor;
+      if (rule.dietaryIntakeNote) {
+        d.dietaryIntakeNote = rule.dietaryIntakeNote;
         d.amountNote = rule.reason;
       }
       say(d, rule.required ? P.required : P.diet, rule.reason);
@@ -523,7 +535,7 @@ export function recommend(entries: GlossaryEntry[], answers: Answers): Recommend
         score: d.score,
         goalHits: d.goalHits,
         reason: [top, ...also].filter(Boolean).join(' '),
-        amountFactor: d.amountFactor,
+        dietaryIntakeNote: d.dietaryIntakeNote,
         timing: d.timing,
       } satisfies Suggestion;
     });
