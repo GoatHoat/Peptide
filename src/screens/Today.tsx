@@ -137,10 +137,23 @@ export function Today() {
 
   const toggleTaken = async (dose: Dose) => {
     if (!user) return;
-    const updated = await setDoseTaken(dose.id, !dose.taken);
+    /* `setDoseTaken` is a plain update and it throws with no connection. This
+       was unguarded, so offline the row did not even change colour and the
+       rejection went nowhere — the tap was silently dead. There is no outbox
+       here and building one is a feature, not a finish; so the honest answer is
+       to say the tick did not save rather than to show it as saved and lose it. */
+    let updated: Dose;
+    try {
+      updated = await setDoseTaken(dose.id, !dose.taken);
+    } catch (err) {
+      console.error('marking a dose failed', err);
+      setOffline(true);
+      return;
+    }
     setDoses((prev) => (prev ? prev.map((d) => (d.id === dose.id ? updated : d)) : prev));
+    setOffline(false);
     // taken/not-taken feeds the compliance map too — refresh the week
-    await refreshCompliance();
+    await refreshCompliance().catch((err) => console.error('compliance refresh failed', err));
     /* Deliberately opens nothing. This used to push the history sheet up,
        which offered Remove From Schedule as the response to someone simply
        marking their supplement as taken. The sheet is a long press now. */
@@ -169,7 +182,11 @@ export function Today() {
 
       {offline && (
         <div className="offline-line t-caption">
-          Offline — showing your last saved day. Anything you tick will sync when you reconnect.
+          {/* This promised that anything ticked would sync on reconnect.
+              Nothing syncs — there is no outbox, no queue and no online
+              listener anywhere in the app — so the sentence was a claim the
+              code does not keep. */}
+          Offline — showing your last saved day. Ticking one off needs a connection.
           {/* The line said what had happened and offered nothing to do about
               it. Reconnecting is not something the app can detect reliably
               inside a WebView, so the button is the honest answer. */}

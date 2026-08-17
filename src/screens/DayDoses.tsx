@@ -38,7 +38,15 @@ export function DayDoses({ userId, date, onChanged }: Props) {
   const retry = () => setAttempt((n) => n + 1);
 
   const toggle = async (dose: Dose) => {
-    const updated = await setDoseTaken(dose.id, !dose.taken);
+    // same as Today's: it throws with no connection, and it was unguarded
+    let updated: Dose;
+    try {
+      updated = await setDoseTaken(dose.id, !dose.taken);
+    } catch (err) {
+      console.error('marking a dose failed', err);
+      setFailed(true);
+      return;
+    }
     setDoses((prev) => (prev ? prev.map((d) => (d.id === dose.id ? updated : d)) : prev));
     onChanged();
   };

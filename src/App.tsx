@@ -129,7 +129,15 @@ function CatchUpGate({ framed }: { framed: boolean }) {
     return (
       <CatchUp
         doses={missed}
-        onTaken={(dose) => setDoseTaken(dose.id, true).then(() => undefined)}
+        onTaken={(dose) =>
+          setDoseTaken(dose.id, true)
+            .then(() => undefined)
+            /* Unhandled, this rejected into nothing whenever the catch-up
+               screen was reached without a connection. */
+            .catch((err) => {
+              console.error('catch-up mark failed', err);
+            })
+        }
         onSkipped={(dose, reason, note) =>
           skipDose({ userId: user.id, doseId: dose.id, reason, note })
         }

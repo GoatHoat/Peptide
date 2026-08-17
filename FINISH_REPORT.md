@@ -98,16 +98,26 @@ What it holds:
 
 ## 2. Migrations to apply, in order
 
-Everything up to and including `0037` was already applied by you. New here:
+Everything up to and including `0036` was applied by you and confirmed against
+the live database. Two are outstanding:
 
 | File | What it does |
 |---|---|
 | `supabase/pending/20_0037_tiers.sql` | `free_rank`, the stack-limit trigger, `my_entitlement()` |
 | `supabase/pending/21_0038_user_facts.sql` | `user_facts`, key validation, the tag trigger |
 
-`0037` is the one that matters: until it runs, `my_entitlement` is absent, every
-account reads as free with a catalogue total of 0, and the upsell copy says
-"0 products are locked".
+**`0037` is the one that matters, and it matters more than the last report
+said.** Until it runs:
+
+- `my_entitlement` is absent, so every account reads as free with a catalogue
+  total of 0, and the upsell copy says "0 products are locked"
+- the stack limit has no server-side enforcement at all
+- `free_rank` does not exist, so **every product used to be locked** — fixed in
+  the client this run, but the free tier still shows the whole catalogue until
+  the column is there to rank it
+
+Neither has been applied by me and neither will be. That is the one action git
+cannot undo.
 
 ---
 
@@ -179,6 +189,33 @@ the bar was 48 tall at 34 up. The bar is now 58 at 20 and the literal had
 drifted, which is why a product row was hidden. Every reserve is derived from
 `--tab-h` and `--tab-gap` now.
 
+**The whole catalogue was locked, and would have shipped that way.** Discover
+locked a product when `(free_rank ?? 9999)` exceeded the free cap. `free_rank`
+arrives through `select('*')`, so on a database where `0037` has not been
+applied the column is simply not there, every row reads `undefined`, and a free
+account sees the entire library greyed out behind a paywall. **That is the state
+your production database is in right now.** A missing rank now means "we cannot
+tell", and the answer to that is to show the product: an over-generous free tier
+is a pricing decision, a library that is nothing but locks is a broken app.
+
+It surfaced because it took `discover.spec` and `peptides.spec` down with it —
+which is the only reason it was found at all, and worth remembering when
+weighing what those tests are for.
+
+**Four tests were pinned to a day.** `nowmarker.spec` froze the clock to a
+hard-coded `2026-08-16` while the fixture starts its schedule item *now*, and
+`ensureTodayDoses` skips an item whose start is after the frozen day. From the
+next midnight the fixture seeded a schedule that had not begun, Today rendered
+its empty state, and four tests about where a marker sits failed for a reason
+with nothing to do with the marker. Both that spec and `catchup.spec` derive the
+day now.
+
+**Three CSS blocks are dead, and were left alone.** `.recon-unit-btn` and
+`.bodymap-chip` have no reference in any `.tsx`. Rule 7 — I do not delete what I
+do not understand — so they are reported rather than removed. `.recon-*` is
+reconstitution UI, which is worth a look on its own terms given the positioning
+in `CLAUDE.md`.
+
 **Still broken, not fixed:** `ask_usage` grows without bound. Only the last 24
 hours is ever read, and now the lifetime count as well — so it cannot simply be
 pruned without breaking the free cap. Whatever retention you choose has to keep
@@ -197,17 +234,27 @@ ANTHROPIC_API_KEY in dist/ 0
 
 purchase() untouched       yes — still the 900ms stub
 SKIP_PAYWALL default       'true'
-injection UI in src/       0 occurrences
+injection UI in src/       0 occurrences — the 2 matches are comments
+                           saying there will not be any
 peptide rank guard         present
 
 npm run build              green
-npm test                   139 passed, 0 failed
+npx tsc --noEmit           green
+npm test                   TALLY
 ```
 
-**Bundle:** `dist` 3.7 MB total, main JS **1028 KB**. It was ~980 KB before this
-run; the growth is `ProSheet`, `entitlements`, the memory UI and the doodle SVG.
-The main chunk is over Vite's 500 KB warning and has been for a while — code
-splitting is worth a session on its own.
+**Bundle:** main JS **1032 KB**, `dist` 3.7 MB total. It was 1028 KB at the last
+report; the 4 KB is `Skeleton`, `ErrorState` and the nine catch blocks. The main
+chunk is over Vite's 500 KB warning and has been for a while — code splitting is
+worth a session on its own.
+
+**A note on what "green" was worth earlier in this run.** Three onboarding
+fixtures were reading and writing a key the app stopped using when local state
+was scoped per account. They wrote where nothing reads and read back nothing,
+and nothing threw — so they reported green while asserting against a store they
+had not written. Two stale assertions hid behind that, including one that still
+expected the multiplied iron figure. Everything in this report was re-run after
+they were repaired.
 
 ---
 
