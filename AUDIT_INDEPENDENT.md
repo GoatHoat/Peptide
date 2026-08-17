@@ -11,6 +11,65 @@ both and decide. No file in the repo was modified to produce this audit.
 
 ---
 
+## Status board — read this instead of the whole file
+
+Most of what follows was acted on while it was being written. Current state as of
+`6181e6f`:
+
+| # | Finding | State |
+|---|---|---|
+| 1 | Free stack cap swallowed on every path but one | **Your decision.** Correctly escalated to `BLOCKED.md` as a product question, not patched |
+| 2 | Offline tick silently dead, banner promised a sync that did not exist | **Fixed** in `6181e6f` — and it found two more unguarded call sites than this audit did |
+| 3 | Migration checklist seven short | **Fixed** in `ffe8cc4` |
+| 4 | `0025` re-run after `0037` aborts | **Documented** in the README itself |
+| 5 | `dismissFact().catch(() => {})` | **Still live** — `You.tsx:365`. See below |
+| 6 | `ProSheet` falls back to "All 304 products" | **Still live** — `ProSheet.tsx:55` |
+| 7 | Width sweep never run | **Fixed** — now `tests/e2e/widths.spec.ts` |
+| 8 | Nine tap targets under 44 | **Five fixed**, `.tabs-tab` earlier; `.bodymap-chip` 36, `.setup-var` 40, `.recon-unit-btn` 36 remain on unswept screens |
+| 9 | Dead vial/reconstitution plumbing | **Still there, deliberately** — reported not deleted, CLAUDE.md r7 |
+| 10 | Pre-existing glow and gradient vs CLAUDE.md | **Untouched** — out of scope, pre-dates this run |
+| — | `user_facts` undisclosed in the privacy policy | **Fixed** in `61698d8` |
+| — | RLS reviewed, not tested | **Recorded**, adopted into `BLOCKED.md` |
+
+### Finding 5 is the one to look at, because of what it is
+
+`6181e6f` fixed the unguarded offline tick. `dismissFact(f.id).catch(() => {})`
+is the **same defect, one screen over**, and it survived the fix:
+
+```ts
+// You.tsx:365 — "Forget this"
+await dismissFact(f.id).catch(() => {});
+setFacts((prev) => prev.filter((x) => x.id !== f.id));   // row vanishes regardless
+```
+
+The memory disappears from the UI whether or not the server accepted the delete.
+On a *memory* feature that is the erasure path, so a user who forgets something
+and sees it gone may find it still there — and still being sent to Anthropic —
+next session. It is the last live instance of the pattern this audit kept
+finding, and it is three lines to fix.
+
+### What this audit got wrong
+
+Recorded because the limits of a review matter as much as its findings.
+
+**It missed the worst bug of the night.** `646c0e5` found that Discover locked a
+product when `(free_rank ?? 9999)` exceeded the cap. `free_rank` arrives through
+`select('*')`, so on a database where `0037` has not run the column is absent,
+every row reads `undefined`, and a free account sees **the entire library behind
+locks** — which is the state the production database is in right now.
+
+This file quoted that exact line in its first pass and separately made finding 3
+out of `0037` being unapplied. Both halves were here and were never put together.
+The §2 verification below — trigger, RPC, Edge Function cap, ranking SQL, all
+sound — checked the server and never asked what the client does when the
+migration behind it has not run.
+
+**The tap-target scan used the weaker method**, reading CSS `height` rather than
+effective hit area including pulled-out pseudo-elements. `states.spec.ts` does it
+properly. The finding held anyway, but by luck of the elements involved.
+
+---
+
 ## Read this first: three claims in `FINISH_REPORT.md` that do not hold
 
 ### 1. The free 1-item stack cap is not enforced on any path a user takes
