@@ -227,6 +227,42 @@ Not run at all: the loading-states-at-final-dimensions sweep and the empty-state
 sweep. Both need a running app per screen rather than a static read, and the
 three-account walkthrough was never rebuilt (see `BLOCKED.md`).
 
+### What "npm test passes" was worth before `ab14e9c`
+
+Recorded because the goal these prompts were run against is "`npm run build &&
+npm test` passes", and for part of this run that sentence meant less than it
+looked.
+
+`ab14e9c` found three onboarding fixtures reading and writing the bare
+`pepstack.onboarding.v1` key. `lib/storage.ts` scoped that key per account
+months ago, so all three wrote somewhere nothing reads and read back nothing —
+**and nothing threw, so they kept reporting green.** What that concealed:
+
+- `completeOnboarding` asserted a heading reading "What we found"; the screen has
+  said "Vitamins and minerals for you" since the name pass.
+- The same helper asserted iron at **"32 mg … 14 mg"** — the stored 18 and 8 with
+  the ODS vegetarian 1.8× multiplied in. That is precisely the calculated figure
+  §1 existed to remove. **The suite was asserting the bug and passing.**
+- The two step-index clamp tests seeded state where the app does not look, so the
+  app booted from nothing and the clamp was never exercised. Both passed for a
+  non-reason.
+
+Two consequences worth carrying:
+
+1. **Every "green" claim in this run predating `ab14e9c` is weaker than it
+   reads** — including the `117 passed` this audit cited for the §2 tree state,
+   and the `118 passed` in `FINISH_REPORT.md` §7. The suite was green; parts of
+   it were not testing anything.
+2. It is the same failure mode as findings 1, 5 and the offline tick below: **an
+   error that cannot surface.** A fixture writing to an unread key, a `.catch(()
+   => {})`, and an unhandled rejection all produce the same thing — a green
+   signal with nothing behind it. That is the through-line of this audit, and it
+   is worth more attention than any single item in the table.
+
+An earlier revision of this file suggested the `-retry1` directories seen at
+01:18 came from CPU contention with the width sweep. That was wrong: they were
+this genuine breakage. The guess is corrected here rather than quietly deleted.
+
 ### A pattern worth one fix rather than three
 
 | Site | Handling | Effect |
