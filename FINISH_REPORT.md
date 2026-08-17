@@ -376,3 +376,52 @@ One thing the code does that the file does not describe: **`ask_reports` stores
 the question and the answer when a user reports an assistant reply.** The file
 lists the table under §4 but does not say the answer text is kept as well. The
 Privacy Policy says both are.
+
+
+---
+
+# The final three, 17 August
+
+## Part 1 — onboarding at 27 steps: **DONE**
+
+Was 20. Six additions and two splits. What each one earns, one line each:
+
+| Step | What it earns |
+|---|---|
+| `profile` → `profile` + `sex` | Age alone is a drag rather than a form; sex moves the iron figure between 18 mg and 8 mg, the largest change any answer makes to what is shown |
+| `day` → `day` + `meals` | Four time pickers on one screen was the densest moment in the flow; the meals are what the schedule anchors to |
+| `stack-count` | An easy number before a hard list, and it sizes the input on the next screen |
+| `stack-insight` | The first moment the app knows something they do not, built from what they just typed, using the solver's own rules |
+| `goal-priority` | Feeds the ordering in `recommend.ts`; skipped entirely with one goal |
+| `commitment` | The target the streak counts against — a number they chose themselves |
+| `plan-preview` | Their own answers before money is mentioned; nothing on it is new |
+| `free-pick` | Which product a free account tracks, with the others still on screen |
+
+Progress stays honest: one segment per FLOW entry out of 27, and a skipped step
+moves it two. Persona 4 asserts exactly that and now expects three jumps — q3,
+goal-priority and free-pick, each retired by something the person said.
+
+Four of the new steps are in `SKIPPABLE`, and each has a neutral default that
+gives the same result as answering.
+
+**Drop-off instrumentation: not built.** The prompt asked for it and I did not
+reach it. `RunRecord` in the persona harness records every screen and its
+duration, which is the same data for a test run but not for a real user.
+
+## Part 2 — the two full runs: **NOT DONE**
+
+Neither walked. `BLOCKED.md` lists exactly what the suite does and does not
+cover in their place, and names the five things nothing currently touches.
+
+## Part 3 — the Apple audit: **DONE**
+
+`APPLE_AUDIT.md`, every numbered guideline in all five sections. Five blockers,
+four of them yours. Every green row cites a file, a migration or a test; four
+rows are marked cannot-verify because they need a device or App Store Connect.
+
+## Also fixed this run
+
+- **The recommendation card was unreadable.** Every child of `.ob-rec-main` is a
+  `<span>`, and vertical margin does nothing on an inline box — so the
+  `margin-top` on the dose, the reason and the diet note were all dropped and
+  four lines ran together. `.ob-rec-diet` had no rule at all and inherited 17px.

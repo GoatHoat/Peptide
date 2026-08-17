@@ -20,8 +20,10 @@ async function reachPaywall(page: import('@playwright/test').Page) {
   await page.getByPlaceholder('Confirm password').fill(PASSWORD);
   await page.getByRole('button', { name: 'Create account' }).click();
 
-  await page.getByRole('heading', { name: 'About you' }).waitFor();
-  await page.getByRole('button', { name: 'Female' }).click();
+  await page.getByRole('heading', { name: 'How old are you?' }).waitFor();
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByRole('heading', { name: 'And your sex' }).waitFor();
+  await page.getByRole('button', { name: 'Female', exact: true }).click();
   await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByRole('heading', { name: /Anything you don.t eat/ }).waitFor();
   await page.getByRole('button', { name: 'Continue' }).click();
@@ -33,17 +35,28 @@ async function reachPaywall(page: import('@playwright/test').Page) {
   await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByRole('heading', { name: 'Your day' }).waitFor();
   await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByRole('heading', { name: 'When do you eat?' }).waitFor();
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByRole('heading', { name: /How many things are you taking/ }).waitFor();
+  await page.getByRole('button', { name: 'Three to five' }).click();
+  await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByRole('heading', { name: 'What are you already taking?' }).waitFor();
+  await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByRole('heading', { name: /not agreed with you/ }).waitFor();
   await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByRole('button', { name: 'Skip' }).click();
   await page.locator('button.ob-goal-icon').first().click();
   await page.getByRole('button', { name: /Continue \(1 selected\)/ }).click();
+  // goal-priority is skipped with one goal
+  await page.getByRole('heading', { name: /How many days a week/ }).waitFor();
+  await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByRole('heading', { name: 'Reminders at the right times' }).waitFor();
   await page.getByRole('button', { name: 'Not now' }).click();
   await page.getByRole('heading', { name: 'Vitamins and minerals for you' }).waitFor({ timeout: 20_000 });
   await page.getByRole('button', { name: 'Create schedule' }).click();
+  await page.getByRole('heading', { name: 'Here is your plan' }).waitFor();
+  await page.getByRole('button', { name: 'See what it costs' }).click();
   await page.getByRole('heading', { name: 'Everything, in one place' }).waitFor();
 }
 

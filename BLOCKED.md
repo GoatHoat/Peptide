@@ -59,7 +59,11 @@ three real accounts before launch.
 Written against `PROMPT_LAST.md`. Nothing here is blocked by a rule — it is
 work I did not reach. Listed exactly rather than rounded up.
 
-## §1 — a longer onboarding: NOT DONE
+## §1 — a longer onboarding: DONE (superseded, see below)
+
+Original entry kept for the record:
+
+### §1 — a longer onboarding: NOT DONE
 
 FLOW is **20 steps**, not the 24–28 asked for. The only step added is
 `free-pick`, and it was added for §2 rather than for §1. None of the named
@@ -97,3 +101,45 @@ developer.apple.com/app-store/review/guidelines this run.
 - The sign-in bug: an existing account no longer re-runs onboarding.
 - The images: they were never copied into `ios/App/App/public`, which is what
   the device serves. `npx cap copy ios`.
+
+
+---
+
+# After the final-three run, 17 August
+
+## Part 1 — onboarding: DONE
+
+FLOW is **27 steps**, inside the 24–28 band. Six additions and two splits, each
+justified in `FINISH_REPORT.md` and in the commit. 22 personas pass against it.
+
+## Part 3 — the Apple audit: DONE
+
+`APPLE_AUDIT.md` covers every numbered guideline in all five sections. Five
+things block upload and four of them are yours: `SKIP_PAYWALL`, `purchase()`,
+the ten legal placeholders, a support contact, and metadata.
+
+## Part 2 — the two full runs: NOT DONE
+
+Neither Run A nor Run B was walked as a person. This is the one item of the
+three still outstanding and it should not be reported any other way.
+
+What exists instead, and what it does and does not cover:
+
+- **Onboarding** is covered thoroughly — 22 personas walk it end to end,
+  including every optional question skipped, no goals, fifteen products, and a
+  kill-and-relaunch mid-flow.
+- **The free tier** is covered — `tests/e2e/freetier.spec.ts` walks paywall →
+  Continue with Free → free-pick → schedule.
+- **Accounts** are covered — `tests/e2e/accounts.spec.ts` walks three accounts
+  in one browser, sign-out, and sign-in to an already-onboarded account.
+- **Not covered by anything**: the post-onboarding journey as one continuous
+  session. Ticking doses, then editing the schedule, then asking four assistant
+  questions, then exporting, then deleting the account — each is tested in
+  isolation and none is tested in sequence. Order-dependent bugs are exactly
+  what a full run finds and exactly what the suite cannot.
+
+The specific things Run A and Run B would have exercised that nothing currently
+touches at all: searching an ingredient that only appears inside a blend,
+reporting an assistant answer, triggering catch-up from a real overdue dose,
+going offline and back online in one session, and walking every row of You in
+one pass.

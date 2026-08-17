@@ -150,7 +150,7 @@ test('three accounts in one browser keep nothing of each other', async ({ page, 
        the onboarded flag had no account in it. The first question of the flow
        is what proves it did not. */
     await expect(
-      page.getByRole('heading', { name: 'About you' }),
+      page.getByRole('heading', { name: 'How old are you?' }),
       `${account.email} skipped onboarding`,
     ).toBeVisible({ timeout: 15_000 });
 
@@ -226,7 +226,7 @@ test('signing in to a set-up account does not re-run onboarding', async ({ page,
   await signUpAs(page, FIRST.email);
 
   await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible({ timeout: 15_000 });
-  await expect(page.getByRole('heading', { name: 'About you' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'How old are you?' })).toHaveCount(0);
 });
 
 test('an account with a schedule but no stamp is still not re-onboarded', async ({ page, app }) => {
@@ -239,7 +239,7 @@ test('an account with a schedule but no stamp is still not re-onboarded', async 
   await signUpAs(page, FIRST.email);
 
   await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible({ timeout: 15_000 });
-  await expect(page.getByRole('heading', { name: 'About you' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'How old are you?' })).toHaveCount(0);
 });
 
 test('a genuinely new account still gets the questions', async ({ page, app }) => {
@@ -250,5 +250,5 @@ test('a genuinely new account still gets the questions', async ({ page, app }) =
   await page.goto('/');
   await signUpAs(page, SECOND.email);
 
-  await expect(page.getByRole('heading', { name: 'About you' })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole('heading', { name: 'How old are you?' })).toBeVisible({ timeout: 15_000 });
 });
