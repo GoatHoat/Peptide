@@ -49,6 +49,9 @@ export function ProSheet({
   onClose: () => void;
 }) {
   const { catalogueTotal, lockedTotal } = useEntitlement();
+  /* Annual by default: it is the better value and preselecting the cheaper
+     monthly would make the saving badge decoration rather than a reason. */
+  const [plan, setPlan] = useState<PlanId>('annual');
   const [busy, setBusy] = useState<PlanId | 'restore' | null>(null);
   const [note, setNote] = useState<string | null>(null);
 
@@ -73,42 +76,58 @@ export function ProSheet({
         <li>Full history and export</li>
       </ul>
 
-      <div className="pro-plans">
+      <div className="pro-plans" role="radiogroup" aria-label="Plan">
         {PLANS.map((p) => (
           <button
             key={p.id}
-            className="pro-plan pressable"
+            className={`pro-plan pressable${plan === p.id ? ' on' : ''}`}
+            role="radio"
+            aria-checked={plan === p.id}
             disabled={busy !== null}
-            onClick={async () => {
-              setBusy(p.id);
-              setNote(null);
-              try {
-                await purchase(p.id);
-                /* Deliberately says nothing about having upgraded. purchase()
-                   is a stub and claiming success would be a lie the user could
-                   act on. */
-                setNote('Subscriptions are not switched on yet.');
-              } finally {
-                setBusy(null);
-              }
-            }}
+            /* Tap selects. It used to purchase on the first tap of either row,
+               so there was no way to look at both prices without committing to
+               one. The single button below is what commits. */
+            onClick={() => setPlan(p.id)}
           >
             <span className="pro-plan-main">
-              <span className="ob-card-title">
+              <span className="pro-plan-name t-body-m">
                 {p.name}
-                {p.badge && <span className="ob-badge">{p.badge}</span>}
+                {p.badge && <span className="pro-badge t-label">{p.badge}</span>}
               </span>
-              <span className="ob-caption">{p.note}</span>
+              <span className="pro-plan-note t-caption">{p.note}</span>
             </span>
             <span className="pro-plan-price">
-              <span className="ob-card-title">{p.price}</span>
-              <span className="ob-caption">{p.period}</span>
+              <span className="pro-plan-amount t-body-m">{p.price}</span>
+              <span className="pro-plan-period t-caption">{p.period}</span>
             </span>
           </button>
         ))}
       </div>
 
-      {note && <p className="pro-note t-caption">{note}</p>}
+      <button
+        className="pro-buy pressable"
+        disabled={busy !== null}
+        onClick={async () => {
+          setBusy(plan);
+          setNote(null);
+          try {
+            await purchase(plan);
+            /* Deliberately says nothing about having upgraded. purchase() is a
+               stub and claiming success would be a lie the user could act on. */
+            setNote('Subscriptions are not switched on yet.');
+          } finally {
+            setBusy(null);
+          }
+        }}
+      >
+        {busy === plan ? 'One moment…' : `Continue with ${PLANS.find((p) => p.id === plan)?.name}`}
+      </button>
+
+      {/* Reserved, so selecting a plan or pressing the button cannot move the
+          rows above it. */}
+      <p className="pro-note t-caption" role="status">
+        {note ?? ' '}
+      </p>
 
       {/* Never behind a link. A missing restore path is the most common
           rejection reason for subscription apps. */}

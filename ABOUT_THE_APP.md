@@ -206,7 +206,7 @@ responsible for what they choose to take.
 
 - **[DECIDE — currently not implemented.]** Payments are stubbed and the paywall
   is disabled; the app as it stands is free and cannot charge.
-- The intended plans are **$29.99 per year** and **$4.99 per month**,
+- The intended plans are **$49.99 per year** and **$4.99 per month**,
   auto-renewing, purchased through Apple's in-app purchase.
 - A free tier is planned: one product in the stack, a limited view of the
   catalogue, three AI messages in total.

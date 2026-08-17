@@ -2703,11 +2703,51 @@ button {
   background: var(--card);
   text-align: left;
 }
+/* The type in here is drawn from the app's own scale — t-body-m, t-caption,
+   t-label — rather than new .pro-* sizes. The sheet used ob-card-title,
+   ob-caption and ob-badge, none of which exist in this file: that prefix
+   belongs to onboarding.css and the sheet renders through a portal outside it,
+   so every line of it was at browser default. Same size, same colour, title
+   indistinguishable from its caption. One type scale, per CLAUDE.md. */
 .pro-plan-main { flex: 1; min-width: 0; display: block; }
 .pro-plan-price { text-align: right; flex: none; }
-.pro-plan-main .ob-caption,
-.pro-plan-price .ob-caption { display: block; margin-top: 2px; }
-.pro-note { margin-top: 12px; color: var(--t3); }
+.pro-plan-name,
+.pro-plan-amount { display: block; color: var(--t1); }
+.pro-plan-note,
+.pro-plan-period { display: block; margin-top: 2px; color: var(--t3); }
+
+/* Selection is the accent as a 1px border and nothing else — no fill, no glow,
+   no second colour. The border replaces the hairline rather than adding to it,
+   so the row cannot change size when it is chosen. */
+.pro-plan.on { border-color: var(--purple); }
+
+.pro-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 2px 7px;
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  color: var(--t2);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.pro-buy {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 14px;
+  border-radius: 16px;
+  background: var(--purple);
+  color: var(--bg);
+  font-size: calc(15px * var(--text-scale));
+  font-weight: 600;
+}
+.pro-buy:disabled { opacity: 0.55; }
+/* Holds a line whether or not there is one to say, so committing a plan cannot
+   push the restore button down under the finger. */
+.pro-note { margin-top: 10px; min-height: 18px; color: var(--t3); }
 .pro-restore {
   display: block;
   width: 100%;
