@@ -24,6 +24,12 @@ async function openPeptides(page: import('@playwright/test').Page) {
 
 test('a peptide row shows no amount, no upper limit and no timing', async ({ page, app }) => {
   await seedSignedIn(page, app.stub);
+  /* Pro: six articles are free now and these rows are not among them, so on
+     a free account the row renders locked and never expands. This test is
+     about what an opened product shows, not about the paywall — that is
+     freearticles.spec.ts. */
+  app.stub.tier = 'pro';
+
   const panel = await openPeptides(page);
 
   const rows = panel.locator('.prod-row');
@@ -46,6 +52,12 @@ test('a peptide row shows no amount, no upper limit and no timing', async ({ pag
 
 test('an opened peptide card offers its papers and no dosing line', async ({ page, app }) => {
   await seedSignedIn(page, app.stub);
+  /* Pro: six articles are free now and these rows are not among them, so on
+     a free account the row renders locked and never expands. This test is
+     about what an opened product shows, not about the paywall — that is
+     freearticles.spec.ts. */
+  app.stub.tier = 'pro';
+
   const panel = await openPeptides(page);
 
   await panel.locator('.prod-row').first().click();
@@ -64,6 +76,12 @@ test('an opened peptide card offers its papers and no dosing line', async ({ pag
 
 test('nothing offers to schedule a peptide', async ({ page, app }) => {
   await seedSignedIn(page, app.stub);
+  /* Pro: six articles are free now and these rows are not among them, so on
+     a free account the row renders locked and never expands. This test is
+     about what an opened product shows, not about the paywall — that is
+     freearticles.spec.ts. */
+  app.stub.tier = 'pro';
+
   const panel = await openPeptides(page);
 
   await panel.locator('.prod-row').first().click();
@@ -77,6 +95,12 @@ test('nothing offers to schedule a peptide', async ({ page, app }) => {
 
 test('the Add to Schedule search does not offer peptides', async ({ page, app }) => {
   await seedSignedIn(page, app.stub);
+  /* Pro: six articles are free now and these rows are not among them, so on
+     a free account the row renders locked and never expands. This test is
+     about what an opened product shows, not about the paywall — that is
+     freearticles.spec.ts. */
+  app.stub.tier = 'pro';
+
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible();
   await page.getByRole('button', { name: 'Add to Schedule' }).click();

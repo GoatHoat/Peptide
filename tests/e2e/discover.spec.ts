@@ -38,6 +38,12 @@ test('renders Discover with the catalogue', async ({ page, app }) => {
  */
 test('says the iron figure depends, and takes the answer', async ({ page, app }) => {
   await seedSignedIn(page, app.stub);
+  /* Pro: six articles are free now and these rows are not among them, so on
+     a free account the row renders locked and never expands. This test is
+     about what an opened product shows, not about the paywall — that is
+     freearticles.spec.ts. */
+  app.stub.tier = 'pro';
+
   await page.goto('/');
 
   await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible();
