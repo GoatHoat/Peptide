@@ -9,12 +9,14 @@
  * suggest any of them, it does not know what is in the vial, and it does not
  * store the answer.
  *
- * `legal.md` records why that distinction is the whole thing: the version that
- * was rejected served *protocols* — reconstitution ratios and amounts attached
+ * `legal.md:5` describes why that distinction is the whole thing: the design
+ * that was abandoned served *protocols* — reconstitution ratios and amounts attached
  * to named peptides, so the app was the source of "how much". It was retried
  * with personal-use framing, with disclaimers, with direct study quotes and
- * behind an in-app browser, and every variation failed, because what is
- * evaluated is the function rather than the wording.
+ * behind an in-app browser, and none of them changed what the app was doing,
+ * because what is evaluated is the function rather than the wording. (That file
+ * records a design decision, not a rejection — there is no record of this app
+ * ever being rejected, and an earlier comment here implied there was.)
  *
  * A converter has no such function. It has no substance in it at all. Keep it
  * that way: no peptide argument, no default, no suggested range, no persistence.

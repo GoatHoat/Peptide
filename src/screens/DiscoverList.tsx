@@ -102,7 +102,7 @@ export function ProductRow({
   /* Peptides are a reference library and nothing else: no amount, no upper
      limit, no timing, ever. CLAUDE.md, legal.md and PROMPT_V2.md section 3 all
      say so, and the reason is that a dose or a schedule for an unapproved
-     compound is the thing that got the first version of this app rejected.
+     compound is the design legal.md:5 records as abandoned — no rejection is on record.
      Enforced here rather than by leaving the columns empty, because a column
      that happens to be null today is not a rule. */
   const isSupp = (entry.kind ?? 'peptide') === 'supplement';

@@ -143,3 +143,63 @@ touches at all: searching an ingredient that only appears inside a blend,
 reporting an assistant answer, triggering catch-up from a real overdue dose,
 going offline and back online in one session, and walking every row of You in
 one pass.
+
+---
+
+# Part A, the two runs — 17 August, second attempt
+
+**How they were run:** headless Chromium driving the real UI on the Vite dev
+server against the Supabase stub. Observed, not reasoned — every screen listed
+below was actually rendered and actually clicked. `tests/e2e/runs.spec.ts` is
+the harness and is re-runnable.
+
+**Status: PARTIAL. Onboarding was walked end to end in both runs. The app phase
+was not completed in either.** Both tests hit their time limit during the
+post-onboarding section, before the recorder printed its report, so the
+screen-by-screen output does not exist yet. Do not read this as the runs being
+done.
+
+## What was observed
+
+**Run A** reached **Today** with all seven goals selected and a schedule built —
+confirmed from the failure snapshot, which shows the Today screen with the week
+strip rendered. It then ran out of time during the app phase (Discover, the four
+assistant questions, You, deletion).
+
+**Run B** also reached **Today**, on a free one-product account.
+
+## The one finding the runs produced
+
+**The goals screen cannot be driven by index.** The first attempt stalled for six
+minutes on step 16 of 27 with "Skin & hair, selected" on screen. The reel pages
+its neighbours in from off-stage behind a mask, so `.ob-goal-icon` exists in the
+DOM for all seven but only the centred one accepts a tap. Clicking `nth(1)`
+waits forever on an element that is present, visible to the accessibility tree,
+and unclickable.
+
+This is a **harness** finding, not an app defect — a person swipes, and
+`persona.ts` already pages by tab before tapping. But it is worth knowing that
+the seven goal glyphs are not independently addressable, and it is exactly the
+kind of thing only a walk finds.
+
+## What is still not observed
+
+Everything after Today in both runs: ticking doses in two blocks, both Discover
+tabs, the ingredient-inside-a-blend search, opening a product, the four
+assistant answers, the report control, editing the schedule, catch-up, export,
+the You rows, account deletion and re-signin; and for Run B the one-product
+limit, the three-message cap, and offline.
+
+**The stack-insight question you care most about is unanswered.** Run A's
+`current-stack` step types product names into the search and clicks whatever
+matches; against the stub catalogue there is no multivitamin, so the
+zinc-inside-a-blend case was never set up and `stack-insight` was never asked
+the question that matters. Answering it needs either the real catalogue or a
+stub fixture carrying a multivitamin whose panel contains zinc without the word
+in its title. That fixture does not exist.
+
+## Why it is not finished
+
+Time in the run, not a blocker. The harness works; the two tests need a longer
+budget than the session had left, and one of them was blocked by a dev server
+left holding port 5174 from the previous attempt.

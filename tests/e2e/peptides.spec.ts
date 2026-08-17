@@ -5,7 +5,7 @@ import { expect, seedSignedIn, test } from './support/app';
  *
  * CLAUDE.md, legal.md and PROMPT_V2.md section 3 all say the same thing, and
  * legal.md records why: app-sourced dosing for unapproved compounds is what got
- * the first version of this app rejected. The rule is enforced in three places
+ * the design legal.md:5 records as abandoned. The rule is enforced in three places
  * — the render, the API, and a database trigger — so these tests check the
  * behaviour rather than any one of them.
  *
