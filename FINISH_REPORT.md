@@ -425,3 +425,52 @@ rows are marked cannot-verify because they need a device or App Store Connect.
   `<span>`, and vertical margin does nothing on an inline box — so the
   `margin-top` on the dose, the reason and the diet note were all dropped and
   four lines ran together. `.ob-rec-diet` had no rule at all and inherited 17px.
+
+
+---
+
+# The paywall and the layout faults — 17 August
+
+Six sections, committed separately. `267 passed`, build and typecheck green.
+
+## What I observed versus reasoned about
+
+| # | Check | |
+|---|---|---|
+| 1 | Paywall has real type at every level | **observed** — the three classes had 0, 0 and layout-only rules; now `t-body-m` / `t-caption` / `t-label` |
+| 2 | No `ob-` class survives outside `src/onboarding/` | **observed** — grep: those three were the only ones, so the sweep is closed |
+| 3 | Selecting a plan is visible, does not purchase, does not shift layout | **observed in code, not on screen** — border swap and a reserved note line; no screenshot taken |
+| 4 | Prices $49.99 / $4.99 everywhere, badge computed | **observed** — 7 unit tests, and the sweep corrected `website/terms.html`, the deployed `site/terms.html` and `ABOUT_THE_APP.md` |
+| 5 | First frame after a hard reload is positioned | **observed** — `layout.spec.ts` measures the panel against the host before touching anything |
+| 6 | Rotate and resize stay correct | **half observed** — resize is measured at 320 and 430; rotation is reasoned, since a headless viewport change is not an `orientationchange` |
+| 7 | No scrollbar in any scroller | **observed** — every scrolling element asserted to reserve 0px gutter and report `scrollbar-width: none`. Chrome only; **Safari not checked** |
+| 8 | No screen scrolls past its content | **observed, and my premise was wrong** — see below |
+| 9 | `SKIP_PAYWALL` still `'true'`, `purchase()` charges nobody | **observed** — grepped after the RevenueCat wiring |
+
+## The one thing I got wrong and corrected
+
+§5 said a short list must not scroll. The empty Today scrolls 65px, and I first
+wrote a test asserting it should not. Measured: content ends 819px into an 852px
+viewport and the floating bar covers the last ~78px, so the action row genuinely
+sits underneath it and that scroll is what reaches it. The 98px reserve is
+correct. The test now asserts the overrun never *exceeds* the reserve, which is
+the fault that would actually matter.
+
+## §6 — payments, and what cannot be verified
+
+`@revenuecat/purchases-capacitor` is in, `src/lib/revenuecat.ts` implements the
+real path, and `billing.ts` keeps both signatures byte-identical. **None of it
+has run.** No Apple account, no products, no key — so nothing was tested against
+a transaction and it is not described as working anywhere.
+
+One correction to the spec: it asked for the key to come from the environment
+with no `VITE_` prefix. Under Vite those cannot both hold — only `VITE_`
+variables reach client code, and those are inlined and public. The key comes
+from a runtime global the native shell sets; `ios/App/App/public/config.js` is
+gitignored, and the built bundle was checked to contain the variable name and no
+value.
+
+`PAYMENTS_SETUP.md` is the ordered list you asked for, and it ends with the two
+things that are still not wired after all of it: nothing writes
+`profiles.subscription_tier`, so a purchase would unlock the client and not the
+server, and `0037_tiers` is unapplied so `my_entitlement()` does not exist.
