@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
 import { TabBar, TAB_SPRING } from './components/TabBar';
 import { Today } from './screens/Today';
@@ -27,6 +27,7 @@ import { EntitlementProvider } from './lib/entitlements';
 import { onBlockRequested, registerNotificationRouter } from './lib/notificationRouter';
 import { registerNotificationActions, syncScheduleNotifications } from './lib/notifications';
 import { enqueueMark, flushQueue } from './lib/doseQueue';
+import { markShown, shownToday } from './lib/catchup';
 
 /** Commit to an axis inside the first 10px and never revisit it. */
 const AXIS_THRESHOLD = 10;
@@ -109,16 +110,19 @@ function Body({ framed }: { framed: boolean }) {
     if (!userId) return;
     let live = true;
     fetchOnboardedAt(userId).then(async (at) => {
-      if (!live || at === undefined) return;
+      if (!live) return;
       if (at) {
         setOnboarded(true);
         markOnboarded(userId);
         return;
       }
-      /* The column says no, and for accounts that finished onboarding before
-         0035 added it that is not true — they have no stamp and were being
-         sent back through the entire flow on sign-in. A schedule is evidence
-         they finished; stamp it so the next check is one column read. */
+      /* Two cases fall through to here and both need the same answer.
+         `null` is "the column says no", which is wrong for every account that
+         finished onboarding before 0035 added it. `undefined` is "could not
+         tell" — offline, or, as `supabase migration list` confirms today,
+         0035 not applied at all, so selecting the column errors. This used to
+         return early on `undefined`, which meant the fallback never ran against
+         the actual production database. A schedule is evidence they finished. */
       const built = await hasSchedule(userId).catch(() => false);
       if (!live || !built) return;
       setOnboarded(true);
@@ -156,24 +160,86 @@ function CatchUpGate({ framed }: { framed: boolean }) {
   const [missed, setMissed] = useState<Dose[] | null>(null);
   const [checked, setChecked] = useState(false);
 
+  /**
+   * The window is consumed by whoever calls first, so it must be called once.
+   *
+   * StrictMode runs every effect twice in development — mount, cleanup, mount.
+   * Both passes called `touchLastOpened()`. The first stamped `last_opened_at`
+   * and returned the real previous open, but `live` was already false so the
+   * result was thrown away; the second returned what the first had written
+   * milliseconds earlier, and `getMissedSince` over a 3ms window is always
+   * empty. The RPC's own comment says it exists so "two launches cannot race
+   * each other into consuming the same window" — StrictMode is exactly that
+   * race, and the second caller is built to lose.
+   *
+   * Keyed on the user id rather than a bare boolean, so switching account still
+   * re-checks. Cleared on foreground below, because this stops a double-invoke
+   * within one mount, not the check for the rest of the app's life.
+   */
+  const consumed = useRef<string | null>(null);
+  /** when the check last ran, for the foreground debounce */
+  const lastCheck = useRef(0);
+
+  const check = useCallback(async () => {
+    if (!user) return;
+    if (consumed.current === user.id) return;
+    consumed.current = user.id;
+    lastCheck.current = Date.now();
+    try {
+      const previous = await touchLastOpened();
+      /* Null is a first launch on this device, and a first launch must not be
+         told it missed a week. It is also what an unapplied 0034 returns — see
+         the warning in api.ts, which is the only thing distinguishing them. */
+      if (!previous) {
+        setChecked(true);
+        return;
+      }
+      const now = new Date();
+      const rows = await getMissedSince(user.id, previous, now);
+      /* Past due and unmarked is the honest window; offering the same dose
+         every time the app opens is nagging. Once a day, per account. */
+      const seen = shownToday(user.id, now);
+      const fresh = (rows ?? []).filter((d) => !seen.has(d.id));
+      if (fresh.length > 0) markShown(user.id, fresh.map((d) => d.id), now);
+      setMissed(fresh);
+      setChecked(true);
+    } catch {
+      setChecked(true);
+    }
+  }, [user?.id]);
+
+  useEffect(() => {
+    void check();
+  }, [check]);
+
+  /**
+   * And again when the app comes back.
+   *
+   * `[user?.id]` alone means once per mount, and reopening a backgrounded iOS
+   * app does not remount React — the WebView is still alive. So the screen only
+   * ever appeared after a full kill and relaunch, which is not how a phone is
+   * used.
+   *
+   * A second listener on `visibilitychange` rather than extending the one in
+   * `Shell`: that one is about notification scheduling and lives with the user
+   * id, this one is about a gate that only exists while signed in, and the two
+   * have different debounces. Both are one-liners; merging them would put
+   * unrelated reasoning in one handler.
+   */
   useEffect(() => {
     if (!user) return;
-    let live = true;
-    touchLastOpened()
-      .then(async (previous) => {
-        if (!live || !previous) return [];
-        return getMissedSince(user.id, previous, new Date());
-      })
-      .then((rows) => {
-        if (!live) return;
-        setMissed(rows ?? []);
-        setChecked(true);
-      })
-      .catch(() => live && setChecked(true));
-    return () => {
-      live = false;
+    const onVisible = () => {
+      if (document.visibilityState !== 'visible') return;
+      /* visibilitychange also fires on browser tab focus and can arrive in
+         bursts. A minute is long enough that flicking between tabs costs
+         nothing and short enough that a real resume is caught. */
+      if (Date.now() - lastCheck.current < 60_000) return;
+      consumed.current = null;
+      void check();
     };
-  }, [user?.id]);
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, [user?.id, check]);
 
   /* A tapped reminder lands here rather than on Today, because this is already
      the screen for "these came due, did you take them?" and it confirms with a
@@ -187,6 +253,9 @@ function CatchUpGate({ framed }: { framed: boolean }) {
           const inBlock = doses.filter(
             (d) => d.scheduled_time && d.scheduled_time.slice(0, 5) === time && !d.taken,
           );
+          /* Deliberately not filtered by `shownToday`. Tapping a reminder is an
+             explicit request for that block, so it opens even if the block was
+             already offered and dismissed this morning. */
           if (inBlock.length > 0) {
             setMissed(inBlock);
             setChecked(true);

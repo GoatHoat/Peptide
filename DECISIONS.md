@@ -135,3 +135,27 @@ broken or non-compliant.
   `styles.css:2810` loads the SVG. The prompt asked for a re-export at the size
   the CSS uses; the CSS uses the SVG, so the honest answer was to delete the
   dead export rather than regenerate one nothing loads.
+
+## The catch-up screen (17 August)
+
+- **60-second foreground debounce.** `visibilitychange` fires on browser tab
+  focus and can arrive in bursts, and the check costs an RPC that consumes a
+  window. A minute is long enough that flicking between tabs is free and short
+  enough that a real resume is caught — nobody backgrounds an app and returns
+  inside a minute expecting to be told what they missed.
+- **A dose is offered once per calendar day.** `getMissedSince` now returns
+  everything past due and unmarked, which is the honest window but would show
+  the screen on every launch until the last dose is ticked. Once a day is the
+  rate limit; the marker is discarded when the date changes, so an untouched
+  dose does come back tomorrow.
+- **A second `visibilitychange` listener rather than extending the one in
+  `Shell`.** That one is about notification scheduling and lives with the user
+  id; this one belongs to a gate that only exists while signed in, and they have
+  different debounces. Both are one-liners and merging them would put unrelated
+  reasoning in one handler.
+- **The shown-marker lives in local storage, not a table.** It is a nag limit,
+  not a record. Losing it on reinstall costs one extra prompt.
+- **`getMissedSince` keeps its `since` parameter** even though the lower bound
+  is gone. Removing it would move the day-boundary reasoning away from the
+  caller that owns it, and the parameter is where that reasoning is written
+  down.

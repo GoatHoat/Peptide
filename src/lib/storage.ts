@@ -49,6 +49,11 @@ export const KEY_BASES = [
      queue surviving into the next account would post one person's dose against
      another's. See lib/doseQueue.ts. */
   'pepstack.dosequeue.v1',
+  /* Which doses the catch-up screen has already offered today. Scoped for the
+     reason this whole module exists: two people on one phone must not inherit
+     each other's "already seen", or the second person's overdue dose is
+     suppressed by the first person's dismissal. See lib/catchup.ts. */
+  'pepstack.catchup.shown.v1',
 ] as const;
 
 /**

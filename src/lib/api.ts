@@ -787,23 +787,51 @@ export const SKIP_REASONS = [
  * Null on a first launch, which the catch-up screen reads as "do not fire" —
  * a device seeing the app for the first time must not be told it missed a week.
  */
+let warnedNoRpc = false;
+
 export async function touchLastOpened(): Promise<Date | null> {
   const { data, error } = await supabase.rpc('touch_last_opened');
   /* Added by migration 0034. Until it is applied the RPC is absent, and a
      catch-up screen that has not been deployed yet must simply not fire. */
   if (error) {
-    if (/does not exist|not find|PGRST202/i.test(error.message ?? '')) return null;
+    if (/does not exist|not find|PGRST202/i.test(error.message ?? '')) {
+      /* The user-visible behaviour is unchanged and deliberately silent — but
+         an unapplied migration looked exactly like a correctly quiet first
+         launch, so the feature could be off forever with nothing to show for
+         it. This branch only; a genuine first launch returns null below and
+         stays quiet. Once per session, because it is also called on every
+         foreground. */
+      if (!warnedNoRpc) {
+        warnedNoRpc = true;
+        console.warn('catch-up disabled: migration 0034 not applied');
+      }
+      return null;
+    }
     throw error;
   }
   return data ? new Date(data as string) : null;
 }
 
 /**
- * Doses whose time passed while the app was closed, still unmarked.
+ * Doses that are past due today and still unmarked.
  *
- * `since` is the previous open. A dose due at 10:30 fires when the app was last
- * open at 21:00 the night before and is opened at 11:00; it does not fire when
- * that same app is opened at 10:00.
+ * ─────────────────────────────────────────────────────────────────────────────
+ * THE WINDOW CHANGED, AND THIS IS WHY. It used to also require the dose to have
+ * come due *since the previous open*: `sameDay ? at > sinceM : true`. That
+ * consumed a dose the moment you glanced at the app. Open at 08:05 without
+ * ticking the 08:00, and `last_opened_at` moves to 08:05; at noon the 08:00 is
+ * no longer "since", so it is filtered out — still unmarked, still overdue, and
+ * now permanently invisible to the one screen that exists to catch it.
+ *
+ * What this screen is for is "unmarked and past due", not "came due since you
+ * last looked". So the lower bound is gone.
+ *
+ * `since` is still taken, and still does one job: a dose from *yesterday* must
+ * not resurface today. That is handled by the `log_date` filter below, and
+ * `since` is kept in the signature because the day-boundary reasoning lives
+ * with the caller. Not showing the same dose twice in one day is a separate
+ * concern and lives in `lib/catchup.ts`.
+ * ─────────────────────────────────────────────────────────────────────────────
  */
 export async function getMissedSince(userId: string, since: Date, now: Date): Promise<Dose[]> {
   const { data, error } = await supabase
@@ -816,17 +844,15 @@ export async function getMissedSince(userId: string, since: Date, now: Date): Pr
   if (error) throw error;
 
   const minutes = (d: Date) => d.getHours() * 60 + d.getMinutes();
-  const sinceM = minutes(since);
   const nowM = minutes(now);
-  const sameDay = toISODate(since) === toISODate(now);
+  void since; // see the note above: the day boundary is the log_date filter
 
   return (data as Dose[]).filter((dose) => {
     if (!dose.scheduled_time) return false;
     const [h, m] = dose.scheduled_time.split(':').map(Number);
     const at = h * 60 + (m || 0);
-    // due before now, and not already passed the last time the app was open
-    if (at > nowM) return false;
-    return sameDay ? at > sinceM : true;
+    // past due, and that is the whole test
+    return at <= nowM;
   });
 }
 
