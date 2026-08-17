@@ -19,6 +19,7 @@ import { useAuth } from './lib/auth';
 import { usePrefs } from './lib/prefs';
 import { SheetPortalProvider } from './lib/sheetPortal';
 import { ActiveTabProvider } from './lib/activeTab';
+import { EntitlementProvider } from './lib/entitlements';
 
 /** Commit to an axis inside the first 10px and never revisit it. */
 const AXIS_THRESHOLD = 10;
@@ -62,7 +63,11 @@ function Body({ framed }: { framed: boolean }) {
   if (loading) return <div className="app splash" />;
   if (!onboarded) return <Onboarding onFinished={() => setOnboarded(true)} />;
   if (!session) return <AuthScreen framed={framed} />;
-  return <CatchUpGate framed={framed} />;
+  return (
+    <EntitlementProvider>
+      <CatchUpGate framed={framed} />
+    </EntitlementProvider>
+  );
 }
 
 /**

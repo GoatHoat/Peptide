@@ -37,6 +37,7 @@ import Anthropic from 'npm:@anthropic-ai/sdk@0.117.1';
 
 import {
   buildCards,
+  FREE_ASK_LIFETIME,
   buildCatalogueBlock,
   buildDetail,
   buildProfileBlock,
@@ -156,6 +157,33 @@ Deno.serve(async (req: Request): Promise<Response> => {
   }
 
   try {
+    /* ---- 3a. the free lifetime cap ---------------------------------------
+       Three messages ever, not per day. The tier is read from the database
+       here rather than taken from the request, because the request is written
+       by the client and the client is what the cap exists to constrain. A
+       402 is the client's signal to open the paywall; the message it typed is
+       left in the input so upgrading and sending again is one tap. */
+    const { data: profileRow } = await supabase
+      .from('profiles')
+      .select('subscription_tier')
+      .eq('id', user.id)
+      .maybeSingle();
+    const tier = (profileRow as { subscription_tier?: string } | null)?.subscription_tier ?? 'free';
+
+    if (tier === 'free') {
+      const { count: lifetime } = await supabase
+        .from('ask_usage')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+      if ((lifetime ?? 0) >= FREE_ASK_LIFETIME) {
+        return fail(
+          'upgrade_required',
+          'You have used your three free assistant messages. Pro raises it to 20 an hour.',
+          402,
+        );
+      }
+    }
+
     // ---- 3. rate limit -----------------------------------------------------
     const now = Date.now();
     const since = new Date(now - 24 * 60 * 60 * 1000).toISOString();

@@ -15,10 +15,16 @@
  * read without signing in. It carries no secret. Point it at the production
  * domain at build time; the fallback is the current deployment.
  */
-const SITE = (import.meta.env.VITE_SITE_URL ?? 'https://halfpast-mauve.vercel.app').replace(/\/$/, '');
+const SITE = (import.meta.env.VITE_SITE_URL ?? 'https://www.pepstack.fit').replace(/\/$/, '');
 
-export const TERMS_URL = `${SITE}/terms`;
-export const PRIVACY_URL = `${SITE}/privacy`;
+/*
+ * The documents are served by the website, not bundled with the app. Two copies
+ * of a legal document is worse than one: they drift, and the version a user was
+ * shown stops being the version that can be produced later. `public/terms.html`
+ * and `public/privacy.html` were deleted for that reason.
+ */
+export const TERMS_URL = `${SITE}/terms.html`;
+export const PRIVACY_URL = `${SITE}/privacy.html`;
 
 /** The props every legal link needs, so no call site can forget one. */
 export const externalLink = { target: '_blank', rel: 'noreferrer noopener' } as const;

@@ -38,7 +38,13 @@ export const MAX_TOOL_ROUNDS = 4;
 /** Papers attached to a card. The sheet can fetch the rest. */
 export const MAX_CITATIONS_PER_CARD = 3;
 
-export const RATE_LIMIT = { perHour: 15, perDay: 50 };
+export const RATE_LIMIT = { perHour: 20, perDay: 200 };
+
+/**
+ * Assistant messages a free account gets, ever. Not per month, not per day.
+ * `ask_usage` already records every call, so the count is the table.
+ */
+export const FREE_ASK_LIFETIME = 3;
 
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * HOUR_MS;
@@ -59,7 +65,12 @@ export interface AskRequest {
   history: AskTurn[];
 }
 
-export type AskErrorCode = 'bad_request' | 'unauthorized' | 'rate_limited' | 'server_error';
+export type AskErrorCode =
+  | 'bad_request'
+  | 'unauthorized'
+  | 'rate_limited'
+  | 'upgrade_required'
+  | 'server_error';
 
 export interface AskErrorBody {
   error: { code: AskErrorCode; message: string; retry_after?: number };

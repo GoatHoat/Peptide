@@ -51,6 +51,8 @@ const FALLBACK: Record<AskFailureCode, string> = {
   offline: 'No connection. Your question is still here — try again once you are back.',
   bad_request: 'That question did not go through. Try asking it a different way.',
   unauthorized: 'That session has expired. Sign in again.',
+  upgrade_required:
+    'You have used your three free assistant messages. Pro raises it to 20 an hour.',
   rate_limited: 'That is the limit on questions for now. It frees up again shortly.',
   server_error: 'Something went wrong at our end. Try that again.',
 };

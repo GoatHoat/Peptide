@@ -478,5 +478,10 @@ where not exists (
   select 1 from public.glossary_research r where r.glossary_id = g.id and r.url = t.url
 );
 
-update public.glossary set goal_tags = array_append(goal_tags, 'Energy')
-where slug in ('mots-c', 'ss-31') and not ('Energy' = any(goal_tags));
+
+
+
+
+
+
+

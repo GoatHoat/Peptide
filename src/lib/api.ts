@@ -42,6 +42,12 @@ export type GlossaryCategory = 'healing' | 'growth' | 'cosmetic' | 'cognitive' |
 export type GlossaryRoute = 'injected' | 'oral' | 'topical' | 'nasal';
 
 export interface GlossaryEntry {
+  /**
+   * Position within its kind for the free tier — migration 0037. Ranked by
+   * evidence, then citation count, then name, so a product cannot move in or
+   * out of the free 30 between sessions.
+   */
+  free_rank?: number | null;
   /** the label's own serving, e.g. 2 — migration 0033 */
   serving_amount?: number | null;
   serving_unit?: string | null;

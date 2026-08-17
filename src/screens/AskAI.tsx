@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../lib/auth';
+import { LIMITS, useEntitlement } from '../lib/entitlements';
+import { ProSheet } from '../components/ProSheet';
+import { RATE_LIMIT } from '../../supabase/functions/ask/lib';
 import { LogoMark } from '../onboarding/chrome';
 import { Sheet } from '../components/Sheet';
 import { AddSchedule } from './AddSchedule';
@@ -51,6 +54,20 @@ export function AskAI({
   onSeedUsed?: () => void;
 }) {
   const { user } = useAuth();
+  const { isPro, askLeft, refresh: refreshEntitlement } = useEntitlement();
+  const [pro, setPro] = useState(false);
+
+  /* Pro reads its allowance from the Edge Function's own constants so the two
+     cannot drift. Free counts down from three. */
+  const counterLine = isPro
+    ? `${RATE_LIMIT.perHour} messages an hour, ${RATE_LIMIT.perDay} a day`
+    : askLeft === null
+      ? ''
+      : askLeft === 0
+        ? 'No free messages left'
+        : askLeft === LIMITS.free.askMessagesTotal
+          ? `${askLeft} free AI messages`
+          : `${askLeft} of ${LIMITS.free.askMessagesTotal} free messages left`;
   /* Keyed to the account. Reading before the session has settled would load the
      `:anon` record and then write it back under that key, which is the same
      bug in a slower form — so the thread is loaded in an effect once `user` is
@@ -130,6 +147,14 @@ export function AskAI({
       () => ({ ok: false as const, error: askFailure('server_error') }),
     );
     setPending(false);
+    if (!result.ok && result.error.code === 'upgrade_required') {
+      /* The typed message goes back in the input rather than into the thread —
+         upgrading and sending again should be one tap, not retyping. */
+      setDraft(question);
+      setPro(true);
+      await refreshEntitlement();
+      return;
+    }
     setEntries((prev) => [
       ...prev,
       result.ok
@@ -142,6 +167,7 @@ export function AskAI({
           }
         : errorEntry(result.error, question),
     ]);
+    if (result.ok) refreshEntitlement();
   };
 
   const send = (text: string) => {
@@ -170,8 +196,15 @@ export function AskAI({
             <span className="ask-mark">
               <LogoMark size={44} />
             </span>
+            <h2 className="ask-empty-title">Meet PepStack AI</h2>
+            {/* "vitamins and minerals" is deliberate and stays: the assistant
+                refuses to recommend peptides, and the empty state must not
+                promise something the tool schema declines. "Your library"
+                rather than "the internet" is the actual difference. */}
             <p className="ask-empty-line">
-              Ask about anything you&rsquo;re taking, or what you&rsquo;re trying to fix.
+              Your personal supplement helper. Ask about anything in your stack, or what to take
+              for a goal — it answers from the research in your library and can recommend vitamins
+              and minerals.
             </p>
             <div className="ask-examples">
               {EXAMPLES.map((e) => (
@@ -265,6 +298,10 @@ export function AskAI({
         )}
         <div ref={endRef} />
       </div>
+
+      {/* Information, not a warning: no bar, no colour change as it depletes.
+          A counter that turns red is nagging. */}
+      <div className="ask-counter t-caption">{counterLine}</div>
 
       <div className="ask-composer">
         <div className="ask-input-row">
@@ -361,6 +398,8 @@ export function AskAI({
           />
         )}
       </Sheet>
+
+      <ProSheet open={pro} reason="ask-limit" onClose={() => setPro(false)} />
 
       <Sheet open={!!openCard} onClose={() => setOpenCard(null)} title={openCard?.name ?? ''}>
         {openCard && <Citations card={openCard} />}

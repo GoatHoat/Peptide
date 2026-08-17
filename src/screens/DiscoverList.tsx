@@ -29,6 +29,8 @@ const yearOf = (meta: string | null) => meta?.match(/\b(19|20)\d{2}\b/)?.[0] ?? 
  */
 export function ProductRow({
   entry,
+  locked = false,
+  onLocked,
   ingredientAmount,
   refs,
   age,
@@ -44,6 +46,14 @@ export function ProductRow({
   onMenstruates,
 }: {
   entry: GlossaryEntry;
+  /**
+   * Past the free tier's cap. The row renders at its exact final height with
+   * its name blurred and a lock over it — hiding it would mean a free search
+   * returned "no results" for something the catalogue holds, and collapsing it
+   * would make the list jump on upgrade.
+   */
+  locked?: boolean;
+  onLocked?: () => void;
   /**
    * How much of the searched-for ingredient this product carries, when the row
    * came from an ingredient search. Null otherwise — a row reached by name has
@@ -98,6 +108,27 @@ export function ProductRow({
   const ev = entry.evidence ? EVIDENCE[entry.evidence] : null;
   const asksMenstrual = isSupp && !!onMenstruates && offersMenstrualStatus(entry, age, sex);
   const chosen = picked ?? (menstruates === true ? 'yes' : menstruates === false ? 'no' : null);
+
+  if (locked) {
+    return (
+      <div className="prod prod-locked">
+        <button className="prod-row" onClick={onLocked} aria-label={`${entry.name} — locked, get Pro`}>
+          <span className="prod-main">
+            <span className="prod-name blurred">{entry.name}</span>
+            <span className="prod-pills">
+              <span className="tagpill blurred">{entry.brand ?? 'Locked'}</span>
+            </span>
+          </span>
+          <span className="prod-lock" aria-hidden>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="var(--purple)" strokeWidth="1.6">
+              <rect x="3.2" y="7" width="9.6" height="6.4" rx="1.6" />
+              <path d="M5.4 7V5.2a2.6 2.6 0 0 1 5.2 0V7" />
+            </svg>
+          </span>
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className={`prod${expanded ? ' open' : ''}`}>

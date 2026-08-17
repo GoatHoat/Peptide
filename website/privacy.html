@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Privacy Policy — Pepstack</title>
+<meta name="description" content="What Pepstack collects, why, who it reaches, and how to get it deleted." />
+<style>
+  :root {
+    --bg: #000;
+    --t1: #fff;
+    --t2: rgba(255, 255, 255, 0.72);
+    --t3: rgba(255, 255, 255, 0.46);
+    --hair: rgba(255, 255, 255, 0.09);
+    --purple: #7b5cfa;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--t2);
+    font: 400 16px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding: max(36px, env(safe-area-inset-top)) 22px max(56px, env(safe-area-inset-bottom));
+  }
+  /* ~70 characters at this size */
+  main { max-width: 34em; margin: 0 auto; }
+  h1 { color: var(--t1); font-size: 30px; line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 8px; }
+  h2 { color: var(--t1); font-size: 18px; line-height: 1.35; letter-spacing: -0.01em; margin: 40px 0 12px; }
+  h3 { color: var(--t1); font-size: 15px; margin: 26px 0 8px; }
+  p, li { margin: 0 0 14px; }
+  li { margin-bottom: 8px; }
+  ul { padding-left: 20px; margin: 0 0 14px; }
+  strong { color: var(--t1); font-weight: 500; }
+  a { color: var(--purple); }
+  hr { border: 0; border-top: 1px solid var(--hair); margin: 40px 0; }
+  .meta { color: var(--t3); font-size: 14px; margin-bottom: 8px; }
+  .lede { color: var(--t1); font-size: 17px; margin-bottom: 28px; }
+  .callout {
+    border: 1px solid var(--hair);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin: 24px 0;
+  }
+  .callout p:last-child, .callout ul:last-child { margin-bottom: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 0 0 16px; font-size: 15px; }
+  th, td { text-align: left; padding: 9px 10px 9px 0; border-bottom: 1px solid var(--hair); vertical-align: top; }
+  th { color: var(--t1); font-weight: 500; }
+  /* Unresolved facts. Impossible to miss on purpose — a wrong fact in a privacy
+     policy is a misrepresentation, and a blank is not. */
+  mark.todo {
+    background: #7b5cfa;
+    color: #fff;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .back { display: inline-block; margin-top: 40px; color: var(--t3); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Privacy Policy</h1>
+  <p class="meta">Pepstack · Version 1.0 · Last updated 16 August 2026</p>
+
+  <p class="lede">
+    Pepstack is a supplement timing and scheduling app. This policy describes
+    every category of personal data it holds, why it holds it, the three
+    companies it reaches, and how to get all of it deleted.
+  </p>
+
+  <div class="callout">
+    <p>
+      <strong>Who is responsible for your data.</strong>
+      <mark class="todo">[TO CONFIRM: legal entity name]</mark>, established in
+      <mark class="todo">[TO CONFIRM: country of establishment]</mark>, is the
+      controller of the personal data described here.
+    </p>
+    <p>
+      Privacy questions and requests:
+      <mark class="todo">[TO CONFIRM: monitored contact email]</mark>
+    </p>
+  </div>
+
+  <h2>The short version</h2>
+  <ul>
+    <li>Everything held about you is something you typed, chose or photographed.</li>
+    <li>There is no advertising, no tracking, no analytics and no data broker.</li>
+    <li>Three companies process it: Supabase, Anthropic and Apple. Nobody else.</li>
+    <li>You can delete your account, and everything in it, from inside the app.</li>
+  </ul>
+
+  <hr />
+
+  <h2>1. What Pepstack collects</h2>
+
+  <h3>Account</h3>
+  <table>
+    <tr><th>Email address</th><td>to create and sign in to your account</td></tr>
+    <tr><th>Password</th><td>stored only as a cryptographic hash; never visible to us</td></tr>
+    <tr><th>Display name</th><td>optional, used in the app</td></tr>
+    <tr><th>Account created, last opened</th><td>so the catch-up screen knows what you missed</td></tr>
+    <tr><th>Subscription tier</th><td>which features your account has</td></tr>
+  </table>
+
+  <h3>About you</h3>
+  <table>
+    <tr><th>Age</th><td>selects the published reference intake shown to you</td></tr>
+    <tr><th>Sex</th><td>male, female or prefer not to say; selects the same</td></tr>
+    <tr><th>Menstrual status</th><td>optional, and it may be left unanswered. It changes one figure — the iron reference intake — and it is asked next to that figure rather than during setup</td></tr>
+    <tr><th>Dietary restrictions</th><td>vegetarian, vegan, dairy-free and similar</td></tr>
+  </table>
+
+  <h3>Health and routine</h3>
+  <table>
+    <tr><th>Supplements you take</th><td>your stack</td></tr>
+    <tr><th>Your daily schedule</th><td>which necessarily reveals your wake, sleep and meal times</td></tr>
+    <tr><th>Wake and sleep times</th><td>so the schedule can be built around your day</td></tr>
+    <tr><th>Every dose, and whether you marked it taken</th><td>a timestamped adherence history</td></tr>
+    <tr><th>Reasons a dose was skipped</th><td>a chosen reason and an optional free-text note</td></tr>
+    <tr><th>Adverse reactions you report</th><td>including a free-text note</td></tr>
+    <tr><th>Health goals</th><td>skin, sleep, energy, focus, training, immunity, growth</td></tr>
+  </table>
+
+  <h3>Progress notes and photographs</h3>
+  <div class="callout">
+    <p>
+      <strong>This is the most sensitive category in the app, and it is named
+      here rather than covered by a general phrase about "your content".</strong>
+    </p>
+    <p>
+      If you add a progress note, Pepstack stores the text, any body measurement
+      you enter, and — if you attach one — <strong>a photograph you took, which
+      may be a photograph of your own body</strong>.
+    </p>
+    <p>
+      Photographs are held in a private Supabase Storage bucket, in a folder
+      belonging to your account, access-controlled so that only requests
+      authenticated as you can read them. They are not public, they are not
+      indexed, and they are not sent to the AI assistant or to any third party.
+      They are deleted when you delete the note, and when you delete your
+      account.
+    </p>
+  </div>
+
+  <h3>The AI assistant</h3>
+  <table>
+    <tr><th>A count of messages, with timestamps</th><td>used only to enforce the rate limit</td></tr>
+    <tr><th>Answers you report</th><td>stored only when you press Report, and then the question and the answer are both kept so the problem can be understood</td></tr>
+    <tr><th>Your conversation</th><td>cached on your own device, under your account, and cleared when you sign out or delete your account</td></tr>
+  </table>
+
+  <h2>2. What Pepstack does not collect</h2>
+  <p>
+    This list is true as of the date at the top. It stops being true the moment
+    an analytics package is added, and this policy would change first.
+  </p>
+  <ul>
+    <li>No location, of any precision.</li>
+    <li>No contacts, calendar, microphone, or access to your photo library beyond a single photo you deliberately attach.</li>
+    <li>No advertising identifier and no device fingerprint.</li>
+    <li>No analytics SDK and no crash-reporting SDK.</li>
+    <li>No tracking of you across other apps or websites.</li>
+    <li>Your personal data is never sold, and never shared for advertising.</li>
+    <li>No health data is read from or written to Apple Health.</li>
+  </ul>
+
+  <h2>3. Lawful bases, and why some of this is special</h2>
+  <div class="callout">
+    <p>
+      <strong>Some of what Pepstack holds is special-category health data</strong>
+      under Article 9 of the UK and EU GDPR: your menstrual status, your dietary
+      restrictions, your health goals, the supplements you take, your adherence
+      history, the reasons you skipped a dose, and your progress notes and
+      photographs.
+    </p>
+    <p>
+      The lawful basis for processing that data is your <strong>explicit
+      consent</strong>, given when you provide it — not legitimate interest. You
+      may withdraw it at any time by deleting the data or your account, and
+      every one of those fields is optional.
+    </p>
+  </div>
+  <p>For everything else:</p>
+  <ul>
+    <li><strong>Contract</strong> — your email, password and subscription tier, because there is no account without them.</li>
+    <li><strong>Legitimate interest</strong> — the message count used to rate-limit the assistant, and reported answers, so the service can be kept working and safe.</li>
+  </ul>
+
+  <h2>4. Who else sees it</h2>
+  <p>Three processors. Each does one job.</p>
+
+  <h3>Supabase</h3>
+  <p>
+    Database, authentication and file storage — everything in section 1.
+    Row-level security is enabled on every table holding your data, so a request
+    authenticated as you can only reach rows belonging to you. Traffic is
+    encrypted in transit, and Supabase encrypts data at rest.
+    The project is hosted in
+    <mark class="todo">[TO CONFIRM: Supabase project region]</mark>.
+    <mark class="todo">[TO CONFIRM: whether that region means UK/EU data leaves
+    the region, and if so which transfer safeguard applies]</mark>
+  </p>
+
+  <h3>Anthropic</h3>
+  <p>
+    Only when you send a message to the AI assistant, and only what that message
+    needs. Your message goes to a server function, which adds context and calls
+    Anthropic's API.
+  </p>
+  <p><strong>What is sent:</strong> your question, the recent conversation, and
+  context loaded on the server — your age, sex, dietary restrictions, reported
+  reactions, goals, current stack, schedule and adherence.</p>
+  <p><strong>What is not sent:</strong> your email address, your display name,
+  your account identifier, and your progress notes or photographs.</p>
+  <p>
+    It is used to answer that request. If you never open the assistant, nothing
+    is ever sent to Anthropic.
+  </p>
+
+  <h3>Apple</h3>
+  <p>
+    If subscriptions are offered, purchases are handled by Apple through
+    in-app purchase. Apple processes the payment and holds the receipt; Pepstack
+    receives only whether your account is subscribed. Card details never reach
+    Pepstack.
+    <mark class="todo">[TO CONFIRM: whether RevenueCat is used as an intermediary
+    — if so it is a further sub-processor and must be listed here]</mark>
+  </p>
+
+  <h2>5. How long it is kept</h2>
+  <p>
+    Until you delete it. Nothing currently expires on a timer.
+    <mark class="todo">[TO CONFIRM: retention period, if any is to be adopted —
+    at present rows persist until account deletion and the assistant's usage log
+    grows indefinitely although only the last 24 hours is ever read]</mark>
+  </p>
+  <p>
+    Deleting your account is immediate and cascades: your profile, stack,
+    schedule, every dose, skip reasons, progress notes and photographs, reported
+    answers and usage counts are removed, along with the login itself. The copy
+    cached on your device is cleared at the same time. It is not recoverable.
+  </p>
+
+  <h2>6. Your rights</h2>
+  <p>
+    If you are in the UK, the EU, or another region with equivalent law, you have
+    the rights below. Most are exercisable in the app without contacting anybody.
+  </p>
+  <ul>
+    <li><strong>Access and portability</strong> — <em>You → Export Data</em> produces everything you have entered, as CSV or PDF.</li>
+    <li><strong>Correction</strong> — every answer can be changed in the app at any time.</li>
+    <li><strong>Erasure</strong> — <em>You → Delete Account</em>. Permanent, immediate, and it does not require emailing anybody.</li>
+    <li><strong>Withdrawing consent</strong> — every sensitive field is optional; clearing it withdraws consent for it.</li>
+    <li><strong>Objection and restriction</strong> — write to the contact address above.</li>
+  </ul>
+  <p>
+    You also have the right to complain to your data protection authority.
+    <mark class="todo">[TO CONFIRM: the supervisory authority for the country of
+    establishment]</mark>
+  </p>
+
+  <h2>7. Children</h2>
+  <p>
+    Pepstack is not directed at children and there is a minimum age of
+    <mark class="todo">[TO CONFIRM: minimum age]</mark>. Accounts are not
+    knowingly created for anyone below it. If you believe a child has created an
+    account, contact us and it will be removed.
+  </p>
+
+  <h2>8. Changes</h2>
+  <p>
+    If this policy changes in a way that affects what is collected, why, or who
+    receives it, the version and date at the top change and the app tells you
+    before the change takes effect.
+  </p>
+
+  <h2>9. Contact</h2>
+  <p>
+    <mark class="todo">[TO CONFIRM: monitored contact email]</mark>
+  </p>
+
+  <hr />
+  <p style="color: var(--t3); font-size: 14px;">
+    Pepstack provides general information and scheduling tools. It is not medical
+    advice and it does not diagnose, treat or prescribe. See the
+    <a href="/terms.html">Terms of Use</a>.
+  </p>
+
+  <a class="back" href="/">← pepstack.fit</a>
+</main>
+</body>
+</html>

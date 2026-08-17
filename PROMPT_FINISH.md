@@ -92,6 +92,72 @@ at 375, 390, 393, 430 and 440 wide.
 
 ---
 
+# 3b. The doodle background — welcome and catch-up
+
+`public/doodle-pattern.svg` is in the repo: scattered outline capsules, tablets,
+softgels, blister packs, bottles and droplets in `#7B5CFA` on transparency,
+1179×2556, 7 KB. `doodle-pattern.png` at 2358×5112 is the raster fallback; prefer
+the SVG, it scales to any device.
+
+Use it on exactly two screens:
+
+- **Welcome** — full-bleed behind everything, `opacity: 0.28`
+- **Catch-up** — full-bleed, `opacity: 0.18`, because cards and a drag control
+  sit on top and legibility wins
+
+```css
+.doodle-bg {
+  position: absolute; inset: 0;
+  background: url('/doodle-pattern.svg') center / cover no-repeat;
+  pointer-events: none;
+}
+```
+
+Rules for it:
+
+- **Dim in CSS, never regenerate a dimmer file.** The asset stays at full accent
+  brightness so line quality survives; each screen sets its own opacity.
+- Pure black behind it. The pattern is transparent and carries no background.
+- Nowhere else. Not Today, not Discover, not the paywall, not onboarding
+  questions. Two screens is a motif; five is wallpaper.
+- It sits behind content and takes no pointer events.
+- Respect `prefers-reduced-transparency` by dropping to `opacity: 0.10`.
+
+**The catch-up screen layout**, since the design is settled: pure black, doodle
+at 0.18, a headline in the top third, then one card per missed dose containing
+the product name, form and time due, and the scheduler's reason line. Below that
+a slide-to-confirm track — full width minus 48px, 132px tall at 3x, `#0E0E11`
+with a hairline border, accent thumb, label "Slide if you took it". On completion
+the track fills accent, the label becomes "Taken", the thumb lands right, and it
+locks. Under it, "I didn't take this" as a quiet text button at 62% white, never
+equal weight to the slider. A footer line reads "Nothing is marked until you
+slide it."
+
+When fewer than three doses are missed, centre the card stack vertically —
+otherwise the screen is mostly empty space.
+
+---
+
+# 3c. Art that is now in the repo
+
+Two files landed and both need wiring up.
+
+**`public/goals/growth.png`** — the seventh goal slab. `goals.tsx` has pointed at
+this path since the Growth goal was added and the file did not exist, so that
+card has been rendering a broken image. It is 512×512 RGBA with a transparent
+background, cropped and scaled to match the other six exactly (full width, 0.75
+of the height). Nothing to change in code beyond confirming the grid now shows
+seven cards without an orphan on the last row.
+
+**`public/art/empty-stack.png`** — an open six-compartment pill organiser, purple
+wireframe on transparency, 1024px. Use it as the empty state for the stack:
+centred, roughly 220px wide, with the empty-state copy under it. Nowhere else.
+
+Both are transparent PNGs and must sit on pure black. Do not add a background
+plate behind either.
+
+---
+
 # 4. States and offline
 
 `PROMPT_SHIP.md` §4.

@@ -68,10 +68,12 @@ export interface Stub {
   deleted: boolean;
   /** what touch_last_opened returns; null (the default) means first launch */
   lastOpened: string | null;
+  /** what my_entitlement reports; 'free' unless a test says otherwise */
+  tier: 'free' | 'pro';
 }
 
 export async function installSupabaseStub(page: Page): Promise<Stub> {
-  const stub: Stub = { db: makeTables(), unhandled: [], deleted: false, lastOpened: null };
+  const stub: Stub = { db: makeTables(), unhandled: [], deleted: false, lastOpened: null, tier: 'free' };
   let generated = 0;
 
   await page.route(`${SUPABASE_URL}/**`, async (route) => {
@@ -136,6 +138,17 @@ export async function installSupabaseStub(page: Page): Promise<Stub> {
         stub.db.profiles = [];
         stub.deleted = true;
         return json(null);
+      }
+      /* Entitlement. Free by default, which is what the gates should be tested
+         against; a test that wants pro sets stub.tier. */
+      if (relation === 'rpc/my_entitlement') {
+        return json([
+          {
+            tier: stub.tier,
+            ask_used: stub.db.ask_usage?.length ?? 0,
+            catalogue_total: stub.db.glossary?.length ?? 0,
+          },
+        ]);
       }
       /* The catch-up screen stamps every app open. Returning null is the
          first-launch answer, which is what every existing test wants: none of

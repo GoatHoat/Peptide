@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Sheet } from '../components/Sheet';
 import { Tabs } from '../components/Tabs';
 import { GlossaryDetail } from './GlossaryDetail';
 import { AddSchedule } from './AddSchedule';
 import { ProductRow } from './DiscoverList';
 import { AskAI } from './AskAI';
+import { ProSheet, type ProReason } from '../components/ProSheet';
+import { isStackLimitError, useEntitlement } from '../lib/entitlements';
 import { useAuth } from '../lib/auth';
 import { usePrefs } from '../lib/prefs';
 import {
@@ -66,6 +68,9 @@ export function Discover() {
   const [ingredientHits, setIngredientHits] = useState<IngredientHit[]>([]);
   /** whether the "also contains" section is expanded */
   const [showAlso, setShowAlso] = useState(false);
+  /** which gate opened the paywall, or null */
+  const [pro, setPro] = useState<ProReason | null>(null);
+  const { isPro, limits, lockedTotal } = useEntitlement();
 
   useEffect(() => {
     getGoalSynonyms().then(setSynonyms);
@@ -126,6 +131,12 @@ export function Discover() {
       /* Peptides go in the stack as a reference, never onto a schedule with an
          amount attached — the same split the tabs exist to express. */
       if ((entry.kind ?? 'peptide') === 'supplement') setSchedulingEntry(entry);
+    } catch (err) {
+      /* The database refused it, not the UI. Turning the trigger's errcode into
+         the paywall is the whole reason the trigger raises a named code rather
+         than a constraint violation. */
+      if (isStackLimitError(err)) setPro('stack-limit');
+      else throw err;
     } finally {
       setAddingIds((prev) => {
         const next = new Set(prev);
@@ -170,6 +181,13 @@ export function Discover() {
              set of products that merely contain the ingredient — the ones whose
              name gives no clue, which is the entire point of showing them. */
           const isSupplementTab = tab.id === 'supplement';
+          /* Locked rows still render, in place, at their exact final height —
+             so nothing shifts if they upgrade, and so seeing that a product
+             exists is possible. A free search must never return "no results"
+             for something the catalogue holds. */
+          const locked = (e: GlossaryEntry) =>
+            !isPro && limits.catalogue !== null && (e.free_rank ?? 9999) > limits.catalogue;
+          const firstLocked = visible.findIndex(locked);
           const amountOf = new Map(ingredientHits.map((h) => [h.glossary_id, h]));
           const forThis = isSupplementTab
             ? ingredientHits.filter((h) => h.section === 1)
@@ -237,9 +255,18 @@ export function Discover() {
 
               <div className="prod-list">
                 <span className="rail" />
-                {visible.map((r) => (
+                {visible.map((r, vi) => (
+                  <Fragment key={r.id}>
+                    {/* One divider, above the first locked row, saying what is
+                        behind it. The count is read from the database. */}
+                    {vi === firstLocked && (
+                      <button className="lock-divider pressable" onClick={() => setPro('locked-product')}>
+                        Get Pro to unlock all {lockedTotal + (limits.catalogue ?? 0) * 2} products
+                      </button>
+                    )}
                   <ProductRow
-                    key={r.id}
+                    locked={locked(r)}
+                    onLocked={() => setPro('locked-product')}
                     entry={r}
                     /* How much of the searched ingredient is in this product.
                        The single most useful thing on the screen when someone
@@ -269,6 +296,7 @@ export function Discover() {
                       save({ menstruates: value }).catch(() => {});
                     }}
                   />
+                  </Fragment>
                 ))}
               </div>
 
@@ -338,6 +366,8 @@ export function Discover() {
           />
         )}
       </Sheet>
+
+      <ProSheet open={!!pro} reason={pro ?? 'goals'} onClose={() => setPro(null)} />
 
       <Sheet open={!!schedulingEntry} onClose={() => setSchedulingEntry(null)} title="Add to Schedule">
         {schedulingEntry && user && (

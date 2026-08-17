@@ -2446,3 +2446,125 @@ button {
   line-height: 1.45;
   color: var(--t4);
 }
+
+/* The paywall. One sheet, opened from every gate — two paywalls that drift
+   apart is a rejection waiting to happen. */
+.pro-headline { margin: 0 0 14px; }
+.pro-list {
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+.pro-list li {
+  padding: 7px 0;
+  color: var(--t2);
+  font-size: calc(15px * var(--text-scale));
+  border-bottom: 1px solid var(--hair);
+}
+.pro-list li:last-child { border-bottom: 0; }
+.pro-plans { display: flex; flex-direction: column; gap: 10px; }
+.pro-plan {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--hair);
+  border-radius: 16px;
+  background: var(--card);
+  text-align: left;
+}
+.pro-plan-main { flex: 1; min-width: 0; display: block; }
+.pro-plan-price { text-align: right; flex: none; }
+.pro-plan-main .ob-caption,
+.pro-plan-price .ob-caption { display: block; margin-top: 2px; }
+.pro-note { margin-top: 12px; color: var(--t3); }
+.pro-restore {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 14px;
+  border: 0;
+  background: none;
+  color: var(--purple);
+  font: inherit;
+  font-size: calc(15px * var(--text-scale));
+}
+.pro-legal { margin-top: 10px; text-align: center; color: var(--t3); }
+.pro-legal a { color: var(--t3); }
+
+/* A product past the free cap. The row keeps its exact height so the list does
+   not jump on upgrade, and the name is legible as a shape but not as a word. */
+.prod-locked .prod-row { cursor: pointer; }
+.blurred {
+  filter: blur(5px);
+  user-select: none;
+  pointer-events: none;
+}
+.prod-lock {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  align-self: center;
+}
+/* One divider above the first locked row, saying what is behind it. */
+.lock-divider {
+  display: block;
+  width: 100%;
+  margin: 14px 0 6px;
+  padding: 12px 0;
+  border: 0;
+  border-top: 1px solid var(--hair);
+  background: none;
+  color: var(--purple);
+  font: inherit;
+  font-size: calc(13px * var(--text-scale));
+  text-align: left;
+}
+
+/* The upsell on Today. Sits in the flow rather than floating, not dismissible
+   but quiet. No gradient, no glow, no icon — CLAUDE.md applies here too. */
+.upsell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 16px;
+  border: 1px solid var(--hair);
+  border-radius: 22px;
+  background: var(--card);
+  text-align: left;
+}
+.upsell-main { flex: 1; min-width: 0; }
+.upsell-title {
+  display: block;
+  font-size: calc(15px * var(--text-scale));
+  font-weight: 600;
+  letter-spacing: -0.1px;
+}
+.upsell-sub {
+  display: block;
+  margin-top: 3px;
+  font-size: calc(13px * var(--text-scale));
+  color: var(--t2);
+}
+
+/* The assistant's message counter. Information, never a warning. */
+.ask-counter {
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  border: 1px solid var(--hair);
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--t2);
+}
+.ask-counter:empty { display: none; }
+.ask-empty-title {
+  margin: 16px 0 0;
+  font-size: calc(20px * var(--text-scale));
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}

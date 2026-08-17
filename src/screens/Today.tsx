@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { Arc } from '../components/Arc';
 import { Sheet } from '../components/Sheet';
 import { AddSchedule } from './AddSchedule';
@@ -10,7 +10,9 @@ import { ensureTodayDoses, getComplianceMap, getDosesForDate, setDoseTaken, type
 import { addDays, formatDisplayDate, formatShortDate, parseHour, startOfWeekMonday, toISODate } from '../lib/date';
 import { useNow } from '../lib/now';
 import { useActiveTab } from '../lib/activeTab';
-import { IconPlus } from '../components/Icons';
+import { IconChevron, IconPlus } from '../components/Icons';
+import { useEntitlement } from '../lib/entitlements';
+import { ProSheet } from '../components/ProSheet';
 import { DoseRow } from '../components/DoseRow';
 import { NowMarker } from '../components/NowMarker';
 import { syncScheduleNotifications } from '../lib/notifications';
@@ -43,6 +45,30 @@ export function Today() {
   const [doses, setDoses] = useState<Dose[] | null>(null);
   const [compliance, setCompliance] = useState<Record<string, { total: number; taken: number }>>({});
   const [sheet, setSheet] = useState<SheetState>(null);
+  const { isPro, askLeft, lockedTotal, catalogueTotal } = useEntitlement();
+  const [pro, setPro] = useState(false);
+
+  /* Whichever limit they are nearest. Recomputed when the numbers change, not
+     on every render. */
+  const upsell = useMemo(() => {
+    if (isPro) return null;
+    if (askLeft !== null && askLeft <= 1) {
+      return {
+        title: askLeft === 0 ? 'No free assistant messages left' : 'One free message left',
+        sub: 'Pro raises it to 20 an hour.',
+      };
+    }
+    if (lockedTotal > 0) {
+      return {
+        title: `${lockedTotal} products are locked`,
+        sub: `Pro unlocks all ${catalogueTotal}.`,
+      };
+    }
+    return {
+      title: 'One product at a time on Free',
+      sub: 'Pro removes the limit and unlocks the whole library.',
+    };
+  }, [isPro, askLeft, lockedTotal, catalogueTotal]);
 
   // live: the header date, the week strip and the arc's "now" all read from
   // this, so the screen rolls over at midnight instead of at the next reload
@@ -180,6 +206,19 @@ export function Today() {
         )}
       </div>
 
+      {/* Free only. Copy follows whichever limit they are closest to, so it
+          stays informative rather than becoming furniture. Computed on mount,
+          not per render. */}
+      {!isPro && upsell && (
+        <button className="upsell pressable" onClick={() => setPro(true)}>
+          <span className="upsell-main">
+            <span className="upsell-title">{upsell.title}</span>
+            <span className="upsell-sub">{upsell.sub}</span>
+          </span>
+          <IconChevron size={15} color="var(--t3)" />
+        </button>
+      )}
+
       <div className="action-row">
         <button className="add-dose pressable" onClick={() => setSheet({ kind: 'add' })}>
           <IconPlus size={15} color="var(--purple)" />
@@ -197,6 +236,8 @@ export function Today() {
           {overdue.length} {overdue.length === 1 ? 'dose' : 'doses'} not yet marked as taken
         </button>
       )}
+
+      <ProSheet open={pro} reason="stack-limit" onClose={() => setPro(false)} />
 
       <Sheet open={sheet?.kind === 'add'} onClose={() => setSheet(null)} title="Add to Schedule">
         <AddSchedule
