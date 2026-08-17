@@ -88,7 +88,7 @@ Smallest honest fix, no new feature: handle the failure so the tap is not
 silently dead, and change the copy to stop promising sync. A real offline outbox
 is a feature and is out of scope for these prompts.
 
-### 3. The migration checklist you would follow in the morning is six short
+### 3. The migration checklist you would follow in the morning was seven short — FIXED in `ffe8cc4`
 
 `supabase/pending/README.md` says "Run these **in order**" and its table stops at:
 
@@ -101,7 +101,12 @@ table: `0032_ingredient_search`, `0033_serving_sizes`, `0034_dose_skips`,
 
 `FINISH_REPORT.md` §2 lists only `0037` and `0038` as new and says "everything up
 to and including `0037` was already applied by you" — which contradicts listing
-`0037` as new. Verify what is actually applied before running anything.
+`0037` as new. **Verify what is actually applied before running anything**; that
+contradiction is unresolved and this audit cannot settle it from the repo.
+
+**Fixed in `ffe8cc4`:** rows 15–21 added, so the table and the directory now both
+hold 21. The blanket "every file is idempotent" line was corrected too — see
+finding 4, which is the one exception and is now stated in the README itself.
 
 ---
 
