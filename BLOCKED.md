@@ -51,3 +51,49 @@ the loop, so it proves the *client* keeps accounts apart and cannot prove that
 account B is unable to read account A's rows. Closing that needs either a
 Postgres-backed run against a local `supabase start`, or one manual pass with
 three real accounts before launch.
+
+---
+
+# Not done, as of the 17 August run
+
+Written against `PROMPT_LAST.md`. Nothing here is blocked by a rule — it is
+work I did not reach. Listed exactly rather than rounded up.
+
+## §1 — a longer onboarding: NOT DONE
+
+FLOW is **20 steps**, not the 24–28 asked for. The only step added is
+`free-pick`, and it was added for §2 rather than for §1. None of the named
+splits exist: wake/sleep/meals are still one `day` screen, there is no
+count-before-list step, no "here is what we found" beat after current-stack, no
+goal-priority step, no commitment step, and the building/reveal pair does not
+echo the user's own inputs back.
+
+This is the largest remaining item and the most invasive — every added step
+moves the progress arithmetic, the clamp test, and the skip rules, all of which
+have already bitten twice this run.
+
+## §3.1 — the two full runs: NOT DONE
+
+Neither Run A (maximal) nor Run B (minimal) was walked end to end. The automated
+suite covers a lot of the same ground — 22 personas, the three-accounts walk,
+the free-tier reveal, the states and widths audits — but that is not the same
+thing and must not be reported as if it were.
+
+## §3.2 — the Apple audit: NOT DONE
+
+`APPLE_AUDIT.md` does not exist. `APPLE_COMPLIANCE.md` is an older, partial pass
+over the sections somebody thought applied, which is precisely the shape the
+prompt says not to accept. Nothing was fetched from
+developer.apple.com/app-store/review/guidelines this run.
+
+## What was done this run
+
+- `PROMPT_COST.md` — all six sections. Migration `0039`, measured cost per call,
+  a dollar ceiling, the catalogue filter (61–83% smaller prompts, measured), the
+  240-character composer.
+- `PROMPT_NOTIFICATIONS.md` — all five sections; `NOTIFICATIONS.md` says which
+  of its ten checks were verified and which were reasoned about.
+- §2 of `PROMPT_LAST.md` — the free-tier reveal, with tests.
+- The sign-in bug: an existing account no longer re-runs onboarding.
+- The images: they were never copied into `ios/App/App/public`, which is what
+  the device serves. `npx cap copy ios`.
