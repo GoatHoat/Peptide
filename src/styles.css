@@ -620,8 +620,15 @@ button {
   box-shadow: inset 0 0 0 1.5px var(--t4);
 }
 
+/* One line of type that opens a sheet, so it is a control and not a caption.
+   It measured 15px tall — the smallest target in the app once anything was
+   overdue, which is exactly when somebody reaches for it. The type stays where
+   it is; the target is padded out around it. */
 .warn {
-  margin-top: 31px;
+  display: block;
+  width: 100%;
+  margin-top: 23px;
+  padding: 14px 0 15px;
   color: var(--purple);
   font-size: calc(12px * var(--text-scale));
   line-height: calc(15px * var(--text-scale));
@@ -1137,6 +1144,25 @@ button {
   color: var(--t3);
   padding: 18px 4px;
 }
+/* Today's empty schedule. Sits inside the rail's gutter, so the illustration
+   is centred on the list rather than on the screen. */
+.schedule-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px 0 2px;
+  /* back out of the timeline's rail gutter, so the drawing is centred on the
+     screen rather than pushed right by a rail that is not there */
+  margin-left: -22px;
+  margin-right: -10px;
+}
+.schedule-empty-art {
+  width: 200px;
+  max-width: 58%;
+  height: auto;
+  margin-bottom: 2px;
+}
 /* An empty screen is a screen with one thing to do on it. The action is the
    only control there, so it does not need to be loud — but it does have to be
    reachable, which is the 44 rather than a smaller pill. */
@@ -1412,14 +1438,24 @@ button {
   gap: 3px;
 }
 .recon-unit-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-width: 44px;
   height: 36px;
   padding: 0 16px;
   border-radius: 12px;
   color: var(--t3);
   font-size: calc(13px * var(--text-scale));
   font-weight: 600;
+}
+/* 36 is the drawn pill inside a 3px-padded track; the target is the full 44,
+   taken vertically so the two do not overlap each other. */
+.recon-unit-btn::after {
+  content: '';
+  position: absolute;
+  inset: -4px 0;
 }
 .recon-unit-btn.active {
   background: var(--purple);
@@ -1444,6 +1480,18 @@ button {
   font-weight: 700;
   color: var(--purple);
   letter-spacing: -0.02em;
+}
+/* The empty result sits in the same box at the same height as the filled one,
+   so the sheet does not grow under the finger as the last field is typed. */
+.recon-empty {
+  color: var(--t3);
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+}
+.recon-note {
+  color: var(--t3);
+  line-height: 1.5;
 }
 
 /* ============================================================

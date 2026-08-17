@@ -27,9 +27,23 @@ npm test --if-present    # must pass
 ## Positioning — this decides a lot of small questions
 
 The app is a **supplement timing and scheduling app**. Peptides are a reference
-library only: no doses, no recommendations, no ranking, no injection-related UI
-or questions anywhere in the product. The interaction/overdose audit is a minor
-side feature and must not be given more prominence than it currently has.
+library only: no doses, no recommendations, no ranking anywhere in the product.
+The interaction/overdose audit is a minor side feature and must not be given
+more prominence than it currently has.
+
+**The one exception, added deliberately: the reconstitution calculator on
+Today.** It converts between units on three numbers the user types — what is in
+their vial, how much water they added, and the dose they had already decided on.
+That is the entire line: the app may do arithmetic on numbers it was given, and
+may never be the source of a number.
+
+So it is not attached to any product in the catalogue, it has no defaults, it
+suggests no range, and it stores nothing. `legal.md` records that the rejected
+version served *protocols* — ratios and amounts tied to named peptides — and
+that re-wording it did not help, because what is evaluated is the function. A
+converter with no substance in it has a different function. Adding a peptide
+argument, a default, a suggested amount or persistence to it would put the old
+function back, whatever it looked like on screen.
 
 ## Design
 

@@ -2,6 +2,7 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { Arc } from '../components/Arc';
 import { Sheet } from '../components/Sheet';
 import { AddSchedule } from './AddSchedule';
+import { ReconCalculator } from './ReconCalculator';
 import { DoseHistory } from './DoseHistory';
 import { DayDoses } from './DayDoses';
 import { useAuth } from '../lib/auth';
@@ -43,6 +44,7 @@ function dayState(dateISO: string, todayISO: string, compliance: Record<string, 
 
 type SheetState =
   | { kind: 'add' }
+  | { kind: 'recon' }
   | { kind: 'history'; name: string; scheduleItemId: string | null }
   | { kind: 'day'; date: Date }
   | null;
@@ -154,6 +156,10 @@ export function Today() {
     setOffline(false);
     // taken/not-taken feeds the compliance map too — refresh the week
     await refreshCompliance().catch((err) => console.error('compliance refresh failed', err));
+    /* And the reminder copy, which is fixed into the banner when it is
+       scheduled — without this, tomorrow morning still offers to kick off a
+       streak that started today. */
+    syncScheduleNotifications(user.id);
     /* Deliberately opens nothing. This used to push the history sheet up,
        which offered Remove From Schedule as the response to someone simply
        marking their supplement as taken. The sheet is a long press now. */
@@ -232,11 +238,23 @@ export function Today() {
       </div>
 
       <div className="timeline">
-        <span className="rail" />
+        {/* The rail marks the passage of the day beside the rows. With no rows
+            it was a 200px line down the side of an illustration, which reads as
+            a rendering fault rather than as an empty day. */}
+        {(doses === null || doses.length > 0) && <span className="rail" />}
         {doses === null && <Skeleton rows={3} height={64} gap={8} radius={18} label="Loading your schedule" />}
         {doses !== null && doses.length === 0 && (
-          <div className="empty-state t-body">
-            Nothing on your schedule yet. Add something and it will appear here at the time you set.
+          /* The same object the empty stack uses. Both states are the same
+             shape of emptiness — a container waiting to be filled — and the
+             app has one drawing of that. ILLUSTRATIONS.md §4 specifies a
+             separate hollow-bar render for this screen; until that exists,
+             one coherent object beats two half-matched ones. */
+          <div className="schedule-empty">
+            <img className="schedule-empty-art" src="/art/empty-stack.png" alt="" width={200} height={200} />
+            <p className="empty-state t-body">
+              Nothing on your schedule yet. Add something and it will appear here at the time you
+              set.
+            </p>
           </div>
         )}
         {doses?.map((d, i) => {
@@ -282,6 +300,13 @@ export function Today() {
           <IconPlus size={15} color="var(--purple)" />
           Add to Schedule
         </button>
+        {/* Unit conversion on numbers the user types, nothing else. It is not
+            attached to any product and it stores nothing — see lib/recon.ts,
+            which explains why both of those are the point rather than
+            omissions. */}
+        <button className="add-dose pressable" onClick={() => setSheet({ kind: 'recon' })}>
+          Reconstitution
+        </button>
       </div>
 
       {overdue.length > 0 && (
@@ -296,6 +321,14 @@ export function Today() {
       )}
 
       <ProSheet open={pro} reason="stack-limit" onClose={() => setPro(false)} />
+
+      <Sheet
+        open={sheet?.kind === 'recon'}
+        onClose={() => setSheet(null)}
+        title="Reconstitution calculator"
+      >
+        <ReconCalculator />
+      </Sheet>
 
       <Sheet open={sheet?.kind === 'add'} onClose={() => setSheet(null)} title="Add to Schedule">
         <AddSchedule

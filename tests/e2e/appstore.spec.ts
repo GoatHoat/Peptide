@@ -119,15 +119,59 @@ test('an assistant answer can be reported', async ({ page, app }) => {
 
 /**
  * 1.4.1 — Apple requires drug dosage calculators to come from the manufacturer,
- * a hospital, a university or an equivalent approved body. legal.md records
- * that reconstitution ratios and injection specifics are what got the first
- * version of this app rejected. None of it may come back.
+ * a hospital, a university or an equivalent approved body.
+ *
+ * `legal.md` records what was actually rejected, and it was not the arithmetic:
+ * it was the app serving *protocols* — ratios and amounts tied to named
+ * peptides — so the app was the source of "how much". That was retried with
+ * personal-use framing, with disclaimers, with study quotes and behind an
+ * in-app browser, and every variation failed, because the function is what is
+ * evaluated rather than the wording.
+ *
+ * So this test no longer asserts "no calculator". It asserts the property that
+ * distinguishes the two: **the app never supplies a number**. The
+ * reconstitution calculator is unit conversion on three values the user typed,
+ * attached to no product, with no defaults and no persistence. If any of that
+ * changes, this fails.
  */
-test('no injection or dosing calculator UI is reachable', async ({ page, app }) => {
+test('the calculator converts what it is given and supplies nothing', async ({ page, app }) => {
   await seedSignedIn(page, app.stub);
   await page.goto('/');
 
-  await expect(page.getByRole('button', { name: 'Calculator' })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Reconstitution' }).click();
+  const sheet = page.locator('.sheet');
+  await expect(sheet).toBeVisible();
+
+  // Every field starts empty. A prefilled vial size is the app having an
+  // opinion about what is in somebody's vial.
+  for (const id of ['#recon-vial', '#recon-diluent', '#recon-dose']) {
+    await expect(sheet.locator(id)).toHaveValue('');
+  }
+
+  // Nothing on the screen names a substance, and nothing offers an amount.
+  const body = await sheet.innerText();
+  expect(body.toLowerCase()).not.toMatch(/bpc|tb-?500|semaglutide|ipamorelin|peptide/);
+  expect(body).not.toMatch(/recommend|typical|suggested|per week|twice daily/i);
+
+  // And it does the arithmetic it exists for: 5 mg in 2 mL is 2500 mcg/mL, so
+  // 250 mcg is 0.1 mL, which is 10 units on a U-100 barrel.
+  await sheet.locator('#recon-vial').fill('5');
+  await sheet.locator('#recon-diluent').fill('2');
+  await sheet.locator('#recon-dose').fill('250');
+  await expect(sheet.getByText('2500.0 mcg/mL')).toBeVisible();
+  await expect(sheet.getByText('10.0 units')).toBeVisible();
+
+  await sheet.getByRole('button', { name: 'Close' }).click();
+  await expect(sheet).toHaveCount(0);
+});
+
+/**
+ * The half of 1.4.1 that has not moved: nothing in the app records or asks
+ * where an injection goes, and no peptide entry carries an amount.
+ */
+test('nothing asks where an injection goes', async ({ page, app }) => {
+  await seedSignedIn(page, app.stub);
+  await page.goto('/');
 
   // Add to Schedule takes an amount the user types, and asks nothing about
   // where it goes.
