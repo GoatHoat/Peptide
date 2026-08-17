@@ -203,8 +203,28 @@ review-risk path, not only a cosmetic one.
 Checked and clean: `AskAI.tsx:520` looks like a raw string but is not — that
 `error.message` comes from the curated `FALLBACK` map in `ask.ts`.
 
-Not run here: the loading-states-at-final-dimensions sweep and the empty-state
-sweep. Those need a running app at each width rather than a static read, and the
+**The 375 / 390 / 393 / 430 / 440 sweep — partly run, and here is exactly how
+far.** A headless pass was driven against an isolated dev server on port 5299
+(deliberately not 5174, to avoid colliding with the other session's suite),
+measuring two things at each width: horizontal page overflow, and text clipped
+inside its own box — the class of bug that produced "Search a product, or
+describe your g…".
+
+Result: **clean at all five widths, on the two screens reachable without an
+account** — Welcome and Create Account. No page overflow, no clipped text, no
+element past the right edge.
+
+That is genuine but thin, and it should not be read as "§3's sweep is done". The
+walk stops at the auth wall, so **every screen behind sign-in is uncovered** —
+Today, Discover, the stack, You, catch-up and the remaining onboarding
+questions, which is where the two reported device bugs actually were. Going
+deeper needs either the Playwright Supabase stub wired into a standalone script,
+or three real accounts against the production database, which this session
+declined to create. The existing suite covers width 393 broadly and one 375 case
+in `today.spec.ts`; the other four widths remain unverified behind auth.
+
+Not run at all: the loading-states-at-final-dimensions sweep and the empty-state
+sweep. Both need a running app per screen rather than a static read, and the
 three-account walkthrough was never rebuilt (see `BLOCKED.md`).
 
 ### A pattern worth one fix rather than three
