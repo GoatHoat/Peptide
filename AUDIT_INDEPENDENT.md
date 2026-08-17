@@ -188,6 +188,45 @@ only — icons, rails, underlines and other non-targets excluded):
 44 pt HIG minimum and the 44×44 this prompt asks for, and it is the control a
 reviewer taps most often.
 
+**Status after `bdc6cf5` — one fixed, eight still live, and the new test cannot
+see them.** That commit turned the four sweeps into `tests/e2e/states.spec.ts`,
+which is the right instinct and measures the *effective* hit area properly: it
+adds back any absolutely-positioned `::before`/`::after` pulled outward, so a
+small drawn control with an expanded target is not reported as a failure. My
+original scan read raw CSS `height` and did not do that, which is the weaker
+method.
+
+Where it looked, it worked. `.tabs-tab` — the one flagged control on a swept
+screen — was fixed the right way round, by expanding the target rather than
+lowering the assertion:
+
+```css
+.tabs-tab::after { content: ''; position: absolute; inset: -5px -9px; }  /* 34 + 5 + 5 = 44 */
+```
+
+**But the sweep visits Today, Discover and You, and never opens a sheet.** The
+only `sheet` matches in that spec file are `document.styleSheets` and a
+`.sheet-empty` selector. So the app's smallest control sits in the one place the
+test does not go. Re-measured against the current tree, these eight remain under
+44 with **no** pseudo-element expansion:
+
+| Element | Effective | Where it lives — and why the sweep misses it |
+|---|---|---|
+| `.sheet-close` | **30 px** | every sheet in the app — no sheet is ever opened |
+| `.stack-expiry-btn` | 32 px | MyStack — not one of the three swept screens |
+| `.glossary-brand-link` | 32 px | GlossaryDetail — reached through a sheet |
+| `.stack-remove` | 34 px | MyStack |
+| `.recon-unit-btn` | 36 px | dead reconstitution UI (finding 9) |
+| `.bodymap-chip` | 36 px | ProgressNotes |
+| `.stack-pick-chip` | 38 px | the stack picker |
+| `.setup-var` | 40 px | SetupNeeded |
+
+The fix is not to widen the exception list. It is to extend the sweep to open a
+sheet and to visit the screens reached through one — the test already has the
+right measurement, it just needs a longer route. `INLINE_EXCEPTIONS` is
+disciplined and should stay that way: four entries, each an inline text link
+inside running prose, each with a written reason.
+
 **Raw error strings reaching the user.** §4 requires "every error state with a
 retry, never a raw error string". One violation:
 
