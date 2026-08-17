@@ -1,3 +1,4 @@
+import { NAME } from './brand';
 import { Capacitor } from '@capacitor/core';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Share } from '@capacitor/share';
@@ -34,7 +35,7 @@ function csvRow(values: (string | number | null | undefined)[]): string {
 
 export function buildCSV(data: ExportData): string {
   const lines: string[] = [];
-  lines.push('Pepstack Export');
+  lines.push(`${NAME} Export`);
   lines.push(`Generated,${new Date().toISOString()}`);
   lines.push('');
 
@@ -69,7 +70,7 @@ export function buildPDF(data: ExportData): jsPDF {
   let y = 18;
 
   doc.setFontSize(18);
-  doc.text('Pepstack Export', marginX, y);
+  doc.text(`${NAME} Export`, marginX, y);
   y += 6;
   doc.setFontSize(10);
   doc.setTextColor(120);

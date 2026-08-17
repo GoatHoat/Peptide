@@ -1,3 +1,4 @@
+import { NAME } from '../../lib/brand';
 import { useState } from 'react';
 import { Cta, OnboardIllustration, Screen, Sub, Title } from '../chrome';
 import { PLANS, purchase, restorePurchases, type PlanId } from '../../lib/billing';
@@ -100,7 +101,7 @@ export function Paywall({ onDone }: { onDone: (subscribed: boolean) => void }) {
       footer={
         <>
           <Cta onClick={buy} disabled={busy !== null}>
-            {busy === 'buy' ? 'One moment…' : 'Start with Pepstack'}
+            {busy === 'buy' ? 'One moment…' : `Start with ${NAME}`}
           </Cta>
           <div className="ob-legal-row">
             {/* Not optional — a missing restore path is the most common

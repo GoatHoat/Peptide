@@ -1,3 +1,4 @@
+import { PRO_NAME } from '../lib/brand';
 import { useState } from 'react';
 import { Sheet } from './Sheet';
 import { PLANS, purchase, restorePurchases, type PlanId } from '../lib/billing';
@@ -54,7 +55,7 @@ export function ProSheet({
   const total = catalogueTotal || 304;
 
   return (
-    <Sheet open={open} onClose={onClose} title="Pepstack Pro">
+    <Sheet open={open} onClose={onClose} title={PRO_NAME}>
       <p className="pro-headline t-body-m">{headlineFor(reason, lockedTotal)}</p>
 
       {/* Four lines, no ticks and no icons — a list of what changes, not a

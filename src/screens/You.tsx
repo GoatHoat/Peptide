@@ -1,3 +1,4 @@
+import { NAME } from '../lib/brand';
 import { Fragment, useEffect, useState } from 'react';
 import { IconClock } from '../components/Icons';
 import { Sheet } from '../components/Sheet';
@@ -232,7 +233,7 @@ export function You() {
 
       <Sheet open={openSheet === 'subscription'} onClose={() => setOpenSheet(null)} title="Subscription">
         <div className="t-body">
-          Pepstack is free while it is in its first release. Everything in the app is
+          {NAME} is free while it is in its first release. Everything in the app is
           available to you, and there is nothing to manage here yet.
         </div>
       </Sheet>

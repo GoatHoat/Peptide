@@ -1,3 +1,4 @@
+import { NAME } from '../lib/brand';
 /**
  * Shown in place of the app when VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY are
  * missing. The app cannot run without them — every screen reads its data from
@@ -14,7 +15,7 @@ export function SetupNeeded() {
       <div className="setup-inner">
         <h1 className="setup-title">Not configured yet</h1>
         <p className="setup-body">
-          Pepstack reads every screen — your doses, stack and profile — from Supabase, so it needs
+          {NAME} reads every screen — your doses, stack and profile — from Supabase, so it needs
           your project&rsquo;s address and public key before it can start.
         </p>
 

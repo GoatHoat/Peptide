@@ -1,3 +1,4 @@
+import { NAME } from '../../lib/brand';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Cta, OnboardIllustration, Screen, Sub, Title } from '../chrome';
 import { GOAL_BY_ID, DEFAULT_GOAL_IDS } from '../goals';
@@ -270,7 +271,7 @@ export function Recommendations({
           scrolling. */}
       <p className="ob-disclaimer t-caption">
         Daily targets are the published NIH Office of Dietary Supplements reference intakes for
-        your age and sex, not a dose set by this app. Pepstack is not medical advice — talk to a
+        your age and sex, not a dose set by this app. {NAME} is not medical advice — talk to a
         healthcare professional before starting anything.
       </p>
 

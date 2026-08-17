@@ -1,3 +1,4 @@
+import { NAME } from '../lib/brand';
 import { useState, type FormEvent } from 'react';
 import { useAuth } from '../lib/auth';
 
@@ -61,7 +62,7 @@ export function Auth() {
   return (
     <div className="auth-screen">
       <div className="auth-head">
-        <h1 className="t-title">Pepstack</h1>
+        <h1 className="t-title">{NAME}</h1>
         <div className="screen-sub t-body">
           {mode === 'signin' ? 'Sign in to your account' : 'Create an account to start tracking'}
         </div>

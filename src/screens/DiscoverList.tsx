@@ -1,3 +1,4 @@
+import { NAME } from '../lib/brand';
 import { useEffect, useState } from 'react';
 import {
   getGlossaryResearch,
@@ -249,12 +250,12 @@ export function ProductRow({
           {isSupp ? (
             <p className="prod-disclaimer t-caption">
               Reference intakes are the published NIH figures for your age and sex, not a
-              recommendation. Pepstack does not give medical advice — talk to a healthcare
+              recommendation. {NAME} does not give medical advice — talk to a healthcare
               professional before starting anything.
             </p>
           ) : (
             <p className="prod-disclaimer t-caption">
-              Reference only. Pepstack gives no amount, no schedule and no guidance for
+              Reference only. {NAME} gives no amount, no schedule and no guidance for
               peptides — just what it is and the research below.
             </p>
           )}

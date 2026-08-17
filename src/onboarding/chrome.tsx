@@ -1,3 +1,4 @@
+import { NAME } from '../lib/brand';
 import type { ReactNode } from 'react';
 import { FLOW, NO_BACK, SKIPPABLE, type Step } from './flow';
 
@@ -5,7 +6,7 @@ export function Wordmark({ size = 17 }: { size?: number }) {
   return (
     <span className="ob-wordmark" style={{ fontSize: size }}>
       <LogoMark size={Math.round(size * 1.15)} />
-      Pepstack
+      {NAME}
     </span>
   );
 }

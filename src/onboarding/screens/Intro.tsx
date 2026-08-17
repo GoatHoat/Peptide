@@ -1,3 +1,4 @@
+import { NAME } from '../../lib/brand';
 import { useState, type FormEvent } from 'react';
 import { Cta, LogoMark, Screen, Sub, Title } from '../chrome';
 import { useAuth } from '../../lib/auth';
@@ -12,7 +13,7 @@ export function Welcome({ onNext }: { onNext: () => void }) {
       <span className="doodle-bg welcome" aria-hidden />
       <div className="ob-welcome">
         <LogoMark size={72} />
-        <h1 className="ob-welcome-name">Pepstack</h1>
+        <h1 className="ob-welcome-name">{NAME}</h1>
         {/* No health claims. This is the first thing App Review reads. */}
         <p className="ob-welcome-line">Know what to take, and when to take it.</p>
       </div>

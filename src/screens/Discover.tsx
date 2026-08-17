@@ -1,3 +1,4 @@
+import { NAME } from '../lib/brand';
 import { Fragment, useEffect, useState } from 'react';
 import { Sheet } from '../components/Sheet';
 import { Tabs } from '../components/Tabs';
@@ -198,7 +199,7 @@ export function Discover() {
             <div>
               {tab.id === 'peptide' && (
                 <p className="tab-note t-caption">
-                  Reference only. These are not over-the-counter supplements and Pepstack does not
+                  Reference only. These are not over-the-counter supplements and {NAME} does not
                   recommend doses for them.
                 </p>
               )}

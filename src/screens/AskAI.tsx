@@ -1,3 +1,4 @@
+import { AI_NAME } from '../lib/brand';
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../lib/auth';
 import { LIMITS, useEntitlement } from '../lib/entitlements';
@@ -196,7 +197,7 @@ export function AskAI({
             <span className="ask-mark">
               <LogoMark size={44} />
             </span>
-            <h2 className="ask-empty-title">Meet PepStack AI</h2>
+            <h2 className="ask-empty-title">{`Meet ${AI_NAME}`}</h2>
             {/* "vitamins and minerals" is deliberate and stays: the assistant
                 refuses to recommend peptides, and the empty state must not
                 promise something the tool schema declines. "Your library"
