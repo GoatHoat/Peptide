@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
 import { TabBar, TAB_SPRING } from './components/TabBar';
 import { Today } from './screens/Today';
@@ -326,18 +326,41 @@ function Shell({ framed, largerText }: { framed: boolean; largerText: boolean })
   const progress = useMotionValue(0);
   const [index, setIndex] = useState(0);
 
-  const width = useRef(402);
-  useEffect(() => {
+  /**
+   * The container width, as a motion value rather than a ref.
+   *
+   * `useTransform` recomputes when the values it is given change. A ref is not
+   * one of those — so when the ResizeObserver corrected `width.current` from a
+   * guessed 402 to the real width, `trackX` kept the offset it already had and
+   * nothing recomputed until `progress` next moved. Tapping a tab moved it,
+   * which is exactly why tapping a tab appeared to fix the layout.
+   *
+   * As a motion value the observer's write is a dependency, so a width change
+   * recomputes the offset immediately with no tab change. Measured in a layout
+   * effect as well, so the first painted frame already has the real width
+   * rather than a guess at a phone.
+   */
+  const widthMV = useMotionValue(402);
+  useLayoutEffect(() => {
     const measure = () => {
-      if (hostRef.current) width.current = hostRef.current.clientWidth;
+      const w = hostRef.current?.clientWidth;
+      if (w) widthMV.set(w);
     };
     measure();
     const ro = new ResizeObserver(measure);
     if (hostRef.current) ro.observe(hostRef.current);
-    return () => ro.disconnect();
-  }, []);
+    /* Rotation resizes the window without necessarily resizing the observed
+       element on some browsers, so both are listened for. */
+    window.addEventListener('resize', measure);
+    window.addEventListener('orientationchange', measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', measure);
+      window.removeEventListener('orientationchange', measure);
+    };
+  }, [widthMV]);
 
-  const trackX = useTransform(progress, (p) => -p * width.current);
+  const trackX = useTransform([progress, widthMV], ([p, w]: number[]) => -p * w);
 
   const goTo = (i: number, velocity = 0) => {
     const target = Math.max(0, Math.min(2, i));
@@ -399,13 +422,13 @@ function Shell({ framed, largerText }: { framed: boolean; largerText: boolean })
     const dt = now - d.lastT;
     if (dt > 0) {
       // tabs per second, smoothed
-      const inst = ((d.lastX - e.clientX) / width.current / dt) * 1000;
+      const inst = ((d.lastX - e.clientX) / widthMV.get() / dt) * 1000;
       d.vel = d.vel * 0.7 + inst * 0.3;
       d.lastX = e.clientX;
       d.lastT = now;
     }
 
-    const raw = d.startP - dx / width.current;
+    const raw = d.startP - dx / widthMV.get();
     const p = raw < 0 ? raw * RUBBER : raw > 2 ? 2 + (raw - 2) * RUBBER : raw;
     progress.set(p);
   };
@@ -465,8 +488,24 @@ function Shell({ framed, largerText }: { framed: boolean; largerText: boolean })
   );
 }
 
+/**
+ * Whether this is the phone layout, decided before the first paint.
+ *
+ * This was `useState(false)` with the media query only running inside the
+ * effect, so every launch painted one frame as the desktop, unframed layout and
+ * then flipped. `.app.framed .panel` swaps padding-top from the safe-area inset
+ * to 54px and the frame changes the container's width, so that first frame was
+ * measured against a container about to change size — which is half of why
+ * everything sat shifted left until a tab was tapped.
+ *
+ * Guarded for no-window so a non-DOM environment still gets a value.
+ */
 function useTouch() {
-  const [v, setV] = useState(false);
+  const [v, setV] = useState(
+    () =>
+      typeof window !== 'undefined' &&
+      (window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 640),
+  );
   useEffect(() => {
     const check = () =>
       setV(window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 640);

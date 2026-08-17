@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
 
 const SPRING = { type: 'spring' as const, stiffness: 380, damping: 34, mass: 1 };
@@ -50,7 +50,11 @@ export function Tabs({
   const pos = useMotionValue(initial);
   const hostRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
-  const width = useRef(390);
+  /* Measured before the first paint, not guessed. This was useRef(390) — a
+     hardcoded stand-in for a phone width, the same fault as App.tsx's 402. The
+     drag maths below divides by it, so a wrong value for the first frame is a
+     wrong offset for the first frame. */
+  const width = useRef(0);
   const [segs, setSegs] = useState<{ x: number; w: number }[]>([]);
 
   useEffect(() => {
@@ -61,7 +65,7 @@ export function Tabs({
     }
   }, [index, storageKey, tabs]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const measure = () => {
       if (hostRef.current) width.current = hostRef.current.clientWidth;
       const bar = barRef.current;
@@ -122,7 +126,12 @@ export function Tabs({
     }
     const now = performance.now();
     const dt = now - d.t;
-    const raw = d.start - dx / width.current;
+    /* The layout effect has run long before any drag can start, so this is
+       belt and braces — but it starts at 0 now rather than at a guessed 390,
+       and dividing by 0 would send the track to Infinity rather than to a
+       slightly wrong place. */
+    const w = width.current || hostRef.current?.clientWidth || 1;
+    const raw = d.start - dx / w;
     const max = tabs.length - 1;
     const p = raw < 0 ? raw * RUBBER : raw > max ? max + (raw - max) * RUBBER : raw;
     if (dt > 0) {

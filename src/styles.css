@@ -91,6 +91,29 @@ body,
   height: 100%;
 }
 
+/* ============================================================
+   Scrolling — once, for every container in the app
+   ============================================================
+   Done as a rule rather than per class, which is what stopped it being
+   complete: .panel and .stack-pick-row each hid their own bar and the sheet
+   body, the ask thread and the rest still showed one.
+
+   `scrollbar-width` is the standards property and was missing entirely, which
+   is why the bar was visible in Firefox and not in Chrome.
+
+   `overscroll-behavior` was set once on the body. Inner scrollers do not
+   inherit it, so reaching the end of a panel or a sheet rubber-banded the page
+   behind it. `contain` on every scroller is what stops the chain. */
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior: contain;
+}
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
 body {
   margin: 0;
   background: var(--bg);

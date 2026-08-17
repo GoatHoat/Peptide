@@ -159,3 +159,33 @@ broken or non-compliant.
   is gone. Removing it would move the day-boundary reasoning away from the
   caller that owns it, and the parameter is where that reasoning is written
   down.
+
+## The paywall and three layout faults (17 August)
+
+- **The sheet's type comes from the app's scale, not from new `.pro-*` sizes.**
+  `t-body-m` for the plan name and the price, `t-caption` for the note and the
+  period, `t-label` for the badge. Every size I needed already existed, so no
+  outlier was added. `.pro-plan-name`/`.pro-plan-amount` etc. carry colour and
+  `display: block` only.
+- **Selection is a border swap, not an extra border.** `.pro-plan.on` changes
+  `border-color` from the hairline to the accent rather than adding a ring, so
+  the row cannot change size when it is chosen.
+- **The track width is a `useMotionValue`, not state.** `useTransform` takes it
+  as a dependency so a resize recomputes the offset immediately, and it does not
+  re-render the tree on every observer callback the way state would — this fires
+  on rotation and on every window resize.
+- **`useLayoutEffect` rather than `useEffect` for both measurements.** The point
+  is to have the real width before the first paint; an effect runs after it,
+  which is the fault being fixed.
+- **`Tabs.tsx`'s width starts at 0, not at a guessed 390.** A guess that is
+  wrong for one frame is a wrong offset for one frame; 0 with a guard is
+  honest, and the layout effect fills it before anything can drag.
+- **Scrollbars and overscroll are one universal rule, not per class.** Two
+  classes had already hidden their own bars and everything else still showed
+  one; `scrollbar-width` was missing entirely, which is why it was visible in
+  some browsers and not others.
+- **The empty Today scrolling 65px is not a defect.** Measured: content ends
+  819px into an 852px viewport and the floating bar covers the last ~78px, so
+  the action row is genuinely underneath it and the 98px reserve is what makes
+  it reachable. The test asserts the overrun never *exceeds* the reserve, which
+  is the fault that would matter — a screen adding its own spacer on top.
