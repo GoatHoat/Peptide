@@ -11,7 +11,13 @@ import { Building, Done, Recommendations, ScheduleBuilder, type Recommendation }
 import { useAuth } from '../lib/auth';
 import { usePrefs } from '../lib/prefs';
 import { supabase } from '../lib/supabaseClient';
-import { markOnboardedRemote, rememberFact, addScheduleItem, getProfile, updateProfile } from '../lib/api';
+import {
+  addScheduleItem,
+  getProfile,
+  markOnboardedRemote,
+  rememberFact,
+  updateProfile,
+} from '../lib/api';
 import { toISODate } from '../lib/date';
 
 /**
@@ -36,7 +42,17 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
     }
   }, [step]);
 
-  /* signing in mid-flow moves past the auth screens on its own */
+  /**
+   * Signing in mid-flow moves past the auth screens on its own.
+   *
+   * This deliberately does NOT decide whether the account has already
+   * onboarded. An earlier version awaited that check here and held the flow
+   * until it came back, which raced `Auth`'s own onDone — the form sat on
+   * "Please wait…" and neither path advanced. The gate in App.tsx owns that
+   * decision, reads the same two facts, and swaps the app in over the top.
+   * The cost is that a returning user may see the first question for the
+   * length of one round trip; the alternative was a form that never returned.
+   */
   useEffect(() => {
     if (session && step === 'auth') {
       patch({ auth: { userId: session.user.id, email: session.user.email ?? null } });

@@ -8,7 +8,12 @@ import {
   isPregnancyQuestion,
   MAX_CARDS,
   MAX_HISTORY_TURNS,
+  costOf,
   MAX_QUESTION_CHARS,
+  MAX_TOKENS,
+  MONTHLY_BUDGET_USD,
+  RATES,
+  relevantCatalogue,
   parseRequest,
   RATE_LIMIT,
   rateVerdict,
@@ -430,4 +435,114 @@ test('the interpret tool forces the enum the trigger also enforces', () => {
     'ingredient_names',
     'confidence',
   ]);
+});
+
+/* ── What a message costs, and the ceiling on it ─────────────────────────── */
+
+test('cost is computed from what the API said it used', () => {
+  const c = costOf({
+    input_tokens: 1_000_000,
+    output_tokens: 0,
+    cache_read_input_tokens: 0,
+    cache_creation_input_tokens: 0,
+  });
+  expect(c.usd).toBeCloseTo(RATES.input, 6);
+
+  const out = costOf({ input_tokens: 0, output_tokens: 1_000_000 });
+  expect(out.usd).toBeCloseTo(RATES.output, 6);
+});
+
+test('a cache read is ten times cheaper than paying for the same tokens', () => {
+  const read = costOf({ cache_read_input_tokens: 1_000_000 });
+  const fresh = costOf({ input_tokens: 1_000_000 });
+  expect(read.usd).toBeCloseTo(fresh.usd / 10, 6);
+});
+
+test('missing usage is zero, not NaN', () => {
+  /* The budget is a sum of this column. One NaN and the sum is NaN, and a
+     comparison against NaN is false — which fails open, in the direction of an
+     unbounded bill. */
+  const c = costOf(undefined);
+  expect(c.usd).toBe(0);
+  expect(Number.isFinite(c.usd)).toBe(true);
+});
+
+test('the ceiling is in dollars, and pro is under half a month of revenue', () => {
+  expect(MONTHLY_BUDGET_USD.pro).toBe(1.0);
+  expect(MONTHLY_BUDGET_USD.free).toBe(0.02);
+  // £29.99/yr is $2.12 a month after Apple's 15%; the cap must stay well under
+  expect(MONTHLY_BUDGET_USD.pro).toBeLessThan(2.12 / 2);
+  // and the instruction that it never goes past $2.00
+  expect(MONTHLY_BUDGET_USD.pro).toBeLessThanOrEqual(2.0);
+});
+
+test('300 messages at the measured mix stays inside the pro ceiling', () => {
+  /* The shape of a real message after the catalogue filter and the cache: a
+     small fresh input, most of the prompt read from cache, a short answer. */
+  const perMessage = costOf({
+    input_tokens: 400,
+    output_tokens: 350,
+    cache_read_input_tokens: 3_500,
+    cache_creation_input_tokens: 0,
+  }).usd;
+  expect(perMessage * 300).toBeLessThan(MONTHLY_BUDGET_USD.pro);
+  // and the cutoff bites before the budget is exceeded, not after
+  const affordable = Math.floor(MONTHLY_BUDGET_USD.pro / perMessage);
+  expect(affordable * perMessage).toBeLessThanOrEqual(MONTHLY_BUDGET_USD.pro);
+});
+
+test('one response cannot run away', () => {
+  // 2000 output tokens is the worst a single answer can bill
+  expect(MAX_TOKENS).toBe(2000);
+  expect((MAX_TOKENS * RATES.output) / 1_000_000).toBeLessThan(0.011);
+});
+
+/* ── Sending only what could be relevant ─────────────────────────────────── */
+
+const catEntry = (slug: string, tags: string[]): CatalogueEntry => ({
+  slug,
+  name: slug,
+  brand: null,
+  product_form: null,
+  goal_tags: tags,
+  kind: 'supplement',
+  timing: null,
+  timing_note: null,
+  evidence: null,
+  mechanism_summary: null,
+  label_url: null,
+  ods_url: null,
+});
+
+const many = (n: number, tags: string[]) =>
+  Array.from({ length: n }, (_, i) => catEntry(`p${tags.join('')}${i}`, tags));
+
+test('no goals means the whole catalogue, as before', () => {
+  const all = many(100, ['Sleep']);
+  expect(relevantCatalogue(all, [])).toHaveLength(100);
+});
+
+test('a tagged product for a goal they do not have is left out', () => {
+  const all = [...many(60, ['Sleep']), ...many(60, ['Muscle'])];
+  const kept = relevantCatalogue(all, ['Sleep']);
+  expect(kept).toHaveLength(60);
+  expect(kept.every((e) => e.goal_tags.includes('Sleep'))).toBe(true);
+});
+
+test('an untagged product is always kept — no tags is missing data', () => {
+  const all = [...many(60, ['Sleep']), catEntry('mystery', [])];
+  expect(relevantCatalogue(all, ['Sleep']).some((e) => e.slug === 'mystery')).toBe(true);
+});
+
+test('a narrow goal does not get a worse assistant than a broad one', () => {
+  /* Below MIN_CATALOGUE the filter gives up entirely, because saving tokens is
+     not worth an answer that could not see the product it needed. Injury has 11
+     products in the live catalogue, which is exactly this case. */
+  const all = [...many(5, ['Injury']), ...many(200, ['Muscle'])];
+  expect(relevantCatalogue(all, ['Injury'])).toHaveLength(205);
+});
+
+test('matching is case-insensitive, since tags come from two places', () => {
+  const all = many(60, ['Sleep']);
+  expect(relevantCatalogue(all, ['sleep'])).toHaveLength(60);
 });

@@ -43,11 +43,14 @@ import {
   buildProfileBlock,
   classifyScope,
   INSTRUCTIONS,
+  costOf,
   MAX_TOKENS,
   MAX_TOOL_ROUNDS,
   MODEL,
+  MONTHLY_BUDGET_USD,
   parseRequest,
   rateVerdict,
+  relevantCatalogue,
   readDetailSlugs,
   readShowProducts,
   TOOLS,
@@ -190,6 +193,29 @@ Deno.serve(async (req: Request): Promise<Response> => {
       }
     }
 
+    /* ---- 3b. the monthly ceiling ----------------------------------------
+       On measured dollars, not on a message count and not on a token
+       allowance: the same allowance is roughly $0.97 with the prompt cache
+       working and $2.60 without it, so a token budget stops bounding cost
+       exactly when a brake matters most.
+
+       A missing function means 0039 has not been applied. That reads as zero
+       spend and the call proceeds — the rate limit above is still a real
+       ceiling, and refusing every message because a migration is outstanding
+       would take the assistant down for everybody. */
+    const budget = MONTHLY_BUDGET_USD[tier === 'pro' ? 'pro' : 'free'];
+    const { data: spendRow } = await supabase.rpc('my_ask_spend_this_month');
+    const spent = Number(spendRow ?? 0);
+    if (Number.isFinite(spent) && spent >= budget) {
+      /* Never a dollar figure and never a token count. "255 messages a month"
+         reads as generous; "$1.00 of AI" reads as metered. */
+      return fail(
+        'upgrade_required',
+        'You have used this month’s assistant messages. They reset on the 1st.',
+        402,
+      );
+    }
+
     // ---- 3. rate limit -----------------------------------------------------
     const now = Date.now();
     const since = new Date(now - 24 * 60 * 60 * 1000).toISOString();
@@ -213,8 +239,18 @@ Deno.serve(async (req: Request): Promise<Response> => {
       );
     }
 
-    const { error: insertError } = await supabase.from('ask_usage').insert({ user_id: user.id });
+    /* Written before the call so the rate limit counts an attempt, and updated
+       after it with what the call actually cost. `select` so the id comes back
+       — the budget is a sum of cost_usd on these rows, and a row that never
+       receives its cost is a message that was free as far as the ceiling is
+       concerned. */
+    const { data: usageRow, error: insertError } = await supabase
+      .from('ask_usage')
+      .insert({ user_id: user.id })
+      .select('id')
+      .single();
     if (insertError) throw insertError;
+    const usageId = (usageRow as { id: string } | null)?.id ?? null;
 
     const usage: AskUsage = {
       remaining_hour: verdict.remaining_hour - 1,
@@ -250,7 +286,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
     // ---- 5. answer ---------------------------------------------------------
     if (!hasKey) return await stubAnswer(supabase, request, bySlug, usage);
-    return await liveAnswer(supabase, request, supplements, bySlug, user.id, usage);
+    return await liveAnswer(supabase, request, supplements, bySlug, user.id, usage, usageId);
   } catch (err) {
     // The message can carry a Postgres error or an upstream body; it stays in
     // the function log and never goes back to the client.
@@ -337,11 +373,27 @@ async function liveAnswer(
   bySlug: Map<string, CatalogueRow>,
   userId: string,
   usage: AskUsage,
+  /** the ask_usage row to write the measured cost back to */
+  usageId: string | null,
 ): Promise<Response> {
-  const [profile, stackNames] = await Promise.all([
+  const [profile, stack] = await Promise.all([
     loadProfile(supabase, userId),
-    loadStackNames(supabase, userId),
+    loadStack(supabase, userId),
   ]);
+  const stackNames = stack.names;
+
+  /* What this person is interested in, derived from what they already take
+     rather than from the request. Goals live in the onboarding store on the
+     device and are not on `profiles`, so there is nothing on the server to read
+     them from — but the catalogue is already in memory and every product
+     carries goal tags, so the stack is a free signal with no extra query and
+     nothing the client can lie about. Somebody taking nothing gets the whole
+     catalogue, which is the old behaviour. */
+  const stackIds = new Set(stack.glossaryIds);
+  const goalTags = [
+    ...new Set(supplements.filter((row) => stackIds.has(row.id)).flatMap((row) => row.goal_tags)),
+  ];
+  const catalogue = relevantCatalogue(supplements, goalTags);
 
   const client = new Anthropic({ apiKey: Deno.env.get('ANTHROPIC_API_KEY') });
 
@@ -359,7 +411,7 @@ async function liveAnswer(
     // rather than paid for again. Anything per-person goes in the user turn.
     {
       type: 'text',
-      text: buildCatalogueBlock(supplements),
+      text: buildCatalogueBlock(catalogue),
       cache_control: { type: 'ephemeral' },
     },
   ];
@@ -372,16 +424,32 @@ async function liveAnswer(
 
   let requested: RequestedCard[] = [];
   let text = '';
+  /* Summed across every round, because a tool round trip is a second billed
+     call and a budget that only counted the last one would undercount by the
+     number of tools the model chose to use. */
+  const spend = { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, usd: 0 };
+  let truncated = false;
 
   for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
     const response = await callModel(client, {
       model: MODEL,
       max_tokens: MAX_TOKENS,
-      output_config: { effort: 'medium' },
+      /* Deliberation bills as output at five times input, and this is
+         retrieval and summarisation over a catalogue we supply — there is
+         little to reason about before answering. */
+      output_config: { effort: 'low' },
       system,
       tools: TOOLS,
       messages,
     });
+
+    const round_cost = costOf(response.usage);
+    spend.input += round_cost.input;
+    spend.output += round_cost.output;
+    spend.cacheRead += round_cost.cacheRead;
+    spend.cacheWrite += round_cost.cacheWrite;
+    spend.usd += round_cost.usd;
+    if (response.stop_reason === 'max_tokens') truncated = true;
 
     if (response.stop_reason === 'refusal') {
       const answer: AskAnswer = {
@@ -426,8 +494,36 @@ async function liveAnswer(
   const citations = await fetchCitations(supabase, present);
   const cards: AskCard[] = buildCards(requested, bySlug, citations);
 
+  /* What it cost, on the row the budget sums. Logged as well as stored: the
+     first thing to check after deploying is whether cacheRead is non-zero,
+     because zero there means the catalogue is being paid for in full on every
+     single message. */
+  console.log(
+    `ask cost: $${spend.usd.toFixed(6)} in=${spend.input} out=${spend.output} cacheRead=${spend.cacheRead} cacheWrite=${spend.cacheWrite}`,
+  );
+  if (usageId) {
+    await supabase
+      .from('ask_usage')
+      .update({
+        input_tokens: spend.input,
+        output_tokens: spend.output,
+        cache_read_tokens: spend.cacheRead,
+        cache_write_tokens: spend.cacheWrite,
+        cost_usd: Number(spend.usd.toFixed(6)),
+      })
+      .eq('id', usageId)
+      /* 0039 not applied yet: the columns do not exist and the update fails.
+         The message was still answered and still counted, so this must not
+         turn a good answer into a 500. */
+      .then(undefined, (err: unknown) => console.error('ask: could not record cost', err));
+  }
+
   const answer: AskAnswer = {
-    answer: text || 'I could not put an answer together for that. Try asking it a different way.',
+    answer: truncated
+      ? `${text}
+
+That answer hit its length limit. Ask me for the rest and I will carry on.`
+      : text || 'I could not put an answer together for that. Try asking it a different way.',
     cards,
     usage,
     stub: false,
@@ -503,17 +599,21 @@ async function loadProfile(
   return (data as ProfileContext) ?? null;
 }
 
-async function loadStackNames(
+async function loadStack(
   supabase: ReturnType<typeof createClient>,
   userId: string,
-): Promise<string[]> {
+): Promise<{ names: string[]; glossaryIds: string[] }> {
   const { data } = await supabase
     .from('schedule_items')
-    .select('name')
+    .select('name, glossary_id')
     .eq('user_id', userId)
     .eq('active', true)
     .limit(25);
-  return (data ?? []).map((row: { name: string }) => row.name);
+  const rows = (data ?? []) as { name: string; glossary_id: string | null }[];
+  return {
+    names: rows.map((row) => row.name),
+    glossaryIds: rows.map((row) => row.glossary_id).filter((id): id is string => !!id),
+  };
 }
 
 

@@ -25,7 +25,7 @@ async function openAsk(page: Page): Promise<Locator> {
 }
 
 async function ask(panel: Locator, question: string): Promise<void> {
-  await panel.getByPlaceholder('Ask a question').fill(question);
+  await panel.getByPlaceholder(/Ask in a sentence/).fill(question);
   await panel.getByRole('button', { name: 'Send' }).click();
 }
 

@@ -108,7 +108,7 @@ test('three accounts in one browser keep nothing of each other', async ({ page, 
   await page.getByRole('button', { name: 'Discover', exact: true }).click();
   await page.getByRole('tab', { name: 'Ask AI' }).click();
   const ask = page.locator('.tabs-panel').first();
-  await ask.getByPlaceholder('Ask a question').fill('what should I take for sleep');
+  await ask.getByPlaceholder(/Ask in a sentence/).fill('what should I take for sleep');
   await ask.getByRole('button', { name: 'Send' }).click();
   await expect(ask.locator('.ask-bubble, .ask-entry').first()).toBeVisible({ timeout: 20_000 });
 
@@ -137,6 +137,13 @@ test('three accounts in one browser keep nothing of each other', async ({ page, 
 
   for (const account of [SECOND, THIRD]) {
     app.stub.identity = account;
+    /* A genuinely new account owns nothing. A's rows are still in the stub's
+       tables and the sign-in gate now treats an existing schedule as evidence
+       that onboarding is finished — correctly, but it is A's evidence, not
+       B's, and leaving it here would test the fixture rather than the app.
+       The dedicated tests below cover that gate on its own. */
+    app.stub.db.schedule_items = [];
+    app.stub.db.doses = [];
     await signUpAs(page, account.email);
 
     /* The bug, exactly: the second account skipped straight to Today because
@@ -198,4 +205,50 @@ test('the one unscoped key is the one that is meant to be', async ({ page, app }
      fails and the comment gets read. */
   const unscoped = (await localKeys(page)).filter((k) => !k.includes(':'));
   expect(unscoped).toEqual(['pepstack.discover.tab']);
+});
+
+/**
+ * Signing in to an account that is already set up.
+ *
+ * This sent people back through the whole flow. Two separate causes, and both
+ * are covered here because either one alone reproduces it:
+ *
+ *   1. Onboarding advanced to the first question the instant a session
+ *      appeared, before anything had checked whose account it was.
+ *   2. An account that finished onboarding before `onboarded_at` existed has a
+ *      null stamp, so the gate read "not onboarded" and believed it.
+ */
+test('signing in to a set-up account does not re-run onboarding', async ({ page, app }) => {
+  app.stub.db.profiles[0].onboarded_at = new Date().toISOString();
+  app.stub.db.schedule_items.push(seededScheduleItem());
+
+  await page.goto('/');
+  await signUpAs(page, FIRST.email);
+
+  await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole('heading', { name: 'About you' })).toHaveCount(0);
+});
+
+test('an account with a schedule but no stamp is still not re-onboarded', async ({ page, app }) => {
+  /* The rows that predate 0035. The column says null and the schedule says
+     otherwise; the schedule is the one telling the truth. */
+  app.stub.db.profiles[0].onboarded_at = null;
+  app.stub.db.schedule_items.push(seededScheduleItem());
+
+  await page.goto('/');
+  await signUpAs(page, FIRST.email);
+
+  await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole('heading', { name: 'About you' })).toHaveCount(0);
+});
+
+test('a genuinely new account still gets the questions', async ({ page, app }) => {
+  // the other direction, so the fix cannot swallow onboarding entirely
+  app.stub.identity = SECOND;
+  app.stub.db.schedule_items = [];
+
+  await page.goto('/');
+  await signUpAs(page, SECOND.email);
+
+  await expect(page.getByRole('heading', { name: 'About you' })).toBeVisible({ timeout: 15_000 });
 });

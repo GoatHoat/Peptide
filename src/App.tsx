@@ -9,6 +9,8 @@ import { CatchUp } from './screens/CatchUp';
 import {
   fetchOnboardedAt,
   getDosesForDate,
+  hasSchedule,
+  markOnboardedRemote,
   getMissedSince,
   setDoseTaken,
   skipDose,
@@ -106,12 +108,22 @@ function Body({ framed }: { framed: boolean }) {
     setOnboarded(hasOnboarded(userId));
     if (!userId) return;
     let live = true;
-    fetchOnboardedAt(userId).then((at) => {
+    fetchOnboardedAt(userId).then(async (at) => {
       if (!live || at === undefined) return;
       if (at) {
         setOnboarded(true);
         markOnboarded(userId);
+        return;
       }
+      /* The column says no, and for accounts that finished onboarding before
+         0035 added it that is not true — they have no stamp and were being
+         sent back through the entire flow on sign-in. A schedule is evidence
+         they finished; stamp it so the next check is one column read. */
+      const built = await hasSchedule(userId).catch(() => false);
+      if (!live || !built) return;
+      setOnboarded(true);
+      markOnboarded(userId);
+      markOnboardedRemote().catch(() => {});
     });
     return () => {
       live = false;

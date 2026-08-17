@@ -22,8 +22,70 @@
  * compliance. */
 export const MODEL = 'claude-haiku-4-5';
 
-/** Room for adaptive thinking plus the answer, well under any HTTP timeout. */
-export const MAX_TOKENS = 8192;
+/**
+ * A hard cap on what one response can cost, not a target.
+ *
+ * 8192 was a runaway ceiling — enough for an answer several times longer than
+ * anyone reads, and output bills at five times input. 2000 is ample for a full
+ * answer plus three cards with rationales. The assistant still answers at
+ * whatever length the question needs; a question about four interacting
+ * products gets a real answer inside this.
+ *
+ * If a response ever does hit it, `stop_reason` comes back as `max_tokens` and
+ * the client says so rather than showing a sentence that stops mid-word.
+ */
+export const MAX_TOKENS = 2000;
+
+/**
+ * Claude Haiku 4.5, dollars per million tokens.
+ *
+ * One place, so a price change is one edit and the number in the database
+ * cannot drift from the number on the invoice.
+ */
+export const RATES = { input: 1.0, output: 5.0, cacheRead: 0.1, cacheWrite5m: 1.25 } as const;
+
+export interface ModelUsage {
+  input_tokens?: number;
+  output_tokens?: number;
+  cache_read_input_tokens?: number;
+  cache_creation_input_tokens?: number;
+}
+
+/** What one call cost, from what the API reported it used. */
+export function costOf(usage: ModelUsage | undefined): {
+  input: number;
+  output: number;
+  cacheRead: number;
+  cacheWrite: number;
+  usd: number;
+} {
+  const input = usage?.input_tokens ?? 0;
+  const output = usage?.output_tokens ?? 0;
+  const cacheRead = usage?.cache_read_input_tokens ?? 0;
+  const cacheWrite = usage?.cache_creation_input_tokens ?? 0;
+  const usd =
+    (input * RATES.input +
+      output * RATES.output +
+      cacheRead * RATES.cacheRead +
+      cacheWrite * RATES.cacheWrite5m) /
+    1_000_000;
+  return { input, output, cacheRead, cacheWrite, usd };
+}
+
+/**
+ * The ceiling, in dollars a calendar month, per tier.
+ *
+ * Dollars rather than tokens because a token allowance does not cap cost: the
+ * same 2.5M tokens is about $0.97 with the cache working and around $2.60
+ * without it — the same allowance, nearly triple the bill, exactly when a brake
+ * matters most.
+ *
+ * $29.99 a year is $2.12 a month after Apple's 15% Small Business rate, so
+ * $1.00 is under half of that at the absolute maximum. Nobody legitimate
+ * reaches it; if caching underperforms the same budget simply yields fewer
+ * messages, which is correct behaviour rather than a bug.
+ */
+export const MONTHLY_BUDGET_USD = { free: 0.02, pro: 1.0 } as const;
 
 /**
  * The user's own message. Never the assistant's reply — that answers at
@@ -41,8 +103,14 @@ export const MAX_TOKENS = 8192;
  */
 export const MAX_QUESTION_CHARS = 240;
 
-/** Turns of prior conversation carried into the request, newest kept. */
-export const MAX_HISTORY_TURNS = 12;
+/**
+ * Turns of prior conversation carried into the request, newest kept.
+ *
+ * Six rather than twelve: a long conversation should not get progressively more
+ * expensive with every message, and the profile block carries the standing
+ * facts anyway, so the history only has to hold the last exchange or two.
+ */
+export const MAX_HISTORY_TURNS = 6;
 
 /** The answer shows at most three products. More is a list, not an answer. */
 export const MAX_CARDS = 3;
@@ -56,7 +124,11 @@ export const MAX_TOOL_ROUNDS = 4;
 /** Papers attached to a card. The sheet can fetch the rest. */
 export const MAX_CITATIONS_PER_CARD = 3;
 
-export const RATE_LIMIT = { perHour: 20, perDay: 200 };
+/**
+ * The first line of defence, and only that. It stops a runaway loop inside an
+ * hour; the monthly budget is what stops sustained expense.
+ */
+export const RATE_LIMIT = { perHour: 20, perDay: 40 };
 
 /**
  * Assistant messages a free account gets, ever. Not per month, not per day.
@@ -404,8 +476,12 @@ export const INSTRUCTIONS = [
   '  start, stop or change a prescription. Say to ask a pharmacist or doctor instead.',
   '',
   'How to write:',
-  '- Two or three short sentences. Sentence case. No lists unless asked, no exclamation',
-  '  marks, no headings, no bold.',
+  '- Do not restate the question. Do not narrate what you are about to do. Do not summarise',
+  '  at the end. Answer directly, at whatever length the question actually needs.',
+  '- Sentence case. No lists unless asked, no exclamation marks, no headings, no bold.',
+  '- Most questions need two or three sentences. A question about several things',
+  '  interacting needs more, and should get it — a truncated answer is worse than a',
+  '  long one.',
   '- The cards carry the name, brand, form, timing and papers. Do not repeat them in the',
   '  text; say the thing the cards cannot say.',
   '- If the honest answer is that nothing here helps, say that.',
@@ -418,9 +494,54 @@ export function catalogueLine(entry: CatalogueEntry): string {
 }
 
 /**
- * The catalogue index. It is the same bytes for every person, so `index.ts`
- * puts the cache breakpoint on it and every request after the first reads it
- * back rather than paying for it again.
+ * Everything that could plausibly answer this person's question.
+ *
+ * The whole supplement catalogue is ~23,800 characters, about 6,600 input
+ * tokens on every single message including "thanks". Somebody whose goals are
+ * Sleep and Focus does not need the 41 recovery products in context to be
+ * answered well.
+ *
+ * Two deliberate softenings, because a filter that hides a real answer is worse
+ * than a filter that saves nothing:
+ *
+ * - a product with **no** goal tags is always kept, since an untagged row is
+ *   missing data rather than an irrelevant product;
+ * - below `MIN_CATALOGUE`, the filter gives up and returns everything. A person
+ *   with one narrow goal must not get a worse assistant than one with six.
+ *
+ * Measured against the live catalogue of 250 supplements: Sleep+Mood 83%
+ * smaller, Focus 81%, Immune+Gut Health 78%, Skin+Anti-Aging 68%,
+ * Energy+Recovery 61%. Injury (11 products) and Growth+Muscle (39) fall back
+ * to the full list, which is the floor doing its job.
+ *
+ * With no goals on file this returns the catalogue unchanged, which is the
+ * pre-existing behaviour.
+ */
+export const MIN_CATALOGUE = 40;
+
+export function relevantCatalogue(
+  catalogue: CatalogueEntry[],
+  goalTags: string[],
+): CatalogueEntry[] {
+  if (goalTags.length === 0) return catalogue;
+  const wanted = new Set(goalTags.map((t) => t.toLowerCase()));
+  const kept = catalogue.filter(
+    (entry) =>
+      entry.goal_tags.length === 0 ||
+      entry.goal_tags.some((tag) => wanted.has(tag.toLowerCase())),
+  );
+  return kept.length >= MIN_CATALOGUE ? kept : catalogue;
+}
+
+/**
+ * The catalogue index.
+ *
+ * `index.ts` puts the cache breakpoint on this. Note what that now means: the
+ * block is the same bytes for everyone **with the same goals**, not for
+ * everyone — so the cache is shared across a cohort rather than across all
+ * users. That is still most of the saving, because the block is read back on
+ * the next message in the same conversation, which is where the repetition
+ * actually is.
  */
 export function buildCatalogueBlock(catalogue: CatalogueEntry[]): string {
   const lines = catalogue.map(catalogueLine);

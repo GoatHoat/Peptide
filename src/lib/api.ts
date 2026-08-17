@@ -1009,6 +1009,30 @@ export async function fetchOnboardedAt(userId: string): Promise<Date | null | un
   return at ? new Date(at) : null;
 }
 
+/**
+ * Has this account already built a schedule?
+ *
+ * The evidence that somebody finished onboarding, for accounts that finished it
+ * before `onboarded_at` existed. Those rows have a null stamp, and believing
+ * the null sends a returning user back through the whole flow — which is
+ * exactly what it did.
+ *
+ * One id at most — an existence check, not a fetch of somebody's schedule.
+ * Deliberately not `{ count: 'exact', head: true }`: that needs the server to
+ * honour a Prefer header, and this runs on the sign-in path where a wrong
+ * answer either re-runs onboarding for a returning user or skips it for a new
+ * one. A row or no row is the same fact with nothing to negotiate.
+ */
+export async function hasSchedule(userId: string): Promise<boolean> {
+  const { data, error } = await supabase
+    .from('schedule_items')
+    .select('id')
+    .eq('user_id', userId)
+    .limit(1);
+  if (error) return false;
+  return (data ?? []).length > 0;
+}
+
 /** Stamps the account as onboarded. Idempotent — it never moves the date. */
 export async function markOnboardedRemote(): Promise<void> {
   const { error } = await supabase.rpc('mark_onboarded');
