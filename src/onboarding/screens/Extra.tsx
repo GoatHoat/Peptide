@@ -261,13 +261,11 @@ export function Commitment({
 export function PlanPreview({
   goals,
   productCount,
-  blockCount,
   commitmentDays,
   onDone,
 }: {
   goals: string[];
   productCount: number;
-  blockCount: number;
   commitmentDays: number;
   onDone: () => void;
 }) {
@@ -279,10 +277,20 @@ export function PlanPreview({
         ? names[0].toLowerCase()
         : `${names.slice(0, -1).join(', ').toLowerCase()} and ${names[names.length - 1].toLowerCase()}`;
 
+  /* Two of these used to be wrong, and this screen's own subtitle says nothing
+     on it is a guess.
+
+     "Products found" was `picks.length` — the ones ticked, not the ones found.
+     The screen before it had just shown six and this said three, which is a
+     screen contradicting the one before it.
+
+     "Blocks in your day" was derived from whether each pick wanted food, which
+     is not what a block is; the solver decides that, and it has not run yet at
+     this point in the flow. A number nobody can stand behind is worse than a
+     row that is not there, so it is gone. */
   const rows = [
     { label: 'Matched to', value: goalLine },
-    { label: 'Products found', value: `${productCount}` },
-    { label: 'Blocks in your day', value: `${blockCount}` },
+    { label: 'Products you picked', value: `${productCount}` },
     { label: 'Days a week', value: `${commitmentDays}` },
   ];
 

@@ -30,6 +30,10 @@ const mk = (): Log => ({ screens: [], findings: [], notes: [] });
 /** Record a screen and check it for the six things the report asks about. */
 async function visit(page: Page, log: Log, name: string) {
   log.screens.push(name);
+  /* Printed here, not at the end. The recorder used to print only when the test
+     passed, so three runs in a row timed out and threw away everything they had
+     observed on the way. */
+  console.log(`  ${String(log.screens.length).padStart(2)}. ${name}`);
   const body = await page.locator('body').innerText().catch(() => '');
   if (!body.trim()) log.findings.push(`${name}: rendered nothing`);
   for (const leak of ['undefined', 'NaN', '[object Object]', 'Infinity']) {
@@ -40,6 +44,15 @@ async function visit(page: Page, log: Log, name: string) {
     return d.scrollWidth > d.clientWidth + 1;
   });
   if (overflow) log.findings.push(`${name}: scrolls sideways`);
+  for (const f of log.findings.slice(-3)) {
+    if (f.startsWith(name)) console.log(`      ! ${f}`);
+  }
+}
+
+/** Note something, and say it now rather than at the end. */
+function note(log: Log, text: string) {
+  log.notes.push(text);
+  console.log(`      · ${text}`);
 }
 
 /** Onboarding, answering everything. Returns the screens seen in order. */
@@ -76,7 +89,7 @@ async function onboard(
   const art = page.locator('img.ob-illustration');
   const artOk = (await art.count()) > 0 && (await art.evaluate((el: HTMLImageElement) => el.naturalWidth)) > 0;
   if (!artOk) log.findings.push('info: the illustration did not load');
-  else log.notes.push('info: stacks.png rendered');
+  else note(log, 'info: stacks.png rendered');
   await page.getByRole('button', { name: 'Continue' }).click();
 
   await page.getByRole('heading', { name: /Have you started a routine/ }).waitFor();
@@ -113,10 +126,10 @@ async function onboard(
       break;
     }
     await box.fill(name);
-    await page.waitForTimeout(450);
+    await page.waitForTimeout(120);
     const hit = page.locator('.ob-stack-hit, .ob-option, .ob-pick').first();
     if ((await hit.count()) > 0) await hit.click();
-    else log.notes.push(`current-stack: "${name}" produced no match to click`);
+    else note(log, `current-stack: "${name}" produced no match to click`);
   }
   await page.getByRole('button', { name: 'Continue' }).click();
 
@@ -124,7 +137,7 @@ async function onboard(
   await page.locator('.ob-root[data-step="stack-insight"]').waitFor({ timeout: 15_000 });
   await visit(page, log, 'stack-insight');
   const insight = await page.locator('.ob-body').innerText();
-  log.notes.push(`stack-insight said: ${JSON.stringify(insight.replace(/\s+/g, ' ').trim())}`);
+  note(log, `stack-insight said: ${JSON.stringify(insight.replace(/\s+/g, ' ').trim())}`);
   await page.getByRole('button', { name: 'Continue' }).click();
 
   await page.getByRole('heading', { name: /not agreed with you/ }).waitFor();
@@ -132,7 +145,7 @@ async function onboard(
   for (const r of opts.reactions) {
     const box = page.getByRole('checkbox', { name: r });
     if ((await box.count()) > 0) await box.click();
-    else log.notes.push(`reactions: no option named "${r}"`);
+    else note(log, `reactions: no option named "${r}"`);
   }
   await page.getByRole('button', { name: 'Continue' }).click();
 
@@ -147,25 +160,25 @@ async function onboard(
      first. Clicking nth(i) directly hangs on an element that is present but
      parked, which is how the first attempt at this run stalled for six minutes
      on step 16 of 27. */
-  const GOAL_NAMES = ['Skin & hair', 'Sleep', 'Energy', 'Focus', 'Training', 'Immune', 'Growth'];
+  const GOAL_NAMES = ['Skin & hair', 'Sleep', 'Energy', 'Focus', 'Training', 'Immunity', 'Growth'];
   let picked = 0;
   for (const name of GOAL_NAMES.slice(0, opts.goals)) {
     const tab = page.getByRole('tab', { name });
     if ((await tab.count()) === 0) {
-      log.notes.push(`goals: no tab named "${name}"`);
+      note(log, `goals: no tab named "${name}"`);
       continue;
     }
     await tab.click();
-    await page.waitForTimeout(350);
+    await page.waitForTimeout(80);
     const glyph = page.getByRole('button', { name, exact: true });
     if ((await glyph.count()) === 0) {
-      log.notes.push(`goals: "${name}" glyph not tappable once centred`);
+      note(log, `goals: "${name}" glyph not tappable once centred`);
       continue;
     }
     await glyph.click();
     picked += 1;
   }
-  log.notes.push(`goals: selected ${picked} of ${opts.goals} asked for`);
+  note(log, `goals: selected ${picked} of ${opts.goals} asked for`);
   await page.getByRole('button', { name: /Continue \(/ }).click();
 
   if (opts.goals > 1) {
@@ -174,7 +187,7 @@ async function onboard(
     await page.locator('.ob-option').first().click();
     await page.getByRole('button', { name: 'Continue' }).click();
   } else {
-    log.notes.push('goal-priority skipped, as designed with one goal');
+    note(log, 'goal-priority skipped, as designed with one goal');
   }
 
   await page.getByRole('heading', { name: /How many days a week/ }).waitFor();
@@ -193,15 +206,15 @@ async function onboard(
   await expect(page.locator('.ob-rec').first()).toBeVisible({ timeout: 30_000 });
   await visit(page, log, 'recommendations');
   if (skel === 0) log.findings.push('recommendations: no placeholder while the list loaded');
-  else log.notes.push(`recommendations: ${skel} placeholder rows held the space`);
+  else note(log, `recommendations: ${skel} placeholder rows held the space`);
   const recCount = await page.locator('.ob-rec').count();
-  log.notes.push(`recommendations: ${recCount} products offered`);
+  note(log, `recommendations: ${recCount} products offered`);
   await page.getByRole('button', { name: 'Create schedule' }).click();
 
   await page.getByRole('heading', { name: 'Here is your plan' }).waitFor();
   await visit(page, log, 'plan-preview');
   const preview = await page.locator('.ob-preview').innerText();
-  log.notes.push(`plan-preview: ${JSON.stringify(preview.replace(/\s+/g, ' ').trim())}`);
+  note(log, `plan-preview: ${JSON.stringify(preview.replace(/\s+/g, ' ').trim())}`);
   await page.getByRole('button', { name: 'See what it costs' }).click();
 
   await page.getByRole('heading', { name: 'Everything, in one place' }).waitFor();
@@ -216,7 +229,7 @@ async function onboard(
     const cards = page.locator('.ob-rec');
     const n = await cards.count();
     const pro = await page.locator('.ob-rec-pro').count();
-    log.notes.push(`free-pick: ${n} products listed, ${pro} marked "Tracked on Pro"`);
+    note(log, `free-pick: ${n} products listed, ${pro} marked "Tracked on Pro"`);
     if (n <= 1) log.findings.push('free-pick: the other selections were not carried through');
     if (pro === 0) log.findings.push('free-pick: nothing marked as Pro — the rest look dropped');
     await cards.first().click();
@@ -268,48 +281,48 @@ test('RUN A — maximal', async ({ page, app }, info) => {
   await page.getByRole('heading', { name: 'Today' }).waitFor({ timeout: 20_000 });
   await visit(page, log, 'Today');
   const doses = await page.locator('.dose').count();
-  log.notes.push(`Today: ${doses} dose rows`);
+  note(log, `Today: ${doses} dose rows`);
   if (doses === 0) log.findings.push('Today: no doses after building a schedule');
 
   // tick in more than one block
   const marks = page.locator('.dose-mark');
   for (let i = 0; i < Math.min(2, await marks.count()); i++) {
     await marks.nth(i).click();
-    await page.waitForTimeout(250);
+    await page.waitForTimeout(120);
   }
-  log.notes.push(`Today: ticked ${Math.min(2, await marks.count())} doses`);
+  note(log, `Today: ticked ${Math.min(2, await marks.count())} doses`);
 
   // catch-up: is touch_last_opened modelled, or silently swallowed?
   const rpcSeen = app.stub.lastOpened;
-  log.notes.push(
+  note(log, 
     `catch-up: stub lastOpened = ${JSON.stringify(rpcSeen)} — the gate calls touchLastOpened() and a null previous open never fires by design`,
   );
 
   await page.getByRole('button', { name: 'Discover', exact: true }).click();
-  await page.waitForTimeout(600);
+  await page.waitForTimeout(200);
   await visit(page, log, 'Discover (Vitamins & Minerals)');
   const prods = await page.locator('.prod').count();
-  log.notes.push(`Discover: ${prods} products listed`);
+  note(log, `Discover: ${prods} products listed`);
 
   await page.getByRole('tab', { name: 'Peptides' }).click();
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(200);
   await visit(page, log, 'Discover (Peptides)');
   const pepBody = await page.locator('.tabs-panel.on').innerText();
   if (/\d+\s?(mg|mcg|iu)\b/i.test(pepBody)) {
     log.findings.push('Discover/Peptides: an amount is shown on a peptide');
   } else {
-    log.notes.push('Discover/Peptides: no amount shown, as required');
+    note(log, 'Discover/Peptides: no amount shown, as required');
   }
 
   // an ingredient that is inside a blend rather than in a title
   await page.getByRole('tab', { name: 'Vitamins & Minerals' }).click();
   const search = page.locator('.tabs-panel.on').getByPlaceholder(/Search/i);
   await search.fill('zinc');
-  await page.waitForTimeout(900);
+  await page.waitForTimeout(120);
   const zincHits = await page.locator('.tabs-panel.on .prod').count();
   const titles = await page.locator('.tabs-panel.on .prod-name').allInnerTexts();
   const byTitle = titles.filter((t) => /zinc/i.test(t)).length;
-  log.notes.push(
+  note(log, 
     `ingredient search "zinc": ${zincHits} results, ${byTitle} of which have zinc in the title`,
   );
   if (zincHits > 0 && zincHits === byTitle) {
@@ -318,10 +331,10 @@ test('RUN A — maximal', async ({ page, app }, info) => {
     );
   }
   await search.fill('');
-  await page.waitForTimeout(600);
+  await page.waitForTimeout(200);
 
   await page.locator('.tabs-panel.on .prod-row').first().click();
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(200);
   await visit(page, log, 'Discover — product open');
 
   /* ── the assistant ── */
@@ -336,9 +349,9 @@ test('RUN A — maximal', async ({ page, app }, info) => {
   for (const q of questions) {
     await ask.getByPlaceholder(/Ask in a sentence/).fill(q.slice(0, 240));
     await ask.getByRole('button', { name: 'Send' }).click();
-    await page.waitForTimeout(1800);
+    await page.waitForTimeout(150);
     const last = await ask.locator('.ask-bubble, .ask-error').last().innerText().catch(() => '(none)');
-    log.notes.push(`ASK "${q}" -> ${JSON.stringify(last.replace(/\s+/g, ' ').slice(0, 220))}`);
+    note(log, `ASK "${q}" -> ${JSON.stringify(last.replace(/\s+/g, ' ').slice(0, 220))}`);
     if (/BPC|peptide/i.test(q)) {
       const cards = await ask.locator('.ask-card').count();
       if (cards > 0) log.findings.push('peptide question returned product cards');
@@ -355,8 +368,8 @@ test('RUN A — maximal', async ({ page, app }, info) => {
   const reportBtn = ask.getByRole('button', { name: /Report/i }).first();
   if ((await reportBtn.count()) > 0) {
     await reportBtn.click();
-    await page.waitForTimeout(500);
-    log.notes.push('report control opened');
+    await page.waitForTimeout(200);
+    note(log, 'report control opened');
     await page.getByRole('button', { name: 'Close' }).first().click().catch(() => {});
   } else {
     log.findings.push('Ask AI: no report control on an answer');
@@ -364,10 +377,10 @@ test('RUN A — maximal', async ({ page, app }, info) => {
 
   /* ── You ── */
   await page.getByRole('button', { name: 'You', exact: true }).click();
-  await page.waitForTimeout(800);
+  await page.waitForTimeout(120);
   await visit(page, log, 'You');
   const rows = await page.locator('.row .row-label').allInnerTexts();
-  log.notes.push(`You rows: ${rows.join(' | ')}`);
+  note(log, `You rows: ${rows.join(' | ')}`);
 
   for (const row of ['Notifications', 'Subscription', 'Export Data']) {
     const btn = page.getByRole('button', { name: new RegExp(row) }).first();
@@ -376,10 +389,10 @@ test('RUN A — maximal', async ({ page, app }, info) => {
       continue;
     }
     await btn.click();
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(120);
     await visit(page, log, `You → ${row}`);
     await page.getByRole('button', { name: 'Close' }).first().click().catch(() => {});
-    await page.waitForTimeout(400);
+    await page.waitForTimeout(150);
   }
 
   /* ── delete the account ── */
@@ -388,14 +401,14 @@ test('RUN A — maximal', async ({ page, app }, info) => {
     log.findings.push('You: no Delete Account row — 5.1.1(v) requires one');
   } else {
     await del.click();
-    await page.waitForTimeout(600);
+    await page.waitForTimeout(200);
     await visit(page, log, 'You → Delete Account');
     const field = page.locator('.sheet input').first();
     if ((await field.count()) > 0) {
       await field.fill('DELETE');
       await page.getByRole('button', { name: /Delete my account/i }).click();
-      await page.waitForTimeout(1500);
-      log.notes.push(`account deletion reached; stub recorded deleted=${app.stub.deleted}`);
+      await page.waitForTimeout(500);
+      note(log, `account deletion reached; stub recorded deleted=${app.stub.deleted}`);
       if (!app.stub.deleted) log.findings.push('Delete Account: the RPC was never called');
     } else {
       log.findings.push('Delete Account: no confirmation field');
@@ -427,11 +440,11 @@ test('RUN B — minimal', async ({ page, app }, info) => {
   await page.getByRole('heading', { name: 'Today' }).waitFor({ timeout: 20_000 });
   await visit(page, log, 'Today');
   const doses = await page.locator('.dose').count();
-  log.notes.push(`Today: ${doses} dose rows on a free, one-product account`);
+  note(log, `Today: ${doses} dose rows on a free, one-product account`);
 
   /* ── the one-product limit ── */
   await page.getByRole('button', { name: 'Add to Schedule' }).click();
-  await page.waitForTimeout(700);
+  await page.waitForTimeout(120);
   await visit(page, log, 'Today → Add to Schedule');
   await page.getByRole('button', { name: 'Close' }).first().click().catch(() => {});
 
@@ -444,14 +457,14 @@ test('RUN B — minimal', async ({ page, app }, info) => {
     await ask.getByPlaceholder(/Ask in a sentence/).fill(q);
     const send = ask.getByRole('button', { name: 'Send' });
     if (!(await send.isEnabled())) {
-      log.notes.push(`message ${i}: Send disabled before sending`);
+      note(log, `message ${i}: Send disabled before sending`);
       break;
     }
     await send.click();
-    await page.waitForTimeout(1600);
+    await page.waitForTimeout(150);
     const draft = await ask.getByPlaceholder(/Ask in a sentence/).inputValue();
     const last = await ask.locator('.ask-bubble, .ask-error').last().innerText().catch(() => '');
-    log.notes.push(
+    note(log, 
       `message ${i}: reply ${JSON.stringify(last.replace(/\s+/g, ' ').slice(0, 120))}; box ${draft ? 'kept the text' : 'was cleared'}`,
     );
     if (i === 4 && !draft) {
@@ -464,16 +477,16 @@ test('RUN B — minimal', async ({ page, app }, info) => {
   await page.context().setOffline(true);
   await page.getByRole('button', { name: 'Today', exact: true }).click();
   await page.reload().catch(() => {});
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(600);
   await visit(page, log, 'Today (offline)');
   const offlineLine = await page.locator('.offline-line').count();
-  log.notes.push(`offline: ${offlineLine > 0 ? 'the offline line rendered' : 'no offline line'}`);
+  note(log, `offline: ${offlineLine > 0 ? 'the offline line rendered' : 'no offline line'}`);
   const bodyOffline = await page.locator('body').innerText().catch(() => '');
   if (/failed to fetch|networkerror|typeerror/i.test(bodyOffline)) {
     log.findings.push('offline: a raw error string reached the screen');
   }
   await page.context().setOffline(false);
-  await page.waitForTimeout(1200);
+  await page.waitForTimeout(400);
   await visit(page, log, 'Today (back online)');
 
   console.log(report('RUN B — minimal (observed, headless Chromium + stub)', log));

@@ -412,8 +412,10 @@ const HANDLERS: Record<string, Handler> = {
   'plan-preview': {
     ready: async (page) => {
       await expect(heading(page, 'Here is your plan')).toBeVisible();
-      // every row is built from an answer; an empty value would be a lie
-      await expect(page.locator('.ob-preview-row')).toHaveCount(4);
+      /* Three rows, not four. "Blocks in your day" was removed: it was derived
+         from whether each pick wanted food, which is not what a block is, and
+         the solver that decides has not run at this point in the flow. */
+      await expect(page.locator('.ob-preview-row')).toHaveCount(3);
     },
     act: async (page) => void (await cta(page, 'See what it costs').click()),
   },

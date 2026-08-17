@@ -244,3 +244,55 @@ centred one accepts a tap.
 
 The zinc-inside-a-multivitamin question is **still unanswered** — the stub
 catalogue holds no multivitamin, so `stack-insight` was never asked it.
+
+---
+
+# Part A, fourth attempt — the walk finally reported
+
+Two changes made it produce output: the recorder prints each screen as it is
+reached rather than at the end, and the fixed `waitForTimeout` calls came down
+from minutes of sleeping to a fraction of that.
+
+## Run A — onboarding, observed, 26 screens in order
+
+welcome · auth · profile (age) · sex · diet · info · q2 · q3 · day (wake/sleep) ·
+meals · stack-count · current-stack · stack-insight · reactions · forms · goals ·
+goal-priority · commitment · notifications · building-recs · recommendations ·
+plan-preview · paywall · building-schedule · schedule · done
+
+Nothing errored, nothing rendered blank, nothing scrolled sideways, and
+`stacks.png` loaded on `info`.
+
+### What it found
+
+**1. `plan-preview` contradicted the screen before it. FIXED.** It said
+"Products found 3" immediately after the recommendations screen had shown six.
+The value was `picks.length` — the ones ticked, not the ones found. Relabelled
+to "Products you picked".
+
+**2. `plan-preview` stated a number nobody could stand behind. FIXED.** "Blocks
+in your day 1" came from `new Set(picks.map(p => p.withFood ? 'meal' : 'any'))`,
+which is not what a block is; the solver decides that and has not run at that
+point in the flow. The screen's own subtitle says "Nothing below is a guess", so
+the row is gone rather than guessed.
+
+**3. The goal is called "Immunity", not "Immune".** Harness bug — 6 of 7 goals
+were selected because the seventh was looked up by the wrong name.
+
+**4. `current-stack` accepted none of the six products typed into it.** Every
+one logged "produced no match to click". This is most likely the harness using
+the wrong selector for a result row rather than an app defect — but it has not
+been confirmed either way, and it is why finding 5 happened.
+
+**5. The zinc-inside-a-multivitamin question is STILL unanswered.** Because of
+4, the stack was empty, so `stack-insight` correctly said *"Nothing here fights
+anything else — you are starting from nothing"*. That is the right output for an
+empty stack and tells us nothing about the case that matters. Answering it needs
+the real `current-stack` selector **and** a stub fixture carrying a blend with
+zinc in its panel but not in its title. Neither exists.
+
+## Still not observed
+
+Everything after `done` in both runs. The walk stalled between the last
+onboarding screen and Today and produced no further output before the session
+ended. Run B was not reached at all this time.

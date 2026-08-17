@@ -251,7 +251,6 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           <PlanPreview
             goals={state.goalPriority.length ? state.goalPriority : state.goals}
             productCount={picks.length}
-            blockCount={new Set(picks.map((p) => (p.withFood ? 'meal' : 'any'))).size || 1}
             commitmentDays={state.commitmentDays}
             onDone={next}
           />
