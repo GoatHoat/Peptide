@@ -11,10 +11,31 @@ function idFor(scheduleItemId: string): number {
   return Math.abs(hash) || 1;
 }
 
+/**
+ * Ask for permission to post local notifications.
+ *
+ * iOS shows the system prompt ONCE, ever. A second call after a refusal returns
+ * the refusal without showing anything, and the only way back is Settings — so
+ * every caller must put an explaining screen in front of this and only reach it
+ * when the person has said yes to that.
+ *
+ * Native first. The onboarding step used to call the web `Notification` API
+ * directly, which inside the iOS WebView asks for a different permission from
+ * the one `LocalNotifications.schedule` needs — so somebody could accept the
+ * prompt during onboarding and still get no reminders. The web path is kept
+ * only so the browser build behaves.
+ */
 export async function requestNotificationPermission(): Promise<boolean> {
-  if (!Capacitor.isNativePlatform()) return false;
-  const result = await LocalNotifications.requestPermissions();
-  return result.display === 'granted';
+  if (Capacitor.isNativePlatform()) {
+    const result = await LocalNotifications.requestPermissions();
+    return result.display === 'granted';
+  }
+  if (typeof Notification === 'undefined') return false;
+  try {
+    return (await Notification.requestPermission()) === 'granted';
+  } catch {
+    return false;
+  }
 }
 
 export async function checkNotificationPermission(): Promise<boolean> {

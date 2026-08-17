@@ -1,4 +1,5 @@
 import { NAME } from '../../lib/brand';
+import { requestNotificationPermission } from '../../lib/notifications';
 import { useState } from 'react';
 import { Cta, OnboardIllustration, Screen, Sub, Title } from '../chrome';
 import { PLANS, purchase, restorePurchases, type PlanId } from '../../lib/billing';
@@ -18,15 +19,16 @@ export function Notifications({
 }) {
   const [busy, setBusy] = useState(false);
 
+  /* Goes through lib/notifications so the native permission is the one asked
+     for. This called the web `Notification` API directly, which inside the iOS
+     WebView is a different permission from the one LocalNotifications.schedule
+     needs — somebody could accept the prompt here and still never get a
+     reminder. The screen above it is the priming iOS's one-shot prompt
+     requires. */
   const ask = async () => {
     setBusy(true);
     try {
-      if (typeof Notification === 'undefined') {
-        onDone(false);
-        return;
-      }
-      const res = await Notification.requestPermission();
-      onDone(res === 'granted');
+      onDone(await requestNotificationPermission());
     } catch {
       onDone(false);
     } finally {
