@@ -212,7 +212,7 @@ export function Discover() {
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search a product, or describe your goal"
+                  placeholder="Search a product or a goal"
                   spellCheck={false}
                 />
                 <span style={{ color: 'var(--t3)', display: 'flex' }}>

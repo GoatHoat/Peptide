@@ -46,6 +46,8 @@
 
   --margin: 20px;
   --tab-h: 58px;
+  /* how far the floating bar sits above the bottom edge */
+  --tab-gap: 20px;
 
   /* Larger Text multiplies this rather than zooming the layout — zoom
      scales the whole box model (including the fixed 402x874 desktop
@@ -229,10 +231,33 @@ button {
      and the inset already accounts for it. Only the desktop phone-box draws a
      fake one, and only there does the 54px band exist. */
   padding-top: env(safe-area-inset-top);
-  padding-bottom: calc(var(--tab-h) + 34px + env(safe-area-inset-bottom));
+  /* Clear the floating bar: its height, the gap it sits above the bottom, and
+     one more gap so the last row is not flush against it. Derived from
+     --tab-h and --tab-gap so it cannot drift when the bar is resized again. */
+  padding-bottom: calc(var(--tab-h) + var(--tab-gap) * 2 + env(safe-area-inset-bottom));
 }
 .app.framed .panel {
   padding-top: 54px;
+}
+/* The status-bar mask.
+   `.panel` is the scroll container and it reaches the top of the screen, so
+   `padding-top: env(safe-area-inset-top)` only sets where the first paint
+   begins — scrolled content travels up through that band and sits over the
+   clock and battery. This is an opaque strip in front of it, outside the
+   scroller, so nothing can pass under the status bar. */
+.app::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top);
+  background: var(--bg);
+  z-index: 30;
+  pointer-events: none;
+}
+.app.framed::before {
+  height: 54px;
 }
 .panel::-webkit-scrollbar {
   width: 0;
@@ -261,10 +286,12 @@ button {
   transform: translateX(-50%);
   width: 272px;
   /* Lower and larger. It sat 34px off the bottom at 232x48, which read as
-     floating high on a tall phone; 20px and 272x58 puts it where the thumb
-     already is. The 34px in every `calc(var(--tab-h) + 34px + ...)` below is
-     the same reserve, and still clears it. */
-  bottom: max(20px, calc(8px + env(safe-area-inset-bottom)));
+     floating high on a tall phone; --tab-gap and 272x58 puts it where the thumb
+     already is. Every reserve that has to clear this bar is written as
+     `calc(var(--tab-h) + var(--tab-gap) * 2 + ...)` rather than as a literal,
+     because the literal drifted the first time the bar was resized and left a
+     product row hidden behind it. */
+  bottom: max(var(--tab-gap), calc(8px + env(safe-area-inset-bottom)));
   height: var(--tab-h);
   border-radius: 29px;
   background: var(--card);
@@ -1849,7 +1876,7 @@ button {
      bar above this (150px at the default type scale), the panel's own top
      inset, and the strip the panel reserves at the bottom for the tab bar. */
   min-height: calc(
-    100dvh - 150px - env(safe-area-inset-top) - var(--tab-h) - 34px - env(safe-area-inset-bottom)
+    100dvh - 150px - env(safe-area-inset-top) - var(--tab-h) - var(--tab-gap) * 2 - env(safe-area-inset-bottom)
   );
 }
 .ask-thread {
@@ -2046,7 +2073,7 @@ button {
   left: 0;
   right: 0;
   top: 100%;
-  height: calc(var(--tab-h) + 34px + env(safe-area-inset-bottom));
+  height: calc(var(--tab-h) + var(--tab-gap) * 2 + env(safe-area-inset-bottom));
   background: var(--bg);
 }
 .ask-input-row {
@@ -2422,7 +2449,7 @@ button {
      with 231px of scroll past the composer, because the clamped neighbours were
      still taller than the panel being read. */
   max-height: calc(
-    100dvh - 150px - env(safe-area-inset-top) - var(--tab-h) - 34px - env(safe-area-inset-bottom)
+    100dvh - 150px - env(safe-area-inset-top) - var(--tab-h) - var(--tab-gap) * 2 - env(safe-area-inset-bottom)
   );
   overflow: hidden;
 }
