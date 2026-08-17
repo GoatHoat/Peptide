@@ -399,6 +399,34 @@ row, so there is no orphan. `growth.png` exists and is referenced.
 
 ---
 
+## §7's three accounts are now tested — but the stub cannot test the half that matters most
+
+`bdc6cf5` turned the walkthrough `BLOCKED.md` listed as not done into
+`tests/e2e/accounts.spec.ts`: three accounts in one browser keeping nothing of
+each other, an account that onboarded elsewhere not repeating it, and a check
+that the one deliberately unscoped key is the intended one. It even carries a
+regression comment naming the original bug — "the second account skipped
+straight to Today". Automating it is better than a morning of tapping, because
+it runs again next time.
+
+**What it cannot cover.** These run against the Supabase stub. They prove the
+*client* keeps accounts apart — scoped `localStorage` keys, the onboarding gate,
+no state bleeding between sessions. They cannot prove that account B is unable
+to read account A's rows, because there is no database in the loop.
+
+Row-level security is currently verified only by *reading* the policies in the
+migrations, never by executing them. Every user table has
+`auth.uid() = user_id`, and `0038`'s policy on `user_facts` correctly carries
+both `using` and `with check` — but "the policy exists in a file" and "the policy
+holds against a live connection" are different claims, and only the first is
+established here.
+
+That gap matters because separating accounts is exactly what a stub is worst at
+and what §7's "three fresh accounts" was for. Two ways to close it, neither
+attempted here: a Postgres-backed test run against a local `supabase start`, or
+one manual pass with three real accounts before launch. Until then, treat RLS as
+reviewed rather than tested.
+
 ## Process note
 
 Two agents ran in this working tree simultaneously for about 25 minutes. This
