@@ -276,7 +276,37 @@ Checked against the code, not taken from the report:
   repo, and progress-photo deletion is real (`api.ts` removes the storage object
   before the row).
 - **§7 greps** — no `sk-ant` or `service_role` in `dist/`; `purchase()` is still
-  the 900 ms stub; `SKIP_PAYWALL` still defaults to `'true'`.
+  the 900 ms stub; `SKIP_PAYWALL` still defaults to `'true'`. Re-run against a
+  fresh `npm run build` of the current tree, not the report's build.
+
+### The §7 secret check cannot catch the thing it is guarding against
+
+`PROMPT_FINISH.md` §7.2 says: grep `dist/` for `sk-ant` and `service_role`, both
+must return nothing. They do. **That check would still pass if the bundle
+shipped a `service_role` key.**
+
+Supabase keys are JWTs. The role is not plaintext — it is base64 inside the
+payload, and the anon key and the service_role key have a **byte-identical
+header** (`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9`). A grep for the string
+`service_role` cannot see it. Paste the wrong key into `VITE_SUPABASE_ANON_KEY`
+and the checklist goes green while the bundle carries a key that bypasses every
+RLS policy in the database.
+
+Checked properly here by decoding the payload of every JWT in `dist/`:
+
+```
+assets/index-*.js   role: anon   ref: xlbhfneqnyagqrlhgnve   → correct
+```
+
+**One JWT, role `anon`, public by design. Nothing leaked.** But replace the grep
+in the release checklist with the decode, because only the decode can fail:
+
+```bash
+node -e "const fs=require('fs'),p=require('path');const w=d=>fs.readdirSync(d).flatMap(f=>{const q=p.join(d,f);
+return fs.statSync(q).isDirectory()?w(q):(fs.readFileSync(q,'utf8').match(/eyJ[\w-]+\.eyJ[\w-]+/g)||[])});
+for(const j of new Set(w('dist'))){const r=JSON.parse(Buffer.from(j.split('.')[1],'base64')).role;
+console.log(r);if(r!=='anon'){console.error('REFUSING TO SHIP: '+r+' key in bundle');process.exit(1)}}"
+```
 - **Test suite** — this session independently ran it to completion: **117
   passed in 20.1 min** at the §2 tree state.
 
