@@ -101,3 +101,17 @@ broken or non-compliant.
 - **Four new steps are in `SKIPPABLE`** — sex, stack-count, goal-priority,
   commitment — and each has a neutral default that produces the same result as
   answering: no sex, no count, no ranking, five days.
+
+## The final runs (17 August)
+
+- **Ran the two walkthroughs before the doodle rework**, despite the prompt
+  saying "Do Part B first". The labels in that message contradict each other —
+  Part A is the runs, Part B is the pattern, and the sentence explaining the
+  order ("doing it second is how it got skipped twice") is about the runs. Doing
+  the runs last is the exact failure being complained about, so the reason won
+  over the label.
+- **Deployed to Vercel when asked to.** The standing rule is never to push;
+  the instruction to deploy was explicit and overrides it for that action only.
+  Deployed a preview first, then production, on the `halfpast` project this repo
+  is linked to. `www.pepstack.fit` is a different project serving the marketing
+  site and was not touched.
