@@ -149,6 +149,7 @@
     <tr><th>A count of messages, with timestamps</th><td>used only to enforce the rate limit</td></tr>
     <tr><th>Answers you report</th><td>stored only when you press Report, and then the question and the answer are both kept so the problem can be understood</td></tr>
     <tr><th>Your conversation</th><td>cached on your own device, under your account, and cleared when you sign out or delete your account</td></tr>
+    <tr><th>Notes you write about how you react to something</th><td>the note you typed is kept exactly as you wrote it. The assistant also reads it and stores a short structured summary beside it — never replacing your words — so it does not have to ask you the same thing again. You can see every one and delete any of them under <em>You</em>, and they are deleted with your account</td></tr>
   </table>
 
   <h2>2. What Pepstack does not collect</h2>
@@ -172,8 +173,8 @@
       <strong>Some of what Pepstack holds is special-category health data</strong>
       under Article 9 of the UK and EU GDPR: your menstrual status, your dietary
       restrictions, your health goals, the supplements you take, your adherence
-      history, the reasons you skipped a dose, and your progress notes and
-      photographs.
+      history, the reasons you skipped a dose, the notes you write about how you
+      react to something, and your progress notes and photographs.
     </p>
     <p>
       The lawful basis for processing that data is your <strong>explicit
@@ -211,7 +212,10 @@
   </p>
   <p><strong>What is sent:</strong> your question, the recent conversation, and
   context loaded on the server — your age, sex, dietary restrictions, reported
-  reactions, goals, current stack, schedule and adherence.</p>
+  reactions, goals, current stack, schedule and adherence. It also includes any
+  notes you have written about how you react to something, and the short summary
+  the assistant made of them, so it does not ask you the same thing twice. A note
+  you delete under <em>You</em> is not sent again.</p>
   <p><strong>What is not sent:</strong> your email address, your display name,
   your account identifier, and your progress notes or photographs.</p>
   <p>

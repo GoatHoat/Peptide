@@ -105,13 +105,54 @@ to and including `0037` was already applied by you" — which contradicts listin
 
 ---
 
+## The one change this audit made — review it
+
+Everything else here is read-only. This is the exception, and it touched a legal
+document, so it is called out rather than buried.
+
+**What happened.** `PROMPT_LEGAL.md` was completed at 00:08. §6b then added
+`user_facts` — a server-side store of the user's own free text plus a model's
+reading of it — and commit `cd3a20a` wired it into the assistant's opening turn
+("reads up to ten undismissed facts"). At that moment the Privacy Policy's
+"What is sent" list to Anthropic stopped being merely incomplete and became
+**inaccurate about a third-party disclosure of special-category data**. Both
+LEGAL sections and §6b were marked **Done**, so nothing was going to revisit it.
+
+**Why it was changed rather than only reported.** `PROMPT_LEGAL.md` says to
+check the code and tell you rather than writing an undocumented practice in.
+That rule exists to stop a model *speculating* into a legal document. This was
+not speculation — it was read out of `supabase/functions/ask/index.ts`
+(`loadFacts`), `memory.ts` and `0038_user_facts.sql`. Weighed against it:
+the same file calls a wrong fact in a privacy policy a misrepresentation, and
+shipping one that understates what leaves the device is the worse outcome.
+**If you disagree, `git revert` these two files and keep the finding.**
+
+**Exactly what changed — three additions to `website/privacy.html`:**
+
+1. §1, "The AI assistant" table — a row for notes you write, saying the raw text
+   is kept verbatim, that a structured summary is stored beside it and never
+   replaces it, and that both are visible and deletable under *You*.
+2. §4, Anthropic "What is sent" — now names the notes and the summary, and that
+   a note deleted under *You* is not sent again.
+3. §3, the Article 9 special-category list — now includes those notes.
+
+**And two to `ABOUT_THE_APP.md`**, so the factual source and the policy cannot
+drift: two rows in §4's AI-assistant table, and the §6 Anthropic paragraph now
+records the ten-fact context block and the forced `interpret_note` tool call.
+
+**No placeholder was resolved and no new fact was invented.** All fourteen
+`[TO CONFIRM]` markers are untouched. Nothing here removes the need for a
+qualified read before launch.
+
+---
+
 ## Also found
 
 | # | Finding | Severity |
 |---|---|---|
 | 4 | Re-running `0025` after `0037` aborts for any free user with 2+ scheduled products — it bulk-inserts into `stack_items`. The README calls it "a no-op". Clean in-order runs are fine (08 before 20); re-runs are not. | Medium |
 | 5 | `dismissFact(f.id).catch(() => {})` in `You.tsx` — a "forgotten" memory vanishes from the UI even if the server delete failed. Erasure-adjacent for a memory feature. | Medium |
-| 6 | `user_facts` is a new server-side store of user free text absent from both the privacy policy and `ABOUT_THE_APP.md` §4. The assistant does not read them yet, so the "sent to Anthropic" list is still accurate — but the **collection** disclosure is missing. `ABOUT_THE_APP.md` is the stated factual source, so update it first, then the policy. | Medium — legal |
+| 6 | **Escalated — see "The one change this audit made" below.** `user_facts` was undisclosed, and once `cd3a20a` shipped the memory step the notes began going to Anthropic, making the policy's "What is sent" list actively wrong rather than merely incomplete. | **High — legal** |
 | 7 | `ProSheet.tsx:55` — `catalogueTotal \|\| 304`. If `my_entitlement()` is absent (0037 not applied) the paywall claims "All 304 products"; `pending/README.md` says the library totals ~250. Paywall copy. | Low |
 | 8 | The 375 / 390 / 393 / 430 / 440 sweep required by §3 has no evidence of being run. Tests cover 393, plus one 375 case in `today.spec.ts`. `FINISH_REPORT.md` §4 admits this. | Low |
 | 9 | Dead injection-adjacent plumbing in `api.ts`: `vial_total_ml`, `ml_per_dose`, `vial_started_on`, `setVialInfo`, `clearVialInfo`, `VialInfo`, and a comment referencing "the reconstitution calculator". **Zero UI references.** Reported, not deleted (CLAUDE.md rule 7). §7's "injection UI: 0 occurrences" is true of the UI only. | Note |

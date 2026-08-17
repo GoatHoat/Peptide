@@ -123,6 +123,8 @@ app touches and it cannot be covered by a generic "we store your content" line.
 | Message count and timestamps | `ask_usage` | rate limiting only |
 | Reported answers | `ask_reports.question`, `.answer` | stored only when a user reports an answer |
 | Conversation thread | device `localStorage`, keyed per user | see §6 |
+| Remembered notes | `user_facts.raw_text` | the "Something else" free text from the reactions question, kept verbatim and never overwritten |
+| The model's reading of those notes | `user_facts.summary`, `.tags`, `.ingredient_keys`, `.confidence` | written lazily on a later assistant turn, never during onboarding. Tags are checked against a fixed enum and ingredient keys against the catalogue; anything unresolvable is discarded. Visible and deletable under You |
 
 ### What is **not** collected
 
@@ -159,9 +161,12 @@ Anthropic API. The API key never reaches the device.
 
 What is sent to Anthropic with each message: the user's question, the recent
 conversation, and context loaded server-side — age, sex, dietary restrictions,
-reactions, goals, current stack, schedule and adherence. **No email address, no
-name, and no user id are sent.** The privacy policy should say what is sent and
-that it is used to answer that request rather than to train a model.
+reactions, goals, current stack, schedule and adherence. Since the memory work
+it also includes up to ten undismissed `user_facts` rows — the user's own note
+text and the model's stored summary of it — and, on the turn a note is first
+interpreted, that note is sent to a forced `interpret_note` tool call. **No email
+address, no name, and no user id are sent.** The privacy policy should say what
+is sent and that it is used to answer that request rather than to train a model.
 
 **Apple** — subscription purchases are handled by StoreKit and Apple's own
 receipt infrastructure. **[DECIDE]** whether RevenueCat is used as an
