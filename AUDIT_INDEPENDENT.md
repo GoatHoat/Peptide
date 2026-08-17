@@ -158,6 +158,55 @@ qualified read before launch.
 | 9 | Dead injection-adjacent plumbing in `api.ts`: `vial_total_ml`, `ml_per_dose`, `vial_started_on`, `setVialInfo`, `clearVialInfo`, `VialInfo`, and a comment referencing "the reconstitution calculator". **Zero UI references.** Reported, not deleted (CLAUDE.md rule 7). §7's "injection UI: 0 occurrences" is true of the UI only. | Note |
 | 10 | Pre-existing CLAUDE.md design-rule violations, not introduced by this run and not in scope: accent glow at `onboarding.css:593` (`drop-shadow(0 0 22px var(--accent))`) and a gradient at `styles.css:315`. The masks at `onboarding.css:1089-90` are legitimate. | Note |
 
+### The §4 audits that were skipped — run here
+
+`FINISH_REPORT.md` §4 says the four sweeps "were **not** carried out as audits …
+nobody went screen by screen". Two of the four were run for this file. Findings
+are concrete, so they can be fixed without repeating the search.
+
+**Tap targets below the 44×44 minimum** (`src/styles.css`, interactive elements
+only — icons, rails, underlines and other non-targets excluded):
+
+| Element | Height | What it is |
+|---|---|---|
+| `.sheet-close` | **30 px** | the close control on **every sheet in the app** — the most-tapped button here |
+| `.stack-expiry-btn` | 32 px | set an expiry on a stack item |
+| `.glossary-brand-link` | 32 px min | brand link on a product |
+| `.stack-remove` | 34 px | remove from stack |
+| `.tabs-tab` | 34 px min | the Discover segmented control — Ask AI / Peptides / Vitamins & Minerals |
+| `.recon-unit-btn` | 36 px | unit toggle on the reconstitution calculator — **dead UI, see finding 9** |
+| `.bodymap-chip` | 36 px | body-map chip |
+| `.stack-pick-chip` | 38 px | product chip in the stack picker |
+| `.setup-var` | 40 px | setup screen control |
+
+`.sheet-close` is the one to fix first. A 30 px target is well under both Apple's
+44 pt HIG minimum and the 44×44 this prompt asks for, and it is the control a
+reviewer taps most often.
+
+**Raw error strings reaching the user.** §4 requires "every error state with a
+retry, never a raw error string". One violation:
+
+```ts
+// You.tsx:360 — account deletion
+setDeleteError(err instanceof Error ? err.message : 'Could not delete the account. Try again.');
+```
+
+The curated fallback is only used when the thrown value is not an `Error`, which
+is the rare case. A real failure shows the user the raw PostgREST/Postgres text.
+**This matters more than a normal error-copy nit:** `0026_delete_account` sits in
+`supabase/pending/` and the README marks it "**urgent** — Delete Account is live
+and calls this". If it is not applied, tapping Delete Account today shows
+something like `Could not find the function public.delete_account(uuid)`. In-app
+account deletion is required by App Store Guideline 5.1.1(v), so this is a
+review-risk path, not only a cosmetic one.
+
+Checked and clean: `AskAI.tsx:520` looks like a raw string but is not — that
+`error.message` comes from the curated `FALLBACK` map in `ask.ts`.
+
+Not run here: the loading-states-at-final-dimensions sweep and the empty-state
+sweep. Those need a running app at each width rather than a static read, and the
+three-account walkthrough was never rebuilt (see `BLOCKED.md`).
+
 ### A pattern worth one fix rather than three
 
 | Site | Handling | Effect |
