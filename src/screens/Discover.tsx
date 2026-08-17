@@ -1,5 +1,5 @@
 import { NAME } from '../lib/brand';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { Sheet } from '../components/Sheet';
 import { Tabs } from '../components/Tabs';
 import { GlossaryDetail } from './GlossaryDetail';
@@ -7,7 +7,7 @@ import { AddSchedule } from './AddSchedule';
 import { ProductRow } from './DiscoverList';
 import { AskAI } from './AskAI';
 import { ProSheet, type ProReason } from '../components/ProSheet';
-import { isStackLimitError, useEntitlement } from '../lib/entitlements';
+import { freeSlugs, isStackLimitError, useEntitlement } from '../lib/entitlements';
 import { useAuth } from '../lib/auth';
 import { usePrefs } from '../lib/prefs';
 import {
@@ -77,6 +77,15 @@ export function Discover() {
   /** which gate opened the paywall, or null */
   const [pro, setPro] = useState<ProReason | null>(null);
   const { isPro, limits, lockedTotal } = useEntitlement();
+  /* The six free slugs, resolved from the whole catalogue rather than from the
+     filtered view — otherwise a search that excludes the free magnesium would
+     promote a different row into its place. */
+  const freeSet = useMemo(() => freeSlugs(results), [results]);
+  /** id -> slug, so the ingredient list can be locked by the same rule */
+  const slugOf = useMemo(
+    () => new Map(results.map((r) => [r.id, r.slug])),
+    [results],
+  );
 
   useEffect(() => {
     getGoalSynonyms().then(setSynonyms);
@@ -203,18 +212,13 @@ export function Discover() {
              so nothing shifts if they upgrade, and so seeing that a product
              exists is possible. A free search must never return "no results"
              for something the catalogue holds. */
-          /* A missing free_rank means "we cannot tell", and the safe answer to
-             that is to show the product. It was `?? 9999`, which locked it —
-             so on a database where 0037 has not been applied the column does
-             not exist, `select('*')` returns no free_rank for any row, and a
-             free account saw the entire library greyed out behind a paywall.
-             An over-generous free tier is a pricing decision; a library that
-             appears to be nothing but locks is a broken app. */
-          const locked = (e: GlossaryEntry) =>
-            !isPro &&
-            limits.catalogue !== null &&
-            typeof e.free_rank === 'number' &&
-            e.free_rank > limits.catalogue;
+          /* Six articles are free — three peptides, three minerals — and every
+             other row in the library is locked. Resolved from the catalogue
+             itself rather than from `free_rank`, which arrives with migration
+             0037 and is not applied: a rank-based rule left every row unlocked
+             on the real database, which is why only the divider was ever
+             visible and everything under it stayed readable. */
+          const locked = (e: GlossaryEntry) => !isPro && !freeSet.has(e.slug);
           const firstLocked = visible.findIndex(locked);
           const amountOf = new Map(ingredientHits.map((h) => [h.glossary_id, h]));
           const forThis = isSupplementTab
@@ -303,7 +307,7 @@ export function Discover() {
                         behind it. The count is read from the database. */}
                     {vi === firstLocked && (
                       <button className="lock-divider pressable" onClick={() => setPro('locked-product')}>
-                        Get Pro to unlock all {lockedTotal + (limits.catalogue ?? 0) * 2} products
+                        Get Pro to unlock all {lockedTotal + (limits.catalogue ?? 0) * 2} articles
                       </button>
                     )}
                   <ProductRow
@@ -376,8 +380,19 @@ export function Discover() {
                   {showAlso && (
                     <ul className="ing-also-list">
                       {also.map((h) => (
+                        /* Locked here too. This list names products by their
+                           title in plain text, so without it a free account
+                           could read the whole catalogue by searching an
+                           ingredient — the one place the lock could be walked
+                           straight around. */
                         <li key={h.glossary_id} className="ing-also-row">
-                          <span className="ing-also-name">{h.name}</span>
+                          <span
+                            className={`ing-also-name${
+                              !isPro && !freeSet.has(slugOf.get(h.glossary_id) ?? '') ? ' blurred' : ''
+                            }`}
+                          >
+                            {h.name}
+                          </span>
                           <span className="ing-also-amount t-caption">
                             {h.amount !== null
                               ? `${h.amount} ${h.unit ?? ''}`.trim()

@@ -133,56 +133,59 @@ export function You() {
         </div>
       </div>
 
-      <div className="widgets">
-        <div className="widget">
-          {complianceFailed ? (
-            <ErrorState
-              message="Your streak did not load. It is usually the connection."
-              onRetry={() => setAttempt((n) => n + 1)}
-            />
-          ) : (
-            <>
-              <div className="widget-num">{streak}</div>
-              {/* One square per day of this month and no others — the row count
-                  drives the grid, so February and a 31-day month both fit. */}
-              <div className="cal" style={{ ['--cal-rows' as string]: monthGrid.length }}>
-                <span className="cal-corner" />
-                {DOW.map((d, i) => (
-                  <span key={`dow-${i}`} className="cal-dow">
-                    {d}
-                  </span>
-                ))}
-                {monthGrid.map((row, ri) => {
-                  const firstOfRow = row.find((d): d is Date => d !== null);
-                  return (
-                    <Fragment key={ri}>
-                      <span className="cal-week-label">{firstOfRow ? firstOfRow.getDate() : ''}</span>
-                      {row.map((d, ci) => {
-                        if (!d) return <span key={ci} className="cal-blank" />;
-                        const iso = toISODate(d);
-                        const c = compliance[iso];
-                        const done = !!c && c.total > 0 && c.taken === c.total;
-                        return (
-                          <span
-                            key={ci}
-                            className={`cal-cell${done ? ' on' : ''}${iso === todayISO ? ' today' : ''}`}
-                            title={iso}
-                          />
-                        );
-                      })}
-                    </Fragment>
-                  );
-                })}
-              </div>
-            </>
-          )}
-        </div>
+      {/* One card, not two. The second was a placeholder labelled "Widget" and
+          a placeholder is a promise the screen does not keep; removing it lets
+          the calendar have the width it wanted. */}
+      <div className="cal-card">
+        {complianceFailed ? (
+          <ErrorState
+            message="Your streak did not load. It is usually the connection."
+            onRetry={() => setAttempt((n) => n + 1)}
+          />
+        ) : (
+          <>
+            <div className="cal-head">
+              <span className="cal-month t-section">
+                {today.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
+              </span>
+              <span className="cal-streak">
+                <span className="cal-streak-num">{streak}</span>
+                <span className="cal-streak-label t-caption">
+                  day{streak === 1 ? '' : 's'}
+                </span>
+              </span>
+            </div>
 
-        {/* Intentionally empty. The label names what belongs here — the
-            contents are not invented. */}
-        <div className="widget widget-gap">
-          <span>Widget</span>
-        </div>
+            {/* One circle per day of this month and no others — the row count
+                comes from the data, so February and a 31-day month both fit. */}
+            <div className="cal" style={{ ['--cal-rows' as string]: monthGrid.length }}>
+              {DOW.map((d, i) => (
+                <span key={`dow-${i}`} className="cal-dow t-caption">
+                  {d}
+                </span>
+              ))}
+              {monthGrid.map((row, ri) => (
+                <Fragment key={ri}>
+                  {row.map((d, ci) => {
+                    if (!d) return <span key={ci} className="cal-blank" />;
+                    const iso = toISODate(d);
+                    const c = compliance[iso];
+                    const done = !!c && c.total > 0 && c.taken === c.total;
+                    return (
+                      <span
+                        key={ci}
+                        className={`cal-cell${done ? ' on' : ''}${iso === todayISO ? ' today' : ''}`}
+                        title={iso}
+                      >
+                        {d.getDate()}
+                      </span>
+                    );
+                  })}
+                </Fragment>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       <MyStack />

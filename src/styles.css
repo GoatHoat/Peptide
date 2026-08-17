@@ -812,93 +812,89 @@ button {
   letter-spacing: -0.1px;
 }
 
-.widgets {
-  display: flex;
-  gap: 12px;
-  /* the pair runs 6px wider than the margin on each side in the export */
-  margin: 19px -6px 0;
-}
-.widget {
-  /* 181 is the width in the export and it holds at every size Apple ships
-     except the smallest: at 375 the pair ran 13px past the right edge of the
-     screen, because `flex: none` means "do not shrink, ever". Basis 181, no
-     grow, shrink allowed — identical wherever there is room, and inside the
-     screen where there is not. */
-  flex: 0 1 181px;
-  min-width: 0;
-  height: 176px;
+/* One calendar, full width, replacing the pair of 181px widgets — the second
+   of which was a placeholder labelled "Widget". A placeholder is a promise the
+   screen does not keep, and removing it is what lets the days be circles big
+   enough to carry their own date. */
+.cal-card {
+  margin-top: 19px;
+  padding: 16px 16px 18px;
   border-radius: 22px;
   background: var(--card);
-  padding: 12px;
-  overflow: hidden;
-  /* the calendar below takes whatever height is left, rather than assuming
-     a row count and spilling past the corner when the month needs six */
-  display: flex;
-  flex-direction: column;
 }
-.widget-num {
-  text-align: center;
+.cal-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.cal-month {
+  color: var(--t1);
+}
+.cal-streak {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  flex: none;
+}
+.cal-streak-num {
   color: var(--purple);
-  font-size: calc(44px * var(--text-scale));
+  font-size: calc(28px * var(--text-scale));
   font-weight: 700;
-  letter-spacing: -1.5px;
+  letter-spacing: -0.8px;
   line-height: 1;
 }
-/* One grid: a weekday header row, then one row per week of THIS month.
-   --cal-rows comes from the data, and every row is 1fr, so a 4-row February
-   and a 6-row month both land inside the widget instead of overflowing it. */
-.cal {
-  margin-top: 8px;
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  grid-template-columns: 13px repeat(7, minmax(0, 1fr));
-  grid-template-rows: 12px repeat(var(--cal-rows, 5), minmax(0, 1fr));
-  gap: 3px 4px;
-}
-.cal-week-label {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+.cal-streak-label {
   color: var(--t3);
-  font-size: calc(9px * var(--text-scale));
-  line-height: 1;
+}
+
+/* Seven columns of equal width, one row per week of THIS month. --cal-rows
+   comes from the data, so a 4-row February and a 6-row month both fit without
+   the card guessing a height. */
+.cal {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
 }
 .cal-dow {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 2px;
   color: var(--t3);
-  font-size: calc(10px * var(--text-scale));
-  line-height: 12px;
 }
+.cal-blank {
+  aspect-ratio: 1;
+}
+/* A circle carrying its own date. `aspect-ratio` rather than a fixed size, so
+   the row divides the card's width and the circles grow with the screen
+   instead of leaving a gutter on a larger phone. */
 .cal-cell {
-  min-height: 0;
-  border-radius: 4px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
   background: var(--cell-empty);
+  color: var(--t3);
+  font-size: calc(13px * var(--text-scale));
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 .cal-cell.on {
   background: var(--purple);
+  color: var(--bg);
+  font-weight: 600;
 }
 /* today reads as an outline, so it stacks with .on rather than fighting it */
 .cal-cell.today {
   box-shadow: inset 0 0 0 1.5px var(--purple);
+  color: var(--t1);
 }
-/* the days before the 1st and after the last: space, not a square */
-.cal-corner,
+/* the days before the 1st and after the last: space, not a circle */
 .cal-blank {
   background: none;
-}
-
-/* an intentionally empty box — the label names what belongs here */
-.widget-gap {
-  display: grid;
-  place-items: center;
-  text-align: center;
-  padding: 18px;
-}
-.widget-gap span {
-  color: var(--t3);
-  font-size: calc(12px * var(--text-scale));
-  line-height: 1.4;
 }
 
 .rows {

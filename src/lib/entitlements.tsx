@@ -20,11 +20,15 @@ import { useAuth } from './auth';
  */
 export type Tier = 'free' | 'pro';
 
+/* Which six are free is a pure function of the catalogue, so it lives in its
+   own module and can be unit tested without a Supabase client. */
+export { FREE_ARTICLES, freeSlugs } from './freeArticles';
+
 export const LIMITS = {
   free: {
     stackItems: 1,
-    /** per kind: free_rank <= this is visible */
-    catalogue: 30,
+    /** articles readable free, per kind — see lib/freeArticles.ts */
+    catalogue: 3,
     askMessagesTotal: 3,
   },
   pro: {

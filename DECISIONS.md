@@ -189,3 +189,26 @@ broken or non-compliant.
   the action row is genuinely underneath it and the 98px reserve is what makes
   it reachable. The test asserts the overrun never *exceeds* the reserve, which
   is the fault that would matter — a screen adding its own spacer on top.
+
+## Six free articles, and the You calendar (17 August)
+
+- **The six are name patterns, not hardcoded slugs.** Three peptides matched on
+  their slug (`bpc-157`, `tb-500`, `ipamorelin`, which are the compounds
+  themselves) and three minerals matched on the product name (magnesium, zinc,
+  vitamin D), each taking the first row in name order it has not already
+  claimed. Six fixed slugs would silently lose a free slot the day one of those
+  branded rows is renamed, and the catalogue is 304 filings that move.
+- **Not keyed on `free_rank`.** That column arrives with `0037`, which is not
+  applied, so a rank rule left every row unlocked on the real database — which
+  is why the divider appeared and everything under it stayed readable. Which
+  articles are free should not wait on a migration.
+- **The ingredient "also contains" list is locked too.** It names products in
+  plain text, so without it a free account could read the whole catalogue by
+  searching an ingredient. It was the one place the lock could be walked round.
+- **The second You widget is gone rather than filled.** It was a placeholder
+  labelled "Widget"; a placeholder is a promise the screen does not keep.
+  Removing it is what gives the calendar the width to make each day a circle
+  big enough to carry its own date.
+- **Calendar cells use `aspect-ratio`, not a fixed size**, so the row divides
+  the card's width and the circles grow with the screen rather than leaving a
+  gutter on a larger phone.
