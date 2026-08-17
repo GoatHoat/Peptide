@@ -90,7 +90,12 @@ export function MyStack() {
 
       {items === null && <div className="sheet-empty t-body">Loading…</div>}
       {items !== null && items.length === 0 && (
-        <div className="empty-state t-body">Nothing in your stack yet — add peptides from Discover.</div>
+        <div className="stack-empty">
+          <img className="stack-empty-art" src="/art/empty-stack.png" alt="" />
+          <p className="empty-state t-body">
+            Nothing in your stack yet. Add something from Discover and it will show up here.
+          </p>
+        </div>
       )}
 
       <div className="stack-list">

@@ -2595,3 +2595,52 @@ button {
   font-weight: 600;
   letter-spacing: -0.3px;
 }
+
+/* The doodle. Two screens, and only two — a motif at two, wallpaper at five.
+   Behind everything, no pointer events, and dimmed here rather than by shipping
+   a dimmer asset so the line quality survives. Pure black behind it: the
+   pattern is transparent and carries no background of its own. */
+.doodle-bg {
+  position: absolute;
+  inset: 0;
+  background: url('/doodle-pattern.svg') center / cover no-repeat;
+  pointer-events: none;
+  z-index: 0;
+}
+.doodle-bg.welcome { opacity: 0.28; }
+.doodle-bg.catchup-doodle { opacity: 0.18; }
+@media (prefers-reduced-transparency: reduce) {
+  .doodle-bg { opacity: 0.1 !important; }
+}
+/* everything on those two screens sits in front of it */
+.ob-welcome, .catchup-head, .catchup-list, .catchup-dismiss { position: relative; z-index: 1; }
+
+/* Fewer than three missed doses leaves the screen mostly empty otherwise. */
+.catchup.short {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* The empty stack. Transparent PNG on pure black — no plate behind it. */
+.stack-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 18px 0 6px;
+}
+.stack-empty-art {
+  width: 220px;
+  max-width: 62%;
+  height: auto;
+  margin-bottom: 6px;
+}
+
+.catchup-footer {
+  position: relative;
+  z-index: 1;
+  margin-top: 18px;
+  text-align: center;
+  color: var(--t3);
+}

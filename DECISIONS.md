@@ -31,3 +31,14 @@ broken or non-compliant.
   rather than claiming success.** `purchase()` is still the stub that waits
   900ms and returns true; reporting that as an upgrade would be a lie a user
   could act on.
+
+## PROMPT_FINISH §3b/§3c
+
+- **Kept the catch-up slider at 56px, not the 132px-at-3x (44px) in the newer
+  spec.** PROMPT_V2 §7 specified 56 and it is already built and tested at that
+  height; 44 is also below the 44×44 minimum once the thumb inset is counted.
+  Larger is the safer of the two and the change is one line if you disagree.
+- **The catch-up card shows name, time due and amount, but no scheduler reason
+  line.** `doses` does not store one — the reason lives in the solver's output
+  at schedule-build time and is never persisted. Adding a column for it is a
+  schema change I did not think worth making unasked; noted in the report.

@@ -6,6 +6,10 @@ import { externalLink, PRIVACY_URL, TERMS_URL } from '../../lib/legal';
 export function Welcome({ onNext }: { onNext: () => void }) {
   return (
     <Screen footer={<Cta onClick={onNext}>Get started</Cta>}>
+      {/* One of exactly two screens that carry it. Behind everything, no
+          pointer events. Dimmed in CSS rather than by shipping a dimmer file,
+          so the asset keeps its line quality. */}
+      <span className="doodle-bg welcome" aria-hidden />
       <div className="ob-welcome">
         <LogoMark size={72} />
         <h1 className="ob-welcome-name">Pepstack</h1>
