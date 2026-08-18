@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { animate, motion, useMotionValue, useTransform, type MotionValue } from 'framer-motion';
 import { IconDiscover, IconToday, IconYou } from './Icons';
+import { withMotion } from '../lib/motion';
 
 export const TABS = [
   { key: 'today', label: 'Today', Icon: IconToday },
@@ -146,8 +147,8 @@ export function TabBar({ progress, onSelect }: Props) {
       }px ${8 + 12 * l}px rgba(0,0,0,${0.4 + 0.15 * l})`,
   );
 
-  const press = () => animate(lift, 1, { duration: 0.12, ease: 'easeOut' });
-  const release = () => animate(lift, 0, TAB_SPRING);
+  const press = () => animate(lift, 1, withMotion({ duration: 0.12, ease: 'easeOut' as const }));
+  const release = () => animate(lift, 0, withMotion(TAB_SPRING));
 
   /* ── press, hold, and move the pill ───────────────────────────────
      The pill stays under the finger for the whole gesture: its centre is

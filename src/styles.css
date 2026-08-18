@@ -88,7 +88,17 @@
 html,
 body,
 #root {
-  height: 100%;
+  /* All three use the SAME unit as .app, and that is the whole point.
+     This was `height: 100%`, which resolves against the initial containing
+     block — and iOS Safari sizes the ICB to the LARGE viewport (toolbars
+     collapsed) while `100dvh` at load is the SMALL one (toolbars shown). So
+     #root was up to ~150px taller than .app, .app's bottom sat that far up
+     the screen, and because .bar is positioned against .app the tab switcher
+     floated high with dead space under it. It corrected itself the moment
+     anything made the toolbar collapse, which is why it looked random.
+     One unit through the whole chain means the gap cannot exist. */
+  height: 100vh; /* fallback for anything without dvh */
+  height: 100dvh;
 }
 
 /* ============================================================
@@ -198,7 +208,9 @@ button {
 .app {
   position: relative;
   width: 100%;
-  height: 100dvh; /* never vh — Safari's collapsing toolbar clips the bottom */
+  /* 100% of #root, which is the dvh above. Not 100dvh again: resolving the
+     unit twice is what allowed .app and its parent to disagree. */
+  height: 100%;
   overflow: hidden;
   background: var(--bg);
 }
@@ -295,6 +307,33 @@ button {
 .panel::-webkit-scrollbar {
   width: 0;
   height: 0;
+}
+
+/* ============================================================
+   Reduce motion — the in-app switch, not just the iOS one
+   ============================================================
+   Every reduced-motion rule in this file is written as
+   `@media (prefers-reduced-motion: reduce)`, which only ever answers the
+   system setting. The switch in You had no CSS behind it at all.
+
+   One blanket rule rather than a `.reduce-motion` twin beside each of those
+   media blocks: the twins were what let the arc keep animating, because a
+   rule has to be remembered to be duplicated and this one was not. Durations
+   go to a hair above zero rather than to `none` so that anything waiting on
+   `transitionend` still gets its event and does not hang half-applied.
+
+   JS-driven animation is not covered by any of this — framer-motion writes
+   inline transforms frame by frame and never touches these properties. The
+   pager spring and the tab pill are handled where they are created. */
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-delay: 0ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  transition-delay: 0ms !important;
+  scroll-behavior: auto !important;
 }
 
 /* ============================================================
@@ -2538,7 +2577,10 @@ button {
   position: relative;
   height: 56px;
   border-radius: 28px;
-  background: #16161a;
+  /* Black, not --card. It was #16161a, which is the literal value of --card —
+     the same grey as the card it sits inside — so the control had no edge and
+     read as a band of the card rather than as a thing to drag. */
+  background: var(--bg);
   overflow: hidden;
   touch-action: none;
   cursor: grab;
@@ -2559,7 +2601,13 @@ button {
   transform: scaleX(0);
   transform-origin: left center;
   background: var(--purple-dim);
-  border-radius: 28px;
+  /* NO border-radius. It had 28px, and scaleX squashes a radius with the box:
+     at a third of the way across, 28px horizontal became about 9px while the
+     vertical stayed 28px, so the trail drew as a lopsided ellipse — and the
+     240ms settle back to zero animated through every narrower version of it.
+     The track already has the radius and clips with overflow:hidden, so the
+     left end is rounded by the clip and the right end is a straight edge
+     under the thumb, which is what a trail should be. */
   will-change: transform;
 }
 /* The only two moments worth easing, because neither is finger-driven: the

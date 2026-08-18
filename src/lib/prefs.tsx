@@ -80,13 +80,31 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const reduceMotion = profile?.reduce_motion ?? false;
+
+  /**
+   * Publish the preference to the document, not to a React tree.
+   *
+   * The toggle in You wrote a boolean that only Sheet.tsx ever read, so turning
+   * it on left the arc, the tab pill, the skeleton shimmer and every card
+   * transition running — it changed one sheet and nothing else. The CSS side of
+   * this was written only as `@media (prefers-reduced-motion: reduce)`, which
+   * answers the iOS setting and cannot see an in-app switch.
+   *
+   * On <html> rather than on .app because sheets portal out of the app element
+   * and onboarding renders its own, so a class on either would miss them.
+   */
+  useEffect(() => {
+    document.documentElement.classList.toggle('reduce-motion', reduceMotion);
+  }, [reduceMotion]);
+
   return (
     <PrefsContext.Provider
       value={{
         profile,
         loading,
         error,
-        reduceMotion: profile?.reduce_motion ?? false,
+        reduceMotion,
         largerText: profile?.larger_text ?? false,
         refresh,
         save,

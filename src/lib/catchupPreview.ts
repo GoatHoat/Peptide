@@ -1,3 +1,5 @@
+import { Capacitor } from '@capacitor/core';
+
 /**
  * TEMPORARY — remove before submission.
  *
@@ -14,16 +16,25 @@
  */
 
 /**
- * False in any production build, so every branch guarded by it is dropped.
+ * On in a dev server and in the browser build; never in the iOS app.
  *
- * `import.meta.env.DEV` written exactly like this and nothing else: Vite
- * substitutes the literal `false` at build time, which lets the minifier fold
- * the branch and delete the row entirely. Writing `import.meta.env?.DEV` —
- * which is what this said first — defeats the substitution, leaves a runtime
- * lookup, and the row stayed in the production bundle. Verified by grepping
- * dist for the row's label.
+ * This was `import.meta.env.DEV` alone, which Vite substitutes with the
+ * literal `false` at build time so the minifier deletes the row outright.
+ * That was the stronger guarantee and it is why the row could not be found:
+ * every build deployed for testing is a production build, so the only place
+ * it has ever appeared is a local dev server.
+ *
+ * `!isNativePlatform()` is a runtime check, which is weaker — the string is in
+ * the bundle now, where before it was provably absent. It is still airtight
+ * for the thing that matters: a submitted binary runs inside the native
+ * WebView, where this is false, and there is no setting or URL that changes
+ * that. The compile-time half is kept so a dev server does not depend on it.
+ *
+ * Written as `import.meta.env.DEV` exactly, never `import.meta.env?.DEV` —
+ * the optional chain defeats the substitution, and that is how this row
+ * shipped in a production bundle once already.
  */
-export const PREVIEW_ENABLED = import.meta.env.DEV;
+export const PREVIEW_ENABLED = import.meta.env.DEV || !Capacitor.isNativePlatform();
 
 type Listener = () => void;
 const listeners = new Set<Listener>();

@@ -199,6 +199,16 @@ export function You() {
           by VoiceOver — Sign Out and Delete Account included. A control is a
           button. */}
       <div className="rows">
+        {/* TEMPORARY — remove before submission. See lib/catchupPreview.ts.
+            First in the list rather than last: it was under Delete Account,
+            below two legal links and a sign-out, which is where you put
+            something you do not want found. */}
+        {PREVIEW_ENABLED && (
+          <button type="button" className="row pressable" onClick={requestCatchUpPreview}>
+            <span className="row-label">Preview catch-up screen</span>
+            <span className="row-value">Testing only</span>
+          </button>
+        )}
         <button type="button" className="row pressable" onClick={() => setOpenSheet('notifications')}>
           <span className="row-label">Notifications</span>
           <span className="row-value">
@@ -229,15 +239,6 @@ export function You() {
             {profile.subscription_tier}
           </span>
         </button>
-        <button
-          type="button"
-          className="row pressable"
-          aria-pressed={!!profile.blood_test_reminder}
-          onClick={() => save({ blood_test_reminder: !profile.blood_test_reminder })}
-        >
-          <span className="row-label">Blood test reminder</span>
-          <span className="row-value">{profile.blood_test_reminder ? 'On' : 'Off'}</span>
-        </button>
         <button type="button" className="row pressable" onClick={() => setOpenSheet('export')}>
           <span className="row-label">Export Data</span>
         </button>
@@ -265,17 +266,6 @@ export function You() {
         >
           <span className="row-label danger">Delete Account</span>
         </button>
-
-        {/* TEMPORARY — remove before submission. Dev builds only:
-            PREVIEW_ENABLED is import.meta.env.DEV, which is false in
-            `npm run build`, so this row cannot reach a submitted binary. One
-            row, one handler, one flag — see lib/catchupPreview.ts. */}
-        {PREVIEW_ENABLED && (
-          <button type="button" className="row pressable" onClick={requestCatchUpPreview}>
-            <span className="row-label">Preview catch-up screen</span>
-            <span className="row-value">Dev only</span>
-          </button>
-        )}
       </div>
 
       <Sheet open={openSheet === 'notifications'} onClose={() => setOpenSheet(null)} title="Notifications">

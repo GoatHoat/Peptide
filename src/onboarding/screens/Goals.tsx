@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
 import { Cta, Screen } from '../chrome';
 import { GOALS } from '../goals';
+import { withMotion } from '../../lib/motion';
 
 const SPRING = { type: 'spring' as const, stiffness: 260, damping: 30, mass: 0.9 };
 /** commit to the drag inside this many px */
@@ -53,7 +54,7 @@ export function Goals({
   const goTo = (i: number, velocity = 0) => {
     const t = Math.max(0, Math.min(GOALS.length - 1, i));
     setIndex(t);
-    animate(pos, t, { ...SPRING, velocity });
+    animate(pos, t, withMotion({ ...SPRING, velocity }));
   };
 
   const onPointerDown = (e: React.PointerEvent) => {

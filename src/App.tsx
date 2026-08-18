@@ -23,13 +23,15 @@ import { useAuth } from './lib/auth';
 import { usePrefs } from './lib/prefs';
 import { SheetPortalProvider } from './lib/sheetPortal';
 import { ActiveTabProvider, GoToTabProvider } from './lib/activeTab';
-import { EntitlementProvider } from './lib/entitlements';
+import { onCheckoutReturn } from './lib/checkoutReturn';
+import { EntitlementProvider, useEntitlement } from './lib/entitlements';
 import { onBlockRequested, registerNotificationRouter } from './lib/notificationRouter';
 import { registerNotificationActions, syncScheduleNotifications } from './lib/notifications';
 import { enqueueMark, flushQueue } from './lib/doseQueue';
 import { markShown, shownToday } from './lib/catchup';
 // TEMPORARY — remove before submission; see lib/catchupPreview
 import { onCatchUpPreview, PREVIEW_ENABLED } from './lib/catchupPreview';
+import { withMotion } from './lib/motion';
 
 /** Commit to an axis inside the first 10px and never revisit it. */
 const AXIS_THRESHOLD = 10;
@@ -141,9 +143,31 @@ function Body({ framed }: { framed: boolean }) {
   if (!session) return <AuthScreen framed={framed} />;
   return (
     <EntitlementProvider>
+      <CheckoutReturnWatcher />
       <CatchUpGate framed={framed} />
     </EntitlementProvider>
   );
+}
+
+/**
+ * Re-reads the tier when somebody comes back from Stripe.
+ *
+ * Inside EntitlementProvider and rendering nothing, so it cannot be unmounted
+ * by whatever screen happens to be showing when the deep link arrives — the
+ * paywall sheet usually is not open any more by then.
+ *
+ * `awaitPro` rather than one read: Stripe redirects the browser and calls the
+ * webhook at the same time, so the first read after returning usually still
+ * says free. Cancelling is deliberately silent; nothing changed and nothing
+ * needs saying.
+ */
+function CheckoutReturnWatcher() {
+  const { awaitPro } = useEntitlement();
+  useEffect(
+    () => onCheckoutReturn((outcome) => outcome !== 'cancelled' && void awaitPro()),
+    [awaitPro],
+  );
+  return null;
 }
 
 /**
@@ -159,6 +183,7 @@ function Body({ framed }: { framed: boolean }) {
  */
 function CatchUpGate({ framed }: { framed: boolean }) {
   const { user } = useAuth();
+  const { refresh: refreshTier } = useEntitlement();
   const [missed, setMissed] = useState<Dose[] | null>(null);
   const [checked, setChecked] = useState(false);
 
@@ -232,6 +257,19 @@ function CatchUpGate({ framed }: { framed: boolean }) {
     if (!user) return;
     const onVisible = () => {
       if (document.visibilityState !== 'visible') return;
+
+      /* Re-read what this account has paid for.
+         This handler rather than a third listener of its own, and this one of
+         the two that already exist because it is the only one mounted inside
+         EntitlementProvider — the other lives in Body, which is the component
+         that renders the provider and so cannot consume it.
+         Above the debounce below, not under it: that minute belongs to the
+         catch-up window check and nothing else. Somebody who pays in the
+         browser and comes straight back is exactly the person this is for, and
+         making them wait out a debounce meant for another feature is the bug
+         being fixed. A tier read is one indexed row by primary key. */
+      void refreshTier();
+
       /* visibilitychange also fires on browser tab focus and can arrive in
          bursts. A minute is long enough that flicking between tabs costs
          nothing and short enough that a real resume is caught. */
@@ -241,7 +279,7 @@ function CatchUpGate({ framed }: { framed: boolean }) {
     };
     document.addEventListener('visibilitychange', onVisible);
     return () => document.removeEventListener('visibilitychange', onVisible);
-  }, [user?.id, check]);
+  }, [user?.id, check, refreshTier]);
 
   /* TEMPORARY — remove before submission. Opens the screen from You with
      today's real doses, ignoring the last_opened_at window entirely. It writes
@@ -406,7 +444,7 @@ function Shell({ framed, largerText }: { framed: boolean; largerText: boolean })
   const goTo = (i: number, velocity = 0) => {
     const target = Math.max(0, Math.min(2, i));
     setIndex(target);
-    animate(progress, target, { ...TAB_SPRING, velocity });
+    animate(progress, target, withMotion({ ...TAB_SPRING, velocity }));
   };
 
   /* ── the drag ──────────────────────────────────────────────
@@ -487,7 +525,7 @@ function Shell({ framed, largerText }: { framed: boolean; largerText: boolean })
     const projected = p + d.vel * 0.22;
     const target = Math.max(0, Math.min(2, Math.round(projected)));
     setIndex(target);
-    animate(progress, target, { ...TAB_SPRING, velocity: d.vel });
+    animate(progress, target, withMotion({ ...TAB_SPRING, velocity: d.vel }));
   };
 
   return (
@@ -542,17 +580,38 @@ function Shell({ framed, largerText }: { framed: boolean; largerText: boolean })
  * Guarded for no-window so a non-DOM environment still gets a value.
  */
 function useTouch() {
-  const [v, setV] = useState(
-    () =>
-      typeof window !== 'undefined' &&
-      (window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 640),
-  );
+  const [v, setV] = useState(() => typeof window !== 'undefined' && isTouchNow());
   useEffect(() => {
-    const check = () =>
-      setV(window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 640);
+    const check = () => setV(isTouchNow());
     check();
     window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
+    /* Restoring from the back-forward cache does not fire `resize`, and the
+       viewport can differ from the one the page was laid out against. */
+    window.addEventListener('pageshow', check);
+    return () => {
+      window.removeEventListener('resize', check);
+      window.removeEventListener('pageshow', check);
+    };
   }, []);
   return v;
+}
+
+/**
+ * `maxTouchPoints` is first because it is the only one of the three that a
+ * phone cannot lie about.
+ *
+ * With Safari's "Request Desktop Website" on — which is per-site and sticky, so
+ * a single accidental tap keeps it on for every later visit — an iPhone reports
+ * `pointer: fine` and an innerWidth around 980. Both of the old checks failed
+ * together, so `framed` came out true and the whole app rendered into the
+ * 402x874 desktop mockup box: a small panel sitting in dead space, its content
+ * cut off, with the tab bar wherever the box's bottom edge landed rather than
+ * the screen's. `maxTouchPoints` stays above zero either way.
+ */
+function isTouchNow(): boolean {
+  return (
+    navigator.maxTouchPoints > 0 ||
+    window.matchMedia('(pointer: coarse)').matches ||
+    window.innerWidth < 640
+  );
 }

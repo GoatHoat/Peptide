@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { animate, motion, useMotionValue, useTransform } from 'framer-motion';
+import { withMotion } from '../lib/motion';
 
 const SPRING = { type: 'spring' as const, stiffness: 380, damping: 34, mass: 1 };
 const AXIS_THRESHOLD = 10;
@@ -97,7 +98,7 @@ export function Tabs({
   const goTo = (i: number, velocity = 0) => {
     const t = Math.max(0, Math.min(tabs.length - 1, i));
     setIndex(t);
-    animate(pos, t, { ...SPRING, velocity });
+    animate(pos, t, withMotion({ ...SPRING, velocity }));
   };
 
   /* A product's Ask a question button asks for the chat tab; the counter is
@@ -105,7 +106,7 @@ export function Tabs({
   useEffect(() => {
     if (!jumpTo) return;
     setIndex(jumpToIndex);
-    animate(pos, jumpToIndex, SPRING);
+    animate(pos, jumpToIndex, withMotion(SPRING));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jumpTo]);
 
