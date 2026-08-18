@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import type { Session, User } from '@supabase/supabase-js';
 import { supabase } from './supabaseClient';
 import { clearLocalState, migrateAnonState } from './storage';
+import { setPurchasesUser } from './revenuecat';
 
 interface AuthState {
   session: Session | null;
@@ -52,12 +53,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setLoading(false);
+      /* RevenueCat is configured here rather than at the paywall, because
+         configuring before the session resolves is what creates an anonymous
+         user and silently detaches every purchase from its account. */
+      void setPurchasesUser(data.session?.user?.id ?? null);
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
       /* The one place the anonymous hand-off happens. Onboarding's first
          screens run before an account exists, so those answers start under
          `:anon`; doing this per screen is how one screen ends up missing it. */
       if (s?.user?.id) migrateAnonState(s.user.id);
+      /* Sign-in identifies, sign-out forgets. Skipping the sign-out half is how
+         a second account on one device inherits the first one's subscription. */
+      void setPurchasesUser(s?.user?.id ?? null);
       setSession(s);
       setLoading(false);
     });

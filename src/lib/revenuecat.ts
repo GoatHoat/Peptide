@@ -69,17 +69,70 @@ const apiKey = (): string | undefined => {
 
 /** Whether a real purchase is possible at all right now. */
 export function purchasesAvailable(): boolean {
-  return Capacitor.isNativePlatform() && !!apiKey();
+  const key = apiKey();
+  if (!key) return false;
+  /* A `test_` key is RevenueCat's Test Store, where a purchase is a modal with
+     a "success" button. Shipping one would let anybody grant themselves Pro, so
+     a production build refuses it outright rather than trusting whoever built
+     it to have swapped the file. Fails safe: no purchases, not free ones. */
+  if (import.meta.env.PROD && key.startsWith('test_')) {
+    console.error('RevenueCat: refusing a Test Store key in a production build');
+    return false;
+  }
+  return Capacitor.isNativePlatform();
 }
 
 let configured = false;
 
+/**
+ * The account purchases are attributed to. Set by `AuthProvider`.
+ *
+ * Without it `Purchases.configure` creates an anonymous user
+ * (`$RCAnonymousID:…`), the webhook receives that instead of a Supabase id,
+ * and a completed purchase can never be mapped back to an account — the client
+ * unlocks and the server never learns of it. It is also what makes a
+ * subscription follow somebody onto a second device.
+ */
+let currentUserId: string | null = null;
+
+/**
+ * Identify, or forget, the signed-in account.
+ *
+ * Called on every auth state change rather than at each call site, so
+ * `billing.ts` keeps its exported signatures byte-identical and no caller moves.
+ */
+export async function setPurchasesUser(userId: string | null): Promise<void> {
+  currentUserId = userId;
+  if (!purchasesAvailable()) return;
+  try {
+    const { Purchases } = await import('@revenuecat/purchases-capacitor');
+    if (!userId) {
+      /* Without this a second account on the same device inherits the first
+         one's subscription — the same class of fault as a localStorage key
+         with no account in it. */
+      if (configured) await Purchases.logOut();
+      return;
+    }
+    if (!configured) {
+      await ensureConfigured();
+      return;
+    }
+    await Purchases.logIn({ appUserID: userId });
+  } catch (err) {
+    console.error('RevenueCat could not identify the user', err);
+  }
+}
+
 async function ensureConfigured(): Promise<boolean> {
   if (!purchasesAvailable()) return false;
   if (configured) return true;
+  /* Configuring before the Supabase session resolves is exactly what produces
+     an anonymous user, so this declines rather than configuring without one.
+     `setPurchasesUser` runs it again the moment auth lands. */
+  if (!currentUserId) return false;
   try {
     const { Purchases } = await import('@revenuecat/purchases-capacitor');
-    await Purchases.configure({ apiKey: apiKey() as string });
+    await Purchases.configure({ apiKey: apiKey() as string, appUserID: currentUserId });
     configured = true;
     return true;
   } catch (err) {
@@ -103,8 +156,17 @@ export async function purchasePlan(planId: PlanId): Promise<boolean> {
   try {
     const { Purchases } = await import('@revenuecat/purchases-capacitor');
     const offerings = await Purchases.getOfferings();
-    const packages = offerings.current?.availablePackages ?? [];
-    const wanted = packages.find((p) => p.product.identifier === PRODUCT_IDS[planId]);
+    const current = offerings.current;
+    /* RevenueCat's own package types rather than an App Store product id
+       string. The Test Store names its products independently, so matching on
+       the identifier finds nothing there — and this way the same build works
+       against the Test Store now and the App Store later with no code change.
+       The identifier match stays as a fallback for a custom-named package. */
+    const wanted =
+      (planId === 'annual' ? current?.annual : current?.monthly) ??
+      (current?.availablePackages ?? []).find(
+        (p) => p.product.identifier === PRODUCT_IDS[planId],
+      );
     if (!wanted) {
       console.error(`no RevenueCat package for ${PRODUCT_IDS[planId]}`);
       return false;
