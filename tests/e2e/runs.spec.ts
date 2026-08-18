@@ -300,13 +300,13 @@ test('RUN A — maximal', async ({ page, app }, info) => {
 
   await page.getByRole('button', { name: 'Discover', exact: true }).click();
   await page.waitForTimeout(200);
-  await visit(page, log, 'Discover (Vitamins & Minerals)');
+  await visit(page, log, 'Discover (Softmax)');
   const prods = await page.locator('.prod').count();
   note(log, `Discover: ${prods} products listed`);
 
-  await page.getByRole('tab', { name: 'Peptides' }).click();
+  await page.getByRole('tab', { name: 'Hardmax' }).click();
   await page.waitForTimeout(200);
-  await visit(page, log, 'Discover (Peptides)');
+  await visit(page, log, 'Discover (Hardmax)');
   const pepBody = await page.locator('.tabs-panel.on').innerText();
   if (/\d+\s?(mg|mcg|iu)\b/i.test(pepBody)) {
     log.findings.push('Discover/Peptides: an amount is shown on a peptide');
@@ -315,7 +315,7 @@ test('RUN A — maximal', async ({ page, app }, info) => {
   }
 
   // an ingredient that is inside a blend rather than in a title
-  await page.getByRole('tab', { name: 'Vitamins & Minerals' }).click();
+  await page.getByRole('tab', { name: 'Softmax' }).click();
   const search = page.locator('.tabs-panel.on').getByPlaceholder(/Search/i);
   await search.fill('zinc');
   await page.waitForTimeout(120);

@@ -1795,8 +1795,17 @@ button {
   padding-right: 0;
 }
 /* the peptide tab's standing caveat */
+/* The category the tab above is a name for. Label type, so it reads as a
+   heading for the list rather than as a sentence about it — the sentence is
+   .tab-note underneath. */
+.tab-sub {
+  margin: 16px 0 0;
+  color: var(--t2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
 .tab-note {
-  margin: 14px 0 2px;
+  margin: 8px 0 2px;
   color: var(--t3);
   line-height: 1.45;
 }

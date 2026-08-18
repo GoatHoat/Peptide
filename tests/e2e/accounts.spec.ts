@@ -197,7 +197,7 @@ test('the one unscoped key is the one that is meant to be', async ({ page, app }
   await page.goto('/');
   await signInOnce(page, app.stub, FIRST);
   await page.getByRole('button', { name: 'Discover', exact: true }).click();
-  await page.getByRole('tab', { name: 'Peptides' }).click();
+  await page.getByRole('tab', { name: 'Hardmax' }).click();
 
   /* `pepstack.discover.tab` is left global on purpose and lib/storage.ts says
      so. This is here so that "unscoped" stays a decision somebody made rather

@@ -18,7 +18,7 @@ async function openPeptides(page: import('@playwright/test').Page) {
   await expect(page.getByRole('heading', { name: 'Today' })).toBeVisible();
   await page.getByRole('button', { name: 'Discover', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Discover' })).toBeVisible();
-  await page.getByRole('tab', { name: 'Peptides' }).click();
+  await page.getByRole('tab', { name: 'Hardmax' }).click();
   return page.locator('.tabs-panel').nth(1);
 }
 

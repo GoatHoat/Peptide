@@ -8,6 +8,14 @@ const RUBBER = 0.35;
 export interface TabDef {
   id: string;
   label: string;
+  /**
+   * What the tab actually holds, rendered as the first line inside it.
+   *
+   * The strip has room for one or two words; anything longer than that is what
+   * the panel is for. The renderer decides how to show it — this only carries
+   * it through.
+   */
+  sub?: string | null;
 }
 
 /**

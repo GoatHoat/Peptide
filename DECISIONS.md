@@ -212,3 +212,14 @@ broken or non-compliant.
 - **Calendar cells use `aspect-ratio`, not a fixed size**, so the row divides
   the card's width and the circles grow with the screen rather than leaving a
   gutter on a larger phone.
+
+## Hardmax and Softmax (17 August)
+
+- **Both written as one word, title case.** The request had "hardmax" and
+  "soft max"; a tab strip with one compound word beside a two-word one reads as
+  a typo rather than a pair. Say if you meant the space.
+- **The category names moved into the panel rather than being dropped.** "Peptides"
+  and "Vitamins, minerals and supplements" are the first line inside each tab,
+  in label type so they read as a heading for the list. The strip has room for
+  one or two words; the panel has room to be exact, and the peptide
+  reference-only note already lived there.

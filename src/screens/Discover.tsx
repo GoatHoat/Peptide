@@ -39,10 +39,19 @@ const CATEGORY_LABEL: Record<string, string> = {
 /** rows per page */
 const PAGE = 15;
 
+/**
+ * The two library tabs are named for what they are *for*, and say what they
+ * actually contain underneath.
+ *
+ * A tab strip has room for one or two words; "Vitamins & Minerals" was the
+ * widest thing on the row and still did not say why the split exists. The
+ * category names have not gone anywhere — they are the first line inside each
+ * tab, where there is room to be exact.
+ */
 const TABS = [
-  { id: 'ask', label: 'Ask AI' },
-  { id: 'peptide', label: 'Peptides' },
-  { id: 'supplement', label: 'Vitamins & Minerals' },
+  { id: 'ask', label: 'Ask AI', sub: null },
+  { id: 'peptide', label: 'Hardmax', sub: 'Peptides' },
+  { id: 'supplement', label: 'Softmax', sub: 'Vitamins, minerals and supplements' },
 ];
 
 export function Discover() {
@@ -228,6 +237,10 @@ export function Discover() {
 
           return (
             <div>
+              {/* What the tab actually holds. The label is two words; this is
+                  where the category gets named properly. */}
+              {tab.sub && <p className="tab-sub t-label">{tab.sub}</p>}
+
               {tab.id === 'peptide' && (
                 <p className="tab-note t-caption">
                   Reference only. These are not over-the-counter supplements and {NAME} does not
