@@ -59,6 +59,11 @@ export default defineConfig({
       // ships, so item 0.10 — moving the paywall — is covered rather than
       // stepped over.
       VITE_SKIP_PAYWALL: 'false',
+      /* The onboarding paywall now renders only when the build can actually
+         charge, so without a payment route switched on the step skips itself
+         and every test that walks through it would be testing its absence.
+         Stripe is the route the web build has. */
+      VITE_CARD_CHECKOUT: 'true',
     },
   },
 });

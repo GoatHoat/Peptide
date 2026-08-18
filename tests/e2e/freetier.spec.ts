@@ -60,14 +60,16 @@ async function reachPaywall(page: import('@playwright/test').Page) {
   await page.getByRole('heading', { name: 'Everything, in one place' }).waitFor();
 }
 
-test('the paywall names the free limits before the choice, and shows the way past', async ({ page }) => {
+test('the paywall shows the way past, and does not pre-empt it with the free terms', async ({ page }) => {
   test.setTimeout(120_000);
   await reachPaywall(page);
 
-  const terms = page.locator('.ob-free-terms');
-  await expect(terms).toBeVisible();
-  await expect(terms).toContainText('One product');
-  await expect(terms).toContainText('assistant messages');
+  /* The free terms are NOT here. They used to sit above the plans, which put
+     "you only get one product" in front of somebody who had not yet been
+     asked to decide anything — the free tier argued for before the paid one
+     had been made. It is said once, on free-pick, and only to the people it
+     applies to: see the next test. */
+  await expect(page.locator('.ob-free-terms')).toHaveCount(0);
 
   /* Visible, and a real target — not a greyed word in a corner. */
   const free = page.getByRole('button', { name: 'Continue with Free' });

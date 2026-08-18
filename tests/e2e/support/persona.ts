@@ -459,7 +459,14 @@ const HANDLERS: Record<string, Handler> = {
         await expect(page.getByRole('status')).toHaveText('No previous purchase found on this account.');
         run.notes.push('restore with no purchase says so and stays on the paywall');
       }
-      await cta(page, 'Start with Pepstack').click();
+      /* Assert the paid route is offered, then decline it.
+         Clicking it hands off to StoreKit or to Stripe in a browser — neither
+         returns inside this process, and the Stripe one calls an Edge Function
+         the stub does not model, so the walk stalled on the paywall and logged
+         a 404. Declining is also the only path that reaches free-pick, which
+         is the screen the rest of the flow depends on. */
+      await expect(cta(page, 'Start with Pepstack')).toBeVisible();
+      await page.getByRole('button', { name: 'Continue with Free' }).click();
     },
   },
 

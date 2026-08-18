@@ -245,9 +245,26 @@ export async function completeOnboarding(page: Page): Promise<void> {
   await onScreen(page, 'Here is your plan');
   await cta(page, 'See what it costs').click();
 
-  // The purchase is asked for here, after the list and before the schedule.
+  /* The purchase is asked for here, after the list and before the schedule.
+     Declining rather than buying: the paid button hands off to StoreKit or to
+     Stripe in a browser, neither of which returns inside this process, so
+     clicking it here waited for a screen that was never coming. Declining is
+     also the path most people take, and it is the only one that reaches
+     free-pick — which is the screen the flow after this depends on. */
   await onScreen(page, 'Everything, in one place');
-  await cta(page, 'Start with Pepstack').click();
+  await expect(cta(page, 'Start with Pepstack')).toBeVisible();
+  await page.getByRole('button', { name: 'Continue with Free' }).click();
+
+  /* Free covers one product, so declining reaches this whenever more than one
+     was picked — and it is skipped when exactly one was, which is true of
+     several of the personas. Conditional rather than unconditional for that
+     reason: asserting it always appears would fail the single-pick walks, and
+     asserting it never does would walk past it on the rest. */
+  const freePick = page.getByRole('heading', { name: 'Free covers one product' });
+  if (await freePick.isVisible({ timeout: 15_000 }).catch(() => false)) {
+    await page.locator('.ob-rec').first().click();
+    await cta(page, 'Build my schedule').click();
+  }
 
   // building-schedule holds itself for 1.8s.
   await onScreen(page, 'Your schedule');

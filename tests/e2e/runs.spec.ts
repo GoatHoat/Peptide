@@ -221,7 +221,23 @@ async function onboard(
   await visit(page, log, 'paywall');
 
   if (opts.pro) {
-    await page.getByRole('button', { name: /Start with/ }).click();
+    /* The paid button is asserted, not pressed.
+       It hands off to StoreKit or to Stripe in the system browser, and neither
+       returns inside this process — pressing it stalled the run on the paywall
+       and logged a 404 from the unmodelled create-checkout call. That is a
+       real limit of the harness rather than a fault in the screen, so it is
+       recorded as a finding instead of being papered over. The subscriber half
+       of this run is covered by `stub.tier`, set by the caller, which is what
+       the app phase below actually reads. */
+    await expect(page.getByRole('button', { name: /Start with/ })).toBeVisible();
+    log.findings.push(
+      'paywall: the paid button leaves the process (StoreKit / browser), so a completed purchase cannot be walked in-harness',
+    );
+    await page.getByRole('button', { name: 'Continue with Free' }).click();
+    await page.getByRole('heading', { name: 'Free covers one product' }).waitFor();
+    await visit(page, log, 'free-pick');
+    await page.locator('.ob-rec').first().click();
+    await page.getByRole('button', { name: 'Build my schedule' }).click();
   } else {
     await page.getByRole('button', { name: 'Continue with Free' }).click();
     await page.getByRole('heading', { name: 'Free covers one product' }).waitFor();
@@ -268,6 +284,10 @@ test('RUN A — maximal', async ({ page, app }, info) => {
   test.setTimeout(900_000);
   const log = mk();
   app.allowConsoleError(/Failed to load resource|load failed/);
+
+  /* The app phase runs as a subscriber. The purchase itself cannot complete in
+     this process (see onboard), so the tier is set where the app reads it. */
+  app.stub.tier = 'pro';
 
   await onboard(page, log, {
     email: 'run-a@pepstack.test',

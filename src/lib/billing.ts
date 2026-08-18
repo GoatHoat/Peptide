@@ -79,9 +79,19 @@ export async function purchase(planId: PlanId): Promise<boolean> {
      The signature is unchanged so no caller moves; see lib/revenuecat.ts for
      what has and has not been tested. */
   if (purchasesAvailable()) return purchasePlan(planId);
-  await new Promise((r) => setTimeout(r, 900));
+
+  /* NOT AVAILABLE MEANS NOT PURCHASED. This used to wait 900ms and return
+     `true`, which was safe only while `SKIP_PAYWALL` defaulted to true and hid
+     the paywall entirely. The moment that flag is flipped, a `true` here is a
+     paywall that grants Pro and charges nobody: guideline 3.1.1 and 2.1 at
+     once, and the fastest rejection this app can earn. It is reachable in a
+     shipped build too, because a missing config.js, a web build, and the
+     Test-Store-key guard in revenuecat.ts all land on this line.
+
+     Failing closed costs somebody who cannot buy an honest "not available".
+     Failing open gives the product away. */
   void planId;
-  return true;
+  return false;
 }
 
 /**
@@ -98,24 +108,46 @@ export async function restorePurchases(): Promise<boolean> {
 /**
  * Whether to skip the paywall screen entirely.
  *
- * DEFAULTS TO TRUE, INCLUDING IN PRODUCTION, and must stay that way until
- * `purchase` above is a real StoreKit call. It previously defaulted to false
- * outside dev, which shipped a screen quoting real prices against a
- * function that waits 900ms and returns true. A reviewer taps Subscribe, is
- * granted the tier, and is never shown a payment sheet — that is Guideline
- * 3.1.1 (digital subscriptions must use in-app purchase) and Guideline 2.1
- * (a purchase control that does not purchase), and it is the fastest possible
- * rejection in this app.
+ * DEFAULTS TO FALSE as of the commit that wired RevenueCat end to end. Before
+ * that it defaulted to true, because `purchase` above returned `true` without
+ * charging: a reviewer taps Subscribe, is granted the tier, and never sees a
+ * payment sheet. That is Guideline 3.1.1 (digital subscriptions must use in-app
+ * purchase) and 2.1 (a purchase control that does not purchase) at once, and
+ * the fastest possible rejection this app can earn.
  *
+ * Two things had to be true before flipping it, and both were checked against a
+ * real TestFlight purchase rather than reasoned about:
+ *
+ *   1. `purchase` fails closed. With no store configured it returns false, so
+ *      no build can grant the tier without a transaction — a missing config.js,
+ *      a web build and the Test-Store-key guard all land there.
+ *   2. A purchase reaches `profiles.subscription_tier` through the RevenueCat
+ *      webhook with `subscription_source = "apple"`, and the client picks it up
+ *      without a restart.
+ *
+ * If either stops being true this goes back to true in the same commit.
  * Shipping with no paywall is fine. Shipping a paywall that does not charge is
- * not. Flip the default back in the same commit that wires RevenueCat, not
- * before.
+ * not.
  *
- * The tests set VITE_SKIP_PAYWALL=false explicitly so the screen itself stays
- * covered.
+ * The tests set VITE_SKIP_PAYWALL explicitly, so they are unaffected either way.
  */
-/* `?.` so this module can be imported in Node, where `import.meta.env` does
-   not exist — the prices and the computed badge are worth unit testing and
-   nothing else in the file needs a browser. The default is unchanged in both
-   environments: absent still means 'true'. */
-export const SKIP_PAYWALL = (import.meta.env?.VITE_SKIP_PAYWALL ?? 'true') === 'true';
+/* `?.` so this module can be imported in Node, where `import.meta.env` does not
+   exist — the prices and the computed badge are worth unit testing and nothing
+   else in the file needs a browser. */
+export const SKIP_PAYWALL = (import.meta.env?.VITE_SKIP_PAYWALL ?? 'false') === 'true';
+
+/**
+ * Whether the Stripe route may be offered at all in this build.
+ *
+ * The audit assumed this flag already existed. It did not — the Stripe button
+ * was rendered unconditionally, including in a native build, which is exactly
+ * the Guideline 3.1.1 problem it was supposed to prevent: Apple requires
+ * StoreKit for digital subscriptions and an external checkout inside a
+ * submitted iOS binary is an automatic rejection.
+ *
+ * Off unless switched on, and `checkout.ts` additionally refuses it on native
+ * whatever this says, so turning it on for a web deploy cannot leak into the
+ * App Store build.
+ */
+export const CARD_CHECKOUT_ENABLED =
+  (import.meta.env?.VITE_CARD_CHECKOUT ?? 'false') === 'true';

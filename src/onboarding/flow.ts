@@ -1,4 +1,4 @@
-import { SKIP_PAYWALL } from '../lib/billing';
+import { canCharge } from '../lib/paywallGate';
 
 /**
  * The order of the flow, in one place.
@@ -133,10 +133,11 @@ export function isSkipped(
   // "What usually goes wrong?" has no answer for someone who has never
   // started a routine in the first place.
   if (step === 'q3' && answers.q2 === 'never') return true;
-  // Dev builds walk past the purchase so the screens after it stay reachable
-  // without stubbing a transaction every run. Here rather than in a screen, so
-  // going back lands on the same screen going forward came from.
-  if (step === 'paywall' && SKIP_PAYWALL) return true;
+  /* Shown when this build can actually charge, hidden when it cannot — never
+     a paywall whose buttons do not take money. This asked `SKIP_PAYWALL`,
+     which defaults to on, so the screen was skipped in every deployed build
+     and `subscribed` stayed false for everybody. See lib/paywallGate.ts. */
+  if (step === 'paywall' && !canCharge()) return true;
   /* Free covers one product, so the choice only exists for somebody on Free who
      picked more than one. A subscriber keeps everything they chose and is never
      shown it; somebody who picked a single product has nothing to choose

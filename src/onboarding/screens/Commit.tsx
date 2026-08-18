@@ -1,9 +1,9 @@
 import { NAME } from '../../lib/brand';
-import { LIMITS } from '../../lib/entitlements';
 import { requestNotificationPermission } from '../../lib/notifications';
 import { useState } from 'react';
 import { Cta, OnboardIllustration, Screen, Sub, Title } from '../chrome';
-import { PLANS, purchase, restorePurchases, type PlanId } from '../../lib/billing';
+import { CARD_DISCOUNT_PCT, PLANS, purchase, restorePurchases, type PlanId } from '../../lib/billing';
+import { cardCheckoutAvailable, startCardCheckout } from '../../lib/checkout';
 import { externalLink, PRIVACY_URL, TERMS_URL } from '../../lib/legal';
 
 /* ── notifications ───────────────────────────────────────────────────── */
@@ -76,6 +76,29 @@ export function Paywall({ onDone }: { onDone: (subscribed: boolean) => void }) {
   const [busy, setBusy] = useState<'buy' | 'restore' | null>(null);
   const [note, setNote] = useState<string | null>(null);
 
+  /**
+   * The card route, on the builds that have one.
+   *
+   * Deliberately does NOT call `onDone(true)`. Coming back from Checkout is
+   * not evidence of payment — the webhook is, and it may not have landed yet.
+   * Onboarding continues on Free and the tier arrives on its own through
+   * CheckoutReturnWatcher, which is the only honest thing to do with a
+   * redirect the person could have typed themselves.
+   */
+  const buyByCard = async () => {
+    setBusy('buy');
+    setNote(null);
+    const r = await startCardCheckout(plan);
+    setBusy(null);
+    setNote(r.ok ? 'Finish in the browser — this unlocks on its own.' : r.message);
+  };
+
+  /**
+   * StoreKit. Only reachable when RevenueCat is configured, because
+   * `purchase()` resolves true without charging when it is not, and a
+   * Subscribe button that grants the tier without a payment sheet is
+   * Guideline 3.1.1 and the fastest rejection there is.
+   */
   const buy = async () => {
     setBusy('buy');
     setNote(null);
@@ -103,8 +126,16 @@ export function Paywall({ onDone }: { onDone: (subscribed: boolean) => void }) {
       scroll
       footer={
         <>
-          <Cta onClick={buy} disabled={busy !== null}>
-            {busy === 'buy' ? 'One moment…' : `Start with ${NAME}`}
+          {/* Whichever route this build can actually charge through. The
+              screen does not render at all when neither can — see
+              lib/paywallGate.ts — so there is never a button here that takes
+              no money. */}
+          <Cta onClick={cardCheckoutAvailable() ? buyByCard : buy} disabled={busy !== null}>
+            {busy === 'buy'
+              ? 'One moment…'
+              : cardCheckoutAvailable()
+                ? `Start with ${NAME} — ${CARD_DISCOUNT_PCT}% off`
+                : `Start with ${NAME}`}
           </Cta>
           {/* Visible, full width, in the footer beside the buy button — not
               hidden, not greyed, not six-point type in a corner. Somebody who
@@ -137,18 +168,6 @@ export function Paywall({ onDone }: { onDone: (subscribed: boolean) => void }) {
             {v}
           </div>
         ))}
-      </div>
-
-      {/* The limits, before the choice rather than after it. The free-pick
-          screen says the same thing again once they have chosen, but by then it
-          would be news, and news at that point reads as a bait and switch. */}
-      <div className="ob-free-terms">
-        <span className="ob-free-terms-head">Free includes</span>
-        <span>
-          One product tracked in your schedule, {LIMITS.free.catalogue} of each kind in Discover,
-          and {LIMITS.free.askMessagesTotal} assistant messages. The research is free for
-          everything, always.
-        </span>
       </div>
 
       <div className="ob-plans" role="radiogroup" aria-label="Plan">
