@@ -108,7 +108,44 @@ Deno.serve(async (req: Request): Promise<Response> => {
   const admin = createClient(supabaseUrl, serviceKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
-  const { error } = await admin.from('profiles').update({ subscription_tier: tier }).eq('id', userId);
+  /* A downgrade may only clear a tier this system granted. Once RevenueCat is
+     wired there are two writers of this column, and without the guard a Stripe
+     cancellation would revoke an App Store subscriber — access they are still
+     paying Apple for. When the source cannot be read (migration 0040 not
+     applied) the tier is left alone: a few days of already-paid access is a
+     cheaper mistake than taking a paying customer's features away. */
+  if (!grant) {
+    const { data, error: readErr } = await admin
+      .from('profiles')
+      .select('subscription_source')
+      .eq('id', userId)
+      .single();
+    if (readErr) {
+      if (/column .* does not exist|subscription_source/i.test(readErr.message ?? '')) {
+        console.warn('stripe-webhook: subscription_source missing (0040 not applied) — not downgrading');
+        return new Response('ok', { status: 200 });
+      }
+      console.error('stripe-webhook: could not read the source', readErr);
+      return new Response('read failed', { status: 500 });
+    }
+    if (data?.subscription_source !== 'stripe') {
+      console.log(`stripe-webhook: ${userId} downgrade ignored — granted by ${data?.subscription_source ?? 'unknown'}`);
+      return new Response('ok', { status: 200 });
+    }
+  }
+
+  let { error } = await admin
+    .from('profiles')
+    .update({ subscription_tier: tier, subscription_source: grant ? 'stripe' : null })
+    .eq('id', userId);
+
+  /* Same fallback as revenuecat-webhook: an unapplied 0040 must not stop a
+     payment reaching the tier column. */
+  if (error && /column .* does not exist|subscription_source/i.test(error.message ?? '')) {
+    console.warn('stripe-webhook: writing tier without source — migration 0040 is not applied');
+    ({ error } = await admin.from('profiles').update({ subscription_tier: tier }).eq('id', userId));
+  }
+
   if (error) {
     /* Non-200 so Stripe retries — a payment that did not reach the column is
        the one failure here worth being noisy about. */

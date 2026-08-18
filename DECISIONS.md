@@ -258,3 +258,22 @@ broken or non-compliant.
 - **`pct` is React state updated only at the two endpoints**, not per frame. It
   exists for `aria-valuenow`; a screen reader does not need 120 updates a
   second and the point of this change is to stop rendering that often.
+
+## RevenueCat wiring (in progress)
+
+- **No RevenueCat-rendered paywall, and no `@revenuecat/purchases-capacitor-ui`.**
+  ProSheet is the one paywall. Two paywalls drift apart, and theirs is remotely
+  configured UI in someone else's visual language.
+- **Customer Center deferred to v1.1.** You already handles account state and
+  Apple's own subscription screen is where people cancel. A third surface is a
+  product decision, not a plumbing one.
+- **Entitlement identifier stays the literal `pro`** (`ENTITLEMENT_ID`).
+  "PepStack Pro" is a display name and appears nowhere in code.
+- **Migration 0040 adds `profiles.subscription_source`. NOT APPLIED.**
+  Written and listed in `supabase/pending/`. Both webhooks degrade rather than
+  fail when the column is absent: a grant still writes the tier, and a
+  *downgrade* is declined outright, because a system that cannot prove it made
+  a grant must not clear it. Refusing to downgrade costs a few days of paid
+  access; the other way round costs a customer.
+- **`CANCELLATION` and `BILLING_ISSUE` change nothing.** Only `EXPIRATION`
+  revokes. Cancelling on day 2 of a paid year keeps the rest of that year.
