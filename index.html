@@ -18,6 +18,9 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Sets window.__PEPSTACK_RC_KEY__ before the bundle runs. Absent in a
+         fresh clone, which is correct: no key means no purchases, not free ones. -->
+    <script src="/config.js"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
