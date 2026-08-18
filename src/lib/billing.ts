@@ -145,9 +145,12 @@ export const SKIP_PAYWALL = (import.meta.env?.VITE_SKIP_PAYWALL ?? 'false') === 
  * StoreKit for digital subscriptions and an external checkout inside a
  * submitted iOS binary is an automatic rejection.
  *
- * Off unless switched on, and `checkout.ts` additionally refuses it on native
- * whatever this says, so turning it on for a web deploy cannot leak into the
- * App Store build.
+ * ON by default. Defaulting it off was wrong: it silently removed a working
+ * Stripe button from every build that did not set the variable, which is every
+ * build. The Apple concern is native-only, and `cardCheckoutAvailable()`
+ * refuses on native whatever this says — that check is the guarantee, not this
+ * flag. This exists only to turn the route off deliberately
+ * (`VITE_CARD_CHECKOUT=false`), never to be the reason it is missing.
  */
 export const CARD_CHECKOUT_ENABLED =
-  (import.meta.env?.VITE_CARD_CHECKOUT ?? 'false') === 'true';
+  (import.meta.env?.VITE_CARD_CHECKOUT ?? 'true') !== 'false';
