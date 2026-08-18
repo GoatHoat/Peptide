@@ -296,3 +296,25 @@ zinc in its panel but not in its title. Neither exists.
 Everything after `done` in both runs. The walk stalled between the last
 onboarding screen and Today and produced no further output before the session
 ended. Run B was not reached at all this time.
+
+---
+
+# TEMPORARY — remove before submission
+
+**The catch-up preview row.** Added 18 August so the screen can be reviewed
+without waiting for a scheduled dose to pass while the app is closed.
+
+It cannot reach a submitted build — `PREVIEW_ENABLED` is `import.meta.env.DEV`,
+which Vite substitutes with the literal `false`, so the branch is folded and
+deleted. Verified by grepping `dist` for the row's label: **0 occurrences in
+both bundles**. (Written as `import.meta.env?.DEV` first, which defeats the
+substitution and left the row in the production bundle — the grep is the check
+that caught it.)
+
+To remove, three places:
+
+1. `src/lib/catchupPreview.ts` — delete the file
+2. `src/screens/You.tsx` — the `PREVIEW_ENABLED &&` row and its import
+3. `src/App.tsx` — the `onCatchUpPreview` effect in `CatchUpGate` and its import
+
+and `tests/e2e/preview.spec.ts`, which tests it.

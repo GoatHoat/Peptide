@@ -28,6 +28,8 @@ import { onBlockRequested, registerNotificationRouter } from './lib/notification
 import { registerNotificationActions, syncScheduleNotifications } from './lib/notifications';
 import { enqueueMark, flushQueue } from './lib/doseQueue';
 import { markShown, shownToday } from './lib/catchup';
+// TEMPORARY — remove before submission; see lib/catchupPreview
+import { onCatchUpPreview, PREVIEW_ENABLED } from './lib/catchupPreview';
 
 /** Commit to an axis inside the first 10px and never revisit it. */
 const AXIS_THRESHOLD = 10;
@@ -240,6 +242,45 @@ function CatchUpGate({ framed }: { framed: boolean }) {
     document.addEventListener('visibilitychange', onVisible);
     return () => document.removeEventListener('visibilitychange', onVisible);
   }, [user?.id, check]);
+
+  /* TEMPORARY — remove before submission. Opens the screen from You with
+     today's real doses, ignoring the last_opened_at window entirely. It writes
+     nothing by existing: no stamp is moved and no window is consumed, so using
+     it cannot suppress the real thing later. Sliding a dose in it does mark
+     that dose, which is the behaviour being reviewed. See lib/catchupPreview. */
+  useEffect(() => {
+    if (!user || !PREVIEW_ENABLED) return;
+    return onCatchUpPreview(() => {
+      getDosesForDate(user.id, new Date())
+        .then((doses) => {
+          const unmarked = doses.filter((d) => !d.taken);
+          setMissed(
+            unmarked.length > 0
+              ? unmarked
+              : /* So the layout is still reviewable on an empty day. Named so
+                   nobody mistakes them for real rows. */
+                ([
+                  {
+                    id: 'preview-1',
+                    name: 'PREVIEW — example product',
+                    amount: '1 capsule',
+                    scheduled_time: '08:00:00',
+                    taken: false,
+                  },
+                  {
+                    id: 'preview-2',
+                    name: 'PREVIEW — second example',
+                    amount: '2 capsules',
+                    scheduled_time: '13:00:00',
+                    taken: false,
+                  },
+                ] as unknown as Dose[]),
+          );
+          setChecked(true);
+        })
+        .catch((err) => console.error('catch-up preview failed', err));
+    });
+  }, [user?.id]);
 
   /* A tapped reminder lands here rather than on Today, because this is already
      the screen for "these came due, did you take them?" and it confirms with a

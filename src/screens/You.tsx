@@ -21,6 +21,8 @@ import { computeStreak } from '../lib/streak';
 import { MyStack } from './MyStack';
 import { ProgressNotes } from './ProgressNotes';
 import { ErrorState } from '../components/ErrorState';
+// TEMPORARY — remove before submission; see lib/catchupPreview
+import { PREVIEW_ENABLED, requestCatchUpPreview } from '../lib/catchupPreview';
 
 const DOW = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
@@ -263,6 +265,17 @@ export function You() {
         >
           <span className="row-label danger">Delete Account</span>
         </button>
+
+        {/* TEMPORARY — remove before submission. Dev builds only:
+            PREVIEW_ENABLED is import.meta.env.DEV, which is false in
+            `npm run build`, so this row cannot reach a submitted binary. One
+            row, one handler, one flag — see lib/catchupPreview.ts. */}
+        {PREVIEW_ENABLED && (
+          <button type="button" className="row pressable" onClick={requestCatchUpPreview}>
+            <span className="row-label">Preview catch-up screen</span>
+            <span className="row-value">Dev only</span>
+          </button>
+        )}
       </div>
 
       <Sheet open={openSheet === 'notifications'} onClose={() => setOpenSheet(null)} title="Notifications">
