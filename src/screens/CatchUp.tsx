@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useMotionValue, useMotionValueEvent } from 'framer-motion';
 import { Sheet } from '../components/Sheet';
 import { SKIP_REASONS, type Dose } from '../lib/api';
 
@@ -131,18 +132,54 @@ function CatchUpCard({
   onNotTaken: () => void;
 }) {
   const track = useRef<HTMLDivElement>(null);
-  const [x, setX] = useState(0);
+  const fill = useRef<HTMLSpanElement>(null);
+  const thumb = useRef<HTMLSpanElement>(null);
+
+  /**
+   * The offset, as a motion value rather than state.
+   *
+   * `onPointerMove` used to call `setX`, which is a full React render per
+   * pointer event — up to 120 a second, re-rendering the whole card subtree
+   * each time. That was the largest cause of the lag. App.tsx and Tabs.tsx
+   * already drive their drags this way and never call setState mid-gesture;
+   * this is the same pattern. React state is kept for the discrete states
+   * only: dragging, locked, done.
+   */
+  const x = useMotionValue(0);
   const [dragging, setDragging] = useState(false);
   const [locked, setLocked] = useState(false);
+  /** for the aria value, which does not need to update every frame */
+  const [pct, setPct] = useState(0);
 
   const THUMB = 48;
   const PAD = 4;
 
   const travel = () => (track.current?.clientWidth ?? 0) - THUMB - PAD * 2;
 
+  /**
+   * Paint from the motion value, outside React.
+   *
+   * `scaleX` on the fill rather than `width`: a width change lays out every
+   * frame, a transform composites. Both get `translate3d`/`scaleX` so neither
+   * touches layout during a gesture.
+   */
+  const paint = (next: number) => {
+    const t = travel();
+    if (fill.current) {
+      const scale = t > 0 ? (next + THUMB) / (t + THUMB) : 0;
+      fill.current.style.transform = `scaleX(${scale})`;
+    }
+    if (thumb.current) thumb.current.style.transform = `translate3d(${next}px,0,0)`;
+  };
+
+  useMotionValueEvent(x, 'change', paint);
+
   const finish = () => {
     setLocked(true);
-    setX(travel());
+    /* The one moment worth easing, because it is not finger-driven. The class
+       is what carries the transition; it is absent during the drag. */
+    x.set(travel());
+    setPct(1);
     onTaken();
   };
 
@@ -151,7 +188,11 @@ function CatchUpCard({
      silently poisons the adherence data this screen exists to gather. */
   const onPointerDown = (e: React.PointerEvent) => {
     if (locked || done) return;
-    (e.target as Element).setPointerCapture?.(e.pointerId);
+    /* `e.currentTarget`, not `e.target`. The target is whatever was under the
+       finger — usually the thumb, sometimes the label — and capturing to a
+       child made the track's move handler behave differently depending on
+       where the drag started. The track is always the right element. */
+    e.currentTarget.setPointerCapture?.(e.pointerId);
     setDragging(true);
   };
 
@@ -159,19 +200,20 @@ function CatchUpCard({
     if (!dragging || locked) return;
     const rect = track.current?.getBoundingClientRect();
     if (!rect) return;
-    const next = Math.max(0, Math.min(travel(), e.clientX - rect.left - THUMB / 2));
-    setX(next);
-    if (next >= travel() - 2) finish();
+    const t = travel();
+    const next = Math.max(0, Math.min(t, e.clientX - rect.left - THUMB / 2));
+    x.set(next);
+    if (next >= t - 2) finish();
   };
 
   const release = () => {
     if (locked) return;
     setDragging(false);
-    setX(0);
+    x.set(0);
+    setPct(0);
   };
 
   const complete = locked || done;
-  const pct = travel() > 0 ? x / travel() : 0;
 
   return (
     <div className="catchup-card">
@@ -196,11 +238,19 @@ function CatchUpCard({
         aria-valuemax={100}
         aria-valuenow={complete ? 100 : Math.round(pct * 100)}
       >
-        <span className="catchup-fill" style={{ width: complete ? '100%' : `${x + THUMB}px` }} />
+        {/* `settling` carries the only two transitions: the snap back on
+            release and the run to the end on completion. Absent while the
+            finger is down, so nothing is easing behind it. */}
+        <span
+          ref={fill}
+          className={`catchup-fill${dragging ? '' : ' settling'}`}
+          style={complete ? { transform: 'scaleX(1)' } : undefined}
+        />
         <span className="catchup-label">{complete ? 'Taken' : 'Slide if you took it'}</span>
         <span
-          className="catchup-thumb"
-          style={{ transform: `translateX(${complete ? travel() : x}px)` }}
+          ref={thumb}
+          className={`catchup-thumb${dragging ? '' : ' settling'}`}
+          style={complete ? { transform: `translate3d(${travel()}px,0,0)` } : undefined}
         />
       </div>
 

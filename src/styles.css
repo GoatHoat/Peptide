@@ -2543,14 +2543,33 @@ button {
   touch-action: none;
   cursor: grab;
 }
+/* The trail behind the thumb, dimmer than it.
+   Both used to be var(--purple), so as the fill caught up the thumb vanished
+   into it and there was nothing to hold on to. One hue, two values — a solid
+   puck riding over a dimmer trail. No shadow, ring or border: the shade
+   difference is the separation.
+
+   scaleX from the left rather than width. A width change lays out every frame;
+   a transform composites. Sized to the full travel and scaled down, so scale 1
+   is the completed state. */
 .catchup-fill {
   position: absolute;
   inset: 0 auto 0 0;
-  background: var(--purple);
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: var(--purple-dim);
   border-radius: 28px;
-  transition: width 120ms linear;
+  will-change: transform;
 }
-.catchup-track.done .catchup-fill { transition: width 260ms var(--ease); }
+/* The only two moments worth easing, because neither is finger-driven: the
+   snap back on release and the run to the end on completion. Applied by class,
+   so nothing is easing while the finger is down — that 120ms was the fill
+   trailing the thumb by a frame and a half on every single move. */
+.catchup-fill.settling,
+.catchup-thumb.settling {
+  transition: transform 240ms var(--ease);
+}
 .catchup-label {
   position: absolute;
   inset: 0;
@@ -2572,6 +2591,7 @@ button {
   border-radius: 24px;
   background: var(--purple);
   pointer-events: none;
+  will-change: transform;
 }
 .catchup-track.done .catchup-thumb { opacity: 0; }
 

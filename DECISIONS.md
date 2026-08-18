@@ -245,3 +245,16 @@ broken or non-compliant.
 - **The doodle SVG and `tools/doodle.py` are kept.** Both screens that used it
   no longer do, and the CSS is deleted — but the generator and the asset are
   work you asked for and are one line from being used again.
+
+## The catch-up slider (18 August)
+
+- **`--purple-dim` at its existing 35% for the fill**, unchanged. Against the
+  #16161a track it is visible without competing with the solid thumb, which is
+  the read being asked for. Raising the alpha was the fallback and was not
+  needed.
+- **One transition class, `settling`, on both fill and thumb**, rather than a
+  permanent transition with a `dragging` override. Absent by default means a
+  new frame during a drag can never be easing.
+- **`pct` is React state updated only at the two endpoints**, not per frame. It
+  exists for `aria-valuenow`; a screen reader does not need 120 updates a
+  second and the point of this change is to stop rendering that often.
