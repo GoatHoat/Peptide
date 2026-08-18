@@ -2712,23 +2712,41 @@ button {
   padding: 0;
   list-style: none;
 }
+/* A bullet each. The list had hairline separators between the lines, which
+   read as a table of rows rather than as four things you get — a bullet says
+   "item in a list" without drawing a box around every one. */
 .pro-list li {
-  padding: 7px 0;
+  position: relative;
+  padding: 6px 0 6px 20px;
   color: var(--t2);
   font-size: calc(15px * var(--text-scale));
-  border-bottom: 1px solid var(--hair);
+  line-height: 1.45;
 }
-.pro-list li:last-child { border-bottom: 0; }
+.pro-list li::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  /* on the first line's optical centre, so a line that wraps keeps its bullet
+     beside the first row rather than floating to the middle of the block */
+  top: calc(0.72em + 6px);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--purple);
+}
 .pro-plans { display: flex; flex-direction: column; gap: 10px; }
+/* Two black cards. --bg rather than --card, so they read as cards cut out of
+   the sheet rather than as rows sitting on it — the sheet is already --card and
+   a card on a card of the same colour is a border, not a card. */
 .pro-plan {
   display: flex;
   align-items: center;
   gap: 12px;
   width: 100%;
-  padding: 14px 16px;
+  padding: 16px;
   border: 1px solid var(--hair);
-  border-radius: 16px;
-  background: var(--card);
+  border-radius: 18px;
+  background: var(--bg);
   text-align: left;
 }
 /* The type in here is drawn from the app's own scale — t-body-m, t-caption,
@@ -2762,30 +2780,76 @@ button {
   white-space: nowrap;
 }
 
-.pro-buy {
-  width: 100%;
-  min-height: 52px;
-  margin-top: 14px;
+/* Two ways to pay, side by side, because they are the same decision. */
+.pro-pay {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.pro-pay-btn {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 54px;
+  padding: 0 12px;
   border-radius: 16px;
-  background: var(--purple);
-  color: var(--bg);
   font-size: calc(15px * var(--text-scale));
   font-weight: 600;
+  line-height: 1.2;
 }
-.pro-buy:disabled { opacity: 0.55; }
-/* Holds a line whether or not there is one to say, so committing a plan cannot
-   push the restore button down under the finger. */
-.pro-note { margin-top: 10px; min-height: 18px; color: var(--t3); }
+.pro-pay-btn:disabled { opacity: 0.55; }
+/* The card route is the one being recommended, so it carries the accent. */
+.pro-pay-card {
+  background: var(--purple);
+  color: var(--bg);
+}
+/* The App Store route is the alternative, not the lesser option — outlined
+   rather than dimmed, so it does not read as disabled. */
+.pro-pay-iap {
+  background: var(--card-hi);
+  color: var(--t1);
+  box-shadow: inset 0 0 0 1px var(--hair);
+}
+/* Top right of the card button, overhanging its corner. Purple on the button's
+   own purple would vanish, so the pill inverts: the app's black on the accent
+   is already the button, so the pill is the accent on black. */
+.pro-pay-off {
+  position: absolute;
+  top: -9px;
+  right: -6px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--purple);
+  color: var(--bg);
+  box-shadow: 0 0 0 3px var(--card);
+  white-space: nowrap;
+}
+/* Holds a line only when there is one. It reserved 18px unconditionally, which
+   is the gap that sat between the pay buttons and Restore Purchases on every
+   render where nothing had gone wrong. */
+/* Only present when there is a message; see ProSheet. */
+.pro-note {
+  margin: 10px 0 0;
+  color: var(--t3);
+}
+/* A text link, small and quiet — you look for it only if you have paid before.
+   Still 44 tall to the finger via the pseudo, because a control you cannot hit
+   is not a restore path. */
 .pro-restore {
+  position: relative;
   display: block;
-  width: 100%;
-  min-height: 44px;
-  margin-top: 14px;
+  margin: 14px auto 0;
   border: 0;
   background: none;
   color: var(--purple);
   font: inherit;
-  font-size: calc(15px * var(--text-scale));
+  font-size: calc(13px * var(--text-scale));
+  font-weight: 500;
+}
+.pro-restore::after {
+  content: '';
+  position: absolute;
+  inset: -13px -16px;
 }
 .pro-legal { margin-top: 10px; text-align: center; color: var(--t3); }
 .pro-legal a { color: var(--t3); }
@@ -2868,28 +2932,6 @@ button {
   letter-spacing: -0.3px;
 }
 
-/* The doodle. Two screens, and only two — a motif at two, wallpaper at five.
-   Behind everything, no pointer events, and dimmed here rather than by shipping
-   a dimmer asset so the line quality survives. Pure black behind it: the
-   pattern is transparent and carries no background of its own. */
-.doodle-bg {
-  position: absolute;
-  inset: 0;
-  background: url('/doodle-pattern.svg') center / cover no-repeat;
-  pointer-events: none;
-  z-index: 0;
-}
-/* No extra opacity on welcome: the file now carries rgba(255,255,255,0.09) on
-   every stroke, and multiplying that by 0.28 as this used to is what made the
-   pattern invisible rather than subtle. Catch-up stays dimmer — cards and a
-   drag control sit on top of it and legibility wins. */
-.doodle-bg.welcome { opacity: 1; }
-.doodle-bg.catchup-doodle { opacity: 0.6; }
-@media (prefers-reduced-transparency: reduce) {
-  .doodle-bg { opacity: 0.1 !important; }
-}
-/* everything on those two screens sits in front of it */
-.ob-welcome, .catchup-head, .catchup-list, .catchup-dismiss { position: relative; z-index: 1; }
 
 /* Fewer than three missed doses leaves the screen mostly empty otherwise. */
 .catchup.short {

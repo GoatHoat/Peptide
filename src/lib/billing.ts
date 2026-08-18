@@ -19,6 +19,16 @@ export interface Plan {
  * no relationship to, so the moment either moved it became a false claim on the
  * one screen where a false claim is a Guideline 2.3.1 problem.
  */
+/**
+ * What paying by card saves against paying through the App Store.
+ *
+ * Apple takes 15% under the Small Business Program, so 5% back to the customer
+ * is comfortably inside what the card route recovers — this is a real
+ * difference, not a marketing number. Written once and rendered from here so
+ * the pill and any copy about it cannot disagree.
+ */
+export const CARD_DISCOUNT_PCT = 5;
+
 export const ANNUAL_CENTS = 4999;
 export const MONTHLY_CENTS = 499;
 

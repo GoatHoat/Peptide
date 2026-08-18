@@ -39,9 +39,6 @@ export function CatchUp({
 
   return (
     <div className={`catchup${doses.length < 3 ? ' short' : ''}`}>
-      {/* Dimmer here than on welcome: cards and a drag control sit on top and
-          legibility wins. */}
-      <span className="doodle-bg catchup-doodle" aria-hidden />
       <div className="catchup-head">
         <h1 className="t-title">While you were away</h1>
         <p className="catchup-sub t-body">

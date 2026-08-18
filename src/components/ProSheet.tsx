@@ -1,7 +1,8 @@
 import { PRO_NAME } from '../lib/brand';
 import { useState } from 'react';
 import { Sheet } from './Sheet';
-import { PLANS, purchase, restorePurchases, type PlanId } from '../lib/billing';
+import { CARD_DISCOUNT_PCT, PLANS, purchase, restorePurchases, type PlanId } from '../lib/billing';
+import { startCardCheckout } from '../lib/checkout';
 import { externalLink, PRIVACY_URL, TERMS_URL } from '../lib/legal';
 import { useEntitlement } from '../lib/entitlements';
 
@@ -104,33 +105,62 @@ export function ProSheet({
         ))}
       </div>
 
-      <button
-        className="pro-buy pressable"
-        disabled={busy !== null}
-        onClick={async () => {
-          setBusy(plan);
-          setNote(null);
-          try {
-            await purchase(plan);
-            /* Deliberately says nothing about having upgraded. purchase() is a
-               stub and claiming success would be a lie the user could act on. */
-            setNote('Subscriptions are not switched on yet.');
-          } finally {
+      {/* Two ways to pay, side by side, because they are the same decision.
+          The card route is cheaper and says so; the App Store route is the one
+          Apple requires on iOS and is not yet wired. */}
+      <div className="pro-pay">
+        <button
+          className="pro-pay-btn pro-pay-card pressable"
+          disabled={busy !== null}
+          onClick={async () => {
+            setBusy(plan);
+            setNote(null);
+            const r = await startCardCheckout(plan);
+            if (!r.ok) setNote(r.message);
             setBusy(null);
-          }
-        }}
-      >
-        {busy === plan ? 'One moment…' : `Continue with ${PLANS.find((p) => p.id === plan)?.name}`}
-      </button>
+          }}
+        >
+          {busy === plan ? 'One moment…' : 'Pay by card'}
+          <span className="pro-pay-off t-label" aria-label="5 percent off">
+            {CARD_DISCOUNT_PCT}% off
+          </span>
+        </button>
 
-      {/* Reserved, so selecting a plan or pressing the button cannot move the
-          rows above it. */}
-      <p className="pro-note t-caption" role="status">
-        {note ?? ' '}
-      </p>
+        <button
+          className="pro-pay-btn pro-pay-iap pressable"
+          disabled={busy !== null}
+          onClick={async () => {
+            setBusy(plan);
+            setNote(null);
+            try {
+              await purchase(plan);
+              /* Deliberately says nothing about having upgraded. purchase() is
+                 a stub and claiming success would be a lie the user could act
+                 on. */
+              setNote('In-app payment is not switched on yet.');
+            } finally {
+              setBusy(null);
+            }
+          }}
+        >
+          In-app payment
+        </button>
+      </div>
 
-      {/* Never behind a link. A missing restore path is the most common
-          rejection reason for subscription apps. */}
+      {/* Rendered only when there is something to say. It used to emit a
+          non-breaking space so the box always had a line in it, which is the
+          gap that sat between the pay buttons and Restore Purchases on every
+          render where nothing had gone wrong. */}
+      {note && (
+        <p className="pro-note t-caption" role="status">
+          {note}
+        </p>
+      )}
+
+      {/* Small, and still a real control — never behind a menu. A missing
+          restore path is the most common rejection reason for subscription
+          apps, so it stays on the sheet; it is quiet because it is the thing
+          you look for only if you have paid before. */}
       <button
         className="pro-restore pressable"
         disabled={busy !== null}
@@ -149,14 +179,11 @@ export function ProSheet({
       </button>
 
       <p className="pro-legal t-caption">
-        <a href={TERMS_URL} {...externalLink}>
-          Terms
-        </a>
+        <a href={TERMS_URL} {...externalLink}>Terms</a>
         {' · '}
-        <a href={PRIVACY_URL} {...externalLink}>
-          Privacy
-        </a>
+        <a href={PRIVACY_URL} {...externalLink}>Privacy</a>
       </p>
+
     </Sheet>
   );
 }

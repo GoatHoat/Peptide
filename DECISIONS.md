@@ -223,3 +223,25 @@ broken or non-compliant.
   in label type so they read as a heading for the list. The strip has room for
   one or two words; the panel has room to be exact, and the peptide
   reference-only note already lived there.
+
+## The Pro sheet, Stripe, and the doodle (18 August)
+
+- **Plan cards are `--bg`, not `--card`.** The sheet is already `--card`; a card
+  on a card of the same colour is a border, not a card. Black cuts them out of
+  the sheet, which is what "two black cards" needs to mean here.
+- **The reserved note line is gone.** It rendered a non-breaking space so the
+  box always had a line in it — that was the 24px gap between the pay buttons
+  and Restore Purchases. It is 2px now, and the note only exists when there is
+  something to say.
+- **Stripe opens in the system browser, not the WebView.** A payment form inside
+  an app's own WebView is the thing people are told to distrust, and it is
+  Stripe's own guidance.
+- **The webhook is the only thing that grants Pro.** `create-checkout` returns a
+  URL and nothing else; a client coming back from Checkout saying "I paid" is
+  not evidence and the return URL can be typed by hand.
+- **`startCardCheckout` lives in `lib/checkout.ts`, not `billing.ts`.** It needs
+  the Supabase client, and `billing.ts` is imported by the price tests in Node
+  where that client does not exist.
+- **The doodle SVG and `tools/doodle.py` are kept.** Both screens that used it
+  no longer do, and the CSS is deleted — but the generator and the asset are
+  work you asked for and are one line from being used again.

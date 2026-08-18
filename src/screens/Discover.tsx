@@ -207,7 +207,16 @@ export function Discover() {
 
           /* Nothing carried a kind before migration 0016, so an unset value
              reads as a peptide — which is what every earlier entry is. */
-          const all = results.filter((r) => (r.kind ?? 'peptide') === tab.id);
+          const inTab = results.filter((r) => (r.kind ?? 'peptide') === tab.id);
+          /* The three readable ones first, then the rest in the order they came.
+             It breaks alphabetical, deliberately: a free account should be able
+             to see everything it can actually open without scrolling past a
+             screenful of blur to find it. Pro sorts as before, because for Pro
+             the distinction does not exist. `filter` twice rather than a sort,
+             so the order inside each group is untouched. */
+          const all = isPro
+            ? inTab
+            : [...inTab.filter((r) => freeSet.has(r.slug)), ...inTab.filter((r) => !freeSet.has(r.slug))];
           const limit = shown[tab.id] ?? PAGE;
           const visible = all.slice(0, limit);
           const remaining = all.length - visible.length;
