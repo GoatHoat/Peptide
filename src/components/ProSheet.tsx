@@ -108,6 +108,7 @@ export function ProSheet({
       {/* Two ways to pay, side by side, because they are the same decision.
           The card route is cheaper and says so; the App Store route is the one
           Apple requires on iOS and is not yet wired. */}
+      <p className="pro-pay-q t-body-m">How do you want to pay?</p>
       <div className="pro-pay">
         <button
           className="pro-pay-btn pro-pay-card pressable"
@@ -120,7 +121,7 @@ export function ProSheet({
             setBusy(null);
           }}
         >
-          {busy === plan ? 'One moment…' : 'Pay by card'}
+          {busy === plan ? 'One moment…' : 'Stripe'}
           <span className="pro-pay-off t-label" aria-label="5 percent off">
             {CARD_DISCOUNT_PCT}% off
           </span>
