@@ -90,8 +90,13 @@ Deno.serve(async (req: Request): Promise<Response> => {
     mode: 'subscription',
     'line_items[0][price]': price,
     'line_items[0][quantity]': '1',
-    success_url: `${site}/?checkout=done`,
-    cancel_url: `${site}/?checkout=cancelled`,
+    /* Two static pages whose only job is to bounce to `pepstack://`, because
+       Stripe requires https here and will reject a custom scheme. These used
+       to be `${site}/?checkout=done`, which left anybody who paid from the app
+       sitting on a website with no way back. Neither page grants anything —
+       see public/pro-success.html. */
+    success_url: `${site}/pro-success.html`,
+    cancel_url: `${site}/pro-cancel.html`,
     /* The only link between a Stripe payment and an account. The webhook reads
        it back — without it a completed payment cannot be attributed to anyone. */
     client_reference_id: user.id,

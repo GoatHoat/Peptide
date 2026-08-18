@@ -20,6 +20,24 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
+	<!-- The scheme Stripe Checkout comes home on. Stripe requires an https
+	     success_url and rejects a custom scheme, so the return is two hops:
+	     Stripe -> pro-success.html on the site -> pepstack://checkout/done,
+	     which iOS delivers to appUrlOpen. See src/lib/checkoutReturn.ts.
+	     Receiving this URL grants nothing; only the webhook sets the tier. -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>app.pepstack.ios</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>pepstack</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>

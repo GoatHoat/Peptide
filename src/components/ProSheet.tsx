@@ -1,8 +1,9 @@
 import { PRO_NAME } from '../lib/brand';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Sheet } from './Sheet';
 import { CARD_DISCOUNT_PCT, PLANS, purchase, restorePurchases, type PlanId } from '../lib/billing';
-import { startCardCheckout } from '../lib/checkout';
+import { cardCheckoutAvailable, startCardCheckout } from '../lib/checkout';
+import { onCheckoutReturn } from '../lib/checkoutReturn';
 import { externalLink, PRIVACY_URL, TERMS_URL } from '../lib/legal';
 import { useEntitlement } from '../lib/entitlements';
 
@@ -49,12 +50,44 @@ export function ProSheet({
   reason: ProReason;
   onClose: () => void;
 }) {
-  const { catalogueTotal, lockedTotal } = useEntitlement();
+  const { catalogueTotal, lockedTotal, isPro } = useEntitlement();
   /* Annual by default: it is the better value and preselecting the cheaper
      monthly would make the saving badge decoration rather than a reason. */
   const [plan, setPlan] = useState<PlanId>('annual');
   const [busy, setBusy] = useState<PlanId | 'restore' | null>(null);
   const [note, setNote] = useState<string | null>(null);
+
+  /**
+   * What to say between coming back from Stripe and the webhook landing.
+   *
+   * Never "payment failed". By the time anybody is looking at this their money
+   * has already left, and the tier arriving a few seconds later is the normal
+   * case, not an error. CheckoutReturnWatcher is doing the actual re-reading;
+   * this only narrates it.
+   */
+  useEffect(() => {
+    if (!open) return;
+    return onCheckoutReturn((outcome) => {
+      if (outcome === 'cancelled') {
+        setBusy(null);
+        setNote(null);
+        return;
+      }
+      setBusy(null);
+      setNote('Confirming your payment…');
+      /* Just past the last retry in PRO_POLL_MS. */
+      const slow = setTimeout(
+        () => setNote((n) => (n ? 'This can take a moment. It will unlock on its own.' : n)),
+        11_000,
+      );
+      return () => clearTimeout(slow);
+    });
+  }, [open]);
+
+  /* The moment it lands, stop talking about it. */
+  useEffect(() => {
+    if (isPro) setNote(null);
+  }, [isPro]);
 
   /* `my_entitlement()` is absent until 0037 is applied, and then catalogueTotal
      is 0. This used to fall back to a hardcoded 304 — a number nobody had
@@ -108,8 +141,12 @@ export function ProSheet({
       {/* Two ways to pay, side by side, because they are the same decision.
           The card route is cheaper and says so; the App Store route is the one
           Apple requires on iOS and is not yet wired. */}
-      <p className="pro-pay-q t-body-m">How do you want to pay?</p>
+      {/* Only a question when there are two answers. On the App Store build
+          the card route is not offered at all — Apple requires StoreKit for
+          digital subscriptions — so this collapses to the one button. */}
+      {cardCheckoutAvailable() && <p className="pro-pay-q t-body-m">How do you want to pay?</p>}
       <div className="pro-pay">
+        {cardCheckoutAvailable() && (
         <button
           className="pro-pay-btn pro-pay-card pressable"
           disabled={busy !== null}
@@ -126,6 +163,7 @@ export function ProSheet({
             {CARD_DISCOUNT_PCT}% off
           </span>
         </button>
+        )}
 
         <button
           className="pro-pay-btn pro-pay-iap pressable"

@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import { AuthProvider } from './lib/auth';
 import { ProfileProvider } from './lib/prefs';
+import { startCheckoutReturnListener } from './lib/checkoutReturn';
 import { isSupabaseConfigured } from './lib/supabaseClient';
 import { SetupNeeded } from './screens/SetupNeeded';
 import './styles.css';
@@ -44,6 +45,11 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
       .catch(() => {});
   });
 }
+
+/* Before React, and once. The deep link that brings somebody back from Stripe
+   can arrive while the app is still starting, and a listener attached inside a
+   component would not exist yet. */
+startCheckoutReturnListener();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
