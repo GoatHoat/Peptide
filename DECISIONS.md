@@ -277,3 +277,18 @@ broken or non-compliant.
   access; the other way round costs a customer.
 - **`CANCELLATION` and `BILLING_ISSUE` change nothing.** Only `EXPIRATION`
   revokes. Cancelling on day 2 of a paid year keeps the rest of that year.
+
+## Schedule
+
+- **A food-free block is derived only for `empty`, and only when the day has
+  none.** `with_food`, `evening` and `morning` degrade onto an existing block
+  sensibly; `any` does not care. None of them earns a new alarm.
+- **At most one derived block per schedule.** Two empty-stomach items share it.
+  A day that grows three new times is worse than the compromise it replaced.
+- **`MAX_BLOCKS` is a preference, not a ceiling.** Worst case is five: four the
+  user gave plus one derived. Noted at the constant.
+- **Earliest workable gap wins**, not the roomiest. A supplement to remember at
+  4pm is one that gets skipped.
+- **No gap means no invention.** A day of back-to-back meals keeps the old
+  least-bad placement and still admits the compromise. Never a 3am slot that
+  satisfies the constraint on paper.

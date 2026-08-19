@@ -64,6 +64,13 @@ export interface Block {
   time: string;
   /** true when this block is a meal, which `with_food` requires */
   isMeal: boolean;
+  /**
+   * Set when the solver made this time up rather than being given it.
+   *
+   * Only ever the food-free gap below. It exists so the reason line can state
+   * the fact instead of apologising for a compromise it did not make.
+   */
+  derived?: true;
 }
 
 export interface Placement {
@@ -82,13 +89,31 @@ export interface Solution {
   used: Block[];
 }
 
-/** Ceiling on distinct blocks. Above this, adherence falls off a cliff. */
+/**
+ * Preferred ceiling on distinct blocks. Above this, adherence falls off a
+ * cliff.
+ *
+ * NOT a hard limit, and it stopped being one when the food-free gap below was
+ * added. A hard anchor is worth one extra block, so the worst case is five:
+ * four the user gave plus one derived. The reuse penalty in `solve` is what
+ * enforces the preference, and it is a cost rather than a refusal for exactly
+ * this reason.
+ */
 export const MAX_BLOCKS = 4;
 
 const WITH_FOOD_MINUTES = 30;
 const EMPTY_AFTER_MEAL = 120;
 const EMPTY_BEFORE_MEAL = 30;
 const WINDOW_MINUTES = 120;
+/** Resolution of the search for a food-free gap. */
+const DERIVE_STEP_MINUTES = 15;
+/**
+ * How far a derived block must sit from every block the user already has.
+ *
+ * Without it the search returns a time ten minutes off an existing one, which
+ * is two alarms that feel like a bug rather than a schedule.
+ */
+const DERIVE_CLEARANCE_MINUTES = 30;
 
 /** Fat-soluble vitamins and the long-chain omega-3s. */
 const FAT_SOLUBLE = new Set(['vitamin-a', 'vitamin-d', 'vitamin-e', 'vitamin-k', 'omega-3']);
@@ -147,8 +172,24 @@ export function blocksFor(day: DayShape): Block[] {
   const winddown = fromMinutes(toMinutes(day.sleep) - 60);
   out.push({ id: 'winddown', name: 'Wind-down', time: winddown, isMeal: false });
 
-  const seen = new Set<string>();
-  return out.filter((b) => (seen.has(b.time) ? false : (seen.add(b.time), true)));
+  /* Collapse duplicate times, but MERGE rather than drop. Wake is pushed
+     first, so a plain filter kept "When you wake" and threw the meal away —
+     and with it `isMeal`. The time then looked food-free to every empty-stomach
+     item and offered nothing to anchor a with-food one, for somebody who eats
+     breakfast the moment they get up. The meal's name and its flag both win,
+     because eating is the fact that constrains the placement. */
+  const byTime = new Map<string, Block>();
+  for (const b of out) {
+    const existing = byTime.get(b.time);
+    if (!existing) {
+      byTime.set(b.time, b);
+      continue;
+    }
+    if (b.isMeal && !existing.isMeal) {
+      byTime.set(b.time, { ...b, id: existing.id === 'wake' ? b.id : existing.id });
+    }
+  }
+  return [...byTime.values()].sort((a, b) => toMinutes(a.time) - toMinutes(b.time));
 }
 
 /** The meal the user called largest, else dinner, else the last meal. */
@@ -253,6 +294,56 @@ function separationBreaks(
   return out;
 }
 
+/**
+ * A food-free time, invented only when the day genuinely offers none.
+ *
+ * An empty-stomach item used to land on a meal with a line admitting it would
+ * rather not be there. For an app whose whole claim is timing, saying "here is
+ * the least bad option" is the wrong answer when a perfectly good gap exists
+ * two hours later and nobody looked.
+ *
+ * THE SEARCH. Every quarter hour from wake to sleep, taking the first time
+ * that `anchorCost('empty', …)` scores zero — so the definition of "away from
+ * food" is the one the solver already uses, EMPTY_AFTER_MEAL and
+ * EMPTY_BEFORE_MEAL, rather than a second one that could drift from it. A
+ * candidate also has to sit DERIVE_CLEARANCE_MINUTES clear of every block the
+ * user already has.
+ *
+ * EARLIEST WINS, and that is a judgement rather than a fallout of the loop
+ * order: a supplement somebody has to remember at four in the afternoon is one
+ * they skip, so the first workable gap beats a theoretically roomier one later.
+ *
+ * Returns null when the day has no gap at all — someone eating from wake to
+ * sleep. The caller then keeps the old behaviour and says so. A 3am slot that
+ * satisfies the constraint on paper is not an answer.
+ */
+function deriveFoodFreeBlock(day: DayShape, blocks: Block[]): Block | null {
+  const wake = toMinutes(day.wake);
+  const sleepRaw = toMinutes(day.sleep);
+  /* An overnight sleep time reads as smaller than wake. Walking to sleep+1440
+     keeps the loop going forward through the waking day rather than not at
+     all. */
+  const sleep = sleepRaw > wake ? sleepRaw : sleepRaw + 1440;
+  const existing = blocks.map((b) => toMinutes(b.time));
+
+  for (let t = wake; t <= sleep; t += DERIVE_STEP_MINUTES) {
+    const time = fromMinutes(t);
+    const clear = existing.every((e) => {
+      const gap = Math.abs(((((t - e) % 1440) + 1440) % 1440));
+      return Math.min(gap, 1440 - gap) >= DERIVE_CLEARANCE_MINUTES;
+    });
+    if (!clear) continue;
+
+    const candidate: Block = { id: 'away-from-food', name: 'Away from food', time, isMeal: false, derived: true };
+    /* Scored against the user's own blocks, not against a set containing this
+       one — a block cannot be its own reason for existing. `empty` only reads
+       meals out of the list, so passing the originals is also the honest
+       input. */
+    if (anchorCost('empty', candidate, day, blocks) === 0) return candidate;
+  }
+  return null;
+}
+
 /** The sentence shown under a placement. */
 function reasonFor(anchor: Anchor, block: Block, day: DayShape, blocks: Block[]): string {
   switch (anchor) {
@@ -265,6 +356,9 @@ function reasonFor(anchor: Anchor, block: Block, day: DayShape, blocks: Block[])
     case 'with_food':
       return `With ${block.name.toLowerCase()} — absorbs better with food.`;
     case 'empty':
+      /* Derived first. The app made a gap for this rather than settling, so it
+         says what it did — plainly, and without congratulating itself. */
+      if (block.derived) return `${block.name} — a gap kept clear of your meals.`;
       return block.isMeal
         ? `At ${block.name.toLowerCase()} — it would rather be away from food.`
         : `${block.name} — the one that has to be away from food.`;
@@ -289,6 +383,22 @@ export function solve(items: SolverItem[], day: DayShape): Solution {
   const blocks = blocksFor(day);
   if (blocks.length === 0 || items.length === 0) {
     return { blocks, placements: [], used: [] };
+  }
+
+  /* Grow the day, but only for `empty`, and only when it has nowhere to go.
+     `with_food`, `evening` and `morning` all degrade onto an existing block
+     sensibly and `any` does not care, so none of them earns a new time.
+     At most one: two empty-stomach items share it, because a day that sprouts
+     three new alarms is worse than the compromise it replaced. */
+  const needsGap =
+    items.some((i) => anchorFor(i) === 'empty') &&
+    !blocks.some((b) => anchorCost('empty', b, day, blocks) === 0);
+  if (needsGap) {
+    const gap = deriveFoodFreeBlock(day, blocks);
+    if (gap) {
+      blocks.push(gap);
+      blocks.sort((a, b) => toMinutes(a.time) - toMinutes(b.time));
+    }
   }
 
   // hardest first: an item with one acceptable block must choose before an

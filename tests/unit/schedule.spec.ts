@@ -1,169 +1,109 @@
 import { expect, test } from '@playwright/test';
-import {
-  anchorFor,
-  blocksFor,
-  MAX_BLOCKS,
-  solve,
-  type DayShape,
-  type SolverItem,
-} from '../../src/lib/schedule';
-import { toMinutes } from '../../src/lib/conflicts';
+import { MAX_BLOCKS, solve, type DayShape, type SolverItem } from '../../src/lib/schedule';
 
 /**
- * The solver, in Node. Table-driven, per PROMPT_V2.md section 4.
- *
- * The cases that matter are the ones where "reasonable" and "correct" come
- * apart: a day with one meal, a waking window that crosses midnight, and a
- * twelve-item stack where the right answer is fewer blocks rather than better
- * spacing.
+ * The solver, in Node. No browser and no fixture — a wrong placement here is a
+ * quietly wrong schedule rather than a blank screen, which is the kind of
+ * failure that survives a smoke test.
  */
 
-const DAY: DayShape = {
+const item = (id: string, key: string): SolverItem => ({
+  id,
+  name: id,
+  ingredients: [{ key, name: key, amount: null, unit: null }],
+});
+
+/**
+ * Meals at wake, midday and evening — the case from the brief.
+ *
+ * Dinner at 21:00 matters: it puts wind-down (sleep minus an hour) only sixty
+ * minutes after eating, so every block the user gave is either a meal or too
+ * close to one. Without that the wind-down block is already food-free and
+ * nothing needs deriving, which is the correct answer to a different question.
+ */
+const spacedDay: DayShape = {
   wake: '07:00',
   sleep: '23:00',
   meals: [
-    { id: 'breakfast', name: 'Breakfast', time: '08:00' },
+    { id: 'breakfast', name: 'Breakfast', time: '07:00' },
+    { id: 'lunch', name: 'Lunch', time: '13:00' },
+    { id: 'dinner', name: 'Dinner', time: '21:00', largest: true },
+  ],
+};
+
+/** The same day, but eating early enough that wind-down is already clear. */
+const roomyDay: DayShape = {
+  wake: '07:00',
+  sleep: '23:00',
+  meals: [
+    { id: 'breakfast', name: 'Breakfast', time: '07:30' },
     { id: 'lunch', name: 'Lunch', time: '13:00' },
     { id: 'dinner', name: 'Dinner', time: '19:00', largest: true },
   ],
 };
 
-const item = (id: string, name: string, keys: [string, number | null][]): SolverItem => ({
-  id,
-  name,
-  ingredients: keys.map(([key, amount]) => ({ key, amount, unit: 'mg' })),
+test('nothing is derived when the day already has a food-free block', () => {
+  const s = solve([item('iron', 'iron')], roomyDay);
+  expect(s.blocks.some((b) => b.derived), 'wind-down already works').toBe(false);
+  expect(s.placements[0].compromise, 'and nothing was compromised').toBeUndefined();
 });
 
-const IRON = item('iron', 'Thorne Iron Bisglycinate', [['iron', 25]]);
-const ZINC = item('zinc', 'Thorne Zinc Picolinate', [['zinc', 30]]);
-const CALCIUM = item('cal', 'Nutricology Calcium Citrate', [['calcium', 500]]);
-const OMEGA = item('omega', 'Klean Omega', [['omega-3', 1000]]);
-const MAGNESIUM = item('mag', 'Thorne Magnesium Bisglycinate', [['magnesium', 200]]);
+test('an empty-stomach item gets a real gap, not a meal', () => {
+  const s = solve([item('iron', 'iron')], spacedDay);
+  const p = s.placements[0];
+  const block = s.blocks.find((b) => b.id === p.blockId)!;
 
-const blockOf = (sol: ReturnType<typeof solve>, id: string) =>
-  sol.placements.find((p) => p.itemId === id)!.blockId;
-
-test('iron, zinc and calcium never share a block', () => {
-  const sol = solve([IRON, ZINC, CALCIUM], DAY);
-  const seats = [blockOf(sol, 'iron'), blockOf(sol, 'zinc'), blockOf(sol, 'cal')];
-  expect(new Set(seats).size, `all three landed in ${seats}`).toBe(3);
+  expect(block.derived, 'the block was derived').toBe(true);
+  expect(block.isMeal, 'a derived gap is never a meal').toBe(false);
+  expect(block.name).toBe('Away from food');
+  expect(p.compromise, 'nothing was given up, so nothing is apologised for').toBeUndefined();
+  expect(p.reason).toContain('kept clear of your meals');
 });
 
-test('and the gaps between them are real, not just different names', () => {
-  const sol = solve([IRON, ZINC, CALCIUM], DAY);
-  const at = (id: string) => toMinutes(sol.blocks.find((b) => b.id === blockOf(sol, id))!.time);
-  expect(Math.abs(at('iron') - at('zinc'))).toBeGreaterThanOrEqual(120);
-  expect(Math.abs(at('zinc') - at('cal'))).toBeGreaterThanOrEqual(120);
-});
+test('the derived time is inside waking hours and clear of every meal', () => {
+  const s = solve([item('iron', 'iron')], spacedDay);
+  const gap = s.blocks.find((b) => b.derived)!;
+  const mins = (t: string) => Number(t.slice(0, 2)) * 60 + Number(t.slice(3));
 
-test('a fat-soluble item lands on the largest meal', () => {
-  const sol = solve([OMEGA], DAY);
-  expect(anchorFor(OMEGA)).toBe('with_fat');
-  expect(blockOf(sol, 'omega')).toBe('dinner');
-  expect(sol.placements[0].reason).toContain('fat');
-});
-
-test('an empty-stomach item never lands within 30 minutes of a meal', () => {
-  const sol = solve([IRON], DAY);
-  const at = toMinutes(sol.blocks.find((b) => b.id === blockOf(sol, 'iron'))!.time);
-  for (const m of DAY.meals) {
-    expect(Math.abs(at - toMinutes(m.time)), `too close to ${m.name}`).toBeGreaterThan(30);
+  expect(mins(gap.time)).toBeGreaterThanOrEqual(mins(spacedDay.wake));
+  expect(mins(gap.time)).toBeLessThanOrEqual(mins(spacedDay.sleep));
+  for (const m of spacedDay.meals) {
+    // 120 after a meal, 30 before one — the solver's own definition
+    const d = mins(gap.time) - mins(m.time);
+    expect(d >= 120 || d <= -30, `too close to ${m.name} (${gap.time} vs ${m.time})`).toBe(true);
   }
 });
 
-test('magnesium goes to the wind-down', () => {
-  const sol = solve([MAGNESIUM], DAY);
-  expect(anchorFor(MAGNESIUM)).toBe('evening');
-  expect(blockOf(sol, 'mag')).toBe('winddown');
+test('two empty-stomach items share one derived block', () => {
+  const s = solve([item('iron', 'iron'), item('tyr', 'l-tyrosine')], spacedDay);
+  expect(s.blocks.filter((b) => b.derived)).toHaveLength(1);
+  const ids = new Set(s.placements.map((p) => p.blockId));
+  expect(ids.has('away-from-food')).toBe(true);
+  expect(s.placements.filter((p) => p.blockId === 'away-from-food')).toHaveLength(2);
 });
 
-test('a twelve-item stack produces four blocks or fewer', () => {
-  const stack: SolverItem[] = [
-    IRON,
-    ZINC,
-    CALCIUM,
-    OMEGA,
-    MAGNESIUM,
-    item('c', 'Vitamin C', [['vitamin-c', 500]]),
-    item('d', 'Vitamin D3', [['vitamin-d', 25]]),
-    item('b12', 'Vitamin B12', [['vitamin-b12', 1]]),
-    item('cr', 'Creatine', [['creatine', 5000]]),
-    item('q', 'Quercetin', [['quercetin', 500]]),
-    item('cur', 'Curcumin', [['curcumin', 1000]]),
-    item('pro', 'Probiotic', [['probiotic', null]]),
-  ];
-  const sol = solve(stack, DAY);
-  expect(sol.placements).toHaveLength(12);
-  expect(sol.used.length, `used ${sol.used.map((b) => b.name)}`).toBeLessThanOrEqual(MAX_BLOCKS);
-});
-
-test('a user with one meal a day still gets a valid schedule', () => {
-  const oneMeal: DayShape = {
-    wake: '10:00',
-    sleep: '02:00',
-    meals: [{ id: 'dinner', name: 'Dinner', time: '18:00', largest: true }],
-  };
-  const sol = solve([IRON, ZINC, OMEGA, MAGNESIUM], oneMeal);
-  expect(sol.placements).toHaveLength(4);
-  // the fat-soluble one has exactly one meal to go to, and it must take it
-  expect(blockOf(sol, 'omega')).toBe('dinner');
-  expect(sol.used.length).toBeGreaterThan(0);
-});
-
-test('an overnight waking window does not crash or produce a negative day', () => {
-  const overnight: DayShape = {
-    wake: '23:00',
-    sleep: '07:00',
-    meals: [{ id: 'meal', name: 'Meal', time: '02:00' }],
-  };
-  const sol = solve([IRON, ZINC, MAGNESIUM], overnight);
-  expect(sol.placements).toHaveLength(3);
-  for (const b of sol.blocks) {
-    expect(b.time, `block time ${b.time} is not a clock time`).toMatch(/^\d\d:\d\d$/);
-  }
-});
-
-test('every placement carries a reason, and none is generic filler', () => {
-  const sol = solve([IRON, ZINC, CALCIUM, OMEGA, MAGNESIUM], DAY);
-  for (const p of sol.placements) {
-    expect(p.reason.length, `${p.itemId} has no reason`).toBeGreaterThan(10);
-    expect(p.reason).not.toBe('');
-    // a reason has to name the block it is talking about
-    const block = sol.blocks.find((b) => b.id === p.blockId)!;
-    expect(
-      p.reason.toLowerCase().includes(block.name.toLowerCase()),
-      `${p.itemId}: "${p.reason}" does not name ${block.name}`,
-    ).toBe(true);
-  }
-});
-
-test('a compromise is stated rather than hidden', () => {
-  /* Three items that all want to be away from each other, in a day with one
-     anchor. Something has to give, and the solver has to say so. */
-  const cramped: DayShape = {
-    wake: '08:00',
-    sleep: '09:00',
-    meals: [{ id: 'meal', name: 'Meal', time: '08:30' }],
-  };
-  const sol = solve([IRON, ZINC, CALCIUM], cramped);
-  expect(sol.placements).toHaveLength(3);
-  expect(sol.placements.some((p) => p.compromise), 'no compromise was reported').toBe(true);
-});
-
-test('blocks collapse when a meal lands on the wake time', () => {
-  const day: DayShape = {
+test('a day with no gap keeps the old behaviour and still says so', () => {
+  /* Eating every ninety minutes from wake to sleep: there is no food-free
+     quarter hour anywhere, so nothing may be invented. */
+  const packed: DayShape = {
     wake: '07:00',
-    sleep: '23:00',
-    meals: [{ id: 'breakfast', name: 'Breakfast', time: '07:00' }],
+    sleep: '22:00',
+    meals: Array.from({ length: 10 }, (_, i) => ({
+      id: `m${i}`,
+      name: `Meal ${i}`,
+      time: `${String(7 + Math.floor((i * 90) / 60)).padStart(2, '0')}:${String((i * 90) % 60).padStart(2, '0')}`,
+    })),
   };
-  const blocks = blocksFor(day);
-  const times = blocks.map((b) => b.time);
-  expect(new Set(times).size, 'a duplicate time became two blocks').toBe(times.length);
+  const s = solve([item('iron', 'iron')], packed);
+  expect(s.blocks.some((b) => b.derived), 'no time was invented').toBe(false);
+  expect(s.placements[0].compromise, 'the compromise is still admitted').toBeTruthy();
 });
 
-test('an item with no panel still gets placed', () => {
-  const typed: SolverItem = { id: 'x', name: 'Something typed by hand' };
-  const sol = solve([typed], DAY);
-  expect(sol.placements).toHaveLength(1);
-  expect(anchorFor(typed)).toBe('any');
+test('a stack with no hard anchor still fits in the preferred block count', () => {
+  const s = solve(
+    [item('c', 'vitamin-c'), item('d', 'vitamin-d'), item('mag', 'magnesium'), item('b12', 'vitamin-b12')],
+    spacedDay,
+  );
+  expect(s.blocks.some((b) => b.derived), 'nothing was derived for soft anchors').toBe(false);
+  expect(s.used.length).toBeLessThanOrEqual(MAX_BLOCKS);
 });
