@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import {
   addScheduleItem,
+  PeptideNotSchedulable,
   findGlossaryByName,
   getPriorEntry,
   getStack,
@@ -30,6 +31,17 @@ interface Props {
  * category, mechanism, storage and route, never an amount or a frequency.
  * See legal.md. Every number here starts as the user's own.
  */
+/**
+ * Said when somebody tries to give a peptide a dose time.
+ *
+ * States the rule and what they can do instead. Peptides are a reference
+ * library here - no dose, no timing - so being unable to schedule one is the
+ * product working, not an error, and it must not read like a retryable
+ * failure. The rule itself lives in api.ts and is not changed by any of this.
+ */
+const PEPTIDE_MESSAGE =
+  'Peptides are reference only, so this one cannot be given a dose time. It can stay in your stack.';
+
 export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose }: Props) {
   const [name, setName] = useState(defaultName ?? '');
   const [pickedGlossaryId, setPickedGlossaryId] = useState<string | null>(glossaryId ?? null);
@@ -46,6 +58,15 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
    * insert path for a change whose whole point is being small.
    */
   const [showAmount, setShowAmount] = useState(false);
+  /**
+   * Whether the chosen product is a peptide, which cannot be scheduled.
+   *
+   * api.ts enforces that and is the right place for it - every path to the
+   * schedule goes through addScheduleItem. But being told after pressing Save
+   * is the wrong moment to learn a rule, so this stops the attempt earlier and
+   * says why. The guard itself is untouched.
+   */
+  const [pickedIsPeptide, setPickedIsPeptide] = useState(false);
   const [time, setTime] = useState('');
   // local date, so "today" means the user's today and not the server's
   const [startDate, setStartDate] = useState(() => toISODate(new Date()));
@@ -92,6 +113,7 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
   const pickFromStack = (item: StackItem) => {
     setName(item.glossary.name);
     setPickedGlossaryId(item.glossary_id);
+    setPickedIsPeptide(item.glossary.kind === 'peptide');
     prefillFrom({ glossaryId: item.glossary_id, name: item.glossary.name });
   };
 
@@ -102,7 +124,12 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
     if (!amount.trim()) prefillFrom({ name: n });
     // recognise a catalogue product typed by hand, so it can reach the stack
     const match = await findGlossaryByName(n).catch(() => null);
-    if (match) setPickedGlossaryId(match.id);
+    if (match) {
+      setPickedGlossaryId(match.id);
+      /* Typed by hand counts too - the guard keys off the glossary row, not
+         off how the row was chosen. */
+      setPickedIsPeptide(match.kind === 'peptide');
+    }
   };
 
   const submit = async (e: FormEvent) => {
@@ -112,6 +139,10 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
        made the field optional in appearance only. */
     if (!name.trim()) {
       setError('Enter a name.');
+      return;
+    }
+    if (pickedIsPeptide) {
+      setError(PEPTIDE_MESSAGE);
       return;
     }
     setBusy(true);
@@ -130,8 +161,12 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
       onAdded(item);
       await syncScheduleNotifications(userId);
       onClose();
-    } catch {
-      setError('Could not save. Try again.');
+    } catch (err) {
+      /* This used to be a bare catch showing "Could not save. Try again." for
+         everything, so a peptide - which can never be saved - invited somebody
+         to keep pressing a button that could not work. The rule is a fact
+         about the product, not a failure, so it reads as one. */
+      setError(err instanceof PeptideNotSchedulable ? PEPTIDE_MESSAGE : 'Could not save. Try again.');
     } finally {
       setBusy(false);
     }
@@ -143,16 +178,24 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
         <div className="field">
           <label className="t-label">From your stack</label>
           <div className="stack-pick-row">
-            {stack.map((item) => (
-              <button
-                type="button"
-                key={item.id}
-                className={`stack-pick-chip pressable ${pickedGlossaryId === item.glossary_id ? 'active' : ''}`}
-                onClick={() => pickFromStack(item)}
-              >
-                {item.glossary.name}
-              </button>
-            ))}
+            {stack.map((item) => {
+              /* Peptides are in the stack and cannot be scheduled, and the
+                 picker makes them easy to put there — so they are shown,
+                 disabled, rather than offered and then refused on save. */
+              const peptide = item.glossary.kind === 'peptide';
+              return (
+                <button
+                  type="button"
+                  key={item.id}
+                  className={`stack-pick-chip pressable ${pickedGlossaryId === item.glossary_id ? 'active' : ''}${peptide ? ' off' : ''}`}
+                  disabled={peptide}
+                  title={peptide ? 'Peptides cannot be given a dose time' : undefined}
+                  onClick={() => pickFromStack(item)}
+                >
+                  {item.glossary.name}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
@@ -168,9 +211,10 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
           onChange={(e) => {
             setName(e.target.value);
             setPickedGlossaryId(null);
+            setPickedIsPeptide(false);
           }}
           onBlur={onNameBlur}
-          placeholder="e.g. BPC-157"
+          placeholder="e.g. Magnesium glycinate"
           required
         />
       </div>

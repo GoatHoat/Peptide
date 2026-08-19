@@ -135,7 +135,13 @@ export function Onboarding({ onFinished }: { onFinished: () => void }) {
           scheduled_time: `${item.time}:00`,
           glossary_id: rec.id,
           start_date: toISODate(new Date()),
-        }).catch(() => {});
+        }).catch((err) => {
+          /* Swallowed entirely before, so an item that never reached the
+             schedule left no trace anywhere — the schedule simply came out
+             shorter than the list the person had just approved. Onboarding
+             still must not stop for one row, but it says which and why. */
+          console.error(`onboarding: ${rec.name} did not reach the schedule`, err);
+        });
       }
       /* The profile provider read this row when the account was created,
          which was before any of the above existed, and it only refetches when

@@ -3178,3 +3178,11 @@ html.reduce-motion *::after {
 .picker-row:disabled .picker-state {
   color: var(--t3);
 }
+
+/* A stack chip for something that cannot be scheduled. Dimmed, not hidden —
+   it is in their stack and pretending otherwise is more confusing than
+   showing it greyed. */
+.stack-pick-chip.off {
+  opacity: 0.4;
+  cursor: default;
+}
