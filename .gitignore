@@ -35,5 +35,16 @@ ios/App/App.xcodeproj/project.xcworkspace/xcuserdata/
 scripts/.dsld_cache/
 ios/App/App/public/config.js
 
-# RevenueCat public SDK key. Public by design, still never committed.
-/public/config.js
+
+# public/config.js is DELIBERATELY NOT IGNORED.
+#
+# It holds the RevenueCat *publishable* key (appl_...), which ships inside every
+# copy of the app, can be read out of any binary, and can neither spend money nor
+# read a row of data. Ignoring it meant every build made on a machine other than
+# the owner's had an empty key: purchasesAvailable() false, so the paywall said
+# "in-app payment is not switched on yet", so onboarding skipped the paywall, so
+# free-pick appeared alone. One missing file, three symptoms, two wasted builds.
+#
+# This was decided by the owner. Do not re-add an ignore rule for it.
+# Real secrets - sk_live_, sb_secret_, service role, Anthropic, whsec_ - live in
+# supabase secrets set and are still never committed.
