@@ -12,3 +12,18 @@ tsconfig.tsbuildinfo
 # what pushed the upload past Vercel's 15,000-file limit.
 test-results
 playwright-report
+
+# .env is deliberately NOT excluded. It holds only VITE_SUPABASE_URL,
+# VITE_SUPABASE_ANON_KEY and VITE_SITE_URL — all VITE_-prefixed, so all
+# inlined into the client bundle and public by design. The build reads them
+# from here; exclude it and the deploy comes up on SetupNeeded with no
+# database and you cannot sign in to test anything.
+
+# The native project. Vercel builds the web app and reads none of this.
+ios
+
+# Overnight run logs. 19MB of jsonl that no build has ever looked at.
+.night
+
+# QA screenshots at the repo root. public/ art is kept, this is not it.
+/onb_*.png

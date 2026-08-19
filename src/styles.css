@@ -99,6 +99,12 @@ body,
      One unit through the whole chain means the gap cannot exist. */
   height: 100vh; /* fallback for anything without dvh */
   height: 100dvh;
+  /* Nothing in this app scrolls sideways. `clip` rather than `hidden`:
+     hidden would make the document a scroll container on the other axis
+     too, and that is what breaks `position: fixed` sheets on iOS. This
+     pairs with the scrollLeft pin in App.tsx — one stops the offset being
+     reachable, the other clears it if it is ever set anyway. */
+  overflow-x: clip;
 }
 
 /* ============================================================

@@ -419,7 +419,13 @@ function Shell({ framed, largerText }: { framed: boolean; largerText: boolean })
    * effect as well, so the first painted frame already has the real width
    * rather than a guess at a phone.
    */
-  const widthMV = useMotionValue(402);
+  /* Still measured, because the drag converts finger pixels into progress and
+     that genuinely needs a width. It starts at 0 rather than at a guessed 402 —
+     a wrong number is worse than no number, and `panelW()` below never returns
+     one. Nothing about the layout depends on this any more. */
+  const widthMV = useMotionValue(0);
+  /** The live panel width. Measured first, motion value second, viewport last. */
+  const panelW = () => hostRef.current?.clientWidth || widthMV.get() || window.innerWidth;
   useLayoutEffect(() => {
     const measure = () => {
       const w = hostRef.current?.clientWidth;
@@ -439,7 +445,63 @@ function Shell({ framed, largerText }: { framed: boolean; largerText: boolean })
     };
   }, [widthMV]);
 
-  const trackX = useTransform([progress, widthMV], ([p, w]: number[]) => -p * w);
+  /* A percentage, not pixels.
+   *
+   * `-p * w` is only correct while `w` equals the panel width, which makes
+   * every paint depend on a measurement having already landed. On a device that
+   * is a race: the WebView can lay out at one size behind the launch screen and
+   * settle at another, and if the observed element's box does not change the
+   * ResizeObserver never fires to correct it. The symptom is content sitting
+   * offset until any interaction moves `progress` and forces a recompute.
+   *
+   * `.track` is `width: 300%` of `.app` and each `.panel` is `33.3333%` of the
+   * track, so one panel is exactly a third of the track. A percentage translate
+   * resolves against the element's OWN width, so `-p * 100 / 3` is one panel per
+   * unit of progress at any screen size, with nothing measured and nothing to
+   * get wrong. This is what `components/Tabs.tsx` already does. */
+  const trackX = useTransform(progress, (p: number) => `${(-p * 100) / 3}%`);
+
+  /**
+   * Pin the horizontal scroll offset to zero, forever.
+   *
+   * Nothing in this app scrolls sideways, but the WebView's own scroll offset
+   * is not ours to trust. One frame in which anything is wider than the
+   * viewport — during the hand-off from the launch screen, a rotation, a
+   * keyboard dismissal — is enough for iOS to leave a non-zero horizontal
+   * offset behind. `.app` is `overflow: hidden`, which hides the bar but does
+   * NOT stop the box being scrolled programmatically, so everything positioned
+   * against it draws that far left: the titles clip on the left edge and the
+   * tab bar, which is `left: 50%` of this element, sits off centre by the same
+   * amount. It corrects the instant anything scrolls it back, which is why
+   * tapping a tab looked like it fixed the layout.
+   *
+   * Cheaper to make the state unreachable than to find the frame that causes
+   * it. `styles.css` clips the document on this axis for the same reason.
+   */
+  useEffect(() => {
+    const pin = () => {
+      const el = hostRef.current;
+      if (el && el.scrollLeft !== 0) el.scrollLeft = 0;
+      const doc = document.scrollingElement;
+      if (doc && doc.scrollLeft !== 0) doc.scrollLeft = 0;
+      if (window.scrollX !== 0) window.scrollTo(0, window.scrollY);
+    };
+    pin();
+    /* The launch screen hands over after the first paint, and the offset is
+       usually left behind by that hand-off rather than present during it. */
+    const settle = window.setTimeout(pin, 300);
+    window.addEventListener('resize', pin);
+    window.addEventListener('orientationchange', pin);
+    window.addEventListener('pageshow', pin);
+    document.addEventListener('visibilitychange', pin);
+    return () => {
+      window.clearTimeout(settle);
+      window.removeEventListener('resize', pin);
+      window.removeEventListener('orientationchange', pin);
+      window.removeEventListener('pageshow', pin);
+      document.removeEventListener('visibilitychange', pin);
+    };
+  }, []);
 
   const goTo = (i: number, velocity = 0) => {
     const target = Math.max(0, Math.min(2, i));
@@ -501,13 +563,13 @@ function Shell({ framed, largerText }: { framed: boolean; largerText: boolean })
     const dt = now - d.lastT;
     if (dt > 0) {
       // tabs per second, smoothed
-      const inst = ((d.lastX - e.clientX) / widthMV.get() / dt) * 1000;
+      const inst = ((d.lastX - e.clientX) / panelW() / dt) * 1000;
       d.vel = d.vel * 0.7 + inst * 0.3;
       d.lastX = e.clientX;
       d.lastT = now;
     }
 
-    const raw = d.startP - dx / widthMV.get();
+    const raw = d.startP - dx / panelW();
     const p = raw < 0 ? raw * RUBBER : raw > 2 ? 2 + (raw - 2) * RUBBER : raw;
     progress.set(p);
   };
