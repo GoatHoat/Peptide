@@ -252,7 +252,12 @@ export async function completeOnboarding(page: Page): Promise<void> {
      also the path most people take, and it is the only one that reaches
      free-pick — which is the screen the flow after this depends on. */
   await onScreen(page, 'Everything, in one place');
-  await expect(cta(page, 'Start with Pepstack')).toBeVisible();
+  /* Two buttons now, not one. The onboarding paywall used to offer a single
+     "Start with Pepstack" — whichever route the build could charge through —
+     so it disagreed with the Pro sheet about what the choice even was. Asserting
+     the old label failed every walk that reaches this screen while the screen
+     itself was correct. */
+  await expect(page.getByRole('button', { name: 'In-app payment' })).toBeVisible();
   await page.getByRole('button', { name: 'Continue with Free' }).click();
 
   /* Free covers one product, so declining reaches this whenever more than one

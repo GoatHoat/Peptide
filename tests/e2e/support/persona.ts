@@ -465,7 +465,7 @@ const HANDLERS: Record<string, Handler> = {
          the stub does not model, so the walk stalled on the paywall and logged
          a 404. Declining is also the only path that reaches free-pick, which
          is the screen the rest of the flow depends on. */
-      await expect(cta(page, 'Start with Pepstack')).toBeVisible();
+      await expect(page.getByRole('button', { name: 'In-app payment' })).toBeVisible();
       await page.getByRole('button', { name: 'Continue with Free' }).click();
     },
   },

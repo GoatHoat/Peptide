@@ -42,7 +42,32 @@ export const PRODUCT_IDS: Record<PlanId, string> = {
  * products — that is what makes "is this account Pro" a single check rather
  * than a list of product ids to keep in step.
  */
-export const ENTITLEMENT_ID = 'pro';
+export const ENTITLEMENT_ID = 'PepStack Pro';
+
+/**
+ * Whether this customer has any paid entitlement at all.
+ *
+ * NOT an equality check against `ENTITLEMENT_ID`, and deliberately so. The
+ * dashboard said "PepStack Pro" while the code said "pro", so every purchase
+ * completed at Apple and then reported the buyer as unsubscribed — a silent,
+ * total failure whose only symptom was a button that appeared to do nothing.
+ *
+ * This app sells one tier. "Any active entitlement" is therefore exactly as
+ * correct as naming it, and it cannot drift when somebody renames a thing in a
+ * dashboard six months from now. `ENTITLEMENT_ID` stays as the preferred match
+ * and as the record of what to create, but it is no longer load-bearing.
+ *
+ * If a second tier is ever sold, this has to become a real comparison again —
+ * and that is the moment to make the identifier a build-time constant checked
+ * against the dashboard, not a string somebody typed twice.
+ */
+export function hasPaidEntitlement(
+  info: { entitlements?: { active?: Record<string, unknown> } } | null | undefined,
+): boolean {
+  const active = info?.entitlements?.active ?? {};
+  if (active[ENTITLEMENT_ID]) return true;
+  return Object.keys(active).length > 0;
+}
 
 /**
  * Absent until the native shell provides it. That is the point.
@@ -156,34 +181,86 @@ async function ensureConfigured(): Promise<boolean> {
  * is the same shape the stub had — the caller's job is to say "not switched on
  * yet" rather than to distinguish reasons.
  */
-export async function purchasePlan(planId: PlanId): Promise<boolean> {
-  if (!(await ensureConfigured())) return false;
+/**
+ * Why a purchase did not happen. `false` alone was not enough.
+ *
+ * It was returned for "you cancelled" and for "there is nothing here to buy",
+ * and the sheet guessed cancellation and said nothing — so a build with no
+ * RevenueCat offering configured had a Subscribe button that visibly did
+ * nothing at all. Silence is the worst of the three outcomes and it was the
+ * one you got by default.
+ */
+export type PurchaseOutcome =
+  /** Bought, and the entitlement is active. */
+  | { ok: true }
+  /** They dismissed the Apple sheet. Not an error, say nothing. */
+  | { ok: false; reason: 'cancelled' }
+  /** No key, no native platform, a browser. Honest to say so. */
+  | { ok: false; reason: 'unavailable' }
+  /** Configured, but RevenueCat has no package for this plan — no offering
+      marked Current, or the products are not attached to it. This is a
+      dashboard problem and the message should say so rather than blame the
+      person pressing the button. */
+  | { ok: false; reason: 'not-configured' }
+  /** Reached Apple and failed there. */
+  | { ok: false; reason: 'failed' };
+
+export async function purchasePlan(planId: PlanId): Promise<PurchaseOutcome> {
+  if (!(await ensureConfigured())) return { ok: false, reason: 'unavailable' };
   try {
     const { Purchases } = await import('@revenuecat/purchases-capacitor');
     const offerings = await Purchases.getOfferings();
+    /* The current offering first, then every other one.
+       There are two offerings on this project and only one can be Current. If
+       the wrong one is — an empty `default` left over from setup, say — then
+       `current.availablePackages` is empty and there is nothing to buy, which
+       looks identical to a broken build from the outside. The fallback only
+       ever matches the two real App Store product ids, so it cannot select
+       something unintended; it just stops a dashboard toggle from taking the
+       product down. */
     const current = offerings.current;
+    const elsewhere = Object.values(offerings.all ?? {}).filter((o) => o !== current);
     /* RevenueCat's own package types rather than an App Store product id
        string. The Test Store names its products independently, so matching on
        the identifier finds nothing there — and this way the same build works
        against the Test Store now and the App Store later with no code change.
        The identifier match stays as a fallback for a custom-named package. */
-    const wanted =
-      (planId === 'annual' ? current?.annual : current?.monthly) ??
-      (current?.availablePackages ?? []).find(
-        (p) => p.product.identifier === PRODUCT_IDS[planId],
-      );
+    const byType = (o: typeof current) => (planId === 'annual' ? o?.annual : o?.monthly);
+    const byId = (o: typeof current) =>
+      (o?.availablePackages ?? []).find((pk) => pk.product.identifier === PRODUCT_IDS[planId]);
+
+    let wanted = byType(current) ?? byId(current);
     if (!wanted) {
-      console.error(`no RevenueCat package for ${PRODUCT_IDS[planId]}`);
-      return false;
+      for (const o of elsewhere) {
+        wanted = byType(o) ?? byId(o);
+        if (wanted) {
+          console.warn(
+            `the current offering has no ${planId} package; using "${o.identifier}" instead — ` +
+              'mark the right offering as Current in RevenueCat',
+          );
+          break;
+        }
+      }
+    }
+    if (!wanted) {
+      console.error(
+        `no RevenueCat package for ${PRODUCT_IDS[planId]} — check that an offering ` +
+          'is marked Current and both products are attached to it',
+      );
+      return { ok: false, reason: 'not-configured' };
     }
     const { customerInfo } = await Purchases.purchasePackage({ aPackage: wanted });
-    return !!customerInfo.entitlements.active[ENTITLEMENT_ID];
+    return hasPaidEntitlement(customerInfo) ? { ok: true } : { ok: false, reason: 'failed' };
   } catch (err) {
-    /* A user cancelling is not an error worth surfacing as one, and RevenueCat
-       reports it through the same channel as a real failure. Neither grants
-       the tier, so both return false. */
-    console.error('purchase did not complete', err);
-    return false;
+    /* RevenueCat reports a cancellation through the same channel as a real
+       failure, and the two deserve different copy: nothing at all for the
+       first, an apology and a retry for the second. */
+    const cancelled =
+      typeof err === 'object' && err !== null &&
+      (('userCancelled' in err && (err as { userCancelled?: boolean }).userCancelled === true) ||
+        /cancel/i.test(String((err as { message?: string }).message ?? '')));
+    if (!cancelled) console.error('purchase did not complete', err);
+    return { ok: false, reason: cancelled ? 'cancelled' : 'failed' };
   }
 }
 
@@ -198,7 +275,7 @@ export async function restore(): Promise<boolean> {
   try {
     const { Purchases } = await import('@revenuecat/purchases-capacitor');
     const { customerInfo } = await Purchases.restorePurchases();
-    return !!customerInfo.entitlements.active[ENTITLEMENT_ID];
+    return hasPaidEntitlement(customerInfo);
   } catch (err) {
     console.error('restore did not complete', err);
     return false;

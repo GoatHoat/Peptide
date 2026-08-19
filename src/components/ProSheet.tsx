@@ -1,7 +1,7 @@
 import { PRO_NAME } from '../lib/brand';
 import { useEffect, useState } from 'react';
 import { Sheet } from './Sheet';
-import { CARD_DISCOUNT_PCT, PLANS, purchase, purchasesAvailable, restorePurchases, type PlanId } from '../lib/billing';
+import { CARD_DISCOUNT_PCT, PLANS, purchase, restorePurchases, type PlanId } from '../lib/billing';
 import { cardCheckoutAvailable, startCardCheckout } from '../lib/checkout';
 import { useStorefrontTick } from '../lib/storefront';
 import { onCheckoutReturn } from '../lib/checkoutReturn';
@@ -196,7 +196,7 @@ export function ProSheet({
                  with no upgrade shown. Exactly the fault this sheet exists to
                  avoid. */
               const bought = await purchase(plan);
-              if (bought) {
+              if (bought.ok) {
                 /* Same wait Stripe gets: the entitlement is the server's to
                    grant and the webhook may still be in flight. */
                 setNote('Confirming your purchase…');
@@ -210,7 +210,19 @@ export function ProSheet({
                  who cancelled that the feature is switched off is wrong, and
                  telling somebody on a build with no key that their payment
                  failed is worse. */
-              setNote(purchasesAvailable() ? null : "In-app payments don't work on this device.");
+              /* Every branch says something except the one where saying nothing
+                 is correct. The old line collapsed four outcomes into two and
+                 chose silence for the most common failure, so a build with no
+                 RevenueCat offering had a button that did visibly nothing. */
+              setNote(
+                bought.reason === 'cancelled'
+                  ? null
+                  : bought.reason === 'unavailable'
+                    ? "In-app payments don't work on this device."
+                    : bought.reason === 'not-configured'
+                      ? 'This plan is not available to buy yet.'
+                      : 'That payment did not go through. Nothing was charged.',
+              );
             } finally {
               setBusy(null);
             }

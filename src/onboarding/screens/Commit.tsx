@@ -1,7 +1,7 @@
 import { requestNotificationPermission } from '../../lib/notifications';
 import { useState } from 'react';
 import { Cta, OnboardIllustration, Screen, Sub, Title } from '../chrome';
-import { CARD_DISCOUNT_PCT, PLANS, purchase, purchasesAvailable, restorePurchases, type PlanId } from '../../lib/billing';
+import { CARD_DISCOUNT_PCT, PLANS, purchase, restorePurchases, type PlanId } from '../../lib/billing';
 import { cardCheckoutAvailable, startCardCheckout } from '../../lib/checkout';
 import { externalLink, PRIVACY_URL, TERMS_URL } from '../../lib/legal';
 
@@ -103,16 +103,26 @@ export function Paywall({ onDone }: { onDone: (subscribed: boolean) => void }) {
     setNote(null);
     try {
       const bought = await purchase(plan);
-      if (bought) {
+      /* `.ok`, never the object. purchase() used to return a boolean and this
+         read `if (bought)` — which stayed true when it became an object, so a
+         FAILED purchase would have advanced onboarding and granted Pro to
+         somebody who paid nothing. The exact fault SKIP_PAYWALL exists to
+         prevent, reintroduced by a type change. */
+      if (bought.ok) {
         onDone(true);
         return;
       }
-      /* False means either "nothing here can charge" or "they backed out",
-         and those are not the same sentence. Onboarding stays where it is
-         either way — advancing would skip the free-pick step for somebody who
-         has not paid. */
+      /* Onboarding stays where it is on every failure — advancing would skip
+         the free-pick step for somebody who has not paid. Only the wording
+         changes, and only cancelling is silent. */
       setNote(
-        purchasesAvailable() ? null : "In-app payments don't work on this device.",
+        bought.reason === 'cancelled'
+          ? null
+          : bought.reason === 'unavailable'
+            ? "In-app payments don't work on this device."
+            : bought.reason === 'not-configured'
+              ? 'This plan is not available to buy yet.'
+              : 'That payment did not go through. Nothing was charged.',
       );
     } finally {
       setBusy(null);

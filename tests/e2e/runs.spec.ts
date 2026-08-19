@@ -127,10 +127,30 @@ async function onboard(
     }
     await box.fill(name);
     await page.waitForTimeout(120);
-    const hit = page.locator('.ob-stack-hit, .ob-option, .ob-pick').first();
-    if ((await hit.count()) > 0) await hit.click();
-    else note(log, `current-stack: "${name}" produced no match to click`);
+    /* `.ob-result` is the real class — Day.tsx renders it twice, once per
+       catalogue match and once as the "Add <what you typed>" fallback, and the
+       two branches are mutually exclusive. The selector used to look for
+       .ob-stack-hit/.ob-option/.ob-pick, none of which exist anywhere in the
+       app, so every product silently failed to be added and Run A walked the
+       whole way to stack-insight with an empty stack — which is precisely the
+       one thing Run A exists to test. */
+    const hit = page.locator('.ob-result').first();
+    if ((await hit.count()) === 0) {
+      note(log, `current-stack: "${name}" produced no match to click`);
+      continue;
+    }
+    await hit.click({ timeout: 5_000 });
+    await page.waitForTimeout(120);
   }
+  /* Assert the stack actually landed, rather than noting it and walking on.
+     A silent note is how this went unnoticed for two full runs. */
+  const chips = await page.locator('.ob-chip').count();
+  if (chips !== opts.stack.length) {
+    log.findings.push(
+      `current-stack: asked for ${opts.stack.length} products, ${chips} ended up in the stack`,
+    );
+  }
+  note(log, `current-stack: ${chips} of ${opts.stack.length} products added`);
   await page.getByRole('button', { name: 'Continue' }).click();
 
   // the screen the whole of Run A is for
@@ -199,16 +219,29 @@ async function onboard(
   await page.getByRole('button', { name: 'Not now' }).click();
 
   await visit(page, log, 'building-recs');
-  await page.getByRole('heading', { name: 'Vitamins and minerals for you' }).waitFor({ timeout: 30_000 });
-  /* The frame arrives before the list. Measure the gap: this is the "appeared
-     without a loading state at its final dimensions" check. */
-  const skel = await page.locator('.skel-row').count();
-  await expect(page.locator('.ob-rec').first()).toBeVisible({ timeout: 30_000 });
-  await visit(page, log, 'recommendations');
-  if (skel === 0) log.findings.push('recommendations: no placeholder while the list loaded');
-  else note(log, `recommendations: ${skel} placeholder rows held the space`);
-  const recCount = await page.locator('.ob-rec').count();
-  note(log, `recommendations: ${recCount} products offered`);
+  /* Two legitimate outcomes now, not one. `recommend` drops anything already in
+     the stack, so a stack that covers every match leaves nothing to offer and
+     Results renders its empty state instead of the list. Waiting only for the
+     list heading turned that into a 30s failure against an app that was
+     behaving correctly. */
+  const recsHeading = page.getByRole('heading', { name: 'Vitamins and minerals for you' });
+  const emptyHeading = page.getByRole('heading', { name: 'Nothing left to suggest' });
+  await expect(recsHeading.or(emptyHeading)).toBeVisible({ timeout: 30_000 });
+
+  if ((await emptyHeading.count()) > 0) {
+    await visit(page, log, 'recommendations (empty)');
+    note(log, 'recommendations: nothing left to suggest — the stack already covered every match');
+  } else {
+    /* The frame arrives before the list. Measure the gap: this is the "appeared
+       without a loading state at its final dimensions" check. */
+    const skel = await page.locator('.skel-row').count();
+    await expect(page.locator('.ob-rec').first()).toBeVisible({ timeout: 30_000 });
+    await visit(page, log, 'recommendations');
+    if (skel === 0) log.findings.push('recommendations: no placeholder while the list loaded');
+    else note(log, `recommendations: ${skel} placeholder rows held the space`);
+    const recCount = await page.locator('.ob-rec').count();
+    note(log, `recommendations: ${recCount} products offered`);
+  }
   await page.getByRole('button', { name: 'Create schedule' }).click();
 
   await page.getByRole('heading', { name: 'Here is your plan' }).waitFor();
@@ -229,7 +262,7 @@ async function onboard(
        recorded as a finding instead of being papered over. The subscriber half
        of this run is covered by `stub.tier`, set by the caller, which is what
        the app phase below actually reads. */
-    await expect(page.getByRole('button', { name: /Start with/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'In-app payment' })).toBeVisible();
     log.findings.push(
       'paywall: the paid button leaves the process (StoreKit / browser), so a completed purchase cannot be walked in-harness',
     );
@@ -259,7 +292,17 @@ async function onboard(
 
   await page.getByRole('heading', { name: /You.re set/ }).waitFor();
   await visit(page, log, 'done');
-  await page.getByRole('button', { name: /Continue|Done|Start/ }).first().click().catch(() => {});
+  /* Best effort: by the time we get here the app has usually auto-advanced to
+     Today and there is no such button left to press. The timeout is not
+     optional — playwright.config.ts sets no `actionTimeout`, so the default is
+     0, meaning "wait forever". Without it this line does not reject, it hangs,
+     the .catch() never runs, and the test dies on the 900s test timeout with
+     the app sitting perfectly healthy on Today. That is what failed both runs. */
+  await page
+    .getByRole('button', { name: /Continue|Done|Start/ })
+    .first()
+    .click({ timeout: 5_000 })
+    .catch(() => {});
 }
 
 function report(title: string, log: Log): string {
@@ -292,7 +335,12 @@ test('RUN A — maximal', async ({ page, app }, info) => {
   await onboard(page, log, {
     email: 'run-a@pepstack.test',
     goals: 7,
-    stack: ['Vitamin D3', 'Iron', 'Magnesium', 'B12', 'Vitamin E', 'Collagen'],
+    /* Three, not all six. The fixture catalogue holds exactly six non-peptide
+       products, so naming all of them emptied the recommender and Run A never
+       reached a populated recommendations screen, a real paywall or a schedule
+       with anything in it. Iron stays because the "Iron upset my stomach"
+       reaction below is what routes it to the bisglycinate. */
+    stack: ['Iron', 'Magnesium', 'Collagen'],
     reactions: ['Iron upset my stomach'],
     pro: true,
   });
@@ -390,7 +438,7 @@ test('RUN A — maximal', async ({ page, app }, info) => {
     await reportBtn.click();
     await page.waitForTimeout(200);
     note(log, 'report control opened');
-    await page.getByRole('button', { name: 'Close' }).first().click().catch(() => {});
+    await page.getByRole('button', { name: 'Close' }).first().click({ timeout: 5_000 }).catch(() => {});
   } else {
     log.findings.push('Ask AI: no report control on an answer');
   }
@@ -411,7 +459,7 @@ test('RUN A — maximal', async ({ page, app }, info) => {
     await btn.click();
     await page.waitForTimeout(120);
     await visit(page, log, `You → ${row}`);
-    await page.getByRole('button', { name: 'Close' }).first().click().catch(() => {});
+    await page.getByRole('button', { name: 'Close' }).first().click({ timeout: 5_000 }).catch(() => {});
     await page.waitForTimeout(150);
   }
 
@@ -466,7 +514,7 @@ test('RUN B — minimal', async ({ page, app }, info) => {
   await page.getByRole('button', { name: 'Add to Schedule' }).click();
   await page.waitForTimeout(120);
   await visit(page, log, 'Today → Add to Schedule');
-  await page.getByRole('button', { name: 'Close' }).first().click().catch(() => {});
+  await page.getByRole('button', { name: 'Close' }).first().click({ timeout: 5_000 }).catch(() => {});
 
   /* ── the assistant cap ── */
   await page.getByRole('button', { name: 'Discover', exact: true }).click();

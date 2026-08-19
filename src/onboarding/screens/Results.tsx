@@ -271,6 +271,44 @@ export function Recommendations({
     );
   }
 
+  /**
+   * The empty state.
+   *
+   * `recommend` drops anything already in the stack, so somebody who already
+   * takes everything tagged for the goals they picked gets an empty list back.
+   * Until now that rendered the title, the disclaimer, the "what was left out"
+   * block and a permanently disabled "Create schedule" — no cards to tick,
+   * nothing to untick, no skip, and no way out of onboarding. A dead end
+   * before the app exists for them.
+   *
+   * The CTA keeps its label so the one path through this screen is the same
+   * path in both states. It is honest: a schedule still gets built, it just
+   * starts empty, and Discover is where anything else comes from.
+   */
+  if (picks.length === 0) {
+    return (
+      <Screen
+        scroll
+        footer={<Cta onClick={() => onDone([])}>Create schedule</Cta>}
+      >
+        <Title>Nothing left to suggest</Title>
+        <Sub>
+          Everything the library matches to your goals is already in your stack, so there is
+          nothing to add here.
+        </Sub>
+        {data.leftOut.alreadyTaking.length > 0 && (
+          <p className="ob-caption" style={{ marginTop: 16 }}>
+            Already in your stack: {data.leftOut.alreadyTaking.join(', ')}.
+          </p>
+        )}
+        <p className="ob-caption" style={{ marginTop: 16 }}>
+          Your schedule starts empty. Add anything you want to track from Discover, and edit the
+          times whenever you like.
+        </p>
+      </Screen>
+    );
+  }
+
   const chosen = picks.filter((p) => p.selected);
 
   return (

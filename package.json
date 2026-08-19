@@ -12,7 +12,8 @@
     "ios": "npm run build && npx cap sync ios && npx cap open ios",
     "ensure-config": "node scripts/ensure-config.mjs",
     "predev": "npm run ensure-config",
-    "prebuild": "npm run ensure-config"
+    "prebuild": "npm run ensure-config",
+    "ios:prep": "npm install && npm run build && npx cap sync ios && node scripts/check-ios-build.mjs"
   },
   "dependencies": {
     "@capacitor/app": "^8.1.1",

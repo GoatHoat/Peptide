@@ -1,4 +1,6 @@
-import { purchasePlan, purchasesAvailable, restore } from './revenuecat';
+import { purchasePlan, purchasesAvailable, restore, type PurchaseOutcome } from './revenuecat';
+
+export type { PurchaseOutcome };
 
 /* Re-exported so a screen can tell "this build cannot charge" apart from "the
    purchase did not complete". Both come back from purchase() as false, and
@@ -78,7 +80,7 @@ export const PLANS: Plan[] = [
  * Both stay that way until there is an Apple Developer account, products in
  * App Store Connect and a RevenueCat key to point at them.
  */
-export async function purchase(planId: PlanId): Promise<boolean> {
+export async function purchase(planId: PlanId): Promise<PurchaseOutcome> {
   /* The real path when a key is configured, and today's stub when it is not —
      which is every build until somebody sets REVENUECAT_IOS_KEY on the device.
      The signature is unchanged so no caller moves; see lib/revenuecat.ts for
@@ -96,7 +98,7 @@ export async function purchase(planId: PlanId): Promise<boolean> {
      Failing closed costs somebody who cannot buy an honest "not available".
      Failing open gives the product away. */
   void planId;
-  return false;
+  return { ok: false, reason: 'unavailable' };
 }
 
 /**
