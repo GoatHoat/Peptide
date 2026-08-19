@@ -292,3 +292,15 @@ broken or non-compliant.
 - **No gap means no invention.** A day of back-to-back meals keeps the old
   least-bad placement and still admits the compromise. Never a 3am slot that
   satisfies the constraint on paper.
+
+## Add to schedule
+
+- **The amount is collapsed, not deleted.** DoseRow renders it for people
+  taking two of one thing and one of another, and `api.ts` types it
+  non-optional in five places. Reversible: delete it later with data saying
+  nobody opened it.
+- **Closed by default even when history prefilled a value** — but the
+  disclosure label then carries that value. A collapsed control silently
+  writing a number it is hiding is worse than one extra line of text.
+- **Amount removed from save validation.** It was in the same check as the
+  name, so "optional" would have been true in appearance only.

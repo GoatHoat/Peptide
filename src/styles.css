@@ -3090,3 +3090,19 @@ html.reduce-motion *::after {
   font: inherit;
   font-size: calc(14px * var(--text-scale));
 }
+
+/* A disclosure that reads as text, not as a second action competing with the
+   submit button. Same type scale and hairline as everything else. */
+.disclose {
+  display: block;
+  width: 100%;
+  padding: 11px 0;
+  border: 0;
+  border-bottom: 1px solid var(--hair);
+  background: none;
+  color: var(--purple);
+  text-align: left;
+  font: inherit;
+  font-size: calc(13px * var(--text-scale));
+  cursor: pointer;
+}

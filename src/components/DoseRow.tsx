@@ -78,9 +78,14 @@ export function DoseRow({ dose, missed = false, onToggle, onLongPress }: Props) 
         <span className="dose-name" style={{ display: 'block' }}>
           {dose.name}
         </span>
-        <span className="dose-amt" style={{ display: 'block' }}>
-          {dose.amount}
-        </span>
+        {/* Rendered only when there is one. As an unconditional block span an
+            empty amount still occupied a line box, so every item saved without
+            one left a gap under its name. */}
+        {dose.amount?.trim() ? (
+          <span className="dose-amt" style={{ display: 'block' }}>
+            {dose.amount}
+          </span>
+        ) : null}
       </span>
       <button
         type="button"

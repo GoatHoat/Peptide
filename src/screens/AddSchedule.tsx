@@ -34,6 +34,18 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
   const [name, setName] = useState(defaultName ?? '');
   const [pickedGlossaryId, setPickedGlossaryId] = useState<string | null>(glossaryId ?? null);
   const [amount, setAmount] = useState('');
+  /**
+   * Closed unless asked for, always — including when history prefilled a value.
+   *
+   * The amount was a step between deciding to track something and it being
+   * tracked, and it earned nothing: the app suggests no doses, checks the
+   * number against nothing, and shows it back only as a caption on Today.
+   * Collapsed rather than deleted because DoseRow does render it for somebody
+   * taking two capsules of one thing and one of another, and because api.ts
+   * types it non-optional in five places - deleting it means touching every
+   * insert path for a change whose whole point is being small.
+   */
+  const [showAmount, setShowAmount] = useState(false);
   const [time, setTime] = useState('');
   // local date, so "today" means the user's today and not the server's
   const [startDate, setStartDate] = useState(() => toISODate(new Date()));
@@ -95,8 +107,11 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !amount.trim()) {
-      setError('Enter a name and an amount.');
+    /* Name and time are what this sheet exists to collect. The amount was in
+       this check, so leaving it blank failed validation - which would have
+       made the field optional in appearance only. */
+    if (!name.trim()) {
+      setError('Enter a name.');
       return;
     }
     setBusy(true);
@@ -160,17 +175,24 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
         />
       </div>
 
-      <AmountInput id="sched-amount" label="Your dose" value={amount} onChange={setAmount} />
+      {/* One tap to reach, nothing above it moves when it opens - the sheet
+          grows downward. The label carries the value when there is one, so a
+          prefilled amount is never hidden information: it would be saved
+          either way, and a collapsed control concealing a value it is about to
+          write is worse than one extra line of text. */}
+      {!showAmount && (
+        <button type="button" className="disclose t-caption" onClick={() => setShowAmount(true)}>
+          {amount.trim() ? `Amount: ${amount.trim()} — change` : 'Add an amount (optional)'}
+        </button>
+      )}
+      {showAmount && (
+        <AmountInput id="sched-amount" label="Your dose" value={amount} onChange={setAmount} />
+      )}
 
       {prefilling && <div className="prefill-note t-caption">Checking your history…</div>}
       {!prefilling && prior && (
         <div className="prefill-note t-caption">
           Filled in from {prior.source === 'schedule' ? 'when you last scheduled this' : `your log on ${formatShortDate(prior.lastUsed!)}`}. Change anything you need.
-        </div>
-      )}
-      {!prefilling && !prior && name.trim() !== '' && (
-        <div className="prefill-note t-caption">
-          First time for this one — the app has no dose to suggest, so these are yours to set.
         </div>
       )}
 
