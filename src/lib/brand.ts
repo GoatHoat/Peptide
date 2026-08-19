@@ -26,10 +26,14 @@
 export const NAME = 'Pepstack';
 
 /**
- * The assistant's name. Capitalised differently on purpose — it is a product
- * name in its own right, and the empty state reads it as one.
+ * The assistant's name.
+ *
+ * Derived rather than written out, because it was written out — as
+ * "PepStack AI", with a capital S — and shipped alongside "Pepstack Pro" in
+ * the same session. A second spelling of your own name is also the thing that
+ * survives a find-and-replace when the app is renamed.
  */
-export const AI_NAME = 'PepStack AI';
+export const AI_NAME = `${NAME} AI`;
 
 /** The paid tier, named wherever it is sold. */
 export const PRO_NAME = `${NAME} Pro`;
