@@ -260,6 +260,11 @@ export function Today() {
               Nothing on your schedule yet. Add something and it will appear here at the time you
               set.
             </p>
+            {/* The action, in the empty state rather than below it — the same
+                shape My Stack uses when it has nothing. */}
+            <button className="empty-action pressable" onClick={() => setSheet({ kind: 'add-time' })}>
+              Add your own time
+            </button>
           </div>
         )}
         {doses?.map((d, i) => {
@@ -286,12 +291,17 @@ export function Today() {
           <NowMarker time={nowLabel} scrollIntoView />
         )}
 
-        {/* Below the last block, including when there are none — the escape
-            hatch for a schedule that is nearly right, not the primary action.
-            It routes into the same sheet the action row opens rather than
-            building a second way to create a schedule item; the only
-            difference is where the cursor lands. */}
-        {doses !== null && (
+        {/* Below the last block — the escape hatch for a schedule that is
+            nearly right, not the primary action. Routes into the same sheet
+            the action row opens rather than building a second way to create a
+            schedule item; the only difference is where the cursor lands.
+
+            Not rendered under an empty schedule, where the empty state carries
+            the action instead. A separate button there was a second call to
+            action under a message that already had one, and it pushed the
+            empty screen 11px past its own scroll reserve — the "a short screen
+            must not scroll" rule in layout.spec. */}
+        {doses !== null && doses.length > 0 && (
           <button className="add-own-time pressable" onClick={() => setSheet({ kind: 'add-time' })}>
             Add your own time
           </button>

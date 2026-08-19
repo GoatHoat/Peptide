@@ -3094,8 +3094,12 @@ html.reduce-motion *::after {
 /* A disclosure that reads as text, not as a second action competing with the
    submit button. Same type scale and hairline as everything else. */
 .disclose {
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
+  /* 44 is the floor, not a target — it measured 39px, which fails the tap
+     target rule states.spec enforces. */
+  min-height: 44px;
   padding: 11px 0;
   border: 0;
   border-bottom: 1px solid var(--hair);
@@ -3226,4 +3230,12 @@ html.reduce-motion *::after {
 .ob-add-time-go:disabled {
   color: var(--t3);
   cursor: default;
+}
+
+/* The empty schedule sits inside the panel's own tab-bar reserve, and its
+   action's bottom margin is the difference between fitting and scrolling past
+   it — layout.spec measures exactly that. Scoped, so My Stack's empty state
+   keeps its spacing. */
+.schedule-empty .empty-action {
+  margin-bottom: 2px;
 }

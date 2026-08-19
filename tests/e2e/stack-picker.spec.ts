@@ -9,7 +9,7 @@ import { test, expect, seedSignedIn } from './support/app';
  */
 const openPicker = async (page: import('@playwright/test').Page) => {
   await page.getByRole('heading', { name: 'Today' }).waitFor({ timeout: 20_000 });
-  await page.getByRole('button', { name: 'You' }).click();
+  await page.getByRole('button', { name: 'You', exact: true }).click();
   await page.getByRole('button', { name: 'Add to stack' }).click();
 };
 
@@ -37,7 +37,7 @@ test('the button is there when the stack is empty', async ({ page, app }) => {
   await seedSignedIn(page, app.stub);
   await page.goto('/');
   await page.getByRole('heading', { name: 'Today' }).waitFor({ timeout: 20_000 });
-  await page.getByRole('button', { name: 'You' }).click();
+  await page.getByRole('button', { name: 'You', exact: true }).click();
   // empty stack: the button must still be the way forward
   await expect(page.getByRole('button', { name: 'Add to stack' })).toBeVisible();
 });
