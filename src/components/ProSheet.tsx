@@ -1,7 +1,7 @@
 import { PRO_NAME } from '../lib/brand';
 import { useEffect, useState } from 'react';
 import { Sheet } from './Sheet';
-import { CARD_DISCOUNT_PCT, PLANS, purchase, restorePurchases, type PlanId } from '../lib/billing';
+import { CARD_DISCOUNT_PCT, PLANS, purchase, purchasesAvailable, restorePurchases, type PlanId } from '../lib/billing';
 import { cardCheckoutAvailable, startCardCheckout } from '../lib/checkout';
 import { useStorefrontTick } from '../lib/storefront';
 import { onCheckoutReturn } from '../lib/checkoutReturn';
@@ -59,7 +59,7 @@ export function ProSheet({
   reason: ProReason;
   onClose: () => void;
 }) {
-  const { catalogueTotal, lockedTotal, isPro } = useEntitlement();
+  const { catalogueTotal, lockedTotal, isPro, awaitPro } = useEntitlement();
   /* Subscribed rather than read once: StoreKit answers asynchronously and can
      reply after this sheet has already rendered. Reading it once would hide
      the card route from the one storefront allowed to see it. */
@@ -188,11 +188,29 @@ export function ProSheet({
             setBusy(plan);
             setNote(null);
             try {
-              await purchase(plan);
-              /* Deliberately says nothing about having upgraded. purchase() is
-                 a stub and claiming success would be a lie the user could act
-                 on. */
-              setNote('In-app payment is not switched on yet.');
+              /* The result is USED. This discarded it and always said "not
+                 switched on yet" — written when purchase() was a stub that
+                 charged nobody. It is not one any more: with a RevenueCat key
+                 present it is a real StoreKit call, so a completed purchase
+                 was being reported to the buyer as a switched-off feature,
+                 with no upgrade shown. Exactly the fault this sheet exists to
+                 avoid. */
+              const bought = await purchase(plan);
+              if (bought) {
+                /* Same wait Stripe gets: the entitlement is the server's to
+                   grant and the webhook may still be in flight. */
+                setNote('Confirming your purchase…');
+                const pro = await awaitPro();
+                setNote(pro ? null : 'This can take a moment. It will unlock on its own.');
+                if (pro) onClose();
+                return;
+              }
+              /* False has two meanings and they are not interchangeable:
+                 nothing can charge here, or they backed out. Telling somebody
+                 who cancelled that the feature is switched off is wrong, and
+                 telling somebody on a build with no key that their payment
+                 failed is worse. */
+              setNote(purchasesAvailable() ? null : 'In-app payment is not switched on yet.');
             } finally {
               setBusy(null);
             }

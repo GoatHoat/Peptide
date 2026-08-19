@@ -1,5 +1,10 @@
 import { purchasePlan, purchasesAvailable, restore } from './revenuecat';
 
+/* Re-exported so a screen can tell "this build cannot charge" apart from "the
+   purchase did not complete". Both come back from purchase() as false, and
+   saying the wrong one is either a lie or an accusation. */
+export { purchasesAvailable };
+
 export type PlanId = 'monthly' | 'annual';
 
 export interface Plan {
