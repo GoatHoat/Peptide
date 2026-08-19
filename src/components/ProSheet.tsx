@@ -6,7 +6,7 @@ import { cardCheckoutAvailable, startCardCheckout } from '../lib/checkout';
 import { useStorefrontTick } from '../lib/storefront';
 import { onCheckoutReturn } from '../lib/checkoutReturn';
 import { externalLink, PRIVACY_URL, TERMS_URL } from '../lib/legal';
-import { useEntitlement } from '../lib/entitlements';
+import { LIMITS, useEntitlement } from '../lib/entitlements';
 
 /**
  * The one paywall, opened from every gate.
@@ -40,7 +40,11 @@ function headlineFor(reason: ProReason, lockedTotal: number): string {
         ? `${lockedTotal} articles are locked on Free.`
         : 'This article is locked on Free.';
     case 'ask-limit':
-      return "You've used your three free assistant messages.";
+      /* Read from LIMITS, not spelled out. "three" was hardcoded on the screen
+         where somebody is asked for money, so changing the limit would have
+         left a false number there — a 2.3.1 problem, and the kind that stays
+         true-looking until it is not. */
+      return `You've used your ${LIMITS.free.askMessagesTotal} free assistant messages.`;
     default:
       return 'Pro removes the limits.';
   }

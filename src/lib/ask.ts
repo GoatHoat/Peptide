@@ -1,5 +1,7 @@
 import { anonApiKey, functionUrl, supabase } from './supabaseClient';
 import { readScoped, writeScoped } from './storage';
+import { LIMITS } from './entitlements';
+import { RATE_LIMIT } from '../../supabase/functions/ask/lib';
 import type {
   AskAnswer,
   AskCard,
@@ -54,8 +56,10 @@ const FALLBACK: Record<AskFailureCode, string> = {
   offline: 'No connection. Your question is still here — try again once you are back.',
   bad_request: 'That question did not go through. Try asking it a different way.',
   unauthorized: 'That session has expired. Sign in again.',
-  upgrade_required:
-    'You have used your three free assistant messages. Pro raises it to 20 an hour.',
+  /* Only a fallback — the server sends the authoritative sentence — but a
+     fallback with a stale number in it is still a wrong number on the screen
+     that asks for money. */
+  upgrade_required: `You have used your ${LIMITS.free.askMessagesTotal} free assistant messages. Pro raises it to ${RATE_LIMIT.perHour} an hour.`,
   rate_limited: 'That is the limit on questions for now. It frees up again shortly.',
   server_error: 'Something went wrong at our end. Try that again.',
 };

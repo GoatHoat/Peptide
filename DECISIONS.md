@@ -321,3 +321,17 @@ broken or non-compliant.
 - **Catalogue fetched on sheet open, not on mount.** MyStack sits in the
   permanently-mounted You panel; fetching there would pull 304 rows on every
   launch for everybody who never opens the picker.
+
+## Pre-submission sweep
+
+- **The catch-up preview row is compile-time gated again.** It was briefly a
+  runtime `!isNativePlatform()` check so it could be found on a web deploy,
+  which left the string in every production bundle. Now
+  `DEV || VITE_CATCHUP_PREVIEW === 'true'` — a plain build folds it away.
+  Build with that flag set to see it; never for the binary Apple gets.
+- **Numbers in paywall copy read from the constants that enforce them.**
+  Three hardcoded counts found and replaced. A spelled-out number keeps reading
+  as true after the limit changes, on the screen that asks for money.
+- **`.night/` transcripts (29 files, 19MB) left in place.** No secrets in them —
+  verified by decoding every committed JWT for a role claim — but they are
+  session logs in a product repo. Not mine to delete.

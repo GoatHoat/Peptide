@@ -1,5 +1,3 @@
-import { Capacitor } from '@capacitor/core';
-
 /**
  * TEMPORARY — remove before submission.
  *
@@ -24,17 +22,22 @@ import { Capacitor } from '@capacitor/core';
  * every build deployed for testing is a production build, so the only place
  * it has ever appeared is a local dev server.
  *
- * `!isNativePlatform()` is a runtime check, which is weaker — the string is in
- * the bundle now, where before it was provably absent. It is still airtight
- * for the thing that matters: a submitted binary runs inside the native
- * WebView, where this is false, and there is no setting or URL that changes
- * that. The compile-time half is kept so a dev server does not depend on it.
+ * It was briefly `!isNativePlatform()`, a RUNTIME check, so the row could be
+ * found on a deployed web build. That left the string in every production
+ * bundle — it did not render in the iOS app, but a debug control present in a
+ * submitted binary is a Guideline 2.1 argument nobody should have to have.
+ *
+ * Both halves here are compile-time, so a plain `npm run build` folds the
+ * branch away and the row is provably absent. To see it on a deployed build,
+ * build with VITE_CATCHUP_PREVIEW=true — deliberately, and never for the
+ * binary that goes to Apple.
  *
  * Written as `import.meta.env.DEV` exactly, never `import.meta.env?.DEV` —
  * the optional chain defeats the substitution, and that is how this row
  * shipped in a production bundle once already.
  */
-export const PREVIEW_ENABLED = import.meta.env.DEV || !Capacitor.isNativePlatform();
+export const PREVIEW_ENABLED =
+  import.meta.env.DEV || import.meta.env.VITE_CATCHUP_PREVIEW === 'true';
 
 type Listener = () => void;
 const listeners = new Set<Listener>();

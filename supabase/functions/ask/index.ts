@@ -187,7 +187,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
       if ((lifetime ?? 0) >= FREE_ASK_LIFETIME) {
         return fail(
           'upgrade_required',
-          'You have used your three free assistant messages. Pro raises it to 20 an hour.',
+          /* Both numbers read from the constants that enforce them. Spelled
+             out, they would keep reading as true after a limit changed — on
+             the message that asks somebody to pay, which is where a wrong
+             number costs the most. */
+          `You have used your ${FREE_ASK_LIFETIME} free assistant messages. Pro raises it to ${RATE_LIMIT.perHour} an hour.`,
           402,
         );
       }
