@@ -603,6 +603,36 @@ export async function getStackMembership(userId: string, glossaryIds: string[]):
   return new Set((data as { glossary_id: string }[]).map((row) => row.glossary_id));
 }
 
+/** A catalogue row reduced to what a picker needs: enough to choose, no content. */
+export interface CatalogueName {
+  id: string;
+  name: string;
+  kind: 'peptide' | 'supplement' | null;
+  brand: string | null;
+}
+
+/**
+ * Every product, as names only.
+ *
+ * Four columns rather than `select('*')`. The full glossary row carries
+ * mechanism_summary, research_summary, storage notes, goal tags, keywords and
+ * the studied ranges — several hundred times the bytes, to render a list of
+ * names nobody can read anything from. It is also the line this app draws:
+ * the writing is the paid product, the name is not, so a picker that fetched
+ * the writing would be shipping the thing it is meant to withhold.
+ *
+ * Ordered by name in the database so the list is stable between sessions and
+ * the client does not sort 250 rows on every open.
+ */
+export async function getCatalogueNames(): Promise<CatalogueName[]> {
+  const { data, error } = await supabase
+    .from('glossary')
+    .select('id, name, kind, brand')
+    .order('name');
+  if (error) throw error;
+  return (data ?? []) as CatalogueName[];
+}
+
 export async function addToStack(userId: string, glossaryId: string): Promise<void> {
   const stackId = await ensureDefaultStack(userId);
   const already = await isInStack(userId, glossaryId);

@@ -10,6 +10,8 @@ import {
   type StackItem,
 } from '../lib/api';
 import { Sheet } from '../components/Sheet';
+import { StackPicker } from '../components/StackPicker';
+import { ProSheet } from '../components/ProSheet';
 import { GlossaryDetail } from './GlossaryDetail';
 import { IconClose } from '../components/Icons';
 import { toISODate } from '../lib/date';
@@ -51,6 +53,8 @@ export function MyStack() {
   const [editingExpiry, setEditingExpiry] = useState<StackItem | null>(null);
   const [expiryInput, setExpiryInput] = useState('');
   const [failed, setFailed] = useState(false);
+  const [picking, setPicking] = useState(false);
+  const [pro, setPro] = useState(false);
 
   const load = async () => {
     if (!user) return;
@@ -110,7 +114,8 @@ export function MyStack() {
         <div className="stack-empty">
           <img className="stack-empty-art" src="/art/empty-stack.png" alt="" />
           <p className="empty-state t-body">
-            Nothing in your stack yet. Add something from Discover and it will show up here.
+            Nothing in your stack yet. Pick anything in the catalogue, or browse Discover to read
+            about it first.
           </p>
           {/* The action, not just the instruction. Naming Discover and then
               leaving somebody to find it is half an empty state. */}
@@ -156,6 +161,31 @@ export function MyStack() {
           );
         })}
       </div>
+
+      {/* Always here — including on an empty stack, which is exactly when
+          somebody needs it, and including while the list is still loading, so
+          it does not appear late and move things. Not behind the empty state,
+          not in a menu, and not behind a tier check: choosing what to track is
+          not the paid part. */}
+      {!failed && (
+        <button className="stack-add pressable" onClick={() => setPicking(true)}>
+          Add to stack
+        </button>
+      )}
+
+      <StackPicker
+        open={picking}
+        onClose={() => setPicking(false)}
+        inStack={new Set((items ?? []).map((i) => i.glossary_id))}
+        /* A sheet closing over MyStack is not a tab change, so the focus
+           refetch that keeps this screen fresh never fires for it. */
+        onAdded={load}
+        onNeedsPro={() => {
+          setPicking(false);
+          setPro(true);
+        }}
+      />
+      <ProSheet open={pro} reason="stack-limit" onClose={() => setPro(false)} />
 
       <Sheet open={!!detail} onClose={() => setDetail(null)} title={detail?.glossary.name ?? ''}>
         {detail && <GlossaryDetail entry={detail.glossary} />}

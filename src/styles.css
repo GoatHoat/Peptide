@@ -3106,3 +3106,75 @@ html.reduce-motion *::after {
   font-size: calc(13px * var(--text-scale));
   cursor: pointer;
 }
+
+/* ============================================================
+   Add to stack — the picker
+   ============================================================
+   A list, not cards. The state word sits in a fixed-width column so a row
+   changing from Add to Added cannot change its own size — layout that shifts
+   as things are added is the thing this app is most allergic to. */
+.stack-add {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  padding: 15px 0;
+  border: 1px solid var(--hair);
+  border-radius: 14px;
+  background: none;
+  color: var(--purple);
+  font-size: calc(15px * var(--text-scale));
+  font-weight: 600;
+  cursor: pointer;
+}
+.picker-cap {
+  margin: 10px 0 2px;
+  color: var(--t3);
+}
+.picker-list {
+  display: flex;
+  flex-direction: column;
+}
+.picker-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 2px;
+  border: 0;
+  border-bottom: 1px solid var(--hair);
+  background: none;
+  color: var(--t1);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.picker-row:disabled {
+  cursor: default;
+}
+.picker-row-main {
+  flex: 1;
+  min-width: 0;
+}
+.picker-name {
+  display: block;
+  font-size: calc(15px * var(--text-scale));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.picker-sub {
+  display: block;
+  margin-top: 2px;
+  color: var(--t3);
+}
+/* Fixed width and right-aligned: "Added" is wider than "Add", and without
+   this the name column reflowed the moment a row was tapped. */
+.picker-state {
+  flex: none;
+  width: 52px;
+  text-align: right;
+  color: var(--purple);
+}
+.picker-row:disabled .picker-state {
+  color: var(--t3);
+}

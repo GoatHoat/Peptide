@@ -304,3 +304,20 @@ broken or non-compliant.
   writing a number it is hiding is worse than one extra line of text.
 - **Amount removed from save validation.** It was in the same check as the
   name, so "optional" would have been true in appearance only.
+
+## Stack picker
+
+- **Reading is the paid part; tracking is not.** Every product in the catalogue
+  is selectable on any tier. Rows are a name plus kind or brand — no summary,
+  evidence chip, research count or dose. A picker that fetched the writing
+  would ship the thing the tier withholds.
+- **`getCatalogueNames` selects four columns**, not `select('*')`: 39KB against
+  332KB over 304 products, measured against production.
+- **Ingredient search reuses `search_by_ingredient`** (migration 0032) rather
+  than a second search path. It already degrades to an empty array when the
+  migration is absent, so name matching still stands alone.
+- **The free cap is stated before it is reached**, as one quiet line. At the
+  cap, tapping opens the existing ProSheet gate — never a silent no-op.
+- **Catalogue fetched on sheet open, not on mount.** MyStack sits in the
+  permanently-mounted You panel; fetching there would pull 304 rows on every
+  launch for everybody who never opens the picker.
