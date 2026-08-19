@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import {
   addScheduleItem,
   PeptideNotSchedulable,
@@ -17,6 +17,8 @@ interface Props {
   userId: string;
   glossaryId?: string | null;
   defaultName?: string;
+  /** open with the cursor in the time field — see "Add your own time" */
+  focusTime?: boolean;
   onAdded: (item: ScheduleItem) => void;
   onClose: () => void;
 }
@@ -42,7 +44,14 @@ interface Props {
 const PEPTIDE_MESSAGE =
   'Peptides are reference only, so this one cannot be given a dose time. It can stay in your stack.';
 
-export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose }: Props) {
+export function AddSchedule({ userId, glossaryId, defaultName, focusTime, onAdded, onClose }: Props) {
+  /* "Add your own time" opens this sheet for the sake of the time field, so
+     that is where the cursor goes. Everything else on the form already has a
+     sensible blank state; the time is the thing they came for. */
+  const timeRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (focusTime) timeRef.current?.focus();
+  }, [focusTime]);
   const [name, setName] = useState(defaultName ?? '');
   const [pickedGlossaryId, setPickedGlossaryId] = useState<string | null>(glossaryId ?? null);
   const [amount, setAmount] = useState('');
@@ -259,6 +268,7 @@ export function AddSchedule({ userId, glossaryId, defaultName, onAdded, onClose 
         </label>
         <input
           id="sched-time"
+          ref={timeRef}
           className="field-input"
           type="time"
           value={time}

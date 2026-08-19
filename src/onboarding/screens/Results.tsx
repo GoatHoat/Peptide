@@ -406,7 +406,19 @@ export function ScheduleBuilder({
   sleep: string;
   onDone: (schedule: { id: string; time: string }[]) => void;
 }) {
-  const slots = useMemo(() => buildSlots(meals, wake, sleep), [meals, wake, sleep]);
+  const baseSlots = useMemo(() => buildSlots(meals, wake, sleep), [meals, wake, sleep]);
+  /**
+   * Times the user added here, before any of this is saved.
+   *
+   * Not written through AddSchedule: nothing on this screen exists as a
+   * schedule_item yet — the rows are created after Start, in one place, by
+   * Onboarding. Adding a time here adds a slot to drag into, and the existing
+   * write path persists whatever ends up in it. That keeps one way to create a
+   * schedule item rather than two.
+   */
+  const [ownTimes, setOwnTimes] = useState<string[]>([]);
+  const [addingTime, setAddingTime] = useState(false);
+  const [newTime, setNewTime] = useState('');
 
   /* The opening layout comes from the solver, not from `i % slots.length`.
      Round-robin put iron next to zinc as often as not and could not say why
@@ -425,6 +437,29 @@ export function ScheduleBuilder({
     () => Object.fromEntries(solution.placements.map((pl) => [pl.itemId, pl])),
     [solution],
   );
+
+  /**
+   * The drag targets: the day's own times, plus anything the solver invented,
+   * plus anything the user added.
+   *
+   * buildSlots built its list independently of the solver, so a block the
+   * solver derived — the food-free gap — had no slot here at all. The fallback
+   * below quietly reassigned those items to slots[0], which is Morning, so an
+   * empty-stomach item was placed correctly by the solver and then shown next
+   * to breakfast anyway, with the reason line for a block that was not on
+   * screen. Merging by time rather than by id, because a derived gap can land
+   * on a time the day already has.
+   */
+  const slots = useMemo(() => {
+    const byTime = new Map(baseSlots.map((s) => [s.time, s]));
+    for (const b of solution.blocks) {
+      if (!byTime.has(b.time)) byTime.set(b.time, { id: b.id, name: b.name, time: b.time });
+    }
+    for (const t of ownTimes) {
+      if (!byTime.has(t)) byTime.set(t, { id: `own-${t}`, name: 'Your own time', time: t });
+    }
+    return [...byTime.values()].sort((a, b) => toMinutes(a.time) - toMinutes(b.time));
+  }, [baseSlots, solution, ownTimes]);
 
   const [placed, setPlaced] = useState<Record<string, string>>(() => {
     const fromSolver = Object.fromEntries(solution.placements.map((pl) => [pl.itemId, pl.blockId]));
@@ -558,6 +593,43 @@ export function ScheduleBuilder({
             </div>
           </div>
         ))}
+
+        {/* Below the last block, and there whether or not anything is in them.
+            The escape hatch for a schedule that is nearly right — the primary
+            action is accepting what was built, which is the Start button.
+
+            An inline time field rather than window.prompt: a browser dialog is
+            a seam, and this is the same control the add-to-schedule sheet uses,
+            so the interaction is one somebody has already met. */}
+        {addingTime ? (
+          <div className="ob-add-time-row">
+            <input
+              className="field-input"
+              type="time"
+              value={newTime}
+              autoFocus
+              onChange={(e) => setNewTime(e.target.value)}
+              aria-label="New time"
+            />
+            <button
+              type="button"
+              className="ob-add-time-go"
+              disabled={!newTime}
+              onClick={() => {
+                if (!newTime) return;
+                setOwnTimes((prev) => (prev.includes(newTime) ? prev : [...prev, newTime]));
+                setNewTime('');
+                setAddingTime(false);
+              }}
+            >
+              Add
+            </button>
+          </div>
+        ) : (
+          <button type="button" className="ob-add-time" onClick={() => setAddingTime(true)}>
+            Add your own time
+          </button>
+        )}
       </div>
 
       {message && (

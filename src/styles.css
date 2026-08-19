@@ -3186,3 +3186,44 @@ html.reduce-motion *::after {
   opacity: 0.4;
   cursor: default;
 }
+
+/* "Add your own time" — the escape hatch under the schedule, on Today and in
+   the onboarding builder. Quiet: the primary action is accepting the schedule
+   that was built, not rebuilding it. */
+.add-own-time,
+.ob-add-time {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  padding: 14px 0;
+  border: 1px solid var(--hair);
+  border-radius: 14px;
+  background: none;
+  color: var(--purple);
+  font-size: calc(14px * var(--text-scale));
+  font-weight: 600;
+  cursor: pointer;
+}
+.ob-add-time-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+.ob-add-time-row .field-input {
+  flex: 1;
+}
+.ob-add-time-go {
+  flex: none;
+  padding: 0 18px;
+  border: 1px solid var(--hair);
+  border-radius: 14px;
+  background: none;
+  color: var(--purple);
+  font-size: calc(14px * var(--text-scale));
+  font-weight: 600;
+  cursor: pointer;
+}
+.ob-add-time-go:disabled {
+  color: var(--t3);
+  cursor: default;
+}

@@ -44,6 +44,9 @@ function dayState(dateISO: string, todayISO: string, compliance: Record<string, 
 
 type SheetState =
   | { kind: 'add' }
+  /* The same sheet, opened for the time field. Distinct so the title says what
+     they pressed and the cursor lands where they meant. */
+  | { kind: 'add-time' }
   | { kind: 'recon' }
   | { kind: 'history'; name: string; scheduleItemId: string | null }
   | { kind: 'day'; date: Date }
@@ -282,6 +285,17 @@ export function Today() {
         {doses !== null && doses.length > 0 && firstAhead === -1 && (
           <NowMarker time={nowLabel} scrollIntoView />
         )}
+
+        {/* Below the last block, including when there are none — the escape
+            hatch for a schedule that is nearly right, not the primary action.
+            It routes into the same sheet the action row opens rather than
+            building a second way to create a schedule item; the only
+            difference is where the cursor lands. */}
+        {doses !== null && (
+          <button className="add-own-time pressable" onClick={() => setSheet({ kind: 'add-time' })}>
+            Add your own time
+          </button>
+        )}
       </div>
 
       {/* Free only. Copy follows whichever limit they are closest to, so it
@@ -330,6 +344,24 @@ export function Today() {
         title="Reconstitution calculator"
       >
         <ReconCalculator />
+      </Sheet>
+
+      <Sheet
+        open={sheet?.kind === 'add-time'}
+        onClose={() => setSheet(null)}
+        title="Add your own time"
+      >
+        {sheet?.kind === 'add-time' && (
+          <AddSchedule
+            userId={user.id}
+            focusTime
+            onAdded={() => {
+              setSheet(null);
+              load();
+            }}
+            onClose={() => setSheet(null)}
+          />
+        )}
       </Sheet>
 
       <Sheet open={sheet?.kind === 'add'} onClose={() => setSheet(null)} title="Add to Schedule">

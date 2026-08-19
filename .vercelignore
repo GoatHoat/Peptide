@@ -7,3 +7,8 @@ design
 *.zip
 *.md
 tsconfig.tsbuildinfo
+
+# Playwright output. 20k files and half a gigabyte after a few runs, which is
+# what pushed the upload past Vercel's 15,000-file limit.
+test-results
+playwright-report
