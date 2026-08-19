@@ -32,9 +32,13 @@ function headlineFor(reason: ProReason, lockedTotal: number): string {
     case 'stack-limit':
       return 'You can hold one product on Free.';
     case 'locked-product':
+      /* What is locked is the reading, not the product. Any product in the
+         catalogue can be tracked on Free since the stack picker landed, so
+         "products are locked" became false — and it was on the screen asking
+         somebody for money, which is guideline 2.3.1 territory. */
       return lockedTotal > 0
-        ? `${lockedTotal} products are locked on Free.`
-        : 'That product is locked on Free.';
+        ? `${lockedTotal} articles are locked on Free.`
+        : 'This article is locked on Free.';
     case 'ask-limit':
       return "You've used your three free assistant messages.";
     default:
@@ -111,7 +115,9 @@ export function ProSheet({
           brochure. CLAUDE.md: this reads expensive through restraint. */}
       <ul className="pro-list">
         <li>An unlimited stack</li>
-        <li>All {total} products</li>
+        {/* The writing, not the catalogue. Every product is trackable on Free;
+            what Pro buys is being able to read about them. */}
+        <li>Every article — all {total}of them</li>
         <li>20 assistant messages an hour</li>
         <li>Full history and export</li>
       </ul>

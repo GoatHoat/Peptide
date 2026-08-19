@@ -72,8 +72,10 @@ export function Today() {
     }
     if (lockedTotal > 0) {
       return {
-        title: `${lockedTotal} products are locked`,
-        sub: `Pro unlocks all ${catalogueTotal}.`,
+        /* Articles, not products. Anything in the catalogue can be tracked on
+           Free; the reading is what Pro buys. */
+        title: `${lockedTotal} articles are locked`,
+        sub: `Pro opens all ${catalogueTotal}.`,
       };
     }
     return {

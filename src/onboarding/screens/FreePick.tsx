@@ -14,8 +14,10 @@ import type { Recommendation } from './Results';
  * The reason is not only decency. They were shown a personalised list and asked
  * to choose from it; taking five of those away without saying so is
  * misrepresenting what the free tier includes, which is what guideline 2.3.1
- * covers. The paywall before this names the limit *before* they choose, so
- * nothing here is news.
+ * covers. This screen is the one place the limit is named. It used to be
+ * stated on the paywall above it as well, which put "you only get one" in
+ * front of somebody who had not yet been asked to decide anything — so it is
+ * said once, here, and only to the people it applies to.
  *
  * And it converts better honestly. Somebody who has seen six things they want
  * and been told plainly that one is free has a reason to upgrade. Somebody who
