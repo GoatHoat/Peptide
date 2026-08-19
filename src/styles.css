@@ -2857,12 +2857,18 @@ html.reduce-motion *::after {
    because it belongs to the pair. */
 .pro-pay-q {
   margin: 18px 0 8px;
+  width: 100%;
+  text-align: left;
   color: var(--t2);
 }
 /* Two ways to pay, side by side, because they are the same decision. */
 .pro-pay {
   display: flex;
   gap: 10px;
+  /* Explicit, because this row is used in two containers and one of them
+     centres its children, where a flex row would otherwise size to its content
+     rather than its parent. */
+  width: 100%;
 }
 .pro-pay-btn {
   position: relative;

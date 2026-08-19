@@ -210,7 +210,7 @@ export function ProSheet({
                  who cancelled that the feature is switched off is wrong, and
                  telling somebody on a build with no key that their payment
                  failed is worse. */
-              setNote(purchasesAvailable() ? null : 'In-app payment is not switched on yet.');
+              setNote(purchasesAvailable() ? null : "In-app payments don't work on this device.");
             } finally {
               setBusy(null);
             }

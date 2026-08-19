@@ -112,3 +112,57 @@ test('choosing free asks which product, and keeps the rest on screen', async ({ 
   await page.getByRole('button', { name: 'Build my schedule' }).click();
   await expect(page.getByRole('heading', { name: 'Your schedule' })).toBeVisible({ timeout: 20_000 });
 });
+
+test('the onboarding paywall names both payment routes, like the Pro sheet', async ({ page }) => {
+  test.setTimeout(120_000);
+  await reachPaywall(page);
+
+  /* This offered one button - "Start with Pepstack" - whichever route the
+     build could charge through, so the two paywalls disagreed about what the
+     choice was and the App Store route was invisible here. */
+  await expect(page.getByText('Payment method')).toBeVisible();
+  await expect(page.getByRole('button', { name: /Stripe/ })).toBeVisible();
+  await expect(page.getByText('5% off')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'In-app payment' })).toBeVisible();
+  // and the way past is still unmissable
+  await expect(page.getByRole('button', { name: 'Continue with Free' })).toBeVisible();
+
+  /* Onboarding slides its screens horizontally, so anything positional has to
+     wait for the transition to settle. Measured mid-slide, .ob-footer sits at
+     x=231 and every child looks like it is off the right edge — which is what
+     a screenshot taken then shows, and it is not overflow. */
+  await expect
+    .poll(async () =>
+      page.evaluate(() => Math.round(
+        (document.querySelector('.ob-footer') as HTMLElement).getBoundingClientRect().x,
+      )),
+    )
+    .toBeLessThanOrEqual(1);
+
+  /* The pay row is two buttons side by side on a 393px screen, so it is the
+     most likely thing in this flow to overflow. Measured rather than eyeballed
+     from a screenshot. */
+  const overflow = await page.evaluate(() => {
+    const el = document.scrollingElement as HTMLElement;
+    const row = document.querySelector('.pro-pay') as HTMLElement;
+    return {
+      docOverflow: el.scrollWidth - el.clientWidth,
+      viewport: window.innerWidth,
+      rowRight: row ? Math.round(row.getBoundingClientRect().right) : -1,
+      chain: (() => {
+        const out: string[] = [];
+        let el: HTMLElement | null = row;
+        while (el && out.length < 7) {
+          const b = el.getBoundingClientRect();
+          out.push(`${el.tagName}.${(el.className || '').toString().split(' ')[0]} x=${Math.round(b.x)} w=${Math.round(b.width)}`);
+          el = el.parentElement;
+        }
+        return out;
+      })(),
+    };
+  });
+  expect(overflow.docOverflow, `the paywall scrolls sideways: ${JSON.stringify(overflow)}`).toBeLessThanOrEqual(1);
+  expect(overflow.rowRight).toBeLessThanOrEqual(overflow.viewport + 1);
+
+  await page.screenshot({ path: 'test-results/ob-paywall.png' });
+});

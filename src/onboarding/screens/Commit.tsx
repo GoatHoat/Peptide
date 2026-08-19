@@ -1,8 +1,7 @@
-import { NAME } from '../../lib/brand';
 import { requestNotificationPermission } from '../../lib/notifications';
 import { useState } from 'react';
 import { Cta, OnboardIllustration, Screen, Sub, Title } from '../chrome';
-import { CARD_DISCOUNT_PCT, PLANS, purchase, restorePurchases, type PlanId } from '../../lib/billing';
+import { CARD_DISCOUNT_PCT, PLANS, purchase, purchasesAvailable, restorePurchases, type PlanId } from '../../lib/billing';
 import { cardCheckoutAvailable, startCardCheckout } from '../../lib/checkout';
 import { externalLink, PRIVACY_URL, TERMS_URL } from '../../lib/legal';
 
@@ -103,7 +102,18 @@ export function Paywall({ onDone }: { onDone: (subscribed: boolean) => void }) {
     setBusy('buy');
     setNote(null);
     try {
-      onDone(await purchase(plan));
+      const bought = await purchase(plan);
+      if (bought) {
+        onDone(true);
+        return;
+      }
+      /* False means either "nothing here can charge" or "they backed out",
+         and those are not the same sentence. Onboarding stays where it is
+         either way — advancing would skip the free-pick step for somebody who
+         has not paid. */
+      setNote(
+        purchasesAvailable() ? null : "In-app payments don't work on this device.",
+      );
     } finally {
       setBusy(null);
     }
@@ -126,17 +136,40 @@ export function Paywall({ onDone }: { onDone: (subscribed: boolean) => void }) {
       scroll
       footer={
         <>
-          {/* Whichever route this build can actually charge through. The
-              screen does not render at all when neither can — see
-              lib/paywallGate.ts — so there is never a button here that takes
-              no money. */}
-          <Cta onClick={cardCheckoutAvailable() ? buyByCard : buy} disabled={busy !== null}>
-            {busy === 'buy'
-              ? 'One moment…'
-              : cardCheckoutAvailable()
-                ? `Start with ${NAME} — ${CARD_DISCOUNT_PCT}% off`
-                : `Start with ${NAME}`}
-          </Cta>
+          {/* The same two routes, named the same way, as the Pro sheet.
+              This offered whichever one the build could charge through, as a
+              single "Start with Pepstack" — so the two paywalls disagreed
+              about what the choice even was, and the App Store route was
+              invisible here while being one of two buttons there. Same
+              classes as ProSheet, so they cannot drift apart visually either.
+
+              The screen does not render at all when neither route can charge
+              — see lib/paywallGate.ts — so there is never a button here that
+              takes no money. */}
+          <p className="pro-pay-q t-body-m">Payment method</p>
+          <div className="pro-pay">
+            {cardCheckoutAvailable() && (
+              <button
+                type="button"
+                className="pro-pay-btn pro-pay-card pressable"
+                disabled={busy !== null}
+                onClick={buyByCard}
+              >
+                {busy === 'buy' ? 'One moment…' : 'Stripe'}
+                <span className="pro-pay-off t-label" aria-label="5 percent off">
+                  {CARD_DISCOUNT_PCT}% off
+                </span>
+              </button>
+            )}
+            <button
+              type="button"
+              className="pro-pay-btn pro-pay-iap pressable"
+              disabled={busy !== null}
+              onClick={buy}
+            >
+              In-app payment
+            </button>
+          </div>
           {/* Visible, full width, in the footer beside the buy button — not
               hidden, not greyed, not six-point type in a corner. Somebody who
               is not going to subscribe today should not have to hunt for the
