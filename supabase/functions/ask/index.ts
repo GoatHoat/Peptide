@@ -441,7 +441,16 @@ async function liveAnswer(
       /* Deliberation bills as output at five times input, and this is
          retrieval and summarisation over a catalogue we supply — there is
          little to reason about before answering. */
-      output_config: { effort: 'low' },
+      /* NO output_config. It was `{ effort: 'low' }`, added to stop paying for
+         deliberation tokens at five times input — and this model rejects the
+         parameter, so every single call 400'd. The catch below turned that
+         into "something went wrong on our end", which is the correct thing to
+         show a user and the worst possible thing to debug from: three wrong
+         diagnoses before the response body was read directly.
+
+         If a cheaper effort setting is wanted later, confirm the model accepts
+         it against the API docs first, and check it with one real call before
+         deploying. */
       system,
       tools: TOOLS,
       messages,
