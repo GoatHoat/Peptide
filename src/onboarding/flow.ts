@@ -143,6 +143,12 @@ export function isSkipped(
      shown it; somebody who picked a single product has nothing to choose
      between. */
   if (step === 'free-pick') {
+    /* No paywall, no choice to have made. When `canCharge()` is false the
+       paywall above is skipped, `subscribed` stays false for everybody, and
+       this screen appeared on its own — telling somebody they had picked Free
+       when they were never offered anything. Both screens live or die
+       together. */
+    if (!canCharge()) return true;
     if (answers.subscribed) return true;
     if ((answers.pickedCount ?? 0) <= 1) return true;
   }

@@ -3,6 +3,7 @@ import { Capacitor } from '@capacitor/core';
 import { supabase } from './supabaseClient';
 import { markCheckoutOpened } from './checkoutReturn';
 import { CARD_CHECKOUT_ENABLED, type PlanId } from './billing';
+import { storefrontIsUS } from './storefront';
 
 /**
  * Whether to show a card route at all.
@@ -13,7 +14,15 @@ import { CARD_CHECKOUT_ENABLED, type PlanId } from './billing';
  * The flag alone governs the web build.
  */
 export function cardCheckoutAvailable(): boolean {
-  return CARD_CHECKOUT_ENABLED && !Capacitor.isNativePlatform();
+  if (!CARD_CHECKOUT_ENABLED) return false;
+  if (!Capacitor.isNativePlatform()) return true;
+  /* Guideline 3.1.1(a) now reads "there is no prohibition on an app including
+     buttons, external links, or other calls to action, and no entitlement is
+     required to do so" — United States storefront ONLY. The same button in the
+     UK, Canada, Japan or the EU is still a 3.1.1 violation, so this is decided
+     at runtime from where the account actually buys, never from a build flag.
+     Unknown reads as not-US; see lib/storefront.ts for why that direction. */
+  return storefrontIsUS();
 }
 
 /**
@@ -50,6 +59,15 @@ export async function startCardCheckout(planId: PlanId): Promise<
          the site, so paying left somebody stranded on a website with no way
          back to the app. This one is dismissible, shows the real URL and
          certificate, and the page it lands on bounces to `pepstack://`. */
+      /* SFSafariViewController. It is dismissible, shows the real URL and
+         certificate, and the page it lands on bounces back to `pepstack://`.
+
+         THE STRONGER OPTION IS REAL SAFARI. Linking out means the purchase
+         happens outside the app, and `@capacitor/app-launcher` hands the URL
+         to iOS so it opens in Safari proper — which also carries the person's
+         saved cards and Apple Pay. That is one `npm i @capacitor/app-launcher`
+         plus a `cap sync`, and it is the safer reading of 3.1.1(a). This is
+         the weaker reading, not a broken one. */
       await Browser.open({ url, presentationStyle: 'popover' });
       return { ok: true };
     }

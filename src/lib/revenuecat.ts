@@ -1,5 +1,6 @@
 import { Capacitor } from '@capacitor/core';
 import type { PlanId } from './billing';
+import { resolveStorefront } from './storefront';
 
 /**
  * The real purchase path, behind the interface `billing.ts` already exports.
@@ -134,6 +135,10 @@ async function ensureConfigured(): Promise<boolean> {
     const { Purchases } = await import('@revenuecat/purchases-capacitor');
     await Purchases.configure({ apiKey: apiKey() as string, appUserID: currentUserId });
     configured = true;
+    /* Only answerable once configure has run, and the paywall needs it to know
+       whether the card route is allowed here. Not awaited — a slow StoreKit
+       reply must not hold up a purchase. */
+    void resolveStorefront();
     return true;
   } catch (err) {
     /* A missing plugin, an unconfigurable key, a simulator without StoreKit.

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Sheet } from './Sheet';
 import { CARD_DISCOUNT_PCT, PLANS, purchase, restorePurchases, type PlanId } from '../lib/billing';
 import { cardCheckoutAvailable, startCardCheckout } from '../lib/checkout';
+import { useStorefrontTick } from '../lib/storefront';
 import { onCheckoutReturn } from '../lib/checkoutReturn';
 import { externalLink, PRIVACY_URL, TERMS_URL } from '../lib/legal';
 import { useEntitlement } from '../lib/entitlements';
@@ -51,6 +52,11 @@ export function ProSheet({
   onClose: () => void;
 }) {
   const { catalogueTotal, lockedTotal, isPro } = useEntitlement();
+  /* Subscribed rather than read once: StoreKit answers asynchronously and can
+     reply after this sheet has already rendered. Reading it once would hide
+     the card route from the one storefront allowed to see it. */
+  useStorefrontTick();
+  const cardOk = cardCheckoutAvailable();
   /* Annual by default: it is the better value and preselecting the cheaper
      monthly would make the saving badge decoration rather than a reason. */
   const [plan, setPlan] = useState<PlanId>('annual');
@@ -144,9 +150,9 @@ export function ProSheet({
       {/* Only a question when there are two answers. On the App Store build
           the card route is not offered at all — Apple requires StoreKit for
           digital subscriptions — so this collapses to the one button. */}
-      {cardCheckoutAvailable() && <p className="pro-pay-q t-body-m">How do you want to pay?</p>}
+      {cardOk && <p className="pro-pay-q t-body-m">How do you want to pay?</p>}
       <div className="pro-pay">
-        {cardCheckoutAvailable() && (
+        {cardOk && (
         <button
           className="pro-pay-btn pro-pay-card pressable"
           disabled={busy !== null}
