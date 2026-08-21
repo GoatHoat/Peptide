@@ -52,7 +52,10 @@ async function reachPaywall(page: import('@playwright/test').Page) {
   await page.getByRole('heading', { name: /How many days a week/ }).waitFor();
   await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByRole('heading', { name: 'Reminders at the right times' }).waitFor();
-  await page.getByRole('button', { name: 'Not now' }).click();
+  /* One button now, and it always reaches the system prompt — see
+     onboarding/screens/Commit.tsx. Apple rejected a sibling app under 5.1.1(iv)
+     for offering a way past a permission priming screen without asking. */
+  await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByRole('heading', { name: 'Vitamins and minerals for you' }).waitFor({ timeout: 20_000 });
   await page.getByRole('button', { name: 'Create schedule' }).click();
   await page.getByRole('heading', { name: 'Here is your plan' }).waitFor();

@@ -259,11 +259,16 @@ function AddNoteForm({ userId, onAdded }: { userId: string; onAdded: () => void 
         <label className="t-label" htmlFor="note-photo">
           Photo (optional)
         </label>
+        {/* No `capture` attribute here. `capture="environment"` sent iOS straight to
+            the rear camera with no picker, which did two things: it terminated the
+            app outright until Info.plist gained NSCameraUsageDescription, and it made
+            attaching a photo you already had impossible, which the privacy policy
+            says you can do. Without it iOS shows the normal sheet — photo library,
+            take photo, or choose file. */}
         <input
           id="note-photo"
           type="file"
           accept="image/*"
-          capture="environment"
           className="field-file"
           onChange={(e) => setFile(e.target.files?.[0] ?? null)}
         />

@@ -211,7 +211,8 @@ export async function completeOnboarding(page: Page): Promise<void> {
   await cta(page, 'Continue').click();
 
   await onScreen(page, 'Reminders at the right times');
-  await cta(page, 'Not now').click();
+  /* One button, and it always asks. See Commit.tsx — 5.1.1(iv). */
+  await cta(page, 'Continue').click();
 
   /* Straight to the recommendations. Nothing asks for money before this
      screen, and the next assertion is what fails if the paywall moves back in

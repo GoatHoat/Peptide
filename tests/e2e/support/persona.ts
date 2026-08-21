@@ -323,9 +323,14 @@ const HANDLERS: Record<string, Handler> = {
 
   notifications: {
     ready: async (page) => void (await expect(heading(page, 'Reminders at the right times')).toBeVisible()),
-    act: async (page, p) => {
-      if (p.notifications === 'grant') await cta(page, 'Turn on reminders').click();
-      else await cta(page, 'Not now').click();
+    /* The grant/decline fork used to live on this screen. It does not any more:
+       there is one button, it says Continue, and it always reaches the system
+       prompt, because Apple rejected a sibling app under Guideline 5.1.1(iv)
+       for letting a user past a priming screen without being asked. Declining
+       now happens in Apple's own dialog, which the harness stubs, so the
+       persona's `notifications` preference is honoured there rather than here. */
+    act: async (page) => {
+      await cta(page, 'Continue').click();
     },
   },
 

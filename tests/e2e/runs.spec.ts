@@ -216,7 +216,8 @@ async function onboard(
 
   await page.getByRole('heading', { name: 'Reminders at the right times' }).waitFor();
   await visit(page, log, 'notifications');
-  await page.getByRole('button', { name: 'Not now' }).click();
+  /* One button, and it always asks. See Commit.tsx — 5.1.1(iv). */
+  await page.getByRole('button', { name: 'Continue' }).click();
 
   await visit(page, log, 'building-recs');
   /* Two legitimate outcomes now, not one. `recommend` drops anything already in

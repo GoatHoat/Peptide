@@ -10,7 +10,23 @@ import { externalLink, PRIVACY_URL, TERMS_URL } from '../../lib/legal';
 /**
  * iOS gives exactly one chance at the system prompt. Tap Don't Allow and it is
  * Settings-only forever, so the ask is explained here first and
- * requestPermission is only reached from the accent button — never on mount.
+ * requestPermission is only reached from the button — never on mount.
+ *
+ * There is exactly one button, it says "Continue", and it always reaches the
+ * system prompt. Both of those are deliberate and neither is a style choice.
+ * This screen used to offer "Turn on reminders" alongside a "Not now" that
+ * returned false without ever asking iOS — and that is verbatim what Apple
+ * rejected a sibling app for under Guideline 5.1.1(iv) on 3 August 2026:
+ *
+ *   "A custom message appears before the permission request, and to proceed
+ *    users press an 'allow' button. Use words like 'Continue' or 'Next' on the
+ *    button instead."
+ *   "...the user can close the message and delay the permission request with
+ *    the maybe later button. The user should always proceed to the permission
+ *    request after the message."
+ *
+ * Somebody who does not want reminders declines in Apple's own dialog, which
+ * is the control Apple wants them using. Do not add a second way out.
  */
 export function Notifications({
   onDone,
@@ -40,14 +56,9 @@ export function Notifications({
     <Screen
       center
       footer={
-        <>
-          <Cta onClick={ask} disabled={busy}>
-            {busy ? 'Asking…' : 'Turn on reminders'}
-          </Cta>
-          <button className="ob-cta ob-cta-ghost" onClick={() => onDone(false)}>
-            Not now
-          </button>
-        </>
+        <Cta onClick={ask} disabled={busy}>
+          {busy ? 'Asking…' : 'Continue'}
+        </Cta>
       }
     >
       <OnboardIllustration name="bell" />

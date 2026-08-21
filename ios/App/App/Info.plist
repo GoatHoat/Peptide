@@ -77,5 +77,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Pepstack uses the camera only when you tap to add a progress photo, so you can keep your own visual record of how a supplement routine is going. For example, taking a photo of your skin alongside a note about a vitamin you started. Photos are stored privately in your account, are never shown to anyone else, and are deleted when you delete your account.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Pepstack asks for a photo from your library only when you tap to add a progress photo, so you can attach one you already took to a progress note. For example, choosing a gym photo from last month to compare against today. Photos are stored privately in your account, are never shown to anyone else, and are deleted when you delete your account.</string>
 </dict>
 </plist>
